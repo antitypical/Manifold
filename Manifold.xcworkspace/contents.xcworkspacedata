@@ -4,4 +4,7 @@
    <FileRef
       location = "group:Manifold.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:External/Box/Box.xcodeproj">
+   </FileRef>
 </Workspace>
