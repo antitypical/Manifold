@@ -15,6 +15,7 @@
 		D4B3FC111A8351FA00DA2AC3 /* Value.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B3FC101A8351FA00DA2AC3 /* Value.swift */; };
 		D4B3FC131A83520100DA2AC3 /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B3FC121A83520100DA2AC3 /* Expression.swift */; };
 		D4B3FC151A83527B00DA2AC3 /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4B3FC141A83527B00DA2AC3 /* Box.framework */; };
+		D4B3FC171A8353CC00DA2AC3 /* Scheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B3FC161A8353CC00DA2AC3 /* Scheme.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +40,7 @@
 		D4B3FC101A8351FA00DA2AC3 /* Value.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Value.swift; sourceTree = "<group>"; };
 		D4B3FC121A83520100DA2AC3 /* Expression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Expression.swift; sourceTree = "<group>"; };
 		D4B3FC141A83527B00DA2AC3 /* Box.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Box.framework; path = "../../../Library/Developer/Xcode/DerivedData/Manifold-epkikerqiriatubqlsmvsfowfovp/Build/Products/Debug/Box.framework"; sourceTree = "<group>"; };
+		D4B3FC161A8353CC00DA2AC3 /* Scheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scheme.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +88,7 @@
 				D4B3FBF01A83515800DA2AC3 /* Manifold.h */,
 				D4B3FC0C1A8351ED00DA2AC3 /* Constraint.swift */,
 				D4B3FC0E1A8351F400DA2AC3 /* Type.swift */,
+				D4B3FC161A8353CC00DA2AC3 /* Scheme.swift */,
 				D4B3FC101A8351FA00DA2AC3 /* Value.swift */,
 				D4B3FC121A83520100DA2AC3 /* Expression.swift */,
 				D4B3FBEE1A83515800DA2AC3 /* Supporting Files */,
@@ -229,6 +232,7 @@
 				D4B3FC0F1A8351F400DA2AC3 /* Type.swift in Sources */,
 				D4B3FC111A8351FA00DA2AC3 /* Value.swift in Sources */,
 				D4B3FC131A83520100DA2AC3 /* Expression.swift in Sources */,
+				D4B3FC171A8353CC00DA2AC3 /* Scheme.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
