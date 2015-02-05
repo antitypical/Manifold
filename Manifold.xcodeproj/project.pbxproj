@@ -68,9 +68,9 @@
 		D4B3FBE11A83515800DA2AC3 = {
 			isa = PBXGroup;
 			children = (
-				D4B3FC141A83527B00DA2AC3 /* Box.framework */,
 				D4B3FBED1A83515800DA2AC3 /* Manifold */,
 				D4B3FBFF1A83515800DA2AC3 /* ManifoldTests */,
+				D4B3FC141A83527B00DA2AC3 /* Box.framework */,
 				D4B3FBEC1A83515800DA2AC3 /* Products */,
 			);
 			sourceTree = "<group>";
