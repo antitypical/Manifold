@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public struct Variable: Hashable, Printable {
+public struct Variable: Hashable, IntegerLiteralConvertible, Printable {
 	let value: Int
 
 
@@ -8,6 +8,13 @@ public struct Variable: Hashable, Printable {
 
 	public var hashValue: Int {
 		return value
+	}
+
+
+	// MARK: IntegerLiteralConvertible
+
+	public init(integerLiteral value: IntegerLiteralType) {
+		self.value = value
 	}
 
 
