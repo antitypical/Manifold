@@ -1,3 +1,3 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public typealias Environment = [Variable: Type]
+public typealias Environment = [Variable: Scheme]
