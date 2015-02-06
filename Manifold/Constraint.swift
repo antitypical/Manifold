@@ -2,7 +2,7 @@
 
 public enum Constraint {
 	case And(Box<Constraint>, Box<Constraint>)
-	case Existential(Int, Box<Constraint>)
+	case Existential(Variable, Box<Constraint>)
 	case Congruence(Type, Type)
 }
 

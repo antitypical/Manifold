@@ -4,7 +4,7 @@ public typealias _Type = Type
 
 public enum Scheme {
 	case Type(_Type)
-	case Universal(Int, Constraint, Box<Scheme>)
+	case Universal(Variable, Constraint, Box<Scheme>)
 }
 
 
