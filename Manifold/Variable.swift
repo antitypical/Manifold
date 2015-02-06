@@ -30,7 +30,7 @@ public struct Variable: Hashable, IntegerLiteralConvertible, Printable {
 
 	// MARK: Private
 
-	private static var cursor: Int = 0
+	private static var cursor = 0
 
 	private let value: Int
 }
