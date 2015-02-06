@@ -1,6 +1,14 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public struct Variable: Hashable, IntegerLiteralConvertible, Printable {
+	/// Constructs a fresh type variable.
+	public init() {
+		self.value = Variable.cursor++
+	}
+
+	private static var cursor: Int = 0
+
+
 	private let value: Int
 
 
