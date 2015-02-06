@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public struct Variable: Hashable {
+public struct Variable: Hashable, Printable {
 	let value: Int
 
 
@@ -8,6 +8,13 @@ public struct Variable: Hashable {
 
 	public var hashValue: Int {
 		return value
+	}
+
+
+	// MARK: Printable
+
+	public var description: String {
+		return value.description
 	}
 }
 
