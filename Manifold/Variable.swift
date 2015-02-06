@@ -6,11 +6,6 @@ public struct Variable: Hashable, IntegerLiteralConvertible, Printable {
 		self.value = Variable.cursor++
 	}
 
-	private static var cursor: Int = 0
-
-
-	private let value: Int
-
 
 	// MARK: Hashable
 
@@ -31,6 +26,13 @@ public struct Variable: Hashable, IntegerLiteralConvertible, Printable {
 	public var description: String {
 		return value.description
 	}
+
+
+	// MARK: Private
+
+	private static var cursor: Int = 0
+
+	private let value: Int
 }
 
 
