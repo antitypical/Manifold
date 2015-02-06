@@ -1,7 +1,7 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public struct Variable: Hashable, IntegerLiteralConvertible, Printable {
-	let value: Int
+	private let value: Int
 
 
 	// MARK: Hashable
