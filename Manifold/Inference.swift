@@ -1,7 +1,13 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public func typeOf(term: Expression, constraint: Constraint, environment: Environment) -> Either<Error, (Constraint, Type)> {
-	return .left("unimplemented")
+	switch term {
+	case let .Value(value):
+		return typeOf(value, constraint, environment)
+
+	default:
+		return .left("unimplemented")
+	}
 }
 
 public func typeOf(value: Value, constraint: Constraint, environment: Environment) -> Either<Error, (Constraint, Type)> {
