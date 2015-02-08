@@ -25,6 +25,14 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable {
 	}
 
 
+	public func apply(type: Type) -> Type {
+		return type.analysis(
+			{ self.elements[$0] ?? type },
+			{ Type(function: self.apply($0), self.apply($1)) }
+		)
+	}
+
+
 	// MARK: DictionaryLiteralConvertible
 
 	public init(dictionaryLiteral elements: (Variable, Type)...) {
