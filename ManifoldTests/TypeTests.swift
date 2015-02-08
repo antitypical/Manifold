@@ -3,7 +3,7 @@
 final class TypeTests: XCTestCase {
 	func testVariableTypesHaveOneFreeVariable() {
 		let variable = Variable()
-		XCTAssertEqual(Type(variable).freeVariables, [ variable ])
+		assertEqual(Type(variable).freeVariables, Set(variable))
 	}
 }
 
@@ -11,4 +11,5 @@ final class TypeTests: XCTestCase {
 // MARK: - Imports
 
 import Manifold
+import Set
 import XCTest

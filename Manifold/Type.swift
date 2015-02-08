@@ -14,7 +14,7 @@ public enum Type {
 	case Function(Box<Type>, Box<Type>)
 
 
-	public var freeVariables: [Manifold.Variable] {
+	public var freeVariables: Set<Manifold.Variable> {
 		return analysis({ [ $0 ] }, { $0.freeVariables + $1.freeVariables })
 	}
 
@@ -34,3 +34,4 @@ public enum Type {
 // MARK: - Imports
 
 import Box
+import Set
