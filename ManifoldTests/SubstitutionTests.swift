@@ -24,6 +24,12 @@ final class SubstitutionTests: XCTestCase {
 		let s2 = Substitution(elements: [ b: Type(b) ])
 		assertEqual(s1.compose(s2).occurringVariables, Set(b))
 	}
+
+	func testCompositionIsNotCommutative() {
+		let s1 = Substitution(elements: [ a: t1 ])
+		let s2 = Substitution(elements: [ a: t2 ])
+		XCTAssertNotEqual(s1.compose(s2), s2.compose(s1))
+	}
 }
 
 
