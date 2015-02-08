@@ -33,6 +33,11 @@ public struct Environment: DictionaryLiteralConvertible {
 }
 
 
+public func / (environment: Environment, variable: Int) -> Environment {
+	return Environment(lazy(environment.bindings).filter { y, _ in y != variable })
+}
+
+
 // MARK: - Imports
 
 import Set
