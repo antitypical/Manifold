@@ -1,6 +1,15 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public enum Type {
+	public init(_ variable: Manifold.Variable) {
+		self = Variable(variable)
+	}
+
+	public init(function t1: Type, _ t2: Type) {
+		self = Function(Box(t1), Box(t2))
+	}
+
+
 	case Variable(Manifold.Variable)
 	case Function(Box<Type>, Box<Type>)
 
