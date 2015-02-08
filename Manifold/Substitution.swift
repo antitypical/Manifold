@@ -1,6 +1,12 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Substitution {
-	case Idempotent([Variable: Type])
-	case Error
+public struct Substitution {
+	public init(elements: [Variable: Type]) {
+		self.elements = elements
+	}
+
+
+	// MARK: Private
+
+	private let elements: [Variable: Type]
 }
