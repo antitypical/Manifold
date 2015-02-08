@@ -32,6 +32,10 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable {
 		)
 	}
 
+	public func apply(scheme: Scheme) -> Scheme {
+		return Scheme(scheme.variables, apply(scheme.type))
+	}
+
 
 	// MARK: DictionaryLiteralConvertible
 
