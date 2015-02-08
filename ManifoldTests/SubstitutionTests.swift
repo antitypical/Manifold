@@ -9,6 +9,7 @@ final class SubstitutionTests: XCTestCase {
 	func testCompositionIsIdempotentIfOperandsAreIdempotent() {
 		let s1 = Substitution(elements: [ a: t1 ])
 		let s2 = Substitution(elements: [ b: t2 ])
+		assertEqual(s1.compose(s2).occurringVariables, Set())
 	}
 }
 
@@ -16,4 +17,5 @@ final class SubstitutionTests: XCTestCase {
 // MARK: - Imports
 
 import Manifold
+import Set
 import XCTest
