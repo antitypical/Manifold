@@ -11,6 +11,11 @@ public struct Environment: DictionaryLiteralConvertible {
 	}
 
 
+	public func generalize(type: Type) -> Scheme {
+		return Scheme(type.freeVariables - freeVariables, type)
+	}
+
+
 	// MARK: DictionaryLiteralConvertible
 
 	public init(dictionaryLiteral elements: (Int, Scheme)...) {
