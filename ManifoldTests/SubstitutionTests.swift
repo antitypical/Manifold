@@ -1,10 +1,12 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 final class SubstitutionTests: XCTestCase {
+	let (a, b) = (Variable(), Variable())
+	let (c, d) = (Variable(), Variable())
+	var t1: Type { return Type(c) }
+	var t2: Type { return Type(d) }
+
 	func testCompositionIsIdempotentIfOperandsAreIdempotent() {
-		let (a, b) = (Variable(), Variable())
-		let (c, d) = (Variable(), Variable())
-		let (t1, t2) = (Type(c), Type(d))
 		let s1 = Substitution(elements: [ a: t1 ])
 		let s2 = Substitution(elements: [ b: t2 ])
 	}
