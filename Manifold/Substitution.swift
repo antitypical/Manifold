@@ -15,6 +15,10 @@ public struct Substitution {
 		return variables.intersection(replacementVariables)
 	}
 
+	public var isIdempotent: Bool {
+		return occurringVariables.count == 0
+	}
+
 
 	// MARK: Private
 
