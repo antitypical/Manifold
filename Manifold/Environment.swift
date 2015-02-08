@@ -1,3 +1,5 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public typealias Environment = [Int: Scheme]
+public struct Environment {
+	private let bindings: [Int: Scheme]
+}
