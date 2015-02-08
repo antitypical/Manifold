@@ -10,6 +10,11 @@ public struct Substitution {
 		return Set(elements.keys)
 	}
 
+	public var occurringVariables: Set<Variable> {
+		let replacementVariables = reduce(lazy(elements.values).map { $0.freeVariables }, Set(), +)
+		return variables.intersection(replacementVariables)
+	}
+
 
 	// MARK: Private
 
