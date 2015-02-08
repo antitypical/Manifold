@@ -12,6 +12,18 @@ final class SubstitutionTests: XCTestCase {
 		assertEqual(s1.compose(s2).occurringVariables, Set())
 		assertEqual(s2.compose(s1).occurringVariables, Set())
 	}
+
+	func testCompositionIsNotIdempotentIfLeftOperandIsNotIdempotent() {
+		let s1 = Substitution(elements: [ a: Type(a) ])
+		let s2 = Substitution(elements: [ b: t2 ])
+		assertEqual(s1.compose(s2).occurringVariables, Set(a))
+	}
+
+	func testCompositionIsNotIdempotentIfRightOperandIsNotIdempotent() {
+		let s1 = Substitution(elements: [ a: t1 ])
+		let s2 = Substitution(elements: [ b: Type(b) ])
+		assertEqual(s1.compose(s2).occurringVariables, Set(b))
+	}
 }
 
 
