@@ -6,7 +6,17 @@ public struct Substitution {
 	}
 
 
+	public var variables: Set<Variable> {
+		return Set(elements.keys)
+	}
+
+
 	// MARK: Private
 
 	private let elements: [Variable: Type]
 }
+
+
+// MARK: - Imports
+
+import Set
