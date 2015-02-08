@@ -23,6 +23,12 @@ public struct Environment: DictionaryLiteralConvertible {
 	}
 
 
+	// MARK: Private
+
+	private init<S: SequenceType where S.Generator.Element == Dictionary<Int, Scheme>.Element>(_ sequence: S) {
+		self.init([:] + sequence)
+	}
+
 	private let bindings: [Int: Scheme]
 }
 
