@@ -1,9 +1,5 @@
 //  Copyright (c) 2014 Rob Rix. All rights reserved.
 
-import Either
-import Prelude
-import XCTest
-
 extension XCTestCase {
 	func assertEqual<T: Equatable>(expression1: @autoclosure () -> T?, _ expression2: @autoclosure () -> T?, _ message: String = "", _ file: String = __FILE__, _ line: UInt = __LINE__) -> T? {
 		let (actual, expected) = (expression1(), expression2())
@@ -84,3 +80,10 @@ extension XCTestCase {
 		return false
 	}
 }
+
+
+// MARK: - Imports
+
+import Either
+import Prelude
+import XCTest
