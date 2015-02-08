@@ -7,7 +7,6 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable {
 
 
 	public func compose(other: Substitution) -> Substitution {
-		let variables = self.variables
 		return Substitution(elements + other.elements)
 	}
 
