@@ -18,6 +18,8 @@
 		D4B3FC171A8353CC00DA2AC3 /* Scheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B3FC161A8353CC00DA2AC3 /* Scheme.swift */; };
 		D4B3FC191A835A7200DA2AC3 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B3FC181A835A7200DA2AC3 /* Environment.swift */; };
 		D4EAE23E1A87F28900931323 /* TypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EAE23D1A87F28900931323 /* TypeTests.swift */; };
+		D4EAE2401A87F45500931323 /* Set.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4EAE23F1A87F45500931323 /* Set.framework */; };
+		D4EAE2411A87F46F00931323 /* Set.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4EAE23F1A87F45500931323 /* Set.framework */; };
 		D4F9F8611A84694600B7071E /* Variable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F9F8601A84694600B7071E /* Variable.swift */; };
 		D4F9F8651A84958000B7071E /* Either.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4F9F8641A84958000B7071E /* Either.framework */; };
 		D4F9F8661A84959600B7071E /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4B3FC141A83527B00DA2AC3 /* Box.framework */; };
@@ -52,6 +54,7 @@
 		D4B3FC161A8353CC00DA2AC3 /* Scheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scheme.swift; sourceTree = "<group>"; };
 		D4B3FC181A835A7200DA2AC3 /* Environment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		D4EAE23D1A87F28900931323 /* TypeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeTests.swift; sourceTree = "<group>"; };
+		D4EAE23F1A87F45500931323 /* Set.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Set.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4F9F8601A84694600B7071E /* Variable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Variable.swift; sourceTree = "<group>"; };
 		D4F9F8641A84958000B7071E /* Either.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Either.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4F9F86A1A8496F700B7071E /* Prelude.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Prelude.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -63,6 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4EAE2401A87F45500931323 /* Set.framework in Frameworks */,
 				D4F9F86B1A8496F700B7071E /* Prelude.framework in Frameworks */,
 				D4F9F8651A84958000B7071E /* Either.framework in Frameworks */,
 				D4B3FC151A83527B00DA2AC3 /* Box.framework in Frameworks */,
@@ -77,6 +81,7 @@
 				D4F9F8661A84959600B7071E /* Box.framework in Frameworks */,
 				D4F9F8671A84959600B7071E /* Either.framework in Frameworks */,
 				D4B3FBFC1A83515800DA2AC3 /* Manifold.framework in Frameworks */,
+				D4EAE2411A87F46F00931323 /* Set.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -124,6 +129,7 @@
 				D4B3FC141A83527B00DA2AC3 /* Box.framework */,
 				D4F9F8641A84958000B7071E /* Either.framework */,
 				D4F9F86A1A8496F700B7071E /* Prelude.framework */,
+				D4EAE23F1A87F45500931323 /* Set.framework */,
 				D4B3FBEF1A83515800DA2AC3 /* Info.plist */,
 			);
 			name = "Supporting Files";
