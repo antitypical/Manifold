@@ -2,12 +2,12 @@
 
 public struct Environment: DictionaryLiteralConvertible {
 	public init(_ bindings: [Int: Scheme]) {
-		self.bindings = bindings
+		self.typings = bindings
 	}
 
 
 	public var freeVariables: Set<Variable> {
-		return reduce(lazy(bindings.values).map { $0.freeVariables }, [], +)
+		return reduce(lazy(typings.values).map { $0.freeVariables }, [], +)
 	}
 
 
@@ -29,12 +29,12 @@ public struct Environment: DictionaryLiteralConvertible {
 		self.init([:] + sequence)
 	}
 
-	private let bindings: [Int: Scheme]
+	private let typings: [Int: Scheme]
 }
 
 
 public func / (environment: Environment, variable: Int) -> Environment {
-	return Environment(lazy(environment.bindings).filter { y, _ in y != variable })
+	return Environment(lazy(environment.typings).filter { y, _ in y != variable })
 }
 
 
