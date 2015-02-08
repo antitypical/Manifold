@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public struct Substitution {
+public struct Substitution: Equatable {
 	public init(elements: [Variable: Type]) {
 		self.elements = elements
 	}
@@ -28,6 +28,11 @@ public struct Substitution {
 	// MARK: Private
 
 	private let elements: [Variable: Type]
+}
+
+
+public func == (left: Substitution, right: Substitution) -> Bool {
+	return left.elements == right.elements
 }
 
 
