@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Type {
+public enum Type: Equatable {
 	public init(_ variable: Manifold.Variable) {
 		self = Variable(variable)
 	}
@@ -27,6 +27,21 @@ public enum Type {
 		case let Function(t1, t2):
 			return ifFunction(t1.value, t2.value)
 		}
+	}
+}
+
+
+/// Equality defined up to substitution.
+public func == (left: Type, right: Type) -> Bool {
+	switch (left, right) {
+	case (.Variable, .Variable):
+		return true
+
+	case let (.Function(x1, x2), .Function(y1, y2)):
+		return x1.value == y1.value && x2.value == y2.value
+
+	default:
+		return false
 	}
 }
 
