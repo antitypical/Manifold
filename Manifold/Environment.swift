@@ -13,7 +13,7 @@ public struct Environment: DictionaryLiteralConvertible {
 
 	// MARK: DictionaryLiteralConvertible
 	public init(dictionaryLiteral elements: (Int, Scheme)...) {
-		self.bindings = [:] + elements
+		self.init([:] + elements)
 	}
 
 
