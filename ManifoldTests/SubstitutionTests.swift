@@ -7,27 +7,27 @@ final class SubstitutionTests: XCTestCase {
 	var t2: Type { return Type(function: Type(d), Type(d)) }
 
 	func testCompositionIsIdempotentIfOperandsAreIdempotent() {
-		let s1 = Substitution(elements: [ a: t1 ])
-		let s2 = Substitution(elements: [ b: t2 ])
+		let s1: Substitution = [ a: t1 ]
+		let s2: Substitution = [ b: t2 ]
 		assertEqual(s1.compose(s2).occurringVariables, Set())
 		assertEqual(s2.compose(s1).occurringVariables, Set())
 	}
 
 	func testCompositionIsNotIdempotentIfLeftOperandIsNotIdempotent() {
-		let s1 = Substitution(elements: [ a: Type(a) ])
-		let s2 = Substitution(elements: [ b: t2 ])
+		let s1: Substitution = [ a: Type(a) ]
+		let s2: Substitution = [ b: t2 ]
 		assertEqual(s1.compose(s2).occurringVariables, Set(a))
 	}
 
 	func testCompositionIsNotIdempotentIfRightOperandIsNotIdempotent() {
-		let s1 = Substitution(elements: [ a: t1 ])
-		let s2 = Substitution(elements: [ b: Type(b) ])
+		let s1: Substitution = [ a: t1 ]
+		let s2: Substitution = [ b: Type(b) ]
 		assertEqual(s1.compose(s2).occurringVariables, Set(b))
 	}
 
 	func testCompositionIsNotCommutative() {
-		let s1 = Substitution(elements: [ a: t1 ])
-		let s2 = Substitution(elements: [ a: t2 ])
+		let s1: Substitution = [ a: t1 ]
+		let s2: Substitution = [ a: t2 ]
 		XCTAssertNotEqual(s1.compose(s2), s2.compose(s1))
 	}
 }
