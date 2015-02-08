@@ -1,13 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public typealias _Type = Type
-
-public enum Scheme {
-	case Type(_Type)
-	case Universal(Variable, Constraint, Box<Scheme>)
+public struct Scheme {
+	let variables: [Variable]
+	let type: Type
 }
-
-
-// MARK: - Imports
-
-import Box
