@@ -6,6 +6,11 @@ public struct Substitution {
 	}
 
 
+	public func compose(other: Substitution) -> Substitution {
+		let variables = self.variables
+		return Substitution(elements: elements + other.elements)
+	}
+
 	public var variables: Set<Variable> {
 		return Set(elements.keys)
 	}
