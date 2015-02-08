@@ -5,6 +5,11 @@ public enum Type {
 	case Function(Box<Type>, Box<Type>)
 
 
+	public var freeVariables: [Manifold.Variable] {
+		return analysis({ [ $0 ] }, { $0.freeVariables + $1.freeVariables })
+	}
+
+
 	public func analysis<T>(ifVariable: Manifold.Variable -> T, _ ifFunction: (Type, Type) -> T) -> T {
 		switch self {
 		case let Variable(v):
