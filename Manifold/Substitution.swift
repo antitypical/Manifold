@@ -7,7 +7,7 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable {
 
 
 	public func compose(other: Substitution) -> Substitution {
-		return Substitution(elements + other.elements)
+		return Substitution(other.elements + elements)
 	}
 
 	public var variables: Set<Variable> {
