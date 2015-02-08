@@ -3,7 +3,7 @@
 final class TypeTests: XCTestCase {
 	func testVariableTypesHaveOneFreeVariable() {
 		let variable = Variable()
-		XCTAssertEqual(Type.Variable(variable).freeVariables, [ variable ])
+		XCTAssertEqual(Type(variable).freeVariables, [ variable ])
 	}
 }
 
