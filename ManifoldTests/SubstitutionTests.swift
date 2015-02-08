@@ -10,6 +10,7 @@ final class SubstitutionTests: XCTestCase {
 		let s1 = Substitution(elements: [ a: t1 ])
 		let s2 = Substitution(elements: [ b: t2 ])
 		assertEqual(s1.compose(s2).occurringVariables, Set())
+		assertEqual(s2.compose(s1).occurringVariables, Set())
 	}
 }
 
