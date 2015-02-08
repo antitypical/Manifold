@@ -8,4 +8,14 @@ public struct Scheme {
 
 	public let variables: [Variable]
 	public let type: Type
+
+
+	public var freeVariables: Set<Variable> {
+		return type.freeVariables
+	}
 }
+
+
+// MARK: - Imports
+
+import Set
