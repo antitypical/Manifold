@@ -1,14 +1,14 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public struct Substitution: DictionaryLiteralConvertible, Equatable {
-	public init(elements: [Variable: Type]) {
+	public init(_ elements: [Variable: Type]) {
 		self.elements = elements
 	}
 
 
 	public func compose(other: Substitution) -> Substitution {
 		let variables = self.variables
-		return Substitution(elements: elements + other.elements)
+		return Substitution(elements + other.elements)
 	}
 
 	public var variables: Set<Variable> {
@@ -28,7 +28,7 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable {
 	// MARK: DictionaryLiteralConvertible
 
 	public init(dictionaryLiteral elements: (Variable, Type)...) {
-		self.init(elements: [:] + elements)
+		self.init([:] + elements)
 	}
 
 
