@@ -23,6 +23,7 @@
 		D4EAE2431A87F4E700931323 /* Assertions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EAE2421A87F4E700931323 /* Assertions.swift */; };
 		D4EAE2451A87F78800931323 /* SchemeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EAE2441A87F78800931323 /* SchemeTests.swift */; };
 		D4EAE2471A87F95200931323 /* Substitution.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EAE2461A87F95200931323 /* Substitution.swift */; };
+		D4EAE2491A88092600931323 /* SubstitutionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EAE2481A88092600931323 /* SubstitutionTests.swift */; };
 		D4F9F8611A84694600B7071E /* Variable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F9F8601A84694600B7071E /* Variable.swift */; };
 		D4F9F8651A84958000B7071E /* Either.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4F9F8641A84958000B7071E /* Either.framework */; };
 		D4F9F8661A84959600B7071E /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4B3FC141A83527B00DA2AC3 /* Box.framework */; };
@@ -61,6 +62,7 @@
 		D4EAE2421A87F4E700931323 /* Assertions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Assertions.swift; sourceTree = "<group>"; };
 		D4EAE2441A87F78800931323 /* SchemeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SchemeTests.swift; sourceTree = "<group>"; };
 		D4EAE2461A87F95200931323 /* Substitution.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Substitution.swift; sourceTree = "<group>"; };
+		D4EAE2481A88092600931323 /* SubstitutionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubstitutionTests.swift; sourceTree = "<group>"; };
 		D4F9F8601A84694600B7071E /* Variable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Variable.swift; sourceTree = "<group>"; };
 		D4F9F8641A84958000B7071E /* Either.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Either.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4F9F86A1A8496F700B7071E /* Prelude.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Prelude.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -149,6 +151,7 @@
 				D4B3FC021A83515800DA2AC3 /* ManifoldTests.swift */,
 				D4EAE23D1A87F28900931323 /* TypeTests.swift */,
 				D4EAE2441A87F78800931323 /* SchemeTests.swift */,
+				D4EAE2481A88092600931323 /* SubstitutionTests.swift */,
 				D4B3FC001A83515800DA2AC3 /* Supporting Files */,
 			);
 			path = ManifoldTests;
@@ -286,6 +289,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4EAE2451A87F78800931323 /* SchemeTests.swift in Sources */,
+				D4EAE2491A88092600931323 /* SubstitutionTests.swift in Sources */,
 				D4EAE2431A87F4E700931323 /* Assertions.swift in Sources */,
 				D4B3FC031A83515800DA2AC3 /* ManifoldTests.swift in Sources */,
 				D4EAE23E1A87F28900931323 /* TypeTests.swift in Sources */,
