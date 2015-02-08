@@ -30,6 +30,12 @@ final class SubstitutionTests: XCTestCase {
 		let s2: Substitution = [ a: t2 ]
 		XCTAssertNotEqual(s1.compose(s2), s2.compose(s1))
 	}
+
+	func testEmptySubstitutionIsTheIdentitySubstitution() {
+		let s: Substitution = [:]
+		assertEqual(s.apply(t1), t1)
+		assertEqual(s.apply(t2), t2)
+	}
 }
 
 
