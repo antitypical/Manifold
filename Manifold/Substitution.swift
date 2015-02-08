@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public struct Substitution: Equatable {
+public struct Substitution: DictionaryLiteralConvertible, Equatable {
 	public init(elements: [Variable: Type]) {
 		self.elements = elements
 	}
@@ -22,6 +22,13 @@ public struct Substitution: Equatable {
 
 	public var isIdempotent: Bool {
 		return occurringVariables.count == 0
+	}
+
+
+	// MARK: DictionaryLiteralConvertible
+
+	public init(dictionaryLiteral elements: (Variable, Type)...) {
+		self.init(elements: [:] + elements)
 	}
 
 
