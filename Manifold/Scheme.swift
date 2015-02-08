@@ -1,12 +1,12 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public struct Scheme {
-	public init(_ variables: [Variable], _ type: Type) {
+	public init(_ variables: Set<Variable>, _ type: Type) {
 		self.variables = variables
 		self.type = type
 	}
 
-	public let variables: [Variable]
+	public let variables: Set<Variable>
 	public let type: Type
 
 
