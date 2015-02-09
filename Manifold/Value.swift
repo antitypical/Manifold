@@ -1,8 +1,21 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Value: Equatable {
+public enum Value: Hashable {
 	case Variable(Int)
 	case Abstraction(Int, Box<Value>)
+
+
+	// MARK: Hashable
+
+	public var hashValue: Int {
+		switch self {
+		case let Variable(i):
+			return i
+
+		case let Abstraction(i, v):
+			return i ^ v.value.hashValue
+		}
+	}
 }
 
 public func == (left: Value, right: Value) -> Bool {
