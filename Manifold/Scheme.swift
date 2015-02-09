@@ -13,6 +13,11 @@ public struct Scheme {
 	public var freeVariables: Set<Variable> {
 		return type.freeVariables - variables
 	}
+
+
+	public func instantiate() -> Type {
+		return Substitution(lazy(variables).map { ($0, Type(Variable())) }).apply(type)
+	}
 }
 
 

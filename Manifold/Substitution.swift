@@ -1,14 +1,13 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public struct Substitution: DictionaryLiteralConvertible, Equatable {
-	public init(_ elements: [Variable: Type]) {
-		self.elements = elements
+	public init<S: SequenceType where S.Generator.Element == Dictionary<Variable, Type>.Element>(_ sequence: S) {
+		self.elements = [:] + sequence
 	}
 
 
 	public func compose(other: Substitution) -> Substitution {
-		let variables = self.variables
-		return Substitution(elements + other.elements)
+		return Substitution(other.elements + elements)
 	}
 
 	public var variables: Set<Variable> {
@@ -32,11 +31,15 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable {
 		)
 	}
 
+	public func apply(scheme: Scheme) -> Scheme {
+		return Scheme(scheme.variables, apply(scheme.type))
+	}
+
 
 	// MARK: DictionaryLiteralConvertible
 
 	public init(dictionaryLiteral elements: (Variable, Type)...) {
-		self.init([:] + elements)
+		self.init(elements)
 	}
 
 
@@ -51,7 +54,7 @@ public func == (left: Substitution, right: Substitution) -> Bool {
 }
 
 
-private func + <T: Hashable, U, S: SequenceType where S.Generator.Element == Dictionary<T, U>.Element> (var left: Dictionary<T, U>, right: S) -> Dictionary<T, U> {
+internal func + <T: Hashable, U, S: SequenceType where S.Generator.Element == Dictionary<T, U>.Element> (var left: Dictionary<T, U>, right: S) -> Dictionary<T, U> {
 	for (key, value) in SequenceOf<(T, U)>(right) {
 		if left[key] == nil {
 			left[key] = value
