@@ -1,7 +1,17 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Constraint: Equatable {
+public enum Constraint: Hashable {
 	case Equality(Type, Type)
+
+
+	// MARK: Hashable
+
+	public var hashValue: Int {
+		switch self {
+		case let Equality(t1, t2):
+			return t1.hashValue ^ t2.hashValue
+		}
+	}
 }
 
 public func == (left: Constraint, right: Constraint) -> Bool {
