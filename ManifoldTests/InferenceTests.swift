@@ -2,7 +2,8 @@
 
 final class InferenceTests: XCTestCase {
 	func testVariablesAreAssignedAFreshTypeVariable() {
-		assertEqual(assertRight(typeOf(Expression.Value(.Variable(0))))?.analysis(const(true), const(false)), true)
+		let expression = Expression.Value(.Variable(0))
+		assertEqual(assertRight(typeOf(expression))?.0, [ expression: Scheme([], Type(Variable())) ])
 	}
 }
 
