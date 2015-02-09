@@ -1,8 +1,8 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public struct Substitution: DictionaryLiteralConvertible, Equatable {
-	public init(_ elements: [Variable: Type]) {
-		self.elements = elements
+	public init<S: SequenceType where S.Generator.Element == Dictionary<Variable, Type>.Element>(_ sequence: S) {
+		self.elements = [:] + sequence
 	}
 
 
@@ -39,7 +39,7 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable {
 	// MARK: DictionaryLiteralConvertible
 
 	public init(dictionaryLiteral elements: (Variable, Type)...) {
-		self.init([:] + elements)
+		self.init(elements)
 	}
 
 
