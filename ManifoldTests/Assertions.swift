@@ -64,18 +64,6 @@ func assertEqual(expression1: @autoclosure () -> ()?, expected: ()?, _ message: 
 	}
 }
 
-func assertEqual<T: Hashable>(expression1: @autoclosure () -> Set<T>?, expression2: @autoclosure () -> Set<T>?) -> Set<T>? {
-	let (actual, expected) = (expression1(), expression2())
-	switch (actual, expected) {
-	case (.None, .None):
-		return actual
-	case let (.Some(x), .Some(y)) where x == y:
-		return actual
-	default:
-		return failure("\(actual) is not equal to \(expected).")
-	}
-}
-
 func assertNil<T>(expression: @autoclosure () -> T?, _ message: String = "", file: String = __FILE__, line: UInt = __LINE__) -> Bool {
 	return expression().map { failure("\($0) is not nil. " + message, file: file, line: line) } ?? true
 
@@ -110,5 +98,4 @@ func failure(message: String, file: String = __FILE__, line: UInt = __LINE__) ->
 
 import Either
 import Prelude
-import Set
 import XCTest
