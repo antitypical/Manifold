@@ -9,8 +9,8 @@ public func typeOf(expression: Expression, _ assumptions: AssumptionSet = [], _ 
 	return expression.analysis(
 		const(.right([ (expression, Scheme([], Type(Variable()))) ], constraints)),
 		const(.left("unimplemented")),
-		const(.left("unimplemented"))
-	)
+		{ (typeOf($0, assumptions, constraints) && typeOf($1, assumptions, constraints)) >>- { _, _ in
+			.left("unimplemented") } })
 }
 
 
