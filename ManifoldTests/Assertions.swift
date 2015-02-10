@@ -1,11 +1,11 @@
 //  Copyright (c) 2014 Rob Rix. All rights reserved.
 
-func assertEqual<T: Equatable>(expression1: @autoclosure () -> T?, expression2: @autoclosure () -> T?, _ message: String = "", _ file: String = __FILE__, _ line: UInt = __LINE__) -> T? {
+func assertEqual<T: Equatable>(@autoclosure expression1: () -> T?, @autoclosure expression2: () -> T?, _ message: String = "", _ file: String = __FILE__, _ line: UInt = __LINE__) -> T? {
 	let (actual, expected) = (expression1(), expression2())
 	return actual == expected ? actual : failure("\(actual) is not equal to \(expected). " + message, file: file, line: line)
 }
 
-func assertEqual<T: Equatable, U: Equatable>(expression1: @autoclosure () -> Either<T, U>?, expression2: @autoclosure () -> Either<T, U>?, _ message: String = "", _ file: String = __FILE__, _ line: UInt = __LINE__) -> Either<T, U>? {
+func assertEqual<T: Equatable, U: Equatable>(@autoclosure expression1: () -> Either<T, U>?, @autoclosure expression2: () -> Either<T, U>?, _ message: String = "", _ file: String = __FILE__, _ line: UInt = __LINE__) -> Either<T, U>? {
 	let (actual, expected) = (expression1(), expression2())
 	switch (actual, expected) {
 	case (.None, .None):
@@ -17,7 +17,7 @@ func assertEqual<T: Equatable, U: Equatable>(expression1: @autoclosure () -> Eit
 	}
 }
 
-func assertEqual<T: Equatable, U: Equatable>(expression1: @autoclosure () -> Either<T, U>?, expression2: @autoclosure () -> U?, _ message: String = "", _ file: String = __FILE__, _ line: UInt = __LINE__) -> Either<T, U>? {
+func assertEqual<T: Equatable, U: Equatable>(@autoclosure expression1: () -> Either<T, U>?, @autoclosure expression2: () -> U?, _ message: String = "", _ file: String = __FILE__, _ line: UInt = __LINE__) -> Either<T, U>? {
 	let (actual, expected) = (expression1(), expression2())
 	switch (actual, expected) {
 	case (.None, .None):
@@ -29,7 +29,7 @@ func assertEqual<T: Equatable, U: Equatable>(expression1: @autoclosure () -> Eit
 	}
 }
 
-func assertEqual<T: Equatable>(expression1: @autoclosure () -> [T]?, expression2: @autoclosure () -> [T]?, _ message: String = "", _ file: String = __FILE__, _ line: UInt = __LINE__) -> [T]? {
+func assertEqual<T: Equatable>(@autoclosure expression1: () -> [T]?, @autoclosure expression2: () -> [T]?, _ message: String = "", _ file: String = __FILE__, _ line: UInt = __LINE__) -> [T]? {
 	let (actual, expected) = (expression1(), expression2())
 	switch (actual, expected) {
 	case (.None, .None):
@@ -41,7 +41,7 @@ func assertEqual<T: Equatable>(expression1: @autoclosure () -> [T]?, expression2
 	}
 }
 
-func assertEqual<T: Hashable, U: Equatable>(expression1: @autoclosure () -> [T: U]?, expression2: @autoclosure () -> [T: U]?, _ message: String = "", _ file: String = __FILE__, _ line: UInt = __LINE__) -> [T: U]? {
+func assertEqual<T: Hashable, U: Equatable>(@autoclosure expression1: () -> [T: U]?, @autoclosure expression2: () -> [T: U]?, _ message: String = "", _ file: String = __FILE__, _ line: UInt = __LINE__) -> [T: U]? {
 	let (actual, expected) = (expression1(), expression2())
 	switch (actual, expected) {
 	case (.None, .None):
@@ -54,7 +54,7 @@ func assertEqual<T: Hashable, U: Equatable>(expression1: @autoclosure () -> [T: 
 }
 
 
-func assertEqual(expression1: @autoclosure () -> ()?, expected: ()?, _ message: String = "", _ file: String = __FILE__, _ line: UInt = __LINE__) -> ()? {
+func assertEqual(@autoclosure expression1: () -> ()?, expected: ()?, _ message: String = "", _ file: String = __FILE__, _ line: UInt = __LINE__) -> ()? {
 	let actual: ()? = expression1()
 	switch (actual, expected) {
 	case (.None, .None), (.Some, .Some):
@@ -64,21 +64,22 @@ func assertEqual(expression1: @autoclosure () -> ()?, expected: ()?, _ message: 
 	}
 }
 
-func assertNil<T>(expression: @autoclosure () -> T?, _ message: String = "", file: String = __FILE__, line: UInt = __LINE__) -> Bool {
+func assertNil<T>(@autoclosure expression: () -> T?, _ message: String = "", file: String = __FILE__, line: UInt = __LINE__) -> Bool {
 	return expression().map { failure("\($0) is not nil. " + message, file: file, line: line) } ?? true
 
 }
 
-func assertNotNil<T>(expression: @autoclosure () -> T?, _ message: String = "", file: String = __FILE__, line: UInt = __LINE__) -> T? {
+func assertNotNil<T>(@autoclosure expression: () -> T?, _ message: String = "", file: String = __FILE__, line: UInt = __LINE__) -> T? {
 	return expression() ?? failure("is nil. " + message, file: file, line: line)
 }
 
-func assertLeft<T, U>(expression: @autoclosure () -> Either<T, U>, _ message: String = "", file: String = __FILE__, line: UInt = __LINE__) -> T? {
+
+func assertLeft<T, U>(@autoclosure expression: () -> Either<T, U>, _ message: String = "", file: String = __FILE__, line: UInt = __LINE__) -> T? {
 	let either = expression()
 	return assertNotNil(either.left, "is unexpectedly \(either)" + message, file: file, line: line)
 }
 
-func assertRight<T, U>(expression: @autoclosure () -> Either<T, U>, _ message: String = "", file: String = __FILE__, line: UInt = __LINE__) -> U? {
+func assertRight<T, U>(@autoclosure expression: () -> Either<T, U>, _ message: String = "", file: String = __FILE__, line: UInt = __LINE__) -> U? {
 	let either = expression()
 	return assertNotNil(either.right, "is unexpectedly \(either)" + message, file: file, line: line)
 }

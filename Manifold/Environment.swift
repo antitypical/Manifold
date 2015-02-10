@@ -7,12 +7,12 @@ public struct Environment: DictionaryLiteralConvertible {
 
 
 	public var freeVariables: Set<Variable> {
-		return reduce(lazy(typings.values).map { $0.freeVariables }, [], +)
+		return reduce(lazy(typings.values).map { $0.freeVariables }, [], uncurry(Set.union))
 	}
 
 
 	public func generalize(type: Type) -> Scheme {
-		return Scheme(type.freeVariables - freeVariables, type)
+		return Scheme(type.freeVariables.subtract(freeVariables), type)
 	}
 
 
@@ -40,4 +40,4 @@ public func / (environment: Environment, variable: Int) -> Environment {
 
 // MARK: - Imports
 
-import Set
+import Prelude

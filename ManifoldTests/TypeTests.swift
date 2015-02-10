@@ -3,12 +3,12 @@
 final class TypeTests: XCTestCase {
 	func testVariableTypesHaveOneFreeVariable() {
 		let variable = Variable()
-		assertEqual(Type(variable).freeVariables, Set(variable))
+		assertEqual(Type(variable).freeVariables, Set([ variable ]))
 	}
 
 	func testFunctionTypesDistributeFreeVariables() {
 		let variable = Variable()
-		assertEqual(Type(function: Type(variable), Type(variable)).freeVariables, Set(variable))
+		assertEqual(Type(function: Type(variable), Type(variable)).freeVariables, Set([ variable ]))
 	}
 }
 

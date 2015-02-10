@@ -15,7 +15,7 @@ public enum Type: Hashable {
 
 
 	public var freeVariables: Set<Manifold.Variable> {
-		return analysis({ [ $0 ] }, { $0.freeVariables + $1.freeVariables })
+		return analysis({ [ $0 ] }, { $0.freeVariables.union($1.freeVariables) })
 	}
 
 
