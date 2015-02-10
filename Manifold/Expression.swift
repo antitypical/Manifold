@@ -21,16 +21,11 @@ public enum Expression: Hashable {
 	// MARK: Hashable
 
 	public var hashValue: Int {
-		switch self {
-		case let Variable(v):
-			return v.hashValue
-
-		case let Abstraction(x, e):
-			return x.hashValue ^ e.value.hashValue
-
-		case let Application(e1, e2):
-			return e1.value.hashValue ^ e2.value.hashValue
-		}
+		return analysis(
+			{ $0.hashValue },
+			{ $0.hashValue ^ $1.hashValue },
+			{ $0.hashValue ^ $1.hashValue }
+		)
 	}
 }
 
