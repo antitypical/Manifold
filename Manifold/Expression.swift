@@ -6,19 +6,28 @@ public enum Expression: Hashable {
 	case Application(Box<Expression>, Box<Expression>)
 
 
+	public func analysis<T>(ifVariable: Int -> T, _ ifAbstraction: (Int, Expression) -> T, _ ifApplication: (Expression, Expression) -> T) -> T {
+		switch self {
+		case let Variable(v):
+			return ifVariable(v)
+
+		case let Abstraction(x, e):
+			return ifAbstraction(x, e.value)
+
+		case let Application(e1, e2):
+			return ifApplication(e1.value, e2.value)
+		}
+	}
+
+
 	// MARK: Hashable
 
 	public var hashValue: Int {
-		switch self {
-		case let Variable(v):
-			return v.hashValue
-
-		case let Abstraction(x, e):
-			return x.hashValue ^ e.value.hashValue
-
-		case let Application(e1, e2):
-			return e1.value.hashValue ^ e2.value.hashValue
-		}
+		return analysis(
+			{ $0.hashValue },
+			{ $0.hashValue ^ $1.hashValue },
+			{ $0.hashValue ^ $1.hashValue }
+		)
 	}
 }
 
