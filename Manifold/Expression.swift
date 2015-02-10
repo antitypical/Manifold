@@ -1,8 +1,21 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Expression: Equatable {
+public enum Expression: Hashable {
 	case Value(Manifold.Value)
 	case Application(Box<Expression>, Box<Expression>)
+
+
+	// MARK: Hashable
+
+	public var hashValue: Int {
+		switch self {
+		case let Value(v):
+			return v.hashValue
+
+		case let Application(e1, e2):
+			return e1.value.hashValue ^ e2.value.hashValue
+		}
+	}
 }
 
 public func == (left: Expression, right: Expression) -> Bool {
