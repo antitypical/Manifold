@@ -15,8 +15,8 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable {
 	}
 
 	public var occurringVariables: Set<Variable> {
-		let replacementVariables = reduce(lazy(elements.values).map { $0.freeVariables }, Set(), +)
-		return variables.intersection(replacementVariables)
+		let replacementVariables = reduce(lazy(elements.values).map { $0.freeVariables }, Set(), uncurry(Set.union))
+		return variables.intersect(replacementVariables)
 	}
 
 	public var isIdempotent: Bool {
@@ -66,4 +66,4 @@ internal func + <T: Hashable, U, S: SequenceType where S.Generator.Element == Di
 
 // MARK: - Imports
 
-import Set
+import Prelude

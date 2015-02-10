@@ -11,7 +11,7 @@ public struct Scheme {
 
 
 	public var freeVariables: Set<Variable> {
-		return type.freeVariables - variables
+		return type.freeVariables.subtract(variables)
 	}
 
 
