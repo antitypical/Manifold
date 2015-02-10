@@ -42,3 +42,19 @@ public enum Error: Printable, StringLiteralConvertible {
 		self.init(reason: value)
 	}
 }
+
+public func + (left: Error, right: Error) -> Error {
+	switch (left, right) {
+	case (.Leaf, .Leaf):
+		return .Branch([ left, right ])
+
+	case let (.Leaf, .Branch(errors)):
+		return .Branch([ left ] + errors)
+
+	case let (.Branch(errors), .Leaf):
+		return .Branch(errors + [ right ])
+
+	case let (.Branch(e1), .Branch(e2)):
+		return .Branch(e1 + e2)
+	}
+}
