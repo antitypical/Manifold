@@ -43,6 +43,8 @@ public enum Error: Printable, StringLiteralConvertible {
 	}
 }
 
+
+/// Constructs a composite error.
 public func + (left: Error, right: Error) -> Error {
 	switch (left, right) {
 	case (.Leaf, .Leaf):
@@ -58,6 +60,9 @@ public func + (left: Error, right: Error) -> Error {
 		return .Branch(e1 + e2)
 	}
 }
+
+
+/// The logical and of two Either<Error>s.
 public func && <A, B> (a: Either<Error, A>, b: Either<Error, B>) -> Either<Error, (A, B)> {
 	return a.either(
 		{ (a: Error) in b.either(
