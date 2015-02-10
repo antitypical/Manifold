@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Type: Equatable {
+public enum Type: Hashable {
 	public init(_ variable: Manifold.Variable) {
 		self = Variable(variable)
 	}
@@ -27,6 +27,16 @@ public enum Type: Equatable {
 		case let Function(t1, t2):
 			return ifFunction(t1.value, t2.value)
 		}
+	}
+
+
+	// MARK: Hashable
+
+	public var hashValue: Int {
+		return analysis(
+			{ $0.hashValue },
+			{ $0.hashValue ^ $1.hashValue }
+		)
 	}
 }
 

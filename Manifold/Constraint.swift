@@ -1,25 +1,25 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Constraint {
-	public init(_ c1: Constraint, and c2: Constraint) {
-		self = And(Box(c1), Box(c2))
+public enum Constraint: Hashable {
+	case Equality(Type, Type)
+
+
+	// MARK: Hashable
+
+	public var hashValue: Int {
+		switch self {
+		case let Equality(t1, t2):
+			return t1.hashValue ^ t2.hashValue
+		}
 	}
-
-	public init(exists: Variable, inConstraint: Constraint) {
-		self = Existential(exists, Box(inConstraint))
-	}
-
-	public init(_ t1: Type, equals t2: Type) {
-		self = Congruence(t1, t2)
-	}
-
-
-	case And(Box<Constraint>, Box<Constraint>)
-	case Existential(Variable, Box<Constraint>)
-	case Congruence(Type, Type)
 }
 
+public func == (left: Constraint, right: Constraint) -> Bool {
+	switch (left, right) {
+	case let (.Equality(x1, y1), .Equality(x2, y2)):
+		return x1 == x2 && y1 == y2
 
-// MARK: - Imports
-
-import Box
+	default:
+		return false
+	}
+}
