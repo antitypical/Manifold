@@ -3,18 +3,17 @@
 public typealias AssumptionSet = [Expression: Scheme]
 
 public func typeOf(expression: Expression, _ assumptions: AssumptionSet = [:], _ constraints: Multiset<Constraint> = []) -> Either<Error, (AssumptionSet, Multiset<Constraint>)> {
-	switch expression {
-	case let .Variable:
-		return .right([expression: Scheme([], Type(Variable()))], constraints)
 
-	default:
-		break
-	}
-	return .left("unimplemented")
+	return expression.analysis(
+		const(.right([expression: Scheme([], Type(Variable()))], constraints)),
+		const(.left("unimplemented")),
+		const(.left("unimplemented"))
+	)
 }
 
 
 // MARK: - Imports
 
 import Either
+import Prelude
 import Set
