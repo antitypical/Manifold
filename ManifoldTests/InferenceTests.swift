@@ -3,7 +3,7 @@
 final class InferenceTests: XCTestCase {
 	func testVariablesAreAssignedAFreshTypeVariable() {
 		let expression = Expression.Variable(0)
-		assertEqual(assertRight(typeOf(expression))?.0, [ expression: Scheme([], Type(Variable())) ])
+		assertEqual(assertRight(typeOf(expression))?.0, [ (expression, Scheme([], Type(Variable()))) ])
 	}
 }
 
