@@ -41,7 +41,7 @@ public enum Type: Hashable {
 }
 
 
-/// Equality defined up to substitution.
+/// Equality defined up to renaming.
 public func == (left: Type, right: Type) -> Bool {
 	switch (left, right) {
 	case (.Variable, .Variable):
