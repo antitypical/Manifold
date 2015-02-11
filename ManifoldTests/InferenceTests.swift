@@ -6,7 +6,7 @@ final class InferenceTests: XCTestCase {
 	}
 
 	func testApplicationsAreAssignedAFreshTypeVariable() {
-		let application = Expression(apply: 0, to: 0) // fixme: left operand should be an abstraction
+		let application = 0 <| 0 // fixme: left operand should be an abstraction
 		assertEqual(assertRight(typeOf(application))?.0, Type(Variable()))
 	}
 }
