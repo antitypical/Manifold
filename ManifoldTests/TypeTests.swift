@@ -10,6 +10,16 @@ final class TypeTests: XCTestCase {
 		let variable = Variable()
 		assertEqual(Type(function: Type(variable), Type(variable)).freeVariables, Set([ variable ]))
 	}
+
+	func testFreeVariablesIncludeTypeFreeVariables() {
+		let variable = Variable()
+		assertEqual(Type(forall: [], Type(variable)).freeVariables, Set([ variable ]))
+	}
+
+	func testFreeVariablesExcludeBoundVariables() {
+		let (a, b) = (Variable(), Variable())
+		assertEqual(Type(forall: [ a ], Type(function: Type(a), Type(b))).freeVariables, Set([ b ]))
+	}
 }
 
 

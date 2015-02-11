@@ -26,13 +26,9 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable {
 
 	public func apply(type: Type) -> Type {
 		return type.analysis(
-			{ self.elements[$0] ?? type },
-			{ Type(function: self.apply($0), self.apply($1)) }
-		)
-	}
-
-	public func apply(scheme: Scheme) -> Scheme {
-		return Scheme(scheme.variables, apply(scheme.type))
+			ifVariable: { self.elements[$0] ?? type },
+			ifFunction: { Type(function: self.apply($0), self.apply($1)) },
+			ifUniversal: { Type(forall: $0, self.apply($1)) })
 	}
 
 

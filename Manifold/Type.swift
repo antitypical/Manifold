@@ -9,23 +9,34 @@ public enum Type: Hashable {
 		self = Function(Box(t1), Box(t2))
 	}
 
-
-	case Variable(Manifold.Variable)
-	case Function(Box<Type>, Box<Type>)
-
-
-	public var freeVariables: Set<Manifold.Variable> {
-		return analysis({ [ $0 ] }, { $0.freeVariables.union($1.freeVariables) })
+	public init(forall a: Set<Manifold.Variable>, _ t: Type) {
+		self = Universal(a, Box(t))
 	}
 
 
-	public func analysis<T>(ifVariable: Manifold.Variable -> T, _ ifFunction: (Type, Type) -> T) -> T {
+	case Variable(Manifold.Variable)
+	case Function(Box<Type>, Box<Type>)
+	case Universal(Set<Manifold.Variable>, Box<Type>)
+
+
+	public var freeVariables: Set<Manifold.Variable> {
+		return analysis(
+			ifVariable: { [ $0 ] },
+			ifFunction: { $0.freeVariables.union($1.freeVariables) },
+			ifUniversal: { $1.freeVariables.subtract($0) })
+	}
+
+
+	public func analysis<T>(#ifVariable: Manifold.Variable -> T, ifFunction: (Type, Type) -> T, ifUniversal: (Set<Manifold.Variable>, Type) -> T) -> T {
 		switch self {
 		case let Variable(v):
 			return ifVariable(v)
 
 		case let Function(t1, t2):
 			return ifFunction(t1.value, t2.value)
+
+		case let Universal(a, t):
+			return ifUniversal(a, t.value)
 		}
 	}
 
@@ -34,8 +45,9 @@ public enum Type: Hashable {
 
 	public var hashValue: Int {
 		return analysis(
-			{ $0.hashValue },
-			{ $0.hashValue ^ $1.hashValue }
+			ifVariable: { $0.hashValue },
+			ifFunction: { $0.hashValue ^ $1.hashValue },
+			ifUniversal: { $0.hashValue ^ $1.hashValue }
 		)
 	}
 }
@@ -49,6 +61,9 @@ public func == (left: Type, right: Type) -> Bool {
 
 	case let (.Function(x1, x2), .Function(y1, y2)):
 		return x1.value == y1.value && x2.value == y2.value
+
+	case let (.Universal(a1, t1), .Universal(a2, t2)):
+		return a1 == a2 && t1 == t2
 
 	default:
 		return false

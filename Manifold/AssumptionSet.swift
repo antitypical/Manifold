@@ -1,7 +1,7 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public struct AssumptionSet: DictionaryLiteralConvertible, Equatable, SequenceType {
-	public subscript(variable: Int) -> [Scheme] {
+	public subscript(variable: Int) -> [Type] {
 		get { return assumptions[variable] ?? [] }
 		set { assumptions[variable] = self[variable] + newValue }
 	}
@@ -9,21 +9,21 @@ public struct AssumptionSet: DictionaryLiteralConvertible, Equatable, SequenceTy
 
 	// MARK: DictionaryLiteralConvertible
 
-	public init(dictionaryLiteral elements: (Int, [Scheme])...) {
+	public init(dictionaryLiteral elements: (Int, [Type])...) {
 		assumptions = [:] + elements
 	}
 
 
 	// MARK: SequenceType
 
-	public func generate() -> GeneratorOf<(Int, [Scheme])> {
+	public func generate() -> GeneratorOf<(Int, [Type])> {
 		return GeneratorOf(assumptions.generate())
 	}
 
 
 	// MARK: Private
 
-	private var assumptions: [Int: [Scheme]]
+	private var assumptions: [Int: [Type]]
 }
 
 
@@ -32,10 +32,15 @@ public func == (left: AssumptionSet, right: AssumptionSet) -> Bool {
 }
 
 
-public func + (left: AssumptionSet, right: AssumptionSet) -> AssumptionSet {
-	var result = left
+public func + (var left: AssumptionSet, right: AssumptionSet) -> AssumptionSet {
 	for (variable, schemes) in right {
-		result[variable] = result[variable] + schemes
+		left[variable] = left[variable] + schemes
 	}
-	return result
+	return left
+}
+
+
+public func / (var left: AssumptionSet, right: Int) -> AssumptionSet {
+	left.assumptions.removeValueForKey(right)
+	return left
 }

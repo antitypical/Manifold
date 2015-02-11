@@ -1,7 +1,7 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public struct Environment: DictionaryLiteralConvertible {
-	public init(_ bindings: [Int: Scheme]) {
+	public init(_ bindings: [Int: Type]) {
 		self.typings = bindings
 	}
 
@@ -11,25 +11,25 @@ public struct Environment: DictionaryLiteralConvertible {
 	}
 
 
-	public func generalize(type: Type) -> Scheme {
-		return Scheme(type.freeVariables.subtract(freeVariables), type)
+	public func generalize(type: Type) -> Type {
+		return Type(forall: type.freeVariables.subtract(freeVariables), type)
 	}
 
 
 	// MARK: DictionaryLiteralConvertible
 
-	public init(dictionaryLiteral elements: (Int, Scheme)...) {
+	public init(dictionaryLiteral elements: (Int, Type)...) {
 		self.init([:] + elements)
 	}
 
 
 	// MARK: Private
 
-	private init<S: SequenceType where S.Generator.Element == Dictionary<Int, Scheme>.Element>(_ sequence: S) {
+	private init<S: SequenceType where S.Generator.Element == Dictionary<Int, Type>.Element>(_ sequence: S) {
 		self.init([:] + sequence)
 	}
 
-	private let typings: [Int: Scheme]
+	private let typings: [Int: Type]
 }
 
 
