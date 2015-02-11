@@ -15,11 +15,13 @@ public enum Type: Hashable {
 
 
 	public var freeVariables: Set<Manifold.Variable> {
-		return analysis({ [ $0 ] }, { $0.freeVariables.union($1.freeVariables) })
+		return analysis(
+			ifVariable: { [ $0 ] },
+			ifFunction: { $0.freeVariables.union($1.freeVariables) })
 	}
 
 
-	public func analysis<T>(ifVariable: Manifold.Variable -> T, _ ifFunction: (Type, Type) -> T) -> T {
+	public func analysis<T>(#ifVariable: Manifold.Variable -> T, ifFunction: (Type, Type) -> T) -> T {
 		switch self {
 		case let Variable(v):
 			return ifVariable(v)
@@ -34,8 +36,8 @@ public enum Type: Hashable {
 
 	public var hashValue: Int {
 		return analysis(
-			{ $0.hashValue },
-			{ $0.hashValue ^ $1.hashValue }
+			ifVariable: { $0.hashValue },
+			ifFunction: { $0.hashValue ^ $1.hashValue }
 		)
 	}
 }
