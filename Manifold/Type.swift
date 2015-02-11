@@ -56,6 +56,15 @@ public func == (left: Type, right: Type) -> Bool {
 }
 
 
+infix operator --> {
+	associativity right
+}
+
+public func --> (left: Type, right: Type) -> Type {
+	return Type(function: left, right)
+}
+
+
 // MARK: - Imports
 
 import Box
