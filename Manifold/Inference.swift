@@ -7,7 +7,7 @@ public func typeOf(expression: Expression) -> Either<Error, (Type, assumptions: 
 		ifVariable: { v in
 			let type = Type(Variable())
 			return .right(type,
-				assumptions: [ v: [ Scheme([], type) ] ],
+				assumptions: [ v: [ Type(forall: [], type) ] ],
 				constraints: [])
 		},
 		ifAbstraction: const(.left("unimplemented")),
