@@ -1,6 +1,19 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public enum Expression: Hashable {
+	public init(variable: Int) {
+		self = Variable(variable)
+	}
+
+	public init(apply e1: Expression, to e2: Expression) {
+		self = Application(Box(e1), Box(e2))
+	}
+
+	public init(abstract x: Int, body: Expression) {
+		self = Abstraction(x, Box(body))
+	}
+
+
 	case Variable(Int)
 	case Abstraction(Int, Box<Expression>)
 	case Application(Box<Expression>, Box<Expression>)
