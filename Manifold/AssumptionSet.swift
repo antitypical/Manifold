@@ -32,10 +32,9 @@ public func == (left: AssumptionSet, right: AssumptionSet) -> Bool {
 }
 
 
-public func + (left: AssumptionSet, right: AssumptionSet) -> AssumptionSet {
-	var result = left
+public func + (var left: AssumptionSet, right: AssumptionSet) -> AssumptionSet {
 	for (variable, schemes) in right {
-		result[variable] = result[variable] + schemes
+		left[variable] = left[variable] + schemes
 	}
-	return result
+	return left
 }
