@@ -38,3 +38,9 @@ public func + (var left: AssumptionSet, right: AssumptionSet) -> AssumptionSet {
 	}
 	return left
 }
+
+
+public func / (var left: AssumptionSet, right: Int) -> AssumptionSet {
+	left.assumptions.removeValueForKey(right)
+	return left
+}
