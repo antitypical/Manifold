@@ -13,10 +13,10 @@ public func typeOf(expression: Expression) -> Either<Error, (Type, assumptions: 
 		ifAbstraction: const(.left("unimplemented")),
 		ifApplication: { e1, e2 in (typeOf(e1) && typeOf(e2)) >>- { e1, e2 in
 			let type = Type(Variable())
-			let c = e1.0 === (e2.0 --> type)
+			let constraints = [ e1.0 === (e2.0 --> type) ]
 			return .right(type,
 				assumptions: e1.assumptions + e2.assumptions,
-				constraints: e1.constraints + e2.constraints + [ c ])
+				constraints: e1.constraints + e2.constraints + constraints)
 		}})
 }
 
