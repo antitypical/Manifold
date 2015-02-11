@@ -8,8 +8,7 @@ public func typeOf(expression: Expression) -> Either<Error, (AssumptionSet, Cons
 	return expression.analysis(
 		{ .right([ ($0, Scheme([], Type(Variable()))) ], []) },
 		const(.left("unimplemented")),
-		{ (typeOf($0) && typeOf($1)) >>- {
-			.right($0.0 + $1.0, $0.1 + $1.1) } })
+		{ (typeOf($0) && typeOf($1)) >>- { .right($0.0 + $1.0, $0.1 + $1.1) } })
 }
 
 
