@@ -9,6 +9,10 @@ public enum Type: Hashable {
 		self = Function(Box(t1), Box(t2))
 	}
 
+	public init(forall a: Set<Manifold.Variable>, _ t: Type) {
+		self = Universal(a, Box(t))
+	}
+
 
 	case Variable(Manifold.Variable)
 	case Function(Box<Type>, Box<Type>)
