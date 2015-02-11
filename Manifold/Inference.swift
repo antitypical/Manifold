@@ -4,11 +4,11 @@ public typealias AssumptionSet = [(Expression, Scheme)]
 
 public typealias ConstraintSet = Multiset<Constraint>
 
-public func typeOf(expression: Expression, _ assumptions: AssumptionSet = [], _ constraints: ConstraintSet = []) -> Either<Error, (AssumptionSet, ConstraintSet)> {
+public func typeOf(expression: Expression) -> Either<Error, (AssumptionSet, ConstraintSet)> {
 	return expression.analysis(
-		const(.right([ (expression, Scheme([], Type(Variable()))) ], constraints)),
+		const(.right([ (expression, Scheme([], Type(Variable()))) ], [])),
 		const(.left("unimplemented")),
-		{ (typeOf($0, assumptions, constraints) && typeOf($1, assumptions, constraints)) >>- {
+		{ (typeOf($0) && typeOf($1)) >>- {
 			.right($0.0 + $1.0, $0.1 + $1.1) } })
 }
 
