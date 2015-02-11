@@ -10,7 +10,12 @@ public func typeOf(expression: Expression) -> Either<Error, (Type, assumptions: 
 				assumptions: [ v: [ Type(forall: [], type) ] ],
 				constraints: [])
 		},
-		ifAbstraction: const(.left("unimplemented")),
+		ifAbstraction: { x, e in typeOf(e) >>- { e in
+			let parameterType = Type(Variable())
+			return .right(parameterType --> e.0,
+				assumptions: e.assumptions / x,
+				constraints: e.constraints + lazy(e.assumptions[x]).map { $0 === parameterType })
+		}},
 		ifApplication: { e1, e2 in (typeOf(e1) && typeOf(e2)) >>- { e1, e2 in
 			let type = Type(Variable())
 			let constraints = [ e1.0 === (e2.0 --> type) ]
