@@ -68,6 +68,16 @@ public func == (left: Expression, right: Expression) -> Bool {
 }
 
 
+infix operator <| {
+	associativity left
+	precedence 95
+}
+
+public func <| (left: Expression, right: Expression) -> Expression {
+	return Expression(apply: left, to: right)
+}
+
+
 // MARK: - Imports
 
 import Box
