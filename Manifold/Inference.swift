@@ -2,11 +2,14 @@
 
 public typealias ConstraintSet = Multiset<Constraint>
 
-public func typeOf(expression: Expression) -> Either<Error, (AssumptionSet, ConstraintSet)> {
+public func typeOf(expression: Expression) -> Either<Error, (Type, AssumptionSet, ConstraintSet)> {
 	return expression.analysis(
-		{ .right([ $0: [ Scheme([], Type(Variable())) ] ], []) },
+		{ v in Type(Variable()) |> { type in .right(type, [ v: [ Scheme([], type) ] ], []) } },
 		const(.left("unimplemented")),
-		{ (typeOf($0) && typeOf($1)) >>- { .right($0.0 + $1.0, $0.1 + $1.1) } })
+		{ e1, e2 in (typeOf(e1) && typeOf(e2)) >>- { e1, e2 in
+			let type = Type(Variable())
+			let c = Constraint(equality: e1.0, Type(function: e2.0, type))
+			return .right(type, e1.1 + e2.1, e1.2 + e2.2 + [ c ]) } })
 }
 
 
