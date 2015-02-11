@@ -2,8 +2,15 @@
 
 final class InferenceTests: XCTestCase {
 	func testVariablesAreAssignedAFreshTypeVariable() {
-		let expression = Expression.Variable(0)
-		assertEqual(assertRight(typeOf(expression))?.0, [ expression: Scheme([], Type(Variable())) ])
+		let expression = Expression(variable: 0)
+		assertEqual(assertRight(typeOf(expression))?.0, Type(Variable()))
+	}
+
+	func testApplicationsAreAssignedAFreshTypeVariable() {
+		let function = Expression(variable: 0) // fixme: this should be an abstraction
+		let variable = Expression(variable: 1)
+		let application = Expression(apply: function, to: variable)
+		assertEqual(assertRight(typeOf(application))?.0, Type(Variable()))
 	}
 }
 

@@ -1,6 +1,11 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public enum Constraint: Hashable {
+	public init(equality t1: Type, _ t2: Type) {
+		self = Equality(t1, t2)
+	}
+
+
 	case Equality(Type, Type)
 
 

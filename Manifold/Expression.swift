@@ -1,12 +1,25 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public enum Expression: Hashable {
+	public init(variable: Int) {
+		self = Variable(variable)
+	}
+
+	public init(apply e1: Expression, to e2: Expression) {
+		self = Application(Box(e1), Box(e2))
+	}
+
+	public init(abstract x: Int, body: Expression) {
+		self = Abstraction(x, Box(body))
+	}
+
+
 	case Variable(Int)
 	case Abstraction(Int, Box<Expression>)
 	case Application(Box<Expression>, Box<Expression>)
 
 
-	public func analysis<T>(ifVariable: Int -> T, _ ifAbstraction: (Int, Expression) -> T, _ ifApplication: (Expression, Expression) -> T) -> T {
+	public func analysis<T>(#ifVariable: Int -> T, ifAbstraction: (Int, Expression) -> T, ifApplication: (Expression, Expression) -> T) -> T {
 		switch self {
 		case let Variable(v):
 			return ifVariable(v)
@@ -24,10 +37,9 @@ public enum Expression: Hashable {
 
 	public var hashValue: Int {
 		return analysis(
-			{ $0.hashValue },
-			{ $0.hashValue ^ $1.hashValue },
-			{ $0.hashValue ^ $1.hashValue }
-		)
+			ifVariable: { $0.hashValue },
+			ifAbstraction: { $0.hashValue ^ $1.hashValue },
+			ifApplication: { $0.hashValue ^ $1.hashValue })
 	}
 }
 
