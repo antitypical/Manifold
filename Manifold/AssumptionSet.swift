@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public struct AssumptionSet: DictionaryLiteralConvertible, SequenceType {
+public struct AssumptionSet: DictionaryLiteralConvertible, Equatable, SequenceType {
 	public subscript(variable: Int) -> [Scheme] {
 		get { return assumptions[variable] ?? [] }
 		set { assumptions[variable] = self[variable] + newValue }
@@ -24,6 +24,11 @@ public struct AssumptionSet: DictionaryLiteralConvertible, SequenceType {
 	// MARK: Private
 
 	private var assumptions: [Int: [Scheme]]
+}
+
+
+public func == (left: AssumptionSet, right: AssumptionSet) -> Bool {
+	return reduce(lazy(Set(left.assumptions.keys).union(right.assumptions.keys)).map { left[$0] == right[$0] }, true) { $0 && $1 }
 }
 
 
