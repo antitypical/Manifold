@@ -28,3 +28,7 @@ public func == (left: Constraint, right: Constraint) -> Bool {
 		return false
 	}
 }
+
+public func === (left: Type, right: Type) -> Constraint {
+	return Constraint(equality: left, right)
+}

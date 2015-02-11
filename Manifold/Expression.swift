@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Expression: Hashable {
+public enum Expression: Hashable, IntegerLiteralConvertible {
 	public init(variable: Int) {
 		self = Variable(variable)
 	}
@@ -41,6 +41,13 @@ public enum Expression: Hashable {
 			ifAbstraction: { $0.hashValue ^ $1.hashValue },
 			ifApplication: { $0.hashValue ^ $1.hashValue })
 	}
+
+
+	// MARK: IntegerLiteralConvertible
+
+	public init(integerLiteral: Int) {
+		self.init(variable: integerLiteral)
+	}
 }
 
 /// Equality up to renaming.
@@ -58,6 +65,16 @@ public func == (left: Expression, right: Expression) -> Bool {
 	default:
 		return false
 	}
+}
+
+
+infix operator <| {
+	associativity left
+	precedence 95
+}
+
+public func <| (left: Expression, right: Expression) -> Expression {
+	return Expression(apply: left, to: right)
 }
 
 
