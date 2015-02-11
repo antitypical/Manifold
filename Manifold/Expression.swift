@@ -78,6 +78,13 @@ public func <| (left: Expression, right: Expression) -> Expression {
 }
 
 
+infix operator .. {}
+
+public func .. (left: Int, right: Expression) -> Expression {
+	return Expression(abstract: left, body: right)
+}
+
+
 // MARK: - Imports
 
 import Box
