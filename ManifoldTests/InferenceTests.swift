@@ -9,6 +9,11 @@ final class InferenceTests: XCTestCase {
 		let application = 0 <| 0 // fixme: left operand should be an abstraction
 		assertEqual(assertRight(typeOf(application))?.0, Type(Variable()))
 	}
+
+	func testAbstractionsAreAssignedAFunctionType() {
+		let abstraction = 0 .. 0
+		assertEqual(assertRight(typeOf(abstraction))?.0, Type(Variable()) --> Type(Variable()))
+	}
 }
 
 
