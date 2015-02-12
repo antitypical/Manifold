@@ -2,7 +2,8 @@
 
 public typealias ConstraintSet = Multiset<Constraint>
 
-public func typeOf(expression: Expression) -> Either<Error, (Type, assumptions: AssumptionSet, constraints: ConstraintSet)> {
+/// Infers the type, assumptions, and constraints for a given `expression`.
+public func infer(expression: Expression) -> Either<Error, (Type, assumptions: AssumptionSet, constraints: ConstraintSet)> {
 	return expression.analysis(
 		ifVariable: { v in
 			let type = Type(Variable())
@@ -10,13 +11,13 @@ public func typeOf(expression: Expression) -> Either<Error, (Type, assumptions: 
 				assumptions: [ v: [ type ] ],
 				constraints: [])
 		},
-		ifAbstraction: { x, e in typeOf(e) >>- { e in
+		ifAbstraction: { x, e in infer(e) >>- { e in
 			let parameterType = Type(Variable())
 			return .right(parameterType --> e.0,
 				assumptions: e.assumptions / x,
 				constraints: e.constraints + lazy(e.assumptions[x]).map { $0 === parameterType })
 		}},
-		ifApplication: { e1, e2 in (typeOf(e1) && typeOf(e2)) >>- { e1, e2 in
+		ifApplication: { e1, e2 in (infer(e1) && infer(e2)) >>- { e1, e2 in
 			let type = Type(Variable())
 			let constraints = [ e1.0 === (e2.0 --> type) ]
 			return .right(type,
