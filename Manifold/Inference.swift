@@ -3,27 +3,29 @@
 public typealias ConstraintSet = Multiset<Constraint>
 
 /// Infers the type, assumptions, and constraints for a given `expression`.
-public func infer(expression: Expression) -> Either<Error, (Type, assumptions: AssumptionSet, constraints: ConstraintSet)> {
+public func infer(expression: Expression) -> (Type, assumptions: AssumptionSet, constraints: ConstraintSet) {
 	return expression.analysis(
 		ifVariable: { v in
 			let type = Type(Variable())
-			return .right(type,
+			return (type,
 				assumptions: [ v: [ type ] ],
 				constraints: [])
 		},
-		ifAbstraction: { x, e in infer(e) >>- { e in
+		ifAbstraction: { x, e in
+			let (type, a, c) = infer(e)
 			let parameterType = Type(Variable())
-			return .right(parameterType --> e.0,
-				assumptions: e.assumptions / x,
-				constraints: e.constraints + lazy(e.assumptions[x]).map { $0 === parameterType })
-		}},
-		ifApplication: { e1, e2 in (infer(e1) && infer(e2)) >>- { e1, e2 in
+			return (parameterType --> type,
+				assumptions: a / x,
+				constraints: c + lazy(a[x]).map { $0 === parameterType })
+		},
+		ifApplication: { e1, e2 in
+			let (t1, a1, c1) = infer(e1)
+			let (t2, a2, c2) = infer(e2)
 			let type = Type(Variable())
-			let constraints = [ e1.0 === (e2.0 --> type) ]
-			return .right(type,
-				assumptions: e1.assumptions + e2.assumptions,
-				constraints: e1.constraints + e2.constraints + constraints)
-		}})
+			return (type,
+				assumptions: a1 + a2,
+				constraints: c1 + c2 + [ t1 === (t2 --> type) ])
+		})
 }
 
 
