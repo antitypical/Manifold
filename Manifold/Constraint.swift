@@ -9,6 +9,14 @@ public enum Constraint: Hashable {
 	case Equality(Type, Type)
 
 
+	public var activeVariables: Set<Variable> {
+		switch self {
+		case let Equality(t1, t2):
+			return t1.freeVariables.union(t2.freeVariables)
+		}
+	}
+
+
 	// MARK: Hashable
 
 	public var hashValue: Int {
