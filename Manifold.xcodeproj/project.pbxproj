@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D40BBF601A8F243D00DD62AB /* DisjointSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40BBF5F1A8F243D00DD62AB /* DisjointSet.swift */; };
+		D40BBF621A8F246600DD62AB /* DisjointSetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40BBF611A8F246600DD62AB /* DisjointSetTests.swift */; };
 		D4B3FBF11A83515800DA2AC3 /* Manifold.h in Headers */ = {isa = PBXBuildFile; fileRef = D4B3FBF01A83515800DA2AC3 /* Manifold.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4B3FBFC1A83515800DA2AC3 /* Manifold.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4B3FBEB1A83515800DA2AC3 /* Manifold.framework */; };
 		D4B3FC0D1A8351ED00DA2AC3 /* Constraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B3FC0C1A8351ED00DA2AC3 /* Constraint.swift */; };
@@ -45,6 +46,7 @@
 
 /* Begin PBXFileReference section */
 		D40BBF5F1A8F243D00DD62AB /* DisjointSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisjointSet.swift; sourceTree = "<group>"; };
+		D40BBF611A8F246600DD62AB /* DisjointSetTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisjointSetTests.swift; sourceTree = "<group>"; };
 		D4B3FBEB1A83515800DA2AC3 /* Manifold.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Manifold.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4B3FBEF1A83515800DA2AC3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D4B3FBF01A83515800DA2AC3 /* Manifold.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Manifold.h; sourceTree = "<group>"; };
@@ -149,6 +151,7 @@
 			isa = PBXGroup;
 			children = (
 				D4EAE2421A87F4E700931323 /* Assertions.swift */,
+				D40BBF611A8F246600DD62AB /* DisjointSetTests.swift */,
 				D4EAE23D1A87F28900931323 /* TypeTests.swift */,
 				D4EAE2481A88092600931323 /* SubstitutionTests.swift */,
 				D4EAE25C1A889A3A00931323 /* InferenceTests.swift */,
@@ -289,6 +292,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D40BBF621A8F246600DD62AB /* DisjointSetTests.swift in Sources */,
 				D4EAE2491A88092600931323 /* SubstitutionTests.swift in Sources */,
 				D4EAE2431A87F4E700931323 /* Assertions.swift in Sources */,
 				D4EAE23E1A87F28900931323 /* TypeTests.swift in Sources */,
