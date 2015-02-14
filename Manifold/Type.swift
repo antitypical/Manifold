@@ -72,11 +72,10 @@ public enum Type: Hashable {
 }
 
 
-/// Equality defined up to renaming.
 public func == (left: Type, right: Type) -> Bool {
 	switch (left, right) {
-	case (.Variable, .Variable):
-		return true
+	case let (.Variable(x), .Variable(y)):
+		return x == y
 
 	case let (.Function(x1, x2), .Function(y1, y2)):
 		return x1.value == y1.value && x2.value == y2.value
