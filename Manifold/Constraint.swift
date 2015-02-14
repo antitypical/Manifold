@@ -10,9 +10,14 @@ public enum Constraint: Hashable {
 
 
 	public var activeVariables: Set<Variable> {
+		return analysis(ifEquality: { $0.freeVariables.union($1.freeVariables ) })
+	}
+
+
+	public func analysis<T>(#ifEquality: (Type, Type) -> T) -> T {
 		switch self {
 		case let Equality(t1, t2):
-			return t1.freeVariables.union(t2.freeVariables)
+			return ifEquality(t1, t2)
 		}
 	}
 
