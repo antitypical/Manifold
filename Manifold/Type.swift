@@ -19,6 +19,10 @@ public enum Type: Hashable {
 	case Universal(Set<Manifold.Variable>, Box<Type>)
 
 
+	public var isVariable: Bool {
+		return analysis(ifVariable: const(true), ifFunction: const(false), ifUniversal: const(false))
+	}
+
 	public var freeVariables: Set<Manifold.Variable> {
 		return analysis(
 			ifVariable: { [ $0 ] },
