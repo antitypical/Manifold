@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D40BBF601A8F243D00DD62AB /* DisjointSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40BBF5F1A8F243D00DD62AB /* DisjointSet.swift */; };
 		D4B3FBF11A83515800DA2AC3 /* Manifold.h in Headers */ = {isa = PBXBuildFile; fileRef = D4B3FBF01A83515800DA2AC3 /* Manifold.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4B3FBFC1A83515800DA2AC3 /* Manifold.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4B3FBEB1A83515800DA2AC3 /* Manifold.framework */; };
 		D4B3FC031A83515800DA2AC3 /* ManifoldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B3FC021A83515800DA2AC3 /* ManifoldTests.swift */; };
@@ -44,6 +45,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D40BBF5F1A8F243D00DD62AB /* DisjointSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DisjointSet.swift; sourceTree = "<group>"; };
 		D4B3FBEB1A83515800DA2AC3 /* Manifold.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Manifold.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4B3FBEF1A83515800DA2AC3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D4B3FBF01A83515800DA2AC3 /* Manifold.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Manifold.h; sourceTree = "<group>"; };
@@ -127,6 +129,7 @@
 				D4EAE2461A87F95200931323 /* Substitution.swift */,
 				D4EAE25A1A889A2200931323 /* Inference.swift */,
 				D4D23F931A8AE58F00C4698C /* AssumptionSet.swift */,
+				D40BBF5F1A8F243D00DD62AB /* DisjointSet.swift */,
 				D4B3FBEE1A83515800DA2AC3 /* Supporting Files */,
 			);
 			path = Manifold;
@@ -274,6 +277,7 @@
 			files = (
 				D4B3FC0D1A8351ED00DA2AC3 /* Constraint.swift in Sources */,
 				D4F9F8611A84694600B7071E /* Variable.swift in Sources */,
+				D40BBF601A8F243D00DD62AB /* DisjointSet.swift in Sources */,
 				D4B3FC191A835A7200DA2AC3 /* Environment.swift in Sources */,
 				D4B3FC0F1A8351F400DA2AC3 /* Type.swift in Sources */,
 				D4EAE25B1A889A2200931323 /* Inference.swift in Sources */,
