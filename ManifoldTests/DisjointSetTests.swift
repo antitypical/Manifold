@@ -9,6 +9,12 @@ final class DisjointSetTests: XCTestCase {
 			failure("it didn't work")
 		}
 	}
+
+	func testUnionCombinesPartitions() {
+		var set: DisjointSet<String> = [ "a", "b", "c", "d", "e" ]
+		set.union(1, 3)
+		assertEqual(set.findAll().count, 4)
+	}
 }
 
 
