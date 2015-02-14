@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public struct DisjointSet<T> {
+public struct DisjointSet<T>: ArrayLiteralConvertible {
 	public mutating func union(a: Int, b: Int) {
 		let (r1, r2) = (find(a), find(b))
 		let (n1, n2) = (sets[r1], sets[r2])
@@ -25,6 +25,13 @@ public struct DisjointSet<T> {
 			sets[a].parent = parent
 			return parent
 		}
+	}
+
+
+	// MARK: ArrayLiteralConvertible
+
+	public init(arrayLiteral elements: T...) {
+		sets = map(enumerate(elements)) { (parent: $0, rank: 0, value: $1) }
 	}
 
 
