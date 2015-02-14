@@ -6,6 +6,14 @@ public struct DisjointSet<T>: ArrayLiteralConvertible, SequenceType {
 	}
 
 
+	/// The number of elements in the set.
+	///
+	/// This is distinct from the number of partitions in the set.
+	public var count: Int {
+		return sets.count
+	}
+
+
 	public mutating func union(a: Int, _ b: Int) {
 		let (r1, r2) = (find(a), find(b))
 		let (n1, n2) = (sets[r1], sets[r2])
