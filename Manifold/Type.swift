@@ -27,6 +27,16 @@ public enum Type: Hashable {
 	}
 
 
+	public func instantiate() -> Type {
+		return analysis(
+			ifVariable: const(self),
+			ifFunction: const(self),
+			ifUniversal: { parameters, type in
+				Substitution(lazy(parameters).map { ($0, Type(Manifold.Variable())) }).apply(type)
+			})
+	}
+
+
 	public func analysis<T>(#ifVariable: Manifold.Variable -> T, ifFunction: (Type, Type) -> T, ifUniversal: (Set<Manifold.Variable>, Type) -> T) -> T {
 		switch self {
 		case let Variable(v):
@@ -83,4 +93,5 @@ public func --> (left: Type, right: Type) -> Type {
 // MARK: - Imports
 
 import Box
+import Prelude
 import Set
