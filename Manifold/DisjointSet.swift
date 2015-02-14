@@ -1,6 +1,11 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public struct DisjointSet<T>: ArrayLiteralConvertible {
+	public init<S: SequenceType where S.Generator.Element == T>(_ sequence: S) {
+		sets = map(enumerate(sequence)) { (parent: $0, rank: 0, value: $1) }
+	}
+
+
 	public mutating func union(a: Int, b: Int) {
 		let (r1, r2) = (find(a), find(b))
 		let (n1, n2) = (sets[r1], sets[r2])
@@ -31,7 +36,7 @@ public struct DisjointSet<T>: ArrayLiteralConvertible {
 	// MARK: ArrayLiteralConvertible
 
 	public init(arrayLiteral elements: T...) {
-		sets = map(enumerate(elements)) { (parent: $0, rank: 0, value: $1) }
+		self.init(elements)
 	}
 
 
