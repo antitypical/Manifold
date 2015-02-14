@@ -23,6 +23,11 @@ public enum Type: Hashable {
 		return analysis(ifVariable: const(true), ifFunction: const(false), ifUniversal: const(false))
 	}
 
+	public var isFunction: Bool {
+		return analysis(ifVariable: const(false), ifFunction: const(true), ifUniversal: const(false))
+	}
+
+
 	public var freeVariables: Set<Manifold.Variable> {
 		return analysis(
 			ifVariable: { [ $0 ] },
