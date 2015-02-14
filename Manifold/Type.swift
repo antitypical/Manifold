@@ -36,6 +36,16 @@ public enum Type: Hashable {
 	}
 
 
+	public var distinctTypes: Set<Type> {
+		return analysis(
+			ifVariable: const([ self ]),
+			ifFunction: { $0.distinctTypes.union($1.distinctTypes) },
+			ifUniversal: {
+				$1.distinctTypes
+			})
+	}
+
+
 	public func instantiate() -> Type {
 		return analysis(
 			ifVariable: const(self),
