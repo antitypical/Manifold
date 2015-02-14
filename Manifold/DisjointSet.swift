@@ -6,7 +6,7 @@ public struct DisjointSet<T>: ArrayLiteralConvertible {
 	}
 
 
-	public mutating func union(a: Int, b: Int) {
+	public mutating func union(a: Int, _ b: Int) {
 		let (r1, r2) = (find(a), find(b))
 		let (n1, n2) = (sets[r1], sets[r2])
 		if r1 != r2 {
