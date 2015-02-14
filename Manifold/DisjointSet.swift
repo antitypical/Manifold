@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public struct DisjointSet<T>: ArrayLiteralConvertible {
+public struct DisjointSet<T>: ArrayLiteralConvertible, SequenceType {
 	public init<S: SequenceType where S.Generator.Element == T>(_ sequence: S) {
 		sets = map(enumerate(sequence)) { (parent: $0, rank: 0, value: $1) }
 	}
@@ -37,6 +37,13 @@ public struct DisjointSet<T>: ArrayLiteralConvertible {
 
 	public init(arrayLiteral elements: T...) {
 		self.init(elements)
+	}
+
+
+	// MARK: SequenceType
+
+	public func generate() -> GeneratorOf<T> {
+		return GeneratorOf(lazy(sets).map { $2 }.generate())
 	}
 
 
