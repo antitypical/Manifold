@@ -14,6 +14,13 @@ public struct DisjointSet<T>: ArrayLiteralConvertible, SequenceType {
 	}
 
 
+	public mutating func findAll() -> Set<Int> {
+		return Set(lazy(sets)
+			.map { $0.0 }
+			.map(find))
+	}
+
+
 	public mutating func union(a: Int, _ b: Int) {
 		let (r1, r2) = (find(a), find(b))
 		let (n1, n2) = (sets[r1], sets[r2])
