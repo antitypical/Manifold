@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public struct DisjointSet {
+public struct DisjointSet<T> {
 	public mutating func union(a: Int, b: Int) {
 		let (r1, r2) = (find(a), find(b))
 		let (n1, n2) = (sets[r1], sets[r2])
@@ -30,5 +30,5 @@ public struct DisjointSet {
 
 	// MARK: Private
 
-	private var sets: [(parent: Int, rank: Int)]
+	private var sets: [(parent: Int, rank: Int, value: T)]
 }
