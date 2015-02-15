@@ -14,6 +14,12 @@ public enum Type: Hashable {
 	}
 
 
+	enum BaseType {
+		case Unit
+		case Bool
+	}
+
+
 	case Variable(Manifold.Variable)
 	case Function(Box<Type>, Box<Type>)
 	case Universal(Set<Manifold.Variable>, Box<Type>)
