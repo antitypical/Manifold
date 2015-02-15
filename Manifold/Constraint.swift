@@ -25,10 +25,8 @@ public enum Constraint: Hashable, Printable {
 	// MARK: Hashable
 
 	public var hashValue: Int {
-		switch self {
-		case let Equality(t1, t2):
-			return t1.hashValue ^ t2.hashValue
-		}
+		return analysis(
+			ifEquality: { $0.hashValue ^ $1.hashValue })
 	}
 
 
