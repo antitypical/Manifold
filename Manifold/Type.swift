@@ -182,6 +182,27 @@ public func --> (left: Type.BaseType, right: Type.BaseType) -> Type {
 }
 
 
+// MARK: - Implementation details
+
+extension Int {
+	private var digits: [UInt32] {
+		var digits: [UInt32] = []
+		var remainder = self
+		do {
+			digits.append(UInt32(remainder % 10))
+			remainder /= 10
+		} while remainder > 0
+
+		return digits.reverse()
+	}
+
+	private var subscriptedDescription: String {
+		let zero: UnicodeScalar = "₀"
+		return String(lazy(digits).map { Character(UnicodeScalar(zero.value + $0)) })
+	}
+}
+
+
 // MARK: - Imports
 
 import Box
