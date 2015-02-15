@@ -52,6 +52,8 @@ public enum Type: Hashable {
 	case Universal(Set<Manifold.Variable>, Box<Type>)
 
 
+	// MARK: Categorization
+
 	public var isVariable: Bool {
 		return analysis(
 			ifBase: const(false),
@@ -68,6 +70,8 @@ public enum Type: Hashable {
 			ifUniversal: const(false))
 	}
 
+
+	// MARK: Composition
 
 	public var freeVariables: Set<Manifold.Variable> {
 		return analysis(
@@ -88,6 +92,8 @@ public enum Type: Hashable {
 			})
 	}
 
+
+	// MARK: Transformation
 
 	public func instantiate() -> Type {
 		return analysis(
