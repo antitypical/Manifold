@@ -3,8 +3,11 @@
 public struct Variable: Hashable, IntegerLiteralConvertible, Printable {
 	/// Constructs a fresh type variable.
 	public init() {
-		self.value = Variable.cursor++
+		value = Variable.cursor++
 	}
+
+
+	public let value: Int
 
 
 	// MARK: Hashable
@@ -31,8 +34,6 @@ public struct Variable: Hashable, IntegerLiteralConvertible, Printable {
 	// MARK: Private
 
 	private static var cursor = 0
-
-	private let value: Int
 }
 
 
