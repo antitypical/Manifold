@@ -14,7 +14,7 @@ public enum Type: Hashable {
 	}
 
 
-	public enum BaseType {
+	public enum BaseType: Equatable {
 		case Unit
 		case Bool
 
@@ -108,6 +108,17 @@ public func == (left: Type, right: Type) -> Bool {
 
 	case let (.Universal(a1, t1), .Universal(a2, t2)):
 		return a1 == a2 && t1 == t2
+
+	default:
+		return false
+	}
+}
+
+
+public func == (left: Type.BaseType, right: Type.BaseType) -> Bool {
+	switch (left, right) {
+	case (.Unit, .Unit), (.Bool, .Bool):
+		return true
 
 	default:
 		return false
