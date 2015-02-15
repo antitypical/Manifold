@@ -16,11 +16,11 @@
 		D4B3FC191A835A7200DA2AC3 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B3FC181A835A7200DA2AC3 /* Environment.swift */; };
 		D4B4AA521A9027710089A5F2 /* DisjointSet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4B4AA511A9027710089A5F2 /* DisjointSet.framework */; };
 		D4B4AA531A9027950089A5F2 /* DisjointSet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4B4AA511A9027710089A5F2 /* DisjointSet.framework */; };
+		D4B4AA551A902A6F0089A5F2 /* Assertions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4B4AA541A902A6F0089A5F2 /* Assertions.framework */; };
 		D4D23F941A8AE58F00C4698C /* AssumptionSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D23F931A8AE58F00C4698C /* AssumptionSet.swift */; };
 		D4EAE23E1A87F28900931323 /* TypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EAE23D1A87F28900931323 /* TypeTests.swift */; };
 		D4EAE2401A87F45500931323 /* Set.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4EAE23F1A87F45500931323 /* Set.framework */; };
 		D4EAE2411A87F46F00931323 /* Set.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4EAE23F1A87F45500931323 /* Set.framework */; };
-		D4EAE2431A87F4E700931323 /* Assertions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EAE2421A87F4E700931323 /* Assertions.swift */; };
 		D4EAE2471A87F95200931323 /* Substitution.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EAE2461A87F95200931323 /* Substitution.swift */; };
 		D4EAE2491A88092600931323 /* SubstitutionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EAE2481A88092600931323 /* SubstitutionTests.swift */; };
 		D4EAE25B1A889A2200931323 /* Inference.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EAE25A1A889A2200931323 /* Inference.swift */; };
@@ -57,10 +57,10 @@
 		D4B3FC141A83527B00DA2AC3 /* Box.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Box.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4B3FC181A835A7200DA2AC3 /* Environment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		D4B4AA511A9027710089A5F2 /* DisjointSet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = DisjointSet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4B4AA541A902A6F0089A5F2 /* Assertions.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Assertions.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4D23F931A8AE58F00C4698C /* AssumptionSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssumptionSet.swift; sourceTree = "<group>"; };
 		D4EAE23D1A87F28900931323 /* TypeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeTests.swift; sourceTree = "<group>"; };
 		D4EAE23F1A87F45500931323 /* Set.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Set.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D4EAE2421A87F4E700931323 /* Assertions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Assertions.swift; sourceTree = "<group>"; };
 		D4EAE2461A87F95200931323 /* Substitution.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Substitution.swift; sourceTree = "<group>"; };
 		D4EAE2481A88092600931323 /* SubstitutionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubstitutionTests.swift; sourceTree = "<group>"; };
 		D4EAE25A1A889A2200931323 /* Inference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Inference.swift; sourceTree = "<group>"; };
@@ -89,6 +89,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4B4AA551A902A6F0089A5F2 /* Assertions.framework in Frameworks */,
 				D4B4AA531A9027950089A5F2 /* DisjointSet.framework in Frameworks */,
 				D4F9F86C1A84970900B7071E /* Prelude.framework in Frameworks */,
 				D4F9F8661A84959600B7071E /* Box.framework in Frameworks */,
@@ -154,7 +155,6 @@
 		D4B3FBFF1A83515800DA2AC3 /* ManifoldTests */ = {
 			isa = PBXGroup;
 			children = (
-				D4EAE2421A87F4E700931323 /* Assertions.swift */,
 				D4EAE23D1A87F28900931323 /* TypeTests.swift */,
 				D4EAE2481A88092600931323 /* SubstitutionTests.swift */,
 				D4EAE25C1A889A3A00931323 /* InferenceTests.swift */,
@@ -166,6 +166,7 @@
 		D4B3FC001A83515800DA2AC3 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				D4B4AA541A902A6F0089A5F2 /* Assertions.framework */,
 				D4B3FC011A83515800DA2AC3 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -296,7 +297,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4EAE2491A88092600931323 /* SubstitutionTests.swift in Sources */,
-				D4EAE2431A87F4E700931323 /* Assertions.swift in Sources */,
 				D4EAE23E1A87F28900931323 /* TypeTests.swift in Sources */,
 				D4EAE25D1A889A3A00931323 /* InferenceTests.swift in Sources */,
 			);

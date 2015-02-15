@@ -25,6 +25,7 @@ final class TypeTests: XCTestCase {
 
 // MARK: - Imports
 
+import Assertions
 import Manifold
 import Set
 import XCTest

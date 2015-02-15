@@ -19,6 +19,7 @@ final class InferenceTests: XCTestCase {
 
 // MARK: - Imports
 
+import Assertions
 import Manifold
 import Prelude
 import XCTest
