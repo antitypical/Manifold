@@ -17,6 +17,16 @@ public enum Type: Hashable {
 	enum BaseType {
 		case Unit
 		case Bool
+
+
+		func analysis<T>(@autoclosure #ifUnit: () -> T, @autoclosure ifBool: () -> T) -> T {
+			switch self {
+			case Unit:
+				return ifUnit()
+			case Bool:
+				return ifBool()
+			}
+		}
 	}
 
 
