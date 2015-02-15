@@ -32,9 +32,7 @@ public enum Type: Hashable {
 		// MARK: Hashable
 
 		public var hashValue: Int {
-			return analysis(
-				ifUnit: "Unit".hashValue,
-				ifBool: "Bool".hashValue)
+			return description.hashValue
 		}
 
 
