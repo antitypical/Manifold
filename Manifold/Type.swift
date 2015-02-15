@@ -86,10 +86,8 @@ public enum Type: Hashable, Printable {
 		return analysis(
 			ifBase: const([ self ]),
 			ifVariable: const([ self ]),
-			ifFunction: { $0.distinctTypes.union($1.distinctTypes) },
-			ifUniversal: {
-				$1.distinctTypes
-			})
+			ifFunction: { $0.distinctTypes.union($1.distinctTypes).union([ self ]) },
+			ifUniversal: { $1.distinctTypes.union([ self ]) })
 	}
 
 	public var quantifiedType: Type? {
