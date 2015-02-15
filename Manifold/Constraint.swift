@@ -64,4 +64,5 @@ func typeGraph(constraints: ConstraintSet) -> DisjointSet<Type> {
 
 // MARK: - Imports
 
+import DisjointSet
 import Set

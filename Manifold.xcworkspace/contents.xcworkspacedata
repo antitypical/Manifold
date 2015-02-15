@@ -8,6 +8,9 @@
       location = "group:External/Box/Box.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:External/DisjointSet/DisjointSet.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:External/Either/Either.xcodeproj">
    </FileRef>
    <FileRef
