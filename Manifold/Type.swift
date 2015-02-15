@@ -71,7 +71,7 @@ public enum Type: Hashable {
 	}
 
 
-	// MARK: Composition
+	// MARK: Decomposition
 
 	public var freeVariables: Set<Manifold.Variable> {
 		return analysis(
@@ -90,6 +90,14 @@ public enum Type: Hashable {
 			ifUniversal: {
 				$1.distinctTypes
 			})
+	}
+
+	public var quantifiedType: Type? {
+		return analysis(
+			ifBase: const(nil),
+			ifVariable: const(nil),
+			ifFunction: const(nil),
+			ifUniversal: { $1.quantifiedType ?? $1 })
 	}
 
 
