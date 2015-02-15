@@ -52,11 +52,17 @@ public enum Type: Hashable {
 
 
 	public var isVariable: Bool {
-		return analysis(ifVariable: const(true), ifFunction: const(false), ifUniversal: const(false))
+		return analysis(
+			ifVariable: const(true),
+			ifFunction: const(false),
+			ifUniversal: const(false))
 	}
 
 	public var isFunction: Bool {
-		return analysis(ifVariable: const(false), ifFunction: const(true), ifUniversal: const(false))
+		return analysis(
+			ifVariable: const(false),
+			ifFunction: const(true),
+			ifUniversal: const(false))
 	}
 
 
