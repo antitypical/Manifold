@@ -14,7 +14,7 @@ public enum Type: Hashable {
 	}
 
 
-	public enum BaseType: Hashable {
+	public enum BaseType: Hashable, Printable {
 		case Unit
 		case Bool
 
@@ -35,6 +35,15 @@ public enum Type: Hashable {
 			return analysis(
 				ifUnit: "Unit".hashValue,
 				ifBool: "Bool".hashValue)
+		}
+
+
+		// MARK: Printable
+
+		public var description: String {
+			return analysis(
+				ifUnit: "Unit",
+				ifBool: "Bool")
 		}
 	}
 
