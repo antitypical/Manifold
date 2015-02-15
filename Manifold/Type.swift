@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Type: Hashable {
+public enum Type: Hashable, Printable {
 	public init(_ variable: Manifold.Variable) {
 		self = Variable(variable)
 	}
@@ -140,6 +140,32 @@ public enum Type: Hashable {
 			ifFunction: { $0.hashValue ^ $1.hashValue },
 			ifUniversal: { $0.hashValue ^ $1.hashValue }
 		)
+	}
+
+
+	// MARK: Printable
+
+	public var description: String {
+		return describe()
+	}
+
+	private func describe(_ boundVariables: Set<Manifold.Variable> = []) -> String {
+		let bound = "α"
+		let free = "τ"
+		return analysis(
+			ifBase: { $0.description },
+			ifVariable: { (boundVariables.contains($0) ? bound : free) + $0.value.subscriptedDescription },
+			ifFunction: { t1, t2 in
+				let parameter = t1.describe(boundVariables) |> { t1.quantifiedType?.isFunction ?? t1.isFunction ? "(\($0))" : $0 }
+				return "\(parameter) → \(t2.describe(boundVariables))"
+			},
+			ifUniversal: {
+				let variables = lazy($0)
+					.map { bound + $0.value.subscriptedDescription }
+					|> sorted
+					|> (join <| ",")
+				return "∀{\(variables)}.\($1.describe(boundVariables.union($0)))"
+			})
 	}
 }
 
