@@ -20,6 +20,12 @@ final class TypeTests: XCTestCase {
 		let (a, b) = (Variable(), Variable())
 		assertEqual(Type(forall: [ a ], Type(function: Type(a), Type(b))).freeVariables, Set([ b ]))
 	}
+
+
+	func testFunctionTypesPrintWithArrow() {
+		let t: Type = .Bool --> .Bool
+		println(t)
+	}
 }
 
 

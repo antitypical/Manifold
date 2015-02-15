@@ -169,6 +169,18 @@ public func --> (left: Type, right: Type) -> Type {
 	return Type(function: left, right)
 }
 
+public func --> (left: Type.BaseType, right: Type) -> Type {
+	return Type(function: .Base(left), right)
+}
+
+public func --> (left: Type, right: Type.BaseType) -> Type {
+	return Type(function: left, .Base(right))
+}
+
+public func --> (left: Type.BaseType, right: Type.BaseType) -> Type {
+	return Type(function: .Base(left), .Base(right))
+}
+
 
 // MARK: - Imports
 
