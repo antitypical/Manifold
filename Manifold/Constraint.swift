@@ -51,14 +51,14 @@ public func === (left: Type, right: Type) -> Constraint {
 
 public typealias ConstraintSet = Multiset<Constraint>
 
-func typeGraph(constraints: ConstraintSet) -> DisjointSet<Type> {
-	let types = lazy(constraints)
+func typeGraph(constraints: ConstraintSet) -> (DisjointSet<Type>, [Type: Int]) {
+	let typeGraph = DisjointSet(lazy(constraints)
 		.flatMap {
 			$0.analysis(ifEquality: {
 				$0.instantiate().distinctTypes.union($1.instantiate().distinctTypes)
 			})
-		}
-	return DisjointSet(types)
+		})
+	return (typeGraph, Dictionary(lazy(enumerate(typeGraph)).map { ($1, $0) }))
 }
 
 
