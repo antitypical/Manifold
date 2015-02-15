@@ -105,9 +105,9 @@ public enum Type: Hashable, Printable {
 		return analysis(
 			ifBase: const(self),
 			ifVariable: const(self),
-			ifFunction: const(self),
+			ifFunction: { Type(function: $0.instantiate(), $1.instantiate()) },
 			ifUniversal: { parameters, type in
-				Substitution(lazy(parameters).map { ($0, Type(Manifold.Variable())) }).apply(type)
+				Substitution(lazy(parameters).map { ($0, Type(Manifold.Variable())) }).apply(type.instantiate())
 			})
 	}
 
