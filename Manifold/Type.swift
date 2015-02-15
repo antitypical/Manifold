@@ -46,6 +46,7 @@ public enum Type: Hashable {
 	}
 
 
+	case Base(BaseType)
 	case Variable(Manifold.Variable)
 	case Function(Box<Type>, Box<Type>)
 	case Universal(Set<Manifold.Variable>, Box<Type>)
@@ -53,6 +54,7 @@ public enum Type: Hashable {
 
 	public var isVariable: Bool {
 		return analysis(
+			ifBase: const(false),
 			ifVariable: const(true),
 			ifFunction: const(false),
 			ifUniversal: const(false))
@@ -60,6 +62,7 @@ public enum Type: Hashable {
 
 	public var isFunction: Bool {
 		return analysis(
+			ifBase: const(false),
 			ifVariable: const(false),
 			ifFunction: const(true),
 			ifUniversal: const(false))
@@ -68,6 +71,7 @@ public enum Type: Hashable {
 
 	public var freeVariables: Set<Manifold.Variable> {
 		return analysis(
+			ifBase: const([]),
 			ifVariable: { [ $0 ] },
 			ifFunction: { $0.freeVariables.union($1.freeVariables) },
 			ifUniversal: { $1.freeVariables.subtract($0) })
@@ -76,6 +80,7 @@ public enum Type: Hashable {
 
 	public var distinctTypes: Set<Type> {
 		return analysis(
+			ifBase: const([ self ]),
 			ifVariable: const([ self ]),
 			ifFunction: { $0.distinctTypes.union($1.distinctTypes) },
 			ifUniversal: {
@@ -86,6 +91,7 @@ public enum Type: Hashable {
 
 	public func instantiate() -> Type {
 		return analysis(
+			ifBase: const(self),
 			ifVariable: const(self),
 			ifFunction: const(self),
 			ifUniversal: { parameters, type in
@@ -94,8 +100,11 @@ public enum Type: Hashable {
 	}
 
 
-	public func analysis<T>(#ifVariable: Manifold.Variable -> T, ifFunction: (Type, Type) -> T, ifUniversal: (Set<Manifold.Variable>, Type) -> T) -> T {
+	public func analysis<T>(#ifBase: BaseType -> T, ifVariable: Manifold.Variable -> T, ifFunction: (Type, Type) -> T, ifUniversal: (Set<Manifold.Variable>, Type) -> T) -> T {
 		switch self {
+		case let Base(t):
+			return ifBase(t)
+
 		case let Variable(v):
 			return ifVariable(v)
 
@@ -112,6 +121,7 @@ public enum Type: Hashable {
 
 	public var hashValue: Int {
 		return analysis(
+			ifBase: { $0.hashValue },
 			ifVariable: { $0.hashValue },
 			ifFunction: { $0.hashValue ^ $1.hashValue },
 			ifUniversal: { $0.hashValue ^ $1.hashValue }
@@ -122,6 +132,9 @@ public enum Type: Hashable {
 
 public func == (left: Type, right: Type) -> Bool {
 	switch (left, right) {
+	case let (.Base(b1), .Base(b2)):
+		return b1 == b2
+
 	case let (.Variable(x), .Variable(y)):
 		return x == y
 
