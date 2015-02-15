@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Constraint: Hashable {
+public enum Constraint: Hashable, Printable {
 	public init(equality t1: Type, _ t2: Type) {
 		self = Equality(t1, t2)
 	}
@@ -29,6 +29,14 @@ public enum Constraint: Hashable {
 		case let Equality(t1, t2):
 			return t1.hashValue ^ t2.hashValue
 		}
+	}
+
+
+	// MARK: Printable
+
+	public var description: String {
+		return analysis(
+			ifEquality: { "\($0) ≡ \($1)" })
 	}
 }
 
