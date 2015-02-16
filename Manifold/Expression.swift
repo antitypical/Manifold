@@ -46,13 +46,18 @@ public enum Expression: Hashable, IntegerLiteralConvertible {
 		}
 	}
 
+
+	case Constant(ConstantExpression)
 	case Variable(Int)
 	case Abstraction(Int, Box<Expression>)
 	case Application(Box<Expression>, Box<Expression>)
 
 
-	public func analysis<T>(#ifVariable: Int -> T, ifAbstraction: (Int, Expression) -> T, ifApplication: (Expression, Expression) -> T) -> T {
+	public func analysis<T>(#ifConstant: ConstantExpression -> T, ifVariable: Int -> T, ifAbstraction: (Int, Expression) -> T, ifApplication: (Expression, Expression) -> T) -> T {
 		switch self {
+		case let Constant(c):
+			return ifConstant(c)
+
 		case let Variable(v):
 			return ifVariable(v)
 
@@ -69,6 +74,7 @@ public enum Expression: Hashable, IntegerLiteralConvertible {
 
 	public var hashValue: Int {
 		return analysis(
+			ifConstant: { $0.hashValue },
 			ifVariable: { $0.hashValue },
 			ifAbstraction: { $0.hashValue ^ $1.hashValue },
 			ifApplication: { $0.hashValue ^ $1.hashValue })
