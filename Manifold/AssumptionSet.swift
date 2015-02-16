@@ -29,7 +29,9 @@ public struct AssumptionSet: DictionaryLiteralConvertible, Equatable, Printable,
 			}
 			|> sorted
 			|> (join <| "")
-		return "{ \(s) }"
+		return assumptions.count > 0 ?
+			"{ \(s) }"
+		:	"{}"
 	}
 
 
