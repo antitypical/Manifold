@@ -18,6 +18,18 @@ public enum Expression: Hashable, IntegerLiteralConvertible {
 		case Unit
 		case Bool(Swift.Bool)
 
+
+		public func analysis<T>(#ifUnit: () -> T, ifBool: Swift.Bool -> T) -> T {
+			switch self {
+			case Unit:
+				return ifUnit()
+
+			case let Bool(b):
+				return ifBool(b)
+			}
+		}
+	}
+
 	case Variable(Int)
 	case Abstraction(Int, Box<Expression>)
 	case Application(Box<Expression>, Box<Expression>)
