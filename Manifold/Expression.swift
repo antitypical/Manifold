@@ -14,6 +14,10 @@ public enum Expression: Hashable, IntegerLiteralConvertible {
 	}
 
 
+	public enum Constant {
+		case Unit
+		case Bool(Swift.Bool)
+
 	case Variable(Int)
 	case Abstraction(Int, Box<Expression>)
 	case Application(Box<Expression>, Box<Expression>)
