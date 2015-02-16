@@ -14,7 +14,7 @@ public enum Expression: Hashable, IntegerLiteralConvertible {
 	}
 
 
-	public enum ConstantExpression {
+	public enum ConstantExpression: Equatable {
 		case Unit
 		case Bool(Swift.Bool)
 
@@ -84,6 +84,20 @@ public func == (left: Expression, right: Expression) -> Bool {
 
 	case let (.Application(x1, y1), .Application(x2, y2)):
 		return x1.value == x2.value && y1.value == y2.value
+
+	default:
+		return false
+	}
+}
+
+
+public func == (left: Expression.ConstantExpression, right: Expression.ConstantExpression) -> Bool {
+	switch (left, right) {
+	case (.Unit, .Unit):
+		return true
+
+	case let (.Bool(x), .Bool(y)):
+		return x == y
 
 	default:
 		return false
