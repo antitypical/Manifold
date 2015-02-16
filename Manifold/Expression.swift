@@ -19,6 +19,13 @@ public enum Expression: Hashable, IntegerLiteralConvertible {
 		case Bool(Swift.Bool)
 
 
+		public var type: Type {
+			return analysis(
+				ifUnit: const(Type(.Unit)),
+				ifBool: const(Type(.Bool)))
+		}
+
+
 		public func analysis<T>(#ifUnit: () -> T, ifBool: Swift.Bool -> T) -> T {
 			switch self {
 			case Unit:
@@ -104,3 +111,4 @@ public func .. (left: Int, right: Expression) -> Expression {
 // MARK: - Imports
 
 import Box
+import Prelude
