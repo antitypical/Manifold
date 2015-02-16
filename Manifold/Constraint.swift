@@ -69,6 +69,18 @@ func typeGraph(constraints: ConstraintSet) -> (DisjointSet<Type>, [Type: Int]) {
 }
 
 
+public func solve(constraints: ConstraintSet) -> DisjointSet<Type> {
+	var (equivalences, indexByType) = typeGraph(constraints)
+	for constraint in constraints {
+		constraint.analysis(
+			ifEquality: {
+				equivalences.union(indexByType[$0]!, indexByType[$1]!)
+			})
+	}
+	return equivalences
+}
+
+
 // MARK: - Imports
 
 import DisjointSet
