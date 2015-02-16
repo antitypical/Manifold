@@ -14,7 +14,7 @@ public enum Expression: Hashable, IntegerLiteralConvertible {
 	}
 
 
-	public enum ConstantExpression: Equatable {
+	public enum ConstantExpression: Hashable {
 		case Unit
 		case Bool(Swift.Bool)
 
@@ -34,6 +34,15 @@ public enum Expression: Hashable, IntegerLiteralConvertible {
 			case let Bool(b):
 				return ifBool(b)
 			}
+		}
+
+
+		// MARK: Hashable
+
+		public var hashValue: Int {
+			return analysis(
+				ifUnit: const(-1),
+				ifBool: { $0.hashValue })
 		}
 	}
 
