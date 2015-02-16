@@ -14,7 +14,7 @@ public enum Expression: Hashable, IntegerLiteralConvertible {
 	}
 
 
-	public enum Constant {
+	public enum ConstantExpression {
 		case Unit
 		case Bool(Swift.Bool)
 
