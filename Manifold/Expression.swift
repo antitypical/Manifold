@@ -14,18 +14,9 @@ public enum Expression: Hashable, IntegerLiteralConvertible {
 	}
 
 
-	public enum ConstantExpression: Hashable {
+	public enum ConstantExpression: BooleanLiteralConvertible, Hashable {
 		case Unit
 		case Bool(Swift.Bool)
-
-
-		public static var True: ConstantExpression {
-			return Bool(true)
-		}
-
-		public static var False: ConstantExpression {
-			return Bool(false)
-		}
 
 
 		public var type: Type {
@@ -43,6 +34,13 @@ public enum Expression: Hashable, IntegerLiteralConvertible {
 			case let Bool(b):
 				return ifBool(b)
 			}
+		}
+
+
+		// MARK: BooleanLiteralConvertible
+
+		public init(booleanLiteral value: Swift.Bool) {
+			self = Bool(value)
 		}
 
 
