@@ -1,6 +1,10 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public enum Type: Hashable, Printable {
+	public init(_ base: BaseType) {
+		self = Base(base)
+	}
+
 	public init(_ variable: Manifold.Variable) {
 		self = Variable(variable)
 	}
