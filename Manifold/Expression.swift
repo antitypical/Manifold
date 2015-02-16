@@ -19,6 +19,15 @@ public enum Expression: Hashable, IntegerLiteralConvertible {
 		case Bool(Swift.Bool)
 
 
+		public static var True: ConstantExpression {
+			return Bool(true)
+		}
+
+		public static var False: ConstantExpression {
+			return Bool(false)
+		}
+
+
 		public var type: Type {
 			return analysis(
 				ifUnit: const(Type(.Unit)),
