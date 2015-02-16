@@ -7,6 +7,11 @@ public struct AssumptionSet: DictionaryLiteralConvertible, Equatable, Printable,
 	}
 
 
+	public var count: Int {
+		return assumptions.count
+	}
+
+
 	// MARK: DictionaryLiteralConvertible
 
 	public init(dictionaryLiteral elements: (Int, [Type])...) {
