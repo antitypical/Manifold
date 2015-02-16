@@ -129,6 +129,10 @@ public func <| (left: Expression, right: Expression) -> Expression {
 	return Expression(apply: left, to: right)
 }
 
+public func <| (left: Expression, right: Expression.ConstantExpression) -> Expression {
+	return Expression(apply: left, to: .Constant(right))
+}
+
 
 infix operator .. {}
 
