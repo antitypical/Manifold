@@ -206,22 +206,11 @@ public enum Type: Hashable, Printable {
 
 
 public func == (left: Type, right: Type) -> Bool {
-	switch (left, right) {
-	case let (.Base(b1), .Base(b2)):
-		return b1 == b2
-
-	case let (.Variable(x), .Variable(y)):
-		return x == y
-
-	case let (.Function(x1, x2), .Function(y1, y2)):
-		return x1.value == y1.value && x2.value == y2.value
-
-	case let (.Universal(a1, t1), .Universal(a2, t2)):
-		return a1 == a2 && t1.value == t2.value
-
-	default:
-		return false
-	}
+	let base: Bool? = (left.base &&& right.base).map(==)
+	let variable: Bool? = (left.variable &&& right.variable).map(==)
+	let function: Bool? = (left.function &&& right.function).map { $0.0 == $1.0 && $0.1 == $1.1 }
+	let universal: Bool? = (left.universal &&& right.universal).map { $0.0 == $1.0 && $0.1 == $1.1 }
+	return base ?? variable ?? function ?? universal ?? false
 }
 
 
