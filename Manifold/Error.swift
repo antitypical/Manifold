@@ -62,18 +62,6 @@ public func + (left: Error, right: Error) -> Error {
 }
 
 
-/// The logical and of two Either<Error>s.
-public func && <A, B> (a: Either<Error, A>, b: Either<Error, B>) -> Either<Error, (A, B)> {
-	return a.either(
-		{ (a: Error) in b.either(
-			{ Either.left(a + $0) },
-			const(Either.left(a))) },
-		{ (a: A) in b.either(
-			Either.left,
-			{ Either.right(a, $0) }) })
-}
-
-
 // MARK: - Imports
 
 import Either
