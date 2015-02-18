@@ -204,12 +204,15 @@ public enum Type: Hashable, Printable {
 	}
 }
 
+public func == <T: Equatable, U: Equatable> (left: (T, U), right: (T, U)) -> Bool {
+	return left.0 == right.0 && left.1 == right.1
+}
 
 public func == (left: Type, right: Type) -> Bool {
 	let base: Bool? = (left.base &&& right.base).map(==)
 	let variable: Bool? = (left.variable &&& right.variable).map(==)
-	let function: Bool? = (left.function &&& right.function).map { $0.0 == $1.0 && $0.1 == $1.1 }
-	let universal: Bool? = (left.universal &&& right.universal).map { $0.0 == $1.0 && $0.1 == $1.1 }
+	let function: Bool? = (left.function &&& right.function).map(==)
+	let universal: Bool? = (left.universal &&& right.universal).map(==)
 	return base ?? variable ?? function ?? universal ?? false
 }
 
