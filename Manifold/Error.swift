@@ -10,6 +10,13 @@ public enum Error: Printable, StringLiteralConvertible {
 	case Branch([Error])
 
 
+	public var errors: [Error] {
+		return analysis(
+			ifLeaf: const([ self ]),
+			ifBranch: id)
+	}
+
+
 	public func analysis<T>(#ifLeaf: String -> T, ifBranch: [Error] -> T) -> T {
 		switch self {
 		case let Leaf(string):
