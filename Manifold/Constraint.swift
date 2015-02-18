@@ -85,9 +85,11 @@ private func structural<T>(t1: Type, t2: Type, initial: T, f: (T, Type, Type) ->
 public func solve(constraints: ConstraintSet) -> DisjointSet<Type> {
 	var (equivalences, indexByType) = typeGraph(constraints)
 	for constraint in constraints {
-		constraint.analysis(
+		let _: () = constraint.analysis(
 			ifEquality: {
-				equivalences.union(indexByType[$0]!, indexByType[$1]!)
+				structural($0, $1, ()) {
+					equivalences.union(indexByType[$1]!, indexByType[$2]!)
+				}
 			})
 	}
 	return equivalences
