@@ -10,6 +10,16 @@ public enum Error: Printable, StringLiteralConvertible {
 	case Branch([Error])
 
 
+	public func analysis<T>(#ifLeaf: String -> T, ifBranch: [Error] -> T) -> T {
+		switch self {
+		case let Leaf(string):
+			return ifLeaf(string)
+		case let Branch(errors):
+			return ifBranch(errors)
+		}
+	}
+
+
 	// MARK: ExtendedGraphemeClusterLiteralConvertible
 
 	public init(extendedGraphemeClusterLiteral value: String) {
