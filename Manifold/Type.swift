@@ -77,6 +77,39 @@ public enum Type: Hashable, Printable {
 
 	// MARK: Decomposition
 
+	public var base: BaseType? {
+		return analysis(
+			ifBase: id,
+			ifVariable: const(nil),
+			ifFunction: const(nil),
+			ifUniversal: const(nil))
+	}
+
+	public var variable: Manifold.Variable? {
+		return analysis(
+			ifBase: const(nil),
+			ifVariable: id,
+			ifFunction: const(nil),
+			ifUniversal: const(nil))
+	}
+
+	public var function: (Type, Type)? {
+		return analysis(
+			ifBase: const(nil),
+			ifVariable: const(nil),
+			ifFunction: id,
+			ifUniversal: const(nil))
+	}
+
+	public var universal: (Set<Manifold.Variable>, Type)? {
+		return analysis(
+			ifBase: const(nil),
+			ifVariable: const(nil),
+			ifFunction: const(nil),
+			ifUniversal: id)
+	}
+
+
 	public var freeVariables: Set<Manifold.Variable> {
 		return analysis(
 			ifBase: const([]),
