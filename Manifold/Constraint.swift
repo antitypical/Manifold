@@ -22,6 +22,14 @@ public enum Constraint: Hashable, Printable {
 	}
 
 
+	// MARK: Decomposition
+
+	var equality: (Type, Type)? {
+		return analysis(
+			ifEquality: id)
+	}
+
+
 	// MARK: Hashable
 
 	public var hashValue: Int {
@@ -84,4 +92,5 @@ public func solve(constraints: ConstraintSet) -> DisjointSet<Type> {
 // MARK: - Imports
 
 import DisjointSet
+import Prelude
 import Set
