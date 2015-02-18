@@ -217,7 +217,7 @@ public func == (left: Type, right: Type) -> Bool {
 		return x1.value == y1.value && x2.value == y2.value
 
 	case let (.Universal(a1, t1), .Universal(a2, t2)):
-		return a1 == a2 && t1 == t2
+		return a1 == a2 && t1.value == t2.value
 
 	default:
 		return false
