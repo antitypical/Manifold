@@ -76,6 +76,11 @@ private func typeGraph(constraints: ConstraintSet) -> (DisjointSet<Type>, [Type:
 	return (typeGraph, Dictionary(lazy(enumerate(typeGraph)).map { ($1, $0) }))
 }
 
+private func structural<T>(t1: Type, t2: Type, initial: T, f: (T, Type, Type) -> T) -> T {
+	return
+		(t1.function &&& t2.function).map { f(f(f(initial, t1, t2), $0.0, $1.0), $0.1, $1.1) }
+	??	f(initial, t1, t2)
+}
 
 public func solve(constraints: ConstraintSet) -> DisjointSet<Type> {
 	var (equivalences, indexByType) = typeGraph(constraints)
