@@ -87,8 +87,8 @@ public func solve(constraints: ConstraintSet) -> DisjointSet<Type> {
 	for constraint in constraints {
 		let _: () = constraint.analysis(
 			ifEquality: {
-				structural($0, $1, ()) {
-					equivalences.union(indexByType[$1]!, indexByType[$2]!)
+				structural($0, $1, ()) { _, t1, t2 in
+					(indexByType[t1] &&& indexByType[t2]).map { equivalences.union($0, $1) }
 				}
 			})
 	}
