@@ -56,6 +56,28 @@ public enum Type: Hashable, Printable {
 		case Function(Type, Type)
 
 
+		public var isUnit: Swift.Bool {
+			return analysis(
+				ifUnit: const(true),
+				ifBool: const(false),
+				ifFunction: const(false))
+		}
+
+		public var isBool: Swift.Bool {
+			return analysis(
+				ifUnit: const(false),
+				ifBool: const(true),
+				ifFunction: const(false))
+		}
+
+		public var function: (Type, Type)? {
+			return analysis(
+				ifUnit: const(nil),
+				ifBool: const(nil),
+				ifFunction: { ($0, $1) })
+		}
+
+
 		public func analysis<T>(#ifUnit: () -> T, ifBool: () -> T, ifFunction: (Type, Type) -> T) -> T {
 			switch self {
 			case Unit:
