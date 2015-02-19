@@ -85,6 +85,14 @@ public enum Type: Hashable, Printable {
 				ifFunction: { $0.freeVariables.union($1.freeVariables) })
 		}
 
+		public var distinctTypes: Set<Type> {
+			return analysis(
+				ifUnit: [],
+				ifBool: [],
+				ifFunction: { $0.distinctTypes.union($1.distinctTypes) })
+		}
+
+
 		public func analysis<T>(@autoclosure #ifUnit: () -> T, @autoclosure ifBool: () -> T, ifFunction: (Type, Type) -> T) -> T {
 			switch self {
 			case Unit:
