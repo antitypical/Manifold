@@ -84,22 +84,23 @@ private func structural<T>(t1: Type, t2: Type, initial: T, f: (T, Type, Type) ->
 	??	f(initial, t1, t2)
 }
 
-public func solve(constraints: ConstraintSet) -> DisjointSet<Type> {
-	var (equivalences, indexByType) = typeGraph(constraints)
-	for constraint in constraints {
-		let _: () = constraint.analysis(
-			ifEquality: {
-				structural($0, $1, ()) { _, t1, t2 in
-					(indexByType[t1] &&& indexByType[t2]).map { equivalences.union($0, $1) }
+public func solve(constraints: ConstraintSet) -> Either<Error, DisjointSet<Type>> {
+	let (equivalences, indexByType) = typeGraph(constraints)
+	let graph = reduce(constraints, equivalences) { equivalences, constraint in
+		constraint.analysis(
+			ifEquality: { t1, t2 in
+				structural(t1, t2, equivalences) { equivalences, t1, t2 in
+					(indexByType[t1] &&& indexByType[t2]).map { equivalences.union($0, $1) } ?? equivalences
 				}
 			})
 	}
-	return equivalences
+	return .right(graph)
 }
 
 
 // MARK: - Imports
 
 import DisjointSet
+import Either
 import Prelude
 import Set
