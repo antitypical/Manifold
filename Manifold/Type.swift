@@ -18,6 +18,15 @@ public enum Type: Hashable, Printable {
 	}
 
 
+	public static var Bool: Type {
+		return Type(.Bool)
+	}
+
+	public static var Unit: Type {
+		return Type(.Unit)
+	}
+
+
 	public enum BaseType: Hashable, Printable {
 		case Unit
 		case Bool
@@ -323,18 +332,6 @@ infix operator --> {
 
 public func --> (left: Type, right: Type) -> Type {
 	return Type(function: left, right)
-}
-
-public func --> (left: Type.BaseType, right: Type) -> Type {
-	return Type(function: .Base(left), right)
-}
-
-public func --> (left: Type, right: Type.BaseType) -> Type {
-	return Type(function: left, .Base(right))
-}
-
-public func --> (left: Type.BaseType, right: Type.BaseType) -> Type {
-	return Type(function: .Base(left), .Base(right))
 }
 
 
