@@ -53,7 +53,7 @@ public enum Type: Hashable, Printable {
 	public enum Constructor {
 		case Unit
 		case Bool
-		case Function
+		case Function(Type, Type)
 	}
 
 
