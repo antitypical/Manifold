@@ -50,6 +50,13 @@ public enum Type: Hashable, Printable {
 	}
 
 
+	public enum Constructor {
+		case Unit
+		case Bool
+		case Function
+	}
+
+
 	case Base(BaseType)
 	case Variable(Manifold.Variable)
 	case Function(Box<Type>, Box<Type>)
