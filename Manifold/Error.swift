@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Error: Printable, StringLiteralConvertible {
+public enum Error: Printable, StringInterpolationConvertible, StringLiteralConvertible {
 	public init(reason: String) {
 		self = Leaf(reason)
 	}
@@ -43,6 +43,21 @@ public enum Error: Printable, StringLiteralConvertible {
 		case let Branch(errors):
 			return join("\n", lazy(errors).map(toString))
 		}
+	}
+
+
+	// MARK: StringInterpolationConvertible
+
+	public init(stringInterpolation strings: Error...) {
+		self = Error(reason: reduce(strings, "") {
+			$0 + $1.analysis(
+				ifLeaf: id,
+				ifBranch: const(""))
+		})
+	}
+
+	public init<T>(stringInterpolationSegment expr: T) {
+		self = Error(reason: toString(expr))
 	}
 
 	
