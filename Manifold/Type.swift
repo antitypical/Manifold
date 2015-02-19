@@ -78,6 +78,13 @@ public enum Type: Hashable, Printable {
 		}
 
 
+		public var freeVariables: Set<Manifold.Variable> {
+			return analysis(
+				ifUnit: [],
+				ifBool: [],
+				ifFunction: { $0.freeVariables.union($1.freeVariables) })
+		}
+
 		public func analysis<T>(@autoclosure #ifUnit: () -> T, @autoclosure ifBool: () -> T, ifFunction: (Type, Type) -> T) -> T {
 			switch self {
 			case Unit:
