@@ -2,17 +2,17 @@
 
 final class InferenceTests: XCTestCase {
 	func testVariablesAreAssignedAFreshTypeVariable() {
-		assertEqual(infer(0).0.isVariable, true)
+		assertNotNil(infer(0).0.variable)
 	}
 
 	func testApplicationsAreAssignedAFreshTypeVariable() {
 		let application = 0 <| 0 // fixme: left operand should be an abstraction
-		assertEqual(infer(application).0.isVariable, true)
+		assertNotNil(infer(application).0.variable)
 	}
 
 	func testAbstractionsAreAssignedAFunctionType() {
 		let abstraction = 0 .. 0
-		assertEqual(infer(abstraction).0.isFunction, true)
+		assertNotNil(infer(abstraction).0.function)
 	}
 }
 
