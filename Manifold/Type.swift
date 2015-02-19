@@ -50,7 +50,7 @@ public enum Type: Hashable, Printable {
 	}
 
 
-	public enum Constructor: Hashable {
+	public enum Constructor: Hashable, Printable {
 		case Unit
 		case Bool
 		case Function(Type, Type)
@@ -97,6 +97,16 @@ public enum Type: Hashable, Printable {
 				ifUnit: 0,
 				ifBool: 1,
 				ifFunction: { 2 ^ $0.hashValue ^ $1.hashValue })
+		}
+
+
+		// MARK: Printable
+
+		public var description: String {
+			return analysis(
+				ifUnit: "Unit",
+				ifBool: "Bool",
+				ifFunction: { "\($0) → \($1)" })
 		}
 	}
 
