@@ -4,7 +4,7 @@
 public func infer(expression: Expression) -> (Type, assumptions: AssumptionSet, constraints: ConstraintSet) {
 	return expression.analysis(
 		ifConstant: { c in
-			return (c.type, assumptions: [:], constraints: [])
+			(c.type, assumptions: [:], constraints: [])
 		},
 		ifVariable: { v in
 			let type = Type(Variable())
