@@ -50,7 +50,7 @@ public enum Type: Hashable, Printable {
 	}
 
 
-	public enum Constructor {
+	public enum Constructor: Equatable {
 		case Unit
 		case Bool
 		case Function(Type, Type)
@@ -266,6 +266,13 @@ public func == (left: Type.BaseType, right: Type.BaseType) -> Bool {
 	default:
 		return false
 	}
+}
+
+public func == (left: Type.Constructor, right: Type.Constructor) -> Bool {
+	return
+		(left.isUnit && right.isUnit)
+	||	(left.isBool && right.isBool)
+	||	((left.function &&& right.function).map(==) ?? false)
 }
 
 
