@@ -58,27 +58,27 @@ public enum Type: Hashable, Printable {
 
 		public var isUnit: Swift.Bool {
 			return analysis(
-				ifUnit: const(true),
-				ifBool: const(false),
+				ifUnit: true,
+				ifBool: false,
 				ifFunction: const(false))
 		}
 
 		public var isBool: Swift.Bool {
 			return analysis(
-				ifUnit: const(false),
-				ifBool: const(true),
+				ifUnit: false,
+				ifBool: true,
 				ifFunction: const(false))
 		}
 
 		public var function: (Type, Type)? {
 			return analysis(
-				ifUnit: const(nil),
-				ifBool: const(nil),
+				ifUnit: nil,
+				ifBool: nil,
 				ifFunction: { ($0, $1) })
 		}
 
 
-		public func analysis<T>(#ifUnit: () -> T, ifBool: () -> T, ifFunction: (Type, Type) -> T) -> T {
+		public func analysis<T>(@autoclosure #ifUnit: () -> T, @autoclosure ifBool: () -> T, ifFunction: (Type, Type) -> T) -> T {
 			switch self {
 			case Unit:
 				return ifUnit()
@@ -94,8 +94,8 @@ public enum Type: Hashable, Printable {
 
 		public var hashValue: Int {
 			return analysis(
-				ifUnit: const(0),
-				ifBool: const(1),
+				ifUnit: 0,
+				ifBool: 1,
 				ifFunction: { 2 ^ $0.hashValue ^ $1.hashValue })
 		}
 	}
