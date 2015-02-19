@@ -94,7 +94,16 @@ public func solve(constraints: ConstraintSet) -> Either<Error, DisjointSet<Type>
 				}
 			})
 	}
-	return .right(graph)
+	return reduce(graph.partitions, .right(graph)) { graph, partition in
+		let constructors = reduce(lazy(partition)
+			.map { $0.constructed }, Set()) {
+			$0.union($1.map { [ $0 ] } ?? [])
+		}
+		let description = ", ".join(lazy(lazy(constructors).map(toString) |> sorted))
+		return constructors.count <= 1 ?
+			graph
+		:	.left("mutually exclusive types: \(description)")
+	}
 }
 
 
