@@ -56,6 +56,8 @@ public enum Type: Hashable, Printable {
 		case Function(Type, Type)
 
 
+		// MARK: Decomposition
+
 		public var isUnit: Swift.Bool {
 			return analysis(
 				ifUnit: true,
@@ -78,6 +80,8 @@ public enum Type: Hashable, Printable {
 		}
 
 
+		// MARK: Recursive properties
+
 		public var freeVariables: Set<Manifold.Variable> {
 			return analysis(
 				ifUnit: [],
@@ -92,6 +96,8 @@ public enum Type: Hashable, Printable {
 				ifFunction: { $0.distinctTypes.union($1.distinctTypes) })
 		}
 
+
+		// MARK: Case analysis
 
 		public func analysis<T>(@autoclosure #ifUnit: () -> T, @autoclosure ifBool: () -> T, ifFunction: (Type, Type) -> T) -> T {
 			switch self {
