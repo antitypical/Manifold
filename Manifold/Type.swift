@@ -54,6 +54,18 @@ public enum Type: Hashable, Printable {
 		case Unit
 		case Bool
 		case Function(Type, Type)
+
+
+		public func analysis<T>(#ifUnit: () -> T, ifBool: () -> T, ifFunction: (Type, Type) -> T) -> T {
+			switch self {
+			case Unit:
+				return ifUnit()
+			case Bool:
+				return ifBool()
+			case let Function(t1, t2):
+				return ifFunction(t1, t2)
+			}
+		}
 	}
 
 
