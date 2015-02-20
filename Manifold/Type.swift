@@ -247,9 +247,9 @@ public func == <T: Equatable, U: Equatable> (left: (T, U), right: (T, U)) -> Boo
 
 public func == (left: Type, right: Type) -> Bool {
 	let variable: Bool? = (left.variable &&& right.variable).map(==)
-	let function: Bool? = (left.function &&& right.function).map(==)
+	let constructed: Bool? = (left.constructed &&& right.constructed).map(==)
 	let universal: Bool? = (left.universal &&& right.universal).map(==)
-	return variable ?? function ?? universal ?? false
+	return variable ?? constructed ?? universal ?? false
 }
 
 public func == (left: Type.Constructor, right: Type.Constructor) -> Bool {
