@@ -141,7 +141,7 @@ public enum Type: Hashable, Printable {
 		return analysis(
 			ifVariable: const(nil),
 			ifConstructed: { $0.function },
-			ifUniversal: const(nil))
+			ifUniversal: { $1.function })
 	}
 
 	public var universal: (Set<Manifold.Variable>, Type)? {
