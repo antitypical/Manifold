@@ -86,11 +86,11 @@ private func structural<T>(t1: Type, t2: Type, initial: T, f: (T, Type, Type) ->
 
 public func solve(constraints: ConstraintSet) -> Either<Error, DisjointSet<Type>> {
 	let (equivalences, indexByType) = typeGraph(constraints)
-	let graph = reduce(constraints, equivalences) { equivalences, constraint in
+	let graph = reduce(constraints, equivalences) { graph, constraint in
 		constraint.analysis(
 			ifEquality: { t1, t2 in
-				structural(t1, t2, equivalences) { equivalences, t1, t2 in
-					(indexByType[t1] &&& indexByType[t2]).map { equivalences.union($0, $1) } ?? equivalences
+				structural(t1, t2, graph) { graph, t1, t2 in
+					(indexByType[t1] &&& indexByType[t2]).map { graph.union($0, $1) } ?? graph
 				}
 			})
 	}
