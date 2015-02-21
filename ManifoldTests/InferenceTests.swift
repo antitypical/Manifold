@@ -13,6 +13,18 @@ final class InferenceTests: XCTestCase {
 	func testAbstractionsAreAssignedAFunctionType() {
 		assertNotNil(infer(identity).0.function)
 	}
+
+
+	func testMutuallyExclusiveTypeConstructorsAreAnError() {
+		let illTyped = Expression(apply: Expression(constant: .Unit), to: Expression(constant: .Unit))
+		let inferred = infer(illTyped)
+		assert(inferred.assumptions.count, ==, 0)
+
+		let solved = solve(inferred.constraints)
+		let e: Error? = solved.either({ $0 }, { failure("expected mutually exclusive types but got \($0)") })
+		assertNotNil(solved.left)
+		assert(solved.right, ==, nil)
+	}
 }
 
 
