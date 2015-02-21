@@ -84,6 +84,17 @@ private func structural<T>(t1: Type, t2: Type, initial: T, f: (T, Type, Type) ->
 	??	f(initial, t1, t2)
 }
 
+private func unify(t1: Type, t2: Type) -> Either<Error, Type> {
+	let constructed: Either<Error, Type>? = (t1.constructed &&& t2.constructed).map { (c1, c2) -> Either<Error, Type> in
+		if c1.isUnit && c2.isUnit { return .right(t1) }
+		if c2.isBool && c2.isBool { return .right(t1) }
+		return (c1.function &&& c2.function).map { (unify($0.0, $1.0) &&& unify($0.1, $1.1)).map { Type(function: $0, $1) } } ?? .left("mutually exclusive types: \(t1), \(t2)")
+	}
+
+	let variable: Either<Error, Type>? = (t1.variable ||| t2.variable)?.either(id, id).map(const(.right(t2)))
+	return variable ?? constructed ?? .left("don’t know how to unify \(t1) with \(t2)")
+}
+
 public func solve(constraints: ConstraintSet) -> Either<Error, DisjointSet<Type>> {
 	let (equivalences, indexByType) = typeGraph(constraints)
 	let graph = reduce(constraints, equivalences) { graph, constraint in
