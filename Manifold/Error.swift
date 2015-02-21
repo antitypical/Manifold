@@ -37,12 +37,9 @@ public enum Error: Printable, StringInterpolationConvertible, StringLiteralConve
 	// MARK: Printable
 
 	public var description: String {
-		switch self {
-		case let Leaf(reason):
-			return reason
-		case let Branch(errors):
-			return join("\n", lazy(errors).map(toString))
-		}
+		return analysis(
+			ifLeaf: id,
+			ifBranch: { "\n".join(lazy($0).map(toString)) })
 	}
 
 
