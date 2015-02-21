@@ -13,6 +13,10 @@ public enum Expression: Hashable, IntegerLiteralConvertible {
 		self = Abstraction(x, Box(body))
 	}
 
+	public init(constant: ConstantExpression) {
+		self = Constant(constant)
+	}
+
 
 	public enum ConstantExpression: BooleanLiteralConvertible, Hashable {
 		case Unit
