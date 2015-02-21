@@ -105,15 +105,12 @@ public func solve(constraints: ConstraintSet) -> Either<Error, DisjointSet<Type>
 				}
 			})
 	}
-	return reduce(graph.partitions, .right(graph)) { graph, partition in
-		let constructors = reduce(lazy(partition)
-			.map { $0.constructed }, Set()) {
-			$0.union($1.map { [ $0 ] } ?? [])
+	return reduce(graph.partitions, .right(graph)) { (graph, partition) -> Either<Error, DisjointSet<Type>> in
+		let constructors: Set<Type> = Set(lazy(partition).filter { $0.constructed != nil })
+		let unified: Either<Error, Type> = reduce(constructors, Either<Error, Type>.right(Type(Variable()))) { (into, each: Type) -> Either<Error, Type> in
+			into >>- { unify($0, each) }
 		}
-		let description = ", ".join(lazy(lazy(constructors).map(toString) |> sorted))
-		return constructors.count <= 1 ?
-			graph
-		:	.left("mutually exclusive types: \(description)")
+		return unified >>- const(graph)
 	}
 }
 
