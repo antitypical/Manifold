@@ -34,6 +34,12 @@ final class InferenceTests: XCTestCase {
 		let solved = solve(inferred.constraints)
 		assert(solved.left, ==, nil)
 	}
+
+	func testTautologicalTypesAreAccepted() {
+		let t = Type(Variable())
+		let solved = solve([ t === t ])
+		assert(solved.left, ==, nil)
+	}
 }
 
 
