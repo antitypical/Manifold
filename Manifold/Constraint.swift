@@ -96,6 +96,11 @@ private func unify(t1: Type, t2: Type) -> Either<Error, Type> {
 }
 
 
+public func checkForInfiniteTypes(graph: DisjointSet<Type>) -> Either<Error, DisjointSet<Type>> {
+	return .right(graph)
+}
+
+
 public func checkForContradictoryTypes(partition: [Type]) -> Either<Error, Type> {
 	let constructors: Set<Type> = Set(lazy(partition).filter { $0.constructed != nil })
 	let unified: Either<Error, Type> = reduce(constructors, Either<Error, Type>.right(Type(Variable()))) { (into, each: Type) -> Either<Error, Type> in
@@ -110,6 +115,7 @@ public func checkForContradictoryTypes(graph: DisjointSet<Type>) -> Either<Error
 	}
 }
 
+
 public func solve(constraints: ConstraintSet) -> Either<Error, DisjointSet<Type>> {
 	let (equivalences, indexByType) = typeGraph(constraints)
 	let graph = reduce(constraints, equivalences) { graph, constraint in
@@ -120,7 +126,8 @@ public func solve(constraints: ConstraintSet) -> Either<Error, DisjointSet<Type>
 				}
 			})
 	}
-	return checkForContradictoryTypes(graph)
+
+	return (checkForContradictoryTypes(graph) &&& checkForInfiniteTypes(graph)) >>- const(.right(graph))
 }
 
 
