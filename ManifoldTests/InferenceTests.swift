@@ -25,6 +25,15 @@ final class InferenceTests: XCTestCase {
 		assertNotNil(solved.left)
 		assert(solved.right, ==, nil)
 	}
+
+	func testWellTypedExpressionsAreAccepted() {
+		let wellTyped = Expression(apply: identity, to: Expression(constant: .Unit))
+		let inferred = infer(wellTyped)
+		XCTAssertEqual(inferred.assumptions.count, 0)
+
+		let solved = solve(inferred.constraints)
+		assert(solved.left, ==, nil)
+	}
 }
 
 
