@@ -40,6 +40,12 @@ final class InferenceTests: XCTestCase {
 		let solved = solve([ t === t ])
 		assert(solved.left, ==, nil)
 	}
+
+	func testInfiniteTypesAreRejected() {
+		let t = Type(Variable())
+		let solved = solve([ t === Type(function: t, t) ])
+		assert(solved.right, ==, nil)
+	}
 }
 
 
