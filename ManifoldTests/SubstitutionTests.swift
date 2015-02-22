@@ -41,6 +41,7 @@ final class SubstitutionTests: XCTestCase {
 
 // MARK: - Imports
 
+import Assertions
 import Manifold
 import Set
 import XCTest

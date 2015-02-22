@@ -1,9 +1,14 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public struct AssumptionSet: DictionaryLiteralConvertible, Equatable, SequenceType {
+public struct AssumptionSet: DictionaryLiteralConvertible, Equatable, Printable, SequenceType {
 	public subscript(variable: Int) -> [Type] {
 		get { return assumptions[variable] ?? [] }
 		set { assumptions[variable] = self[variable] + newValue }
+	}
+
+
+	public var count: Int {
+		return assumptions.count
 	}
 
 
@@ -11,6 +16,22 @@ public struct AssumptionSet: DictionaryLiteralConvertible, Equatable, SequenceTy
 
 	public init(dictionaryLiteral elements: (Int, [Type])...) {
 		assumptions = [:] + elements
+	}
+
+
+	// MARK: Printable
+
+	public var description: String {
+		let s = lazy(assumptions)
+			.map {
+				let types = ", ".join(lazy($1).map(toString) |> sorted)
+				return "\($0) ~ [ \(types) ]"
+			}
+			|> sorted
+			|> (join <| "")
+		return assumptions.count > 0 ?
+			"{ \(s) }"
+		:	"{}"
 	}
 
 
@@ -44,3 +65,8 @@ public func / (var left: AssumptionSet, right: Int) -> AssumptionSet {
 	left.assumptions.removeValueForKey(right)
 	return left
 }
+
+
+// MARK: - Imports
+
+import Prelude

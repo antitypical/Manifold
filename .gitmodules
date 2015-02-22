@@ -10,3 +10,9 @@
 [submodule "External/Set"]
 	path = External/Set
 	url = https://github.com/robrix/Set.git
+[submodule "External/DisjointSet"]
+	path = External/DisjointSet
+	url = https://github.com/antitypical/DisjointSet.git
+[submodule "External/Assertions"]
+	path = External/Assertions
+	url = https://github.com/antitypical/Assertions.git

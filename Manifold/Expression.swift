@@ -13,14 +13,55 @@ public enum Expression: Hashable, IntegerLiteralConvertible {
 		self = Abstraction(x, Box(body))
 	}
 
+	public init(constant: ConstantExpression) {
+		self = Constant(constant)
+	}
 
+
+	public enum ConstantExpression: Hashable {
+		case Unit
+		case Bool(Swift.Bool)
+
+
+		public var type: Type {
+			return analysis(
+				ifUnit: const(Type(.Unit)),
+				ifBool: const(Type(.Bool)))
+		}
+
+
+		public func analysis<T>(#ifUnit: () -> T, ifBool: Swift.Bool -> T) -> T {
+			switch self {
+			case Unit:
+				return ifUnit()
+
+			case let Bool(b):
+				return ifBool(b)
+			}
+		}
+
+
+		// MARK: Hashable
+
+		public var hashValue: Int {
+			return analysis(
+				ifUnit: const(-1),
+				ifBool: { $0.hashValue })
+		}
+	}
+
+
+	case Constant(ConstantExpression)
 	case Variable(Int)
 	case Abstraction(Int, Box<Expression>)
 	case Application(Box<Expression>, Box<Expression>)
 
 
-	public func analysis<T>(#ifVariable: Int -> T, ifAbstraction: (Int, Expression) -> T, ifApplication: (Expression, Expression) -> T) -> T {
+	public func analysis<T>(#ifConstant: ConstantExpression -> T, ifVariable: Int -> T, ifAbstraction: (Int, Expression) -> T, ifApplication: (Expression, Expression) -> T) -> T {
 		switch self {
+		case let Constant(c):
+			return ifConstant(c)
+
 		case let Variable(v):
 			return ifVariable(v)
 
@@ -37,6 +78,7 @@ public enum Expression: Hashable, IntegerLiteralConvertible {
 
 	public var hashValue: Int {
 		return analysis(
+			ifConstant: { $0.hashValue },
 			ifVariable: { $0.hashValue },
 			ifAbstraction: { $0.hashValue ^ $1.hashValue },
 			ifApplication: { $0.hashValue ^ $1.hashValue })
@@ -68,23 +110,21 @@ public func == (left: Expression, right: Expression) -> Bool {
 }
 
 
-infix operator <| {
-	associativity left
-	precedence 95
-}
+public func == (left: Expression.ConstantExpression, right: Expression.ConstantExpression) -> Bool {
+	switch (left, right) {
+	case (.Unit, .Unit):
+		return true
 
-public func <| (left: Expression, right: Expression) -> Expression {
-	return Expression(apply: left, to: right)
-}
+	case let (.Bool(x), .Bool(y)):
+		return x == y
 
-
-infix operator .. {}
-
-public func .. (left: Int, right: Expression) -> Expression {
-	return Expression(abstract: left, body: right)
+	default:
+		return false
+	}
 }
 
 
 // MARK: - Imports
 
 import Box
+import Prelude

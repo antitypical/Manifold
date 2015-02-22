@@ -5,7 +5,13 @@
       location = "group:Manifold.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:External/Assertions/Assertions.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:External/Box/Box.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:External/DisjointSet/DisjointSet.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:External/Either/Either.xcodeproj">

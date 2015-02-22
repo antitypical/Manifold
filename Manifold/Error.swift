@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Error: Printable, StringLiteralConvertible {
+public enum Error: Printable, StringInterpolationConvertible, StringLiteralConvertible {
 	public init(reason: String) {
 		self = Leaf(reason)
 	}
@@ -8,6 +8,23 @@ public enum Error: Printable, StringLiteralConvertible {
 
 	case Leaf(String)
 	case Branch([Error])
+
+
+	public var errors: [Error] {
+		return analysis(
+			ifLeaf: const([ self ]),
+			ifBranch: id)
+	}
+
+
+	public func analysis<T>(#ifLeaf: String -> T, ifBranch: [Error] -> T) -> T {
+		switch self {
+		case let Leaf(string):
+			return ifLeaf(string)
+		case let Branch(errors):
+			return ifBranch(errors)
+		}
+	}
 
 
 	// MARK: ExtendedGraphemeClusterLiteralConvertible
@@ -20,12 +37,24 @@ public enum Error: Printable, StringLiteralConvertible {
 	// MARK: Printable
 
 	public var description: String {
-		switch self {
-		case let Leaf(reason):
-			return reason
-		case let Branch(errors):
-			return join("\n", lazy(errors).map(toString))
-		}
+		return analysis(
+			ifLeaf: id,
+			ifBranch: { "\n".join(lazy($0).map(toString)) })
+	}
+
+
+	// MARK: StringInterpolationConvertible
+
+	public init(stringInterpolation strings: Error...) {
+		self = Error(reason: reduce(strings, "") {
+			$0 + $1.analysis(
+				ifLeaf: id,
+				ifBranch: const(""))
+		})
+	}
+
+	public init<T>(stringInterpolationSegment expr: T) {
+		self = Error(reason: toString(expr))
 	}
 
 	
@@ -46,31 +75,16 @@ public enum Error: Printable, StringLiteralConvertible {
 
 /// Constructs a composite error.
 public func + (left: Error, right: Error) -> Error {
-	switch (left, right) {
-	case (.Leaf, .Leaf):
-		return .Branch([ left, right ])
-
-	case let (.Leaf, .Branch(errors)):
-		return .Branch([ left ] + errors)
-
-	case let (.Branch(errors), .Leaf):
-		return .Branch(errors + [ right ])
-
-	case let (.Branch(e1), .Branch(e2)):
-		return .Branch(e1 + e2)
-	}
+	return Error.Branch(left.errors + right.errors)
 }
 
 
-/// The logical and of two Either<Error>s.
-public func && <A, B> (a: Either<Error, A>, b: Either<Error, B>) -> Either<Error, (A, B)> {
-	return a.either(
-		{ (a: Error) in b.either(
-			{ Either.left(a + $0) },
-			const(Either.left(a))) },
-		{ (a: A) in b.either(
-			Either.left,
-			{ Either.right(a, $0) }) })
+/// Computes the conjunction of two `Either`s.
+public func &&& <T, U> (a: Either<Error, T>, b: Either<Error, U>) -> Either<Error, (T, U)> {
+	let right = (a.right &&& b.right).map(Either<Error, (T, U)>.right)
+	let lefts = (a.left &&& b.left).map(+).map(Either<Error, (T, U)>.left)
+	let left = (a.left.map(Either<Error, (T, U)>.left) ||| b.left.map(Either<Error, (T, U)>.left))?.either(id, id)
+	return (right ?? lefts ?? left)!
 }
 
 

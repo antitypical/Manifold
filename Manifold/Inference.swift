@@ -1,10 +1,11 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public typealias ConstraintSet = Multiset<Constraint>
-
 /// Infers the type, assumptions, and constraints for a given `expression`.
 public func infer(expression: Expression) -> (Type, assumptions: AssumptionSet, constraints: ConstraintSet) {
 	return expression.analysis(
+		ifConstant: { c in
+			(c.type, assumptions: [:], constraints: [])
+		},
 		ifVariable: { v in
 			let type = Type(Variable())
 			return (type,
@@ -33,4 +34,3 @@ public func infer(expression: Expression) -> (Type, assumptions: AssumptionSet, 
 
 import Either
 import Prelude
-import Set
