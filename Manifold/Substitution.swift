@@ -55,16 +55,6 @@ public func == (left: Substitution, right: Substitution) -> Bool {
 }
 
 
-internal func + <T: Hashable, U, S: SequenceType where S.Generator.Element == Dictionary<T, U>.Element> (var left: Dictionary<T, U>, right: S) -> Dictionary<T, U> {
-	for (key, value) in SequenceOf<(T, U)>(right) {
-		if left[key] == nil {
-			left[key] = value
-		}
-	}
-	return left
-}
-
-
 // MARK: - Imports
 
 import Prelude
