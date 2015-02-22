@@ -95,6 +95,21 @@ private func unify(t1: Type, t2: Type) -> Either<Error, Type> {
 	return variable ?? constructed ?? .left("don’t know how to unify \(t1) with \(t2)")
 }
 
+
+public func checkForContradictoryTypes(partition: [Type]) -> Either<Error, Type> {
+	let constructors: Set<Type> = Set(lazy(partition).filter { $0.constructed != nil })
+	let unified: Either<Error, Type> = reduce(constructors, Either<Error, Type>.right(Type(Variable()))) { (into, each: Type) -> Either<Error, Type> in
+		into >>- { unify($0, each) }
+	}
+	return unified
+}
+
+public func checkForContradictoryTypes(graph: DisjointSet<Type>) -> Either<Error, DisjointSet<Type>> {
+	return reduce(graph.partitions, .right(graph)) { graph, partition in
+		checkForContradictoryTypes(partition) >>- const(graph)
+	}
+}
+
 public func solve(constraints: ConstraintSet) -> Either<Error, DisjointSet<Type>> {
 	let (equivalences, indexByType) = typeGraph(constraints)
 	let graph = reduce(constraints, equivalences) { graph, constraint in
@@ -105,13 +120,7 @@ public func solve(constraints: ConstraintSet) -> Either<Error, DisjointSet<Type>
 				}
 			})
 	}
-	return reduce(graph.partitions, .right(graph)) { (graph, partition) -> Either<Error, DisjointSet<Type>> in
-		let constructors: Set<Type> = Set(lazy(partition).filter { $0.constructed != nil })
-		let unified: Either<Error, Type> = reduce(constructors, Either<Error, Type>.right(Type(Variable()))) { (into, each: Type) -> Either<Error, Type> in
-			into >>- { unify($0, each) }
-		}
-		return unified >>- const(graph)
-	}
+	return checkForContradictoryTypes(graph)
 }
 
 
