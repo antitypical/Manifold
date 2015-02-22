@@ -84,37 +84,32 @@ private func structural<T>(t1: Type, t2: Type, initial: T, f: (T, Type, Type) ->
 	??	f(initial, t1, t2)
 }
 
-private func unify(t1: Type, t2: Type) -> Either<Error, Type> {
-	let constructed: Either<Error, Type>? = (t1.constructed &&& t2.constructed).map { (c1, c2) -> Either<Error, Type> in
+
+public func occurs(v: Variable, t: Type) -> Bool {
+	return t.freeVariables.contains(v)
+}
+
+public func unify(t1: Type, t2: Type) -> Either<Error, Type> {
+	let constructed: Either<Error, Type>? = (t1.constructed &&& t2.constructed).map { c1, c2 -> Either<Error, Type> in
 		if c1.isUnit && c2.isUnit { return .right(t1) }
 		if c2.isBool && c2.isBool { return .right(t1) }
 		return (c1.function &&& c2.function).map { (unify($0.0, $1.0) &&& unify($0.1, $1.1)).map { Type(function: $0, $1) } } ?? .left("mutually exclusive types: \(t1), \(t2)")
 	}
 
-	let variable: Either<Error, Type>? = (t1.variable ||| t2.variable)?.either(id, id).map(const(.right(t2)))
-	return variable ?? constructed ?? .left("don’t know how to unify \(t1) with \(t2)")
+	let infinite: Either<Error, Type> = .left("{\(t1), \(t2)} form an infinite type")
+	return
+		t1.variable.map { occurs($0, t2) ? infinite : .right(t2) }
+	??	t2.variable.map { occurs($0, t1) ? infinite : .right(t1) }
+	??	constructed
+	??	.left("don’t know how to unify \(t1) with \(t2)")
 }
 
 
-public func checkForInfiniteTypes(graph: DisjointSet<Type>) -> Either<Error, DisjointSet<Type>> {
-	return .right(graph)
-}
-
-
-public func checkForContradictoryTypes(partition: [Type]) -> Either<Error, Type> {
-	let constructors: Set<Type> = Set(lazy(partition).filter { $0.constructed != nil })
-	let unified: Either<Error, Type> = reduce(constructors, Either<Error, Type>.right(Type(Variable()))) { (into, each: Type) -> Either<Error, Type> in
+public func checkForInconsistencies(partition: [Type]) -> Either<Error, Type> {
+	return reduce(partition, .right(Type(Variable()))) { into, each in
 		into >>- { unify($0, each) }
 	}
-	return unified
 }
-
-public func checkForContradictoryTypes(graph: DisjointSet<Type>) -> Either<Error, DisjointSet<Type>> {
-	return reduce(graph.partitions, .right(graph)) { graph, partition in
-		checkForContradictoryTypes(partition) >>- const(graph)
-	}
-}
-
 
 public func solve(constraints: ConstraintSet) -> Either<Error, DisjointSet<Type>> {
 	let (equivalences, indexByType) = typeGraph(constraints)
@@ -127,7 +122,9 @@ public func solve(constraints: ConstraintSet) -> Either<Error, DisjointSet<Type>
 			})
 	}
 
-	return (checkForContradictoryTypes(graph) &&& checkForInfiniteTypes(graph)) >>- const(.right(graph))
+	return reduce(graph.partitions, .right(graph)) { graph, partition in
+		checkForInconsistencies(partition) >>- const(graph)
+	}
 }
 
 
