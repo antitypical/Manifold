@@ -14,9 +14,9 @@ public struct FlatMapSequenceView<Base: SequenceType, Each: SequenceType>: Seque
 		var inner: Each.Generator?
 		return GeneratorOf {
 			next(
-				{ () -> Each.Generator? in
+				{ () -> Bool in
 					inner = outer.next().map(self.transform)?.generate()
-					return inner
+					return inner != nil
 				},
 				{ inner?.next() }
 			)
@@ -30,8 +30,8 @@ public struct FlatMapSequenceView<Base: SequenceType, Each: SequenceType>: Seque
 	private let transform: Base.Generator.Element -> Each
 }
 
-private func next<Each: GeneratorType>(outer: () -> Each?, inner: () -> Each.Element?) -> Each.Element? {
-	return inner() ?? outer().map { _ in next(outer, inner) } ?? nil
+private func next<T>(outer: () -> Bool, inner: () -> T?) -> T? {
+	return inner() ?? (outer() ? next(outer, inner) : nil)
 }
 
 
