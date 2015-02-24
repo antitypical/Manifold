@@ -26,7 +26,7 @@ public enum Constraint: Hashable, Printable {
 
 	var equality: (Type, Type)? {
 		return analysis(
-			ifEquality: id)
+			ifEquality: unit)
 	}
 
 

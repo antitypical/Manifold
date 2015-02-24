@@ -53,7 +53,7 @@ public enum Type: Hashable, Printable {
 			return analysis(
 				ifUnit: nil,
 				ifBool: nil,
-				ifFunction: id)
+				ifFunction: unit)
 		}
 
 
@@ -125,7 +125,7 @@ public enum Type: Hashable, Printable {
 
 	public var variable: Manifold.Variable? {
 		return analysis(
-			ifVariable: id,
+			ifVariable: unit,
 			ifConstructed: const(nil),
 			ifUniversal: const(nil))
 	}
@@ -133,7 +133,7 @@ public enum Type: Hashable, Printable {
 	public var constructed: Constructor? {
 		return analysis(
 			ifVariable: const(nil),
-			ifConstructed: id,
+			ifConstructed: unit,
 			ifUniversal: const(nil))
 	}
 
@@ -148,7 +148,7 @@ public enum Type: Hashable, Printable {
 		return analysis(
 			ifVariable: const(nil),
 			ifConstructed: const(nil),
-			ifUniversal: id)
+			ifUniversal: unit)
 	}
 
 
