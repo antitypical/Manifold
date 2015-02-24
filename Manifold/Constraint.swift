@@ -97,9 +97,12 @@ public func unify(t1: Type, t2: Type) -> Either<Error, Type> {
 	}
 
 	let infinite: Either<Error, Type> = .left("{\(t1), \(t2)} form an infinite type")
+	let v1 = t1.variable.map { occurs($0, t2) ? infinite : .right(t2) }
+	let v2 = t2.variable.map { occurs($0, t1) ? infinite : .right(t1) }
+
 	return
-		t1.variable.map { occurs($0, t2) ? infinite : .right(t2) }
-	??	t2.variable.map { occurs($0, t1) ? infinite : .right(t1) }
+		v1
+	??	v2
 	??	constructed
 	??	.left("don’t know how to unify \(t1) with \(t2)")
 }
