@@ -89,16 +89,19 @@ public func occurs(v: Variable, t: Type) -> Bool {
 	return t.freeVariables.contains(v)
 }
 
-public func unify(t1: Type, t2: Type) -> Either<Error, Type> {
-	let constructed: Either<Error, Type>? = (t1.constructed &&& t2.constructed).map { c1, c2 -> Either<Error, Type> in
-		if c1.isUnit && c2.isUnit { return .right(t1) }
-		if c1.isBool && c2.isBool { return .right(t1) }
-		return (c1.function &&& c2.function).map { (unify($0.0, $1.0) &&& unify($0.1, $1.1)).map { Type(function: $0, $1) } } ?? .left("mutually exclusive types: \(t1), \(t2)")
+public func unify(t1: Type, t2: Type) -> Either<Error, Substitution> {
+	let identity: Either<Error, Substitution> = .right([:])
+	let constructed: Either<Error, Substitution>? = (t1.constructed &&& t2.constructed).map { c1, c2 -> Either<Error, Substitution> in
+		if c1.isUnit && c2.isUnit { return identity }
+		if c1.isBool && c2.isBool { return identity }
+		return
+			(c1.function &&& c2.function).map { (unify($0.0, $1.0) &&& unify($0.1, $1.1)).map(uncurry(Substitution.compose)) }
+		??	.left("mutually exclusive types: \(t1), \(t2)")
 	}
 
-	let infinite: Either<Error, Type> = .left("{\(t1), \(t2)} form an infinite type")
-	let v1 = t1.variable.map { occurs($0, t2) ? infinite : .right(t2) }
-	let v2 = t2.variable.map { occurs($0, t1) ? infinite : .right(t1) }
+	let infinite: Either<Error, Substitution> = .left("{\(t1), \(t2)} form an infinite type")
+	let v1 = t1.variable.map { occurs($0, t2) ? infinite : .right([$0: t2]) }
+	let v2 = t2.variable.map { occurs($0, t1) ? infinite : .right([$0: t1]) }
 
 	return
 		v1
@@ -108,13 +111,16 @@ public func unify(t1: Type, t2: Type) -> Either<Error, Type> {
 }
 
 
-public func checkForInconsistencies(partition: [Type]) -> Either<Error, Type> {
-	return reduce(partition, .right(Type(Variable()))) { into, each in
-		into >>- { unify($0, each) }
+public func checkForInconsistencies(partition: [Type]) -> (Error?, Substitution) {
+	typealias Result = (Error?, Substitution, Type)
+	let initial: Result = (nil, [:], Type(Variable()))
+	let result: Result = reduce(partition, initial) { into, each in
+		unify(into.2, each).either({ error in (into.0.map { $0 + error } ?? error, into.1, each) }, { (into.0, into.1.compose($0), each) })
 	}
+	return (result.0, result.1)
 }
 
-public func solve(constraints: ConstraintSet) -> Either<Error, DisjointSet<Type>> {
+public func solve(constraints: ConstraintSet) -> Either<Error, Substitution> {
 	let (equivalences, indexByType) = typeGraph(constraints)
 	let graph = reduce(constraints, equivalences) { graph, constraint in
 		constraint.analysis(
@@ -125,8 +131,11 @@ public func solve(constraints: ConstraintSet) -> Either<Error, DisjointSet<Type>
 			})
 	}
 
-	return reduce(graph.partitions, .right(graph)) { graph, partition in
-		checkForInconsistencies(partition) >>- const(graph)
+	return reduce(graph.partitions, Either<Error, Substitution>.right([:])) { substitution, partition in
+		substitution >>- { substitution in
+			let result = checkForInconsistencies(partition)
+			return result.0.map(Either.left) ?? .right(result.1.compose(substitution))
+		}
 	}
 }
 
