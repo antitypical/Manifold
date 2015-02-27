@@ -65,17 +65,6 @@ public func === (left: Type, right: Type) -> Constraint {
 
 public typealias ConstraintSet = Multiset<Constraint>
 
-private func typeGraph(constraints: ConstraintSet) -> (DisjointSet<Type>, [Type: Int]) {
-	let distinctTypes = Set(lazy(constraints)
-		.flatMap {
-			$0.analysis(ifEquality: {
-				$0.instantiate().distinctTypes.union($1.instantiate().distinctTypes)
-			})
-		})
-	let typeGraph = DisjointSet(distinctTypes)
-	return (typeGraph, Dictionary(lazy(enumerate(typeGraph)).map { ($1, $0) }))
-}
-
 private func structural<T>(t1: Type, t2: Type, initial: T, f: (T, Type, Type) -> T) -> T {
 	return
 		(t1.function &&& t2.function).map {
@@ -121,14 +110,22 @@ public func checkForInconsistencies(partition: [Type]) -> (Error?, Substitution)
 }
 
 public func solve(constraints: ConstraintSet) -> Either<Error, Substitution> {
-	let (equivalences, indexByType) = typeGraph(constraints)
-	let graph = reduce(constraints, equivalences) { graph, constraint in
-		constraint.analysis(
-			ifEquality: { t1, t2 in
-				structural(t1, t2, graph) { graph, t1, t2 in
-					(indexByType[t1] &&& indexByType[t2]).map { graph.union($0, $1) } ?? graph
-				}
-			})
+	func findOrAdd(type: Type, inout equivalences: DisjointSet<Type>, inout indices: [Type: Int]) -> Int {
+		if let index = indices[type] { return index }
+		let index = equivalences.count
+		indices[type] = index
+		equivalences.append(type)
+		return index
+	}
+	let (graph: DisjointSet<Type>, indexByType: [Type: Int]) = reduce(constraints, ([], [:])) { (pair, constraint) in
+		constraint.analysis { t1, t2 in
+			structural(t1.instantiate(), t2.instantiate(), pair) { (var pair, t1, t2) in
+				let i1 = findOrAdd(t1, &pair.0, &pair.1)
+				let i2 = findOrAdd(t2, &pair.0, &pair.1)
+				pair.0.unionInPlace(i1, i2)
+				return pair
+			}
+		}
 	}
 
 	return reduce(graph.partitions, Either<Error, Substitution>.right([:])) { substitution, partition in
