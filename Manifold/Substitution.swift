@@ -8,7 +8,7 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable, Printable {
 
 	public func compose(other: Substitution) -> Substitution {
 		let variables = self.variables
-		return Substitution(elements + lazy(other.elements).filter { !variables.contains($0.0) })
+		return Substitution(map(elements) { ($0, other.apply($1)) } + lazy(other.elements).filter { !variables.contains($0.0) })
 	}
 
 	public var variables: Set<Variable> {
