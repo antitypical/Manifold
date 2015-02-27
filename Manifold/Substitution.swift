@@ -57,6 +57,10 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable, Printable {
 }
 
 
+public func == <T: Equatable, U: Equatable> (left: [(T, U)], right: [(T, U)]) -> Bool {
+	return left.count == right.count && reduce(lazy(zip(left, right)).map(==), true) { $0 && $1 }
+}
+
 public func == (left: Substitution, right: Substitution) -> Bool {
 	return left.elements == right.elements
 }
