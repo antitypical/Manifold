@@ -1,13 +1,14 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public struct Substitution: DictionaryLiteralConvertible, Equatable {
-	public init<S: SequenceType where S.Generator.Element == Dictionary<Variable, Type>.Element>(_ sequence: S) {
+public struct Substitution: DictionaryLiteralConvertible, Equatable, Printable {
+	public init<S: SequenceType where S.Generator.Element == (Variable, Type)>(_ sequence: S) {
 		self.elements = [:] + sequence
 	}
 
 
 	public func compose(other: Substitution) -> Substitution {
-		return Substitution(other.elements + elements)
+		let variables = self.variables
+		return Substitution(map(elements) { ($0, other.apply($1)) } + lazy(other.elements).filter { !variables.contains($0.0) })
 	}
 
 	public var variables: Set<Variable> {
@@ -15,7 +16,7 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable {
 	}
 
 	public var occurringVariables: Set<Variable> {
-		let replacementVariables = reduce(lazy(elements.values).map { $0.freeVariables }, Set(), uncurry(Set.union))
+		let replacementVariables = reduce(lazy(elements).map { $1.freeVariables }, Set(), uncurry(Set.union))
 		return variables.intersect(replacementVariables)
 	}
 
@@ -41,6 +42,13 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable {
 
 	public init(dictionaryLiteral elements: (Variable, Type)...) {
 		self.init(elements)
+	}
+
+
+	// MARK: Printable
+
+	public var description: String {
+		return "[" + ", ".join(lazy(elements).map { "\(Type($0)) := \($1)" }) + "]"
 	}
 
 
