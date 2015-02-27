@@ -2,7 +2,7 @@
 
 public struct Substitution: DictionaryLiteralConvertible, Equatable, Printable {
 	public init<S: SequenceType where S.Generator.Element == (Variable, Type)>(_ sequence: S) {
-		self.elements = [] + sequence
+		self.elements = [:] + sequence
 	}
 
 
@@ -12,7 +12,7 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable, Printable {
 	}
 
 	public var variables: Set<Variable> {
-		return Set(lazy(elements).map { $0.0 })
+		return Set(elements.keys)
 	}
 
 	public var occurringVariables: Set<Variable> {
@@ -27,7 +27,7 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable, Printable {
 
 	public func apply(type: Type) -> Type {
 		return type.analysis(
-			ifVariable: { variable in find(self.elements, { v, _ in v == variable }).map { self.elements[$0].1 } ?? type },
+			ifVariable: { self.elements[$0] ?? type },
 			ifConstructed: {
 				$0.analysis(
 					ifUnit: type,
@@ -54,7 +54,7 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable, Printable {
 
 	// MARK: Private
 
-	private let elements: [(Variable, Type)]
+	private let elements: [Variable: Type]
 }
 
 
