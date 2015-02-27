@@ -1,21 +1,22 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public struct Substitution: DictionaryLiteralConvertible, Equatable, Printable {
-	public init<S: SequenceType where S.Generator.Element == Dictionary<Variable, Type>.Element>(_ sequence: S) {
-		self.elements = [:] + sequence
+	public init<S: SequenceType where S.Generator.Element == (Variable, Type)>(_ sequence: S) {
+		self.elements = [] + sequence
 	}
 
 
 	public func compose(other: Substitution) -> Substitution {
-		return Substitution(other.elements + elements)
+		let variables = self.variables
+		return Substitution(elements + lazy(other.elements).filter { !variables.contains($0.0) })
 	}
 
 	public var variables: Set<Variable> {
-		return Set(elements.keys)
+		return Set(lazy(elements).map { $0.0 })
 	}
 
 	public var occurringVariables: Set<Variable> {
-		let replacementVariables = reduce(lazy(elements.values).map { $0.freeVariables }, Set(), uncurry(Set.union))
+		let replacementVariables = reduce(lazy(elements).map { $1.freeVariables }, Set(), uncurry(Set.union))
 		return variables.intersect(replacementVariables)
 	}
 
@@ -26,7 +27,7 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable, Printable {
 
 	public func apply(type: Type) -> Type {
 		return type.analysis(
-			ifVariable: { self.elements[$0] ?? type },
+			ifVariable: { variable in find(self.elements, { v, _ in v == variable }).map { self.elements[$0].1 } ?? type },
 			ifConstructed: {
 				$0.analysis(
 					ifUnit: type,
@@ -53,7 +54,7 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable, Printable {
 
 	// MARK: Private
 
-	private let elements: [Variable: Type]
+	private let elements: [(Variable, Type)]
 }
 
 
