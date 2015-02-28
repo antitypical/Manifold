@@ -60,17 +60,11 @@ public enum Type: Hashable, Printable {
 		// MARK: Recursive properties
 
 		public var freeVariables: Set<Manifold.Variable> {
-			return analysis(
-				ifUnit: [],
-				ifBool: [],
-				ifFunction: { $0.freeVariables.union($1.freeVariables) })
+			return reduce([]) { $0.union($1.freeVariables) }
 		}
 
 		public var distinctTypes: Set<Type> {
-			return analysis(
-				ifUnit: [],
-				ifBool: [],
-				ifFunction: { $0.distinctTypes.union($1.distinctTypes) })
+			return reduce([]) { $0.union($1.distinctTypes) }
 		}
 
 
@@ -168,10 +162,7 @@ public enum Type: Hashable, Printable {
 
 
 	public var distinctTypes: Set<Type> {
-		return analysis(
-			ifVariable: const([ self ]),
-			ifConstructed: { $0.distinctTypes.union([ self ]) },
-			ifUniversal: { $1.distinctTypes.union([ self ]) })
+		return reduce([]) { $0.union([ $1 ]) }
 	}
 
 	public var quantifiedType: Type? {
