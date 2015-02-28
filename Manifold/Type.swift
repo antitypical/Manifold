@@ -76,7 +76,7 @@ public enum Type: Hashable, Printable {
 
 		// MARK: Case analysis
 
-		public func analysis<T>(@autoclosure #ifUnit: () -> T, @autoclosure ifBool: () -> T, ifFunction: (Type, Type) -> T) -> T {
+		public func analysis<T>(@autoclosure #ifUnit: () -> T, @autoclosure ifBool: () -> T, @noescape ifFunction: (Type, Type) -> T) -> T {
 			switch self {
 			case Unit:
 				return ifUnit()
@@ -192,7 +192,9 @@ public enum Type: Hashable, Printable {
 	}
 
 
-	public func analysis<T>(#ifVariable: Manifold.Variable -> T, ifConstructed: Constructor -> T, ifUniversal: (Set<Manifold.Variable>, Type) -> T) -> T {
+	// MARK: Case analysis
+
+	public func analysis<T>(@noescape #ifVariable: Manifold.Variable -> T, @noescape ifConstructed: Constructor -> T, @noescape ifUniversal: (Set<Manifold.Variable>, Type) -> T) -> T {
 		switch self {
 		case let Variable(v):
 			return ifVariable(v)
