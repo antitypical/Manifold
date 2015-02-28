@@ -214,6 +214,13 @@ public enum Type: Hashable, Printable {
 		}
 	}
 
+	public func reduce<Result>(initial: Result, @noescape _ combine: (Result, Type) -> Result) -> Result {
+		return analysis(
+			ifVariable: { _ in combine(initial, self) },
+			ifConstructed: { combine($0.reduce(initial, combine), self) },
+			ifUniversal: { combine($1.reduce(initial, combine), self) })
+	}
+
 
 	// MARK: Hashable
 
