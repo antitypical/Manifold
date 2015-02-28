@@ -87,6 +87,13 @@ public enum Type: Hashable, Printable {
 			}
 		}
 
+		public func reduce<Result>(initial: Result, @noescape _ combine: (Result, Type) -> Result) -> Result {
+			return analysis(
+				ifUnit: initial,
+				ifBool: initial,
+				ifFunction: { combine(combine(initial, $0), $1) })
+		}
+
 
 		// MARK: Hashable
 
