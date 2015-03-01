@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public struct Term: FixpointType, Equatable {
+public struct Term: FixpointType, Hashable {
 	public init(_ type: Constructor<Term>) {
 		self.type = type
 	}
@@ -10,9 +10,26 @@ public struct Term: FixpointType, Equatable {
 	}
 
 	public let type: Constructor<Term>
+
+
+	// MARK: Hashable
+
+	public var hashValue: Int {
+		return type.analysis(
+			ifUnit: 1,
+			ifFunction: hash(2),
+			ifSum: hash(3))
+	}
 }
 
 
 public func == (left: Term, right: Term) -> Bool {
 	return left.type == right.type
+}
+
+
+// MARK: - Implementation details
+
+private func hash<A: Hashable, B: Hashable>(n: Int)(a: A, b: B) -> Int {
+	return n ^ a.hashValue ^ b.hashValue
 }
