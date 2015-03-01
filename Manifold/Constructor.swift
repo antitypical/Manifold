@@ -15,13 +15,6 @@ public enum Constructor<T>: Printable {
 			ifSum: const(false))
 	}
 
-	public var isBool: Swift.Bool {
-		return analysis(
-			ifUnit: false,
-			ifFunction: const(false),
-			ifSum: const(false))
-	}
-
 	public var function: (T, T)? {
 		return analysis(
 			ifUnit: nil,
