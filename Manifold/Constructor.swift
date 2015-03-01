@@ -86,8 +86,8 @@ public func == <T: Equatable, U: Equatable> (left: (T, U), right: (T, U)) -> Boo
 public func == <T: Equatable> (left: Constructor<T>, right: Constructor<T>) -> Bool {
 	return
 		(left.isUnit && right.isUnit)
-	||	(left.isBool && right.isBool)
 	||	((left.function &&& right.function).map(==) ?? false)
+	||	((left.sum &&& right.sum).map(==) ?? false)
 }
 
 
