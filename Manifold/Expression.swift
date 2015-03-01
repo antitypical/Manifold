@@ -25,8 +25,8 @@ public enum Expression: Hashable, IntegerLiteralConvertible {
 
 		public var type: Type {
 			return analysis(
-				ifUnit: const(Type(.Unit)),
-				ifBool: const(Type(.Bool)))
+				ifUnit: const(Type.Unit),
+				ifBool: const(Type.Bool))
 		}
 
 
