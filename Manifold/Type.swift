@@ -23,7 +23,7 @@ public enum Type: Hashable, Printable {
 
 
 	public static var Bool: Type {
-		return Type(.Sum(.Unit, .Unit))
+		return Type(sum: .Unit, .Unit)
 	}
 
 	public static var Unit: Type {
