@@ -50,7 +50,7 @@ public enum Constructor: Hashable, Printable {
 
 	// MARK: Case analysis
 
-	public func analysis<T>(@autoclosure #ifUnit: () -> T, @noescape ifFunction: (Type, Type) -> T, @noescape ifSum: (Type, Type) -> T) -> T {
+	public func analysis<Result>(@autoclosure #ifUnit: () -> Result, @noescape ifFunction: (Type, Type) -> Result, @noescape ifSum: (Type, Type) -> Result) -> Result {
 		switch self {
 		case Unit:
 			return ifUnit()

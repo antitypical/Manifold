@@ -113,7 +113,7 @@ public enum Type: Hashable, Printable {
 
 	// MARK: Case analysis
 
-	public func analysis<T>(@noescape #ifVariable: Manifold.Variable -> T, @noescape ifConstructed: Constructor -> T, @noescape ifUniversal: (Set<Manifold.Variable>, Type) -> T) -> T {
+	public func analysis<Result>(@noescape #ifVariable: Manifold.Variable -> Result, @noescape ifConstructed: Constructor -> Result, @noescape ifUniversal: (Set<Manifold.Variable>, Type) -> Result) -> Result {
 		switch self {
 		case let Variable(v):
 			return ifVariable(v)
