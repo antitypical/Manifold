@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Constructor<T: Hashable>: Hashable, Printable {
+public enum Constructor<T>: Printable {
 	case Unit
 	case Function(Box<T>, Box<T>)
 	case Sum(Box<T>, Box<T>)
@@ -58,17 +58,6 @@ public enum Constructor<T: Hashable>: Hashable, Printable {
 	}
 
 
-	// MARK: Hashable
-
-	public var hashValue: Int {
-		let hash: Int -> (T, T) -> Int = { n in { n ^ $0.hashValue ^ $1.hashValue } }
-		return analysis(
-			ifUnit: 0,
-			ifFunction: hash(1),
-			ifSum: hash(2))
-	}
-
-
 	// MARK: Printable
 
 	public var description: String {
@@ -84,7 +73,7 @@ public func == <T: Equatable, U: Equatable> (left: (T, U), right: (T, U)) -> Boo
 	return left.0 == right.0 && left.1 == right.1
 }
 
-public func == <T> (left: Constructor<T>, right: Constructor<T>) -> Bool {
+public func == <T: Equatable> (left: Constructor<T>, right: Constructor<T>) -> Bool {
 	return
 		(left.isUnit && right.isUnit)
 	||	(left.isBool && right.isBool)
