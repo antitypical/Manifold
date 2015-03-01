@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public struct Term: FixpointType {
+public struct Term: FixpointType, Equatable {
 	public init(_ type: Constructor<Term>) {
 		self.type = type
 	}
@@ -10,4 +10,9 @@ public struct Term: FixpointType {
 	}
 
 	public let type: Constructor<Term>
+}
+
+
+public func == (left: Term, right: Term) -> Bool {
+	return left.type == right.type
 }
