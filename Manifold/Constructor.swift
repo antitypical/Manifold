@@ -37,6 +37,16 @@ public enum Constructor<T>: Printable {
 	}
 
 
+	// MARK: Functor
+
+	public func map<U>(transform: T -> U) -> Constructor<U> {
+		return analysis(
+			ifUnit: .Unit,
+			ifFunction: { .Function(Box(transform($0)), Box(transform($1))) },
+			ifSum: { .Sum(Box(transform($0)), Box(transform($1))) })
+	}
+
+
 	// MARK: Case analysis
 
 	public func analysis<Result>(@autoclosure #ifUnit: () -> Result, @noescape ifFunction: (T, T) -> Result, @noescape ifSum: (T, T) -> Result) -> Result {
