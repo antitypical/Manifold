@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D44474451AA3AE84001F0782 /* Term.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44474441AA3AE84001F0782 /* Term.swift */; };
 		D4A31B241AA3593200B3FC68 /* Constructor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A31B231AA3593200B3FC68 /* Constructor.swift */; };
 		D4A31B2A1AA366EC00B3FC68 /* Algebra.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A31B291AA366EC00B3FC68 /* Algebra.swift */; };
 		D4A31B2C1AA3708F00B3FC68 /* AlgebraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A31B2B1AA3708F00B3FC68 /* AlgebraTests.swift */; };
@@ -50,6 +51,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D44474441AA3AE84001F0782 /* Term.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Term.swift; sourceTree = "<group>"; };
 		D4A31B231AA3593200B3FC68 /* Constructor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constructor.swift; sourceTree = "<group>"; };
 		D4A31B291AA366EC00B3FC68 /* Algebra.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Algebra.swift; sourceTree = "<group>"; };
 		D4A31B2B1AA3708F00B3FC68 /* AlgebraTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlgebraTests.swift; sourceTree = "<group>"; };
@@ -143,6 +145,7 @@
 				D4EAE2461A87F95200931323 /* Substitution.swift */,
 				D4EAE25A1A889A2200931323 /* Inference.swift */,
 				D4D23F931A8AE58F00C4698C /* AssumptionSet.swift */,
+				D44474441AA3AE84001F0782 /* Term.swift */,
 				D4B3FBEE1A83515800DA2AC3 /* Supporting Files */,
 			);
 			path = Manifold;
@@ -302,6 +305,7 @@
 				D4A31B2A1AA366EC00B3FC68 /* Algebra.swift in Sources */,
 				D4D23F941A8AE58F00C4698C /* AssumptionSet.swift in Sources */,
 				D4B3FC131A83520100DA2AC3 /* Expression.swift in Sources */,
+				D44474451AA3AE84001F0782 /* Term.swift in Sources */,
 				D4F9F86E1A84977400B7071E /* Error.swift in Sources */,
 				D4EAE2471A87F95200931323 /* Substitution.swift in Sources */,
 			);
