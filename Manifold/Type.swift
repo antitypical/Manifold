@@ -139,9 +139,13 @@ public enum Type: Hashable, Printable {
 	public var hashValue: Int {
 		return analysis(
 			ifVariable: { $0.hashValue },
-			ifConstructed: { $0.hashValue },
-			ifUniversal: { $0.hashValue ^ $1.hashValue }
-		)
+			ifConstructed: {
+				$0.analysis(
+					ifUnit: 1,
+					ifFunction: hash(2),
+					ifSum: hash(3))
+			},
+			ifUniversal: hash(4))
 	}
 
 
@@ -214,6 +218,10 @@ extension Int {
 		let zero: UnicodeScalar = "₀"
 		return String(lazy(digits).map { Character(UnicodeScalar(zero.value + $0)) })
 	}
+}
+
+private func hash<A: Hashable, B: Hashable>(n: Int)(a: A, b: B) -> Int {
+	return n ^ a.hashValue ^ b.hashValue
 }
 
 
