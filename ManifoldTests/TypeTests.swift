@@ -28,23 +28,23 @@ final class TypeTests: XCTestCase {
 	}
 
 	func testFunctionTypesPrintWithArrow() {
-		let t: Type = .Bool --> .Bool
-		assert(t.description, ==, "Bool → Bool")
+		let t: Type = .Unit --> .Unit
+		assert(t.description, ==, "Unit → Unit")
 	}
 
 	func testFunctionTypesParenthesizeParameterFunctions() {
-		let t: Type = (.Bool --> .Bool) --> .Bool
-		assert(t.description, ==, "(Bool → Bool) → Bool")
+		let t: Type = (.Unit --> .Unit) --> .Unit
+		assert(t.description, ==, "(Unit → Unit) → Unit")
 	}
 
 	func testFunctionTypesParenthesizeQuantifiedParameterFunctions() {
-		let t: Type = Type(forall: [ 0 ], Type(0) --> .Bool) --> .Bool
-		assert(t.description, ==, "(∀{α₀}.α₀ → Bool) → Bool")
+		let t: Type = Type(forall: [ 0 ], Type(0) --> .Unit) --> .Unit
+		assert(t.description, ==, "(∀{α₀}.α₀ → Unit) → Unit")
 	}
 
 	func testFunctionTypesDoNotParenthesizeReturnedFunctions() {
-		let t: Type = .Bool --> .Bool --> .Bool
-		assert(t.description, ==, "Bool → Bool → Bool")
+		let t: Type = .Unit --> .Unit --> .Unit
+		assert(t.description, ==, "Unit → Unit → Unit")
 	}
 
 	func testUniversalTypesPrintWithQuantifier() {

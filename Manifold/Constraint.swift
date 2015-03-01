@@ -66,10 +66,14 @@ public func === (left: Type, right: Type) -> Constraint {
 public typealias ConstraintSet = Multiset<Constraint>
 
 private func structural<T>(t1: Type, t2: Type, initial: T, f: (T, Type, Type) -> T) -> T {
+	let recur: ((Type, Type), (Type, Type)) -> T = {
+		structural($0.0, $1.0, structural($0.1, $1.1, f(initial, t1, t2), f), f)
+	}
+	let function = (t1.function &&& t2.function).map(recur)
+	let sum = (t1.sum &&& t2.sum).map(recur)
 	return
-		(t1.function &&& t2.function).map {
-			structural($0.0, $1.0, structural($0.1, $1.1, f(initial, t1, t2), f), f)
-		}
+		function
+	??	sum
 	??	f(initial, t1, t2)
 }
 
@@ -83,8 +87,12 @@ public func unify(t1: Type, t2: Type) -> Either<Error, Substitution> {
 	let constructed: Either<Error, Substitution>? = (t1.constructed &&& t2.constructed).map { c1, c2 -> Either<Error, Substitution> in
 		if c1.isUnit && c2.isUnit { return identity }
 		if c1.isBool && c2.isBool { return identity }
+		let recur: ((Type, Type), (Type, Type)) -> Either<Error, Substitution> = { (unify($0.0, $1.0) &&& unify($0.1, $1.1)).map(uncurry(Substitution.compose)) }
+		let function = (c1.function &&& c2.function).map(recur)
+		let sum = (c1.sum &&& c2.sum).map(recur)
 		return
-			(c1.function &&& c2.function).map { (unify($0.0, $1.0) &&& unify($0.1, $1.1)).map(uncurry(Substitution.compose)) }
+			function
+		??	sum
 		??	.left("mutually exclusive types: \(t1), \(t2)")
 	}
 
