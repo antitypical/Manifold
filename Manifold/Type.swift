@@ -23,7 +23,7 @@ public enum Type: Hashable, Printable {
 
 
 	public static var Bool: Type {
-		return Type(.Bool)
+		return Type(.Sum(.Unit, .Unit))
 	}
 
 	public static var Unit: Type {
@@ -33,7 +33,6 @@ public enum Type: Hashable, Printable {
 
 	public enum Constructor: Hashable, Printable {
 		case Unit
-		case Bool
 		case Function(Type, Type)
 		case Sum(Type, Type)
 
@@ -43,7 +42,6 @@ public enum Type: Hashable, Printable {
 		public var isUnit: Swift.Bool {
 			return analysis(
 				ifUnit: true,
-				ifBool: false,
 				ifFunction: const(false),
 				ifSum: const(false))
 		}
@@ -51,7 +49,6 @@ public enum Type: Hashable, Printable {
 		public var isBool: Swift.Bool {
 			return analysis(
 				ifUnit: false,
-				ifBool: true,
 				ifFunction: const(false),
 				ifSum: const(false))
 		}
@@ -59,7 +56,6 @@ public enum Type: Hashable, Printable {
 		public var function: (Type, Type)? {
 			return analysis(
 				ifUnit: nil,
-				ifBool: nil,
 				ifFunction: unit,
 				ifSum: const(nil))
 		}
@@ -67,7 +63,6 @@ public enum Type: Hashable, Printable {
 		public var sum: (Type, Type)? {
 			return analysis(
 				ifUnit: nil,
-				ifBool: nil,
 				ifFunction: const(nil),
 				ifSum: unit)
 		}
@@ -86,12 +81,10 @@ public enum Type: Hashable, Printable {
 
 		// MARK: Case analysis
 
-		public func analysis<T>(@autoclosure #ifUnit: () -> T, @autoclosure ifBool: () -> T, @noescape ifFunction: (Type, Type) -> T, @noescape ifSum: (Type, Type) -> T) -> T {
+		public func analysis<T>(@autoclosure #ifUnit: () -> T, @noescape ifFunction: (Type, Type) -> T, @noescape ifSum: (Type, Type) -> T) -> T {
 			switch self {
 			case Unit:
 				return ifUnit()
-			case Bool:
-				return ifBool()
 			case let Function(t1, t2):
 				return ifFunction(t1, t2)
 			case let Sum(t1, t2):
@@ -102,7 +95,6 @@ public enum Type: Hashable, Printable {
 		public func reduce<Result>(initial: Result, @noescape _ combine: (Result, Type) -> Result) -> Result {
 			return analysis(
 				ifUnit: initial,
-				ifBool: initial,
 				ifFunction: { combine(combine(initial, $0), $1) },
 				ifSum: { combine(combine(initial, $0), $1) })
 		}
@@ -114,9 +106,8 @@ public enum Type: Hashable, Printable {
 			let hash: Int -> (Type, Type) -> Int = { n in { n ^ $0.hashValue ^ $1.hashValue } }
 			return analysis(
 				ifUnit: 0,
-				ifBool: 1,
-				ifFunction: hash(2),
-				ifSum: hash(3))
+				ifFunction: hash(1),
+				ifSum: hash(2))
 		}
 
 
@@ -129,7 +120,6 @@ public enum Type: Hashable, Printable {
 		private func describe(_ boundVariables: Set<Manifold.Variable> = []) -> String {
 			return analysis(
 				ifUnit: "Unit",
-				ifBool: "Bool",
 				ifFunction: { t1, t2 in
 					let parameter = t1.describe(boundVariables) |> { (t1.quantifiedType?.function ?? t1.function).map(const("(\($0))")) ?? $0 }
 					return "\(parameter) → \(t2.describe(boundVariables))"
@@ -203,7 +193,6 @@ public enum Type: Hashable, Printable {
 			ifConstructed: {
 				$0.analysis(
 					ifUnit: self,
-					ifBool: self,
 					ifFunction: { Type(function: $0.instantiate(), $1.instantiate()) },
 					ifSum: { Type(sum: $0.instantiate(), $1.instantiate()) })
 			},
