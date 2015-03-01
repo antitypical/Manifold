@@ -11,11 +11,6 @@ public struct Environment: DictionaryLiteralConvertible {
 	}
 
 
-	public func generalize(type: Type) -> Type {
-		return Type(forall: type.freeVariables.subtract(freeVariables), type)
-	}
-
-
 	// MARK: DictionaryLiteralConvertible
 
 	public init(dictionaryLiteral elements: (Int, Type)...) {
