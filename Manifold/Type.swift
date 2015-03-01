@@ -5,16 +5,16 @@ public enum Type: Hashable, Printable {
 		self = Variable(variable)
 	}
 
-	public init(_ constructor: Constructor) {
+	public init(_ constructor: Constructor<Type>) {
 		self = Constructed(Box(constructor))
 	}
 
 	public init(function t1: Type, _ t2: Type) {
-		self = Constructed(Box(.Function(t1, t2)))
+		self = Constructed(Box(.Function(Box(t1), Box(t2))))
 	}
 
 	public init(sum t1: Type, _ t2: Type) {
-		self = Constructed(Box(.Sum(t1, t2)))
+		self = Constructed(Box(.Sum(Box(t1), Box(t2))))
 	}
 
 	public init(forall a: Set<Manifold.Variable>, _ t: Type) {
@@ -23,7 +23,7 @@ public enum Type: Hashable, Printable {
 
 
 	public static var Bool: Type {
-		return Type(.Sum(.Unit, .Unit))
+		return Type(sum: .Unit, .Unit)
 	}
 
 	public static var Unit: Type {
@@ -31,106 +31,8 @@ public enum Type: Hashable, Printable {
 	}
 
 
-	public enum Constructor: Hashable, Printable {
-		case Unit
-		case Function(Type, Type)
-		case Sum(Type, Type)
-
-
-		// MARK: Decomposition
-
-		public var isUnit: Swift.Bool {
-			return analysis(
-				ifUnit: true,
-				ifFunction: const(false),
-				ifSum: const(false))
-		}
-
-		public var isBool: Swift.Bool {
-			return analysis(
-				ifUnit: false,
-				ifFunction: const(false),
-				ifSum: const(false))
-		}
-
-		public var function: (Type, Type)? {
-			return analysis(
-				ifUnit: nil,
-				ifFunction: unit,
-				ifSum: const(nil))
-		}
-
-		public var sum: (Type, Type)? {
-			return analysis(
-				ifUnit: nil,
-				ifFunction: const(nil),
-				ifSum: unit)
-		}
-
-
-		// MARK: Recursive properties
-
-		public var freeVariables: Set<Manifold.Variable> {
-			return reduce([]) { $0.union($1.freeVariables) }
-		}
-
-		public var distinctTypes: Set<Type> {
-			return reduce([]) { $0.union($1.distinctTypes) }
-		}
-
-
-		// MARK: Case analysis
-
-		public func analysis<T>(@autoclosure #ifUnit: () -> T, @noescape ifFunction: (Type, Type) -> T, @noescape ifSum: (Type, Type) -> T) -> T {
-			switch self {
-			case Unit:
-				return ifUnit()
-			case let Function(t1, t2):
-				return ifFunction(t1, t2)
-			case let Sum(t1, t2):
-				return ifSum(t1, t2)
-			}
-		}
-
-		public func reduce<Result>(initial: Result, @noescape _ combine: (Result, Type) -> Result) -> Result {
-			return analysis(
-				ifUnit: initial,
-				ifFunction: { combine(combine(initial, $0), $1) },
-				ifSum: { combine(combine(initial, $0), $1) })
-		}
-
-
-		// MARK: Hashable
-
-		public var hashValue: Int {
-			let hash: Int -> (Type, Type) -> Int = { n in { n ^ $0.hashValue ^ $1.hashValue } }
-			return analysis(
-				ifUnit: 0,
-				ifFunction: hash(1),
-				ifSum: hash(2))
-		}
-
-
-		// MARK: Printable
-
-		public var description: String {
-			return describe()
-		}
-
-		private func describe(_ boundVariables: Set<Manifold.Variable> = []) -> String {
-			return analysis(
-				ifUnit: "Unit",
-				ifFunction: { t1, t2 in
-					let parameter = t1.describe(boundVariables) |> { (t1.quantifiedType?.function ?? t1.function).map(const("(\($0))")) ?? $0 }
-					return "\(parameter) → \(t2.describe(boundVariables))"
-				},
-				ifSum: { "\($0) | \($1)" })
-		}
-	}
-
-
 	case Variable(Manifold.Variable)
-	case Constructed(Box<Constructor>)
+	case Constructed(Box<Constructor<Type>>)
 	case Universal(Set<Manifold.Variable>, Box<Type>)
 
 
@@ -143,7 +45,7 @@ public enum Type: Hashable, Printable {
 			ifUniversal: const(nil))
 	}
 
-	public var constructed: Constructor? {
+	public var constructed: Constructor<Type>? {
 		return analysis(
 			ifVariable: const(nil),
 			ifConstructed: unit,
@@ -175,20 +77,13 @@ public enum Type: Hashable, Printable {
 	public var freeVariables: Set<Manifold.Variable> {
 		return analysis(
 			ifVariable: { [ $0 ] },
-			ifConstructed: { $0.freeVariables },
+			ifConstructed: { $0.reduce([]) { $0.union($1.freeVariables) } },
 			ifUniversal: { $1.freeVariables.subtract($0) })
 	}
 
 
 	public var distinctTypes: Set<Type> {
 		return reduce([]) { $0.union([ $1 ]) }
-	}
-
-	public var quantifiedType: Type? {
-		return analysis(
-			ifVariable: const(nil),
-			ifConstructed: const(nil),
-			ifUniversal: { $1.quantifiedType ?? $1 })
 	}
 
 
@@ -211,7 +106,7 @@ public enum Type: Hashable, Printable {
 
 	// MARK: Case analysis
 
-	public func analysis<T>(@noescape #ifVariable: Manifold.Variable -> T, @noescape ifConstructed: Constructor -> T, @noescape ifUniversal: (Set<Manifold.Variable>, Type) -> T) -> T {
+	public func analysis<Result>(@noescape #ifVariable: Manifold.Variable -> Result, @noescape ifConstructed: Constructor<Type> -> Result, @noescape ifUniversal: (Set<Manifold.Variable>, Type) -> Result) -> Result {
 		switch self {
 		case let Variable(v):
 			return ifVariable(v)
@@ -237,9 +132,13 @@ public enum Type: Hashable, Printable {
 	public var hashValue: Int {
 		return analysis(
 			ifVariable: { $0.hashValue },
-			ifConstructed: { $0.hashValue },
-			ifUniversal: { $0.hashValue ^ $1.hashValue }
-		)
+			ifConstructed: {
+				$0.analysis(
+					ifUnit: 1,
+					ifFunction: hash(2),
+					ifSum: hash(3))
+			},
+			ifUniversal: hash(4))
 	}
 
 
@@ -255,7 +154,16 @@ public enum Type: Hashable, Printable {
 		return analysis(
 			ifVariable: { (boundVariables.contains($0) ? bound : free) + $0.value.subscriptedDescription },
 			ifConstructed: { c in
-				c.describe(boundVariables)
+				c.analysis(
+					ifUnit: "Unit",
+					ifFunction: { t1, t2 in
+						let d1 = t1.describe(boundVariables)
+						let parameter = t1.function ?? t1.sum != nil ?
+							"(\(d1))"
+						:	d1
+						return "\(parameter) → \(t2.describe(boundVariables))"
+					},
+					ifSum: { "\($0) | \($1)" })
 			},
 			ifUniversal: {
 				let variables = lazy($0)
@@ -267,22 +175,12 @@ public enum Type: Hashable, Printable {
 	}
 }
 
-public func == <T: Equatable, U: Equatable> (left: (T, U), right: (T, U)) -> Bool {
-	return left.0 == right.0 && left.1 == right.1
-}
 
 public func == (left: Type, right: Type) -> Bool {
 	let variable: Bool? = (left.variable &&& right.variable).map(==)
 	let constructed: Bool? = (left.constructed &&& right.constructed).map(==)
 	let universal: Bool? = (left.universal &&& right.universal).map(==)
 	return variable ?? constructed ?? universal ?? false
-}
-
-public func == (left: Type.Constructor, right: Type.Constructor) -> Bool {
-	return
-		(left.isUnit && right.isUnit)
-	||	(left.isBool && right.isBool)
-	||	((left.function &&& right.function).map(==) ?? false)
 }
 
 
@@ -313,6 +211,10 @@ extension Int {
 		let zero: UnicodeScalar = "₀"
 		return String(lazy(digits).map { Character(UnicodeScalar(zero.value + $0)) })
 	}
+}
+
+private func hash<A: Hashable, B: Hashable>(n: Int)(a: A, b: B) -> Int {
+	return n ^ a.hashValue ^ b.hashValue
 }
 
 
