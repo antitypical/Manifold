@@ -77,7 +77,7 @@ public enum Type: Hashable, Printable {
 	public var freeVariables: Set<Manifold.Variable> {
 		return analysis(
 			ifVariable: { [ $0 ] },
-			ifConstructed: { $0.freeVariables },
+			ifConstructed: { $0.reduce([]) { $0.union($1.freeVariables) } },
 			ifUniversal: { $1.freeVariables.subtract($0) })
 	}
 

@@ -39,10 +39,6 @@ public enum Constructor<T: Hashable>: Hashable, Printable {
 
 	// MARK: Recursive properties
 
-	public var freeVariables: Set<Manifold.Variable> {
-		return reduce([]) { $0.union($1.freeVariables) }
-	}
-
 	public var distinctTypes: Set<Type> {
 		return reduce([]) { $0.union($1.distinctTypes) }
 	}
