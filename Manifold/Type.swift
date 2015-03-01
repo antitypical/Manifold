@@ -64,6 +64,14 @@ public enum Type: Hashable, Printable {
 				ifSum: const(nil))
 		}
 
+		public var sum: (Type, Type)? {
+			return analysis(
+				ifUnit: nil,
+				ifBool: nil,
+				ifFunction: const(nil),
+				ifSum: unit)
+		}
+
 
 		// MARK: Recursive properties
 
