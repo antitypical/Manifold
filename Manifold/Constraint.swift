@@ -66,10 +66,14 @@ public func === (left: Type, right: Type) -> Constraint {
 public typealias ConstraintSet = Multiset<Constraint>
 
 private func structural<T>(t1: Type, t2: Type, initial: T, f: (T, Type, Type) -> T) -> T {
+	let recur: ((Type, Type), (Type, Type)) -> T = {
+		structural($0.0, $1.0, structural($0.1, $1.1, f(initial, t1, t2), f), f)
+	}
+	let function = (t1.function &&& t2.function).map(recur)
+	let sum = (t1.sum &&& t2.sum).map(recur)
 	return
-		(t1.function &&& t2.function).map {
-			structural($0.0, $1.0, structural($0.1, $1.1, f(initial, t1, t2), f), f)
-		}
+		function
+	??	sum
 	??	f(initial, t1, t2)
 }
 
