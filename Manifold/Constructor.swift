@@ -37,13 +37,6 @@ public enum Constructor<T: Hashable>: Hashable, Printable {
 	}
 
 
-	// MARK: Recursive properties
-
-	public var distinctTypes: Set<Type> {
-		return reduce([]) { $0.union($1.distinctTypes) }
-	}
-
-
 	// MARK: Case analysis
 
 	public func analysis<Result>(@autoclosure #ifUnit: () -> Result, @noescape ifFunction: (Type, Type) -> Result, @noescape ifSum: (Type, Type) -> Result) -> Result {
