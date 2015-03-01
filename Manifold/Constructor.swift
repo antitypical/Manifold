@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Constructor: Hashable, Printable {
+public enum Constructor<T: Hashable>: Hashable, Printable {
 	case Unit
 	case Function(Type, Type)
 	case Sum(Type, Type)
@@ -102,7 +102,7 @@ public func == <T: Equatable, U: Equatable> (left: (T, U), right: (T, U)) -> Boo
 	return left.0 == right.0 && left.1 == right.1
 }
 
-public func == (left: Constructor, right: Constructor) -> Bool {
+public func == <T> (left: Constructor<T>, right: Constructor<T>) -> Bool {
 	return
 		(left.isUnit && right.isUnit)
 	||	(left.isBool && right.isBool)

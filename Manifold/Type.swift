@@ -5,7 +5,7 @@ public enum Type: Hashable, Printable {
 		self = Variable(variable)
 	}
 
-	public init(_ constructor: Constructor) {
+	public init(_ constructor: Constructor<Type>) {
 		self = Constructed(Box(constructor))
 	}
 
@@ -32,7 +32,7 @@ public enum Type: Hashable, Printable {
 
 
 	case Variable(Manifold.Variable)
-	case Constructed(Box<Constructor>)
+	case Constructed(Box<Constructor<Type>>)
 	case Universal(Set<Manifold.Variable>, Box<Type>)
 
 
@@ -45,7 +45,7 @@ public enum Type: Hashable, Printable {
 			ifUniversal: const(nil))
 	}
 
-	public var constructed: Constructor? {
+	public var constructed: Constructor<Type>? {
 		return analysis(
 			ifVariable: const(nil),
 			ifConstructed: unit,
@@ -113,7 +113,7 @@ public enum Type: Hashable, Printable {
 
 	// MARK: Case analysis
 
-	public func analysis<Result>(@noescape #ifVariable: Manifold.Variable -> Result, @noescape ifConstructed: Constructor -> Result, @noescape ifUniversal: (Set<Manifold.Variable>, Type) -> Result) -> Result {
+	public func analysis<Result>(@noescape #ifVariable: Manifold.Variable -> Result, @noescape ifConstructed: Constructor<Type> -> Result, @noescape ifUniversal: (Set<Manifold.Variable>, Type) -> Result) -> Result {
 		switch self {
 		case let Variable(v):
 			return ifVariable(v)
