@@ -12,6 +12,11 @@ public struct Term: FixpointType, Hashable {
 	public let type: Constructor<Term>
 
 
+	public var distinctTerms: Set<Term> {
+		return type.reduce([], { $0.union([ $1 ]) })
+	}
+
+
 	// MARK: Hashable
 
 	public var hashValue: Int {
