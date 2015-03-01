@@ -86,13 +86,6 @@ public enum Type: Hashable, Printable {
 		return reduce([]) { $0.union([ $1 ]) }
 	}
 
-	public var quantifiedType: Type? {
-		return analysis(
-			ifVariable: const(nil),
-			ifConstructed: const(nil),
-			ifUniversal: { $1.quantifiedType ?? $1 })
-	}
-
 
 	// MARK: Transformation
 
