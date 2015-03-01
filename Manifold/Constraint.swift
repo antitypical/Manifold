@@ -82,19 +82,22 @@ public func occurs(v: Variable, t: Type) -> Bool {
 	return t.freeVariables.contains(v)
 }
 
-public func unify(t1: Type, t2: Type) -> Either<Error, Substitution> {
+private func unify(c1: Type.Constructor, c2: Type.Constructor) -> Either<Error, Substitution>? {
 	let identity: Either<Error, Substitution> = .right([:])
-	let constructed: Either<Error, Substitution>? = (t1.constructed &&& t2.constructed).map { c1, c2 -> Either<Error, Substitution> in
-		if c1.isUnit && c2.isUnit { return identity }
-		if c1.isBool && c2.isBool { return identity }
-		let recur: ((Type, Type), (Type, Type)) -> Either<Error, Substitution> = { (unify($0.0, $1.0) &&& unify($0.1, $1.1)).map(uncurry(Substitution.compose)) }
-		let function = (c1.function &&& c2.function).map(recur)
-		let sum = (c1.sum &&& c2.sum).map(recur)
-		return
-			function
-		??	sum
-		??	.left("mutually exclusive types: \(t1), \(t2)")
-	}
+	if c1.isUnit && c2.isUnit { return identity }
+	if c1.isBool && c2.isBool { return identity }
+	let recur: ((Type, Type), (Type, Type)) -> Either<Error, Substitution> = { (unify($0.0, $1.0) &&& unify($0.1, $1.1)).map(uncurry(Substitution.compose)) }
+	let function = (c1.function &&& c2.function).map(recur)
+	let sum = (c1.sum &&& c2.sum).map(recur)
+	return
+		function
+	??	sum
+}
+
+public func unify(t1: Type, t2: Type) -> Either<Error, Substitution> {
+	let constructed: Either<Error, Substitution>? =
+		(t1.constructed &&& t2.constructed).map(unify)
+	??	.left("mutually exclusive types: \(t1), \(t2)")
 
 	let infinite: Either<Error, Substitution> = .left("{\(t1), \(t2)} form an infinite type")
 	let v1 = t1.variable.map { occurs($0, t2) ? infinite : .right([$0: t2]) }
