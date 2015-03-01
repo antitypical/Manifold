@@ -65,16 +65,16 @@ public func === (left: Type, right: Type) -> Constraint {
 
 public typealias ConstraintSet = Multiset<Constraint>
 
-private func structural<T>(t1: Type, t2: Type, initial: T, f: (T, Type, Type) -> T) -> T {
+private func reduce<T>(t1: Type, t2: Type, initial: T, combine: (T, Type, Type) -> T) -> T {
 	let recur: ((Type, Type), (Type, Type)) -> T = {
-		structural($0.0, $1.0, structural($0.1, $1.1, f(initial, t1, t2), f), f)
+		reduce($0.0, $1.0, reduce($0.1, $1.1, combine(initial, t1, t2), combine), combine)
 	}
 	let function = (t1.function &&& t2.function).map(recur)
 	let sum = (t1.sum &&& t2.sum).map(recur)
 	return
 		function
 	??	sum
-	??	f(initial, t1, t2)
+	??	combine(initial, t1, t2)
 }
 
 
@@ -130,7 +130,7 @@ public func solve(constraints: ConstraintSet) -> Either<Error, Substitution> {
 	}
 	let (graph: DisjointSet<Type>, indexByType: [Type: Int]) = reduce(constraints, ([], [:])) { (pair, constraint) in
 		constraint.analysis { t1, t2 in
-			structural(t1.instantiate(), t2.instantiate(), pair) { (var pair, t1, t2) in
+			reduce(t1.instantiate(), t2.instantiate(), pair) { (var pair, t1, t2) in
 				let i1 = findOrAdd(t1, &pair.0, &pair.1)
 				let i2 = findOrAdd(t2, &pair.0, &pair.1)
 				pair.0.unionInPlace(i1, i2)
