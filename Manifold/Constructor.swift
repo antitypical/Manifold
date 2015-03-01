@@ -2,8 +2,8 @@
 
 public enum Constructor<T: Hashable>: Hashable, Printable {
 	case Unit
-	case Function(Type, Type)
-	case Sum(Type, Type)
+	case Function(Box<T>, Box<T>)
+	case Sum(Box<T>, Box<T>)
 
 
 	// MARK: Decomposition
@@ -22,14 +22,14 @@ public enum Constructor<T: Hashable>: Hashable, Printable {
 			ifSum: const(false))
 	}
 
-	public var function: (Type, Type)? {
+	public var function: (T, T)? {
 		return analysis(
 			ifUnit: nil,
 			ifFunction: unit,
 			ifSum: const(nil))
 	}
 
-	public var sum: (Type, Type)? {
+	public var sum: (T, T)? {
 		return analysis(
 			ifUnit: nil,
 			ifFunction: const(nil),
@@ -39,18 +39,18 @@ public enum Constructor<T: Hashable>: Hashable, Printable {
 
 	// MARK: Case analysis
 
-	public func analysis<Result>(@autoclosure #ifUnit: () -> Result, @noescape ifFunction: (Type, Type) -> Result, @noescape ifSum: (Type, Type) -> Result) -> Result {
+	public func analysis<Result>(@autoclosure #ifUnit: () -> Result, @noescape ifFunction: (T, T) -> Result, @noescape ifSum: (T, T) -> Result) -> Result {
 		switch self {
 		case Unit:
 			return ifUnit()
 		case let Function(t1, t2):
-			return ifFunction(t1, t2)
+			return ifFunction(t1.value, t2.value)
 		case let Sum(t1, t2):
-			return ifSum(t1, t2)
+			return ifSum(t1.value, t2.value)
 		}
 	}
 
-	public func reduce<Result>(initial: Result, @noescape _ combine: (Result, Type) -> Result) -> Result {
+	public func reduce<Result>(initial: Result, @noescape _ combine: (Result, T) -> Result) -> Result {
 		return analysis(
 			ifUnit: initial,
 			ifFunction: { combine(combine(initial, $0), $1) },
@@ -61,7 +61,7 @@ public enum Constructor<T: Hashable>: Hashable, Printable {
 	// MARK: Hashable
 
 	public var hashValue: Int {
-		let hash: Int -> (Type, Type) -> Int = { n in { n ^ $0.hashValue ^ $1.hashValue } }
+		let hash: Int -> (T, T) -> Int = { n in { n ^ $0.hashValue ^ $1.hashValue } }
 		return analysis(
 			ifUnit: 0,
 			ifFunction: hash(1),
@@ -94,4 +94,5 @@ public func == <T> (left: Constructor<T>, right: Constructor<T>) -> Bool {
 
 // MARK: - Imports
 
+import Box
 import Prelude
