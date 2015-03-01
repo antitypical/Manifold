@@ -72,16 +72,9 @@ public enum Constructor<T: Hashable>: Hashable, Printable {
 	// MARK: Printable
 
 	public var description: String {
-		return describe()
-	}
-
-	internal func describe(_ boundVariables: Set<Manifold.Variable> = []) -> String {
 		return analysis(
 			ifUnit: "Unit",
-			ifFunction: { t1, t2 in
-				let parameter = t1.describe(boundVariables) |> { (t1.quantifiedType?.function ?? t1.function).map(const("(\($0))")) ?? $0 }
-				return "\(parameter) → \(t2.describe(boundVariables))"
-			},
+			ifFunction: { "(\($0)) → \($1)" },
 			ifSum: { "\($0) | \($1)" })
 	}
 }

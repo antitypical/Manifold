@@ -151,13 +151,22 @@ public enum Type: Hashable, Printable {
 		return describe()
 	}
 
-	internal func describe(_ boundVariables: Set<Manifold.Variable> = []) -> String {
+	private func describe(_ boundVariables: Set<Manifold.Variable> = []) -> String {
 		let bound = "α"
 		let free = "τ"
 		return analysis(
 			ifVariable: { (boundVariables.contains($0) ? bound : free) + $0.value.subscriptedDescription },
 			ifConstructed: { c in
-				c.describe(boundVariables)
+				c.analysis(
+					ifUnit: "Unit",
+					ifFunction: { t1, t2 in
+						let d1 = t1.describe(boundVariables)
+						let parameter = t1.function ?? t1.sum != nil ?
+							"(\(d1))"
+						:	d1
+						return "\(parameter) → \(t2.describe(boundVariables))"
+					},
+					ifSum: { "\($0) | \($1)" })
 			},
 			ifUniversal: {
 				let variables = lazy($0)
