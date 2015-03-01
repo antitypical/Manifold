@@ -14,12 +14,12 @@ public struct Term: FixpointType {
 
 
 public protocol FixpointType {
-	typealias F
-	init(F)
-	static func out(Self) -> F
+	typealias Recur
+	init(Recur)
+	static func out(Self) -> Recur
 }
 
-public func cata<T, Fix: FixpointType where Fix.F == Constructor<Fix>>(f: Constructor<T> -> T)(_ term: Fix) -> T {
+public func cata<T, Fix: FixpointType where Fix.Recur == Constructor<Fix>>(f: Constructor<T> -> T)(_ term: Fix) -> T {
 	return term |> (Fix.out >>> (flip(uncurry(Constructor.map)) <| cata(f)) >>> f)
 }
 
