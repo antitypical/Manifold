@@ -10,11 +10,11 @@ public enum Type: Hashable, Printable {
 	}
 
 	public init(function t1: Type, _ t2: Type) {
-		self = Constructed(Box(.Function(Box(t1), Box(t2))))
+		self.init(.Function(Box(t1), Box(t2)))
 	}
 
 	public init(sum t1: Type, _ t2: Type) {
-		self = Constructed(Box(.Sum(Box(t1), Box(t2))))
+		self.init(.Sum(Box(t1), Box(t2)))
 	}
 
 	public init(forall a: Set<Manifold.Variable>, _ t: Type) {
