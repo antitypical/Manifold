@@ -1,14 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public struct Term: FixpointType, Hashable {
-	public init(_ type: Type) {
-		self.type = type
-	}
-
-	public static func out(term: Term) -> Type {
-		return term.type
-	}
-
 	public let type: Type
 
 
@@ -33,6 +25,17 @@ public struct Term: FixpointType, Hashable {
 					ifSum: hash(3))
 			},
 			ifUniversal: hash(4))
+	}
+
+
+	// MARK: FixpointType
+
+	public init(_ type: Type) {
+		self.type = type
+	}
+
+	public static func out(term: Term) -> Type {
+		return term.type
 	}
 }
 
