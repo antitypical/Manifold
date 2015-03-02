@@ -12,7 +12,10 @@ public struct Term: FixpointType, Hashable {
 
 
 	public var freeVariables: Set<Variable> {
-		return []
+		return type.analysis(
+			ifVariable: { [ $0 ] },
+			ifConstructed: { $0.reduce([]) { $0.union($1.freeVariables) } },
+			ifUniversal: { $1.freeVariables.subtract($0) })
 	}
 
 	public var distinctTerms: Set<Type> {
