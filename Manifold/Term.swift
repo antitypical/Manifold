@@ -1,22 +1,22 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public struct Term: FixpointType, Hashable {
-	public init(_ type: Constructor<Term>) {
+	public init(_ type: Type) {
 		self.type = type
 	}
 
-	public static func out(term: Term) -> Constructor<Term> {
+	public static func out(term: Term) -> Type {
 		return term.type
 	}
 
-	public let type: Constructor<Term>
+	public let type: Type
 
 
 	public var freeVariables: Set<Variable> {
 		return []
 	}
 
-	public var distinctTerms: Set<Term> {
+	public var distinctTerms: Set<Type> {
 		return type.reduce([], { $0.union([ $1 ]) })
 	}
 
@@ -25,9 +25,14 @@ public struct Term: FixpointType, Hashable {
 
 	public var hashValue: Int {
 		return type.analysis(
-			ifUnit: 1,
-			ifFunction: hash(2),
-			ifSum: hash(3))
+			ifVariable: { $0.hashValue },
+			ifConstructed: {
+				$0.analysis(
+					ifUnit: 1,
+					ifFunction: hash(2),
+					ifSum: hash(3))
+			},
+			ifUniversal: hash(4))
 	}
 }
 
