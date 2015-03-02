@@ -41,6 +41,13 @@ public struct Term: FixpointType, Hashable, Printable {
 			ifUniversal: { $1.freeVariables.subtract($0) })
 	}
 
+	public var boundVariables: Set<Variable> {
+		return type.analysis(
+			ifVariable: const([]),
+			ifConstructed: const([]),
+			ifUniversal: { variables, _ in variables })
+	}
+
 	public var distinctTerms: Set<Term> {
 		return cata(Term.distinctTerms)(self)
 	}
