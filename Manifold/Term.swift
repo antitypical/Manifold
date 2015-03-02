@@ -2,6 +2,13 @@
 
 public struct Term: FixpointType, Hashable {
 	public let type: Type
+	public static var Unit: Term {
+		return Term(Type(.Unit))
+	}
+
+	public static var Bool: Term {
+		return Term(Type(sum: .Unit, .Unit))
+	}
 
 
 	public var freeVariables: Set<Variable> {
