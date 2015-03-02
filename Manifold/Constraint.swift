@@ -71,10 +71,7 @@ private func reduce<T>(t1: Type, t2: Type, initial: T, combine: (T, Type, Type) 
 	}
 	let function = (t1.function &&& t2.function).map(recur)
 	let sum = (t1.sum &&& t2.sum).map(recur)
-	return
-		function
-	??	sum
-	??	combine(initial, t1, t2)
+	return function ?? sum ?? combine(initial, t1, t2)
 }
 
 
