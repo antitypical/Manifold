@@ -145,33 +145,7 @@ public enum Type: Hashable, Printable {
 	// MARK: Printable
 
 	public var description: String {
-		return describe()
-	}
-
-	private func describe(_ boundVariables: Set<Manifold.Variable> = []) -> String {
-		let bound = "α"
-		let free = "τ"
-		return analysis(
-			ifVariable: { (boundVariables.contains($0) ? bound : free) + $0.value.subscriptedDescription },
-			ifConstructed: { c in
-				c.analysis(
-					ifUnit: "Unit",
-					ifFunction: { t1, t2 in
-						let d1 = t1.describe(boundVariables)
-						let parameter = t1.function ?? t1.sum != nil ?
-							"(\(d1))"
-						:	d1
-						return "\(parameter) → \(t2.describe(boundVariables))"
-					},
-					ifSum: { "\($0) | \($1)" })
-			},
-			ifUniversal: {
-				let variables = lazy($0)
-					.map { bound + $0.value.subscriptedDescription }
-					|> sorted
-					|> (join <| ",")
-				return "∀{\(variables)}.\($1.describe(boundVariables.union($0)))"
-			})
+		return describe(self, [])
 	}
 }
 
@@ -215,6 +189,36 @@ extension Int {
 
 private func hash<A: Hashable, B: Hashable>(n: Int)(a: A, b: B) -> Int {
 	return n ^ a.hashValue ^ b.hashValue
+}
+
+
+/// Describes a type given a set of bound variables.
+///
+/// This would be nested within `Type.description`, but that crashes the Swift compiler.
+private func describe(type: Type, boundVariables: Set<Manifold.Variable>) -> String {
+	let bound = "α"
+	let free = "τ"
+	return type.analysis(
+		ifVariable: { (boundVariables.contains($0) ? bound : free) + $0.value.subscriptedDescription },
+		ifConstructed: { c in
+			c.analysis(
+				ifUnit: "Unit",
+				ifFunction: { t1, t2 in
+					let d1 = describe(t1, boundVariables)
+					let parameter = t1.function ?? t1.sum != nil ?
+						"(\(d1))"
+					:	d1
+					return "\(parameter) → \(describe(t2, boundVariables))"
+				},
+				ifSum: { "\($0) | \($1)" })
+		},
+		ifUniversal: {
+			let variables = lazy($0)
+				.map { bound + $0.value.subscriptedDescription }
+				|> sorted
+				|> (join <| ",")
+			return "∀{\(variables)}.\(describe($1, boundVariables.union($0)))"
+		})
 }
 
 
