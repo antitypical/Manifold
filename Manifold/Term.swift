@@ -136,7 +136,7 @@ public struct Term: FixpointType, Hashable, Printable {
 	// MARK: Printable
 
 	public var description: String {
-		return describe(self, [])
+		return toString(self, [])
 	}
 }
 
@@ -164,7 +164,7 @@ private func hash<A: Hashable, B: Hashable>(n: Int)(a: A, b: B) -> Int {
 /// Describes a type given a set of bound variables.
 ///
 /// This would be nested within `Type.description`, but that crashes the Swift compiler.
-private func describe(term: Term, boundVariables: Set<Manifold.Variable>) -> String {
+private func toString(term: Term, boundVariables: Set<Manifold.Variable>) -> String {
 	let bound = "α"
 	let free = "τ"
 	return term.type.analysis(
@@ -173,11 +173,11 @@ private func describe(term: Term, boundVariables: Set<Manifold.Variable>) -> Str
 			c.analysis(
 				ifUnit: "Unit",
 				ifFunction: { t1, t2 in
-					let d1 = describe(t1, boundVariables)
+					let d1 = toString(t1, boundVariables)
 					let parameter = t1.function ?? t1.sum != nil ?
 						"(\(d1))"
 					:	d1
-					return "\(parameter) → \(describe(t2, boundVariables))"
+					return "\(parameter) → \(toString(t2, boundVariables))"
 				},
 				ifSum: { "\($0) | \($1)" })
 		},
@@ -186,7 +186,7 @@ private func describe(term: Term, boundVariables: Set<Manifold.Variable>) -> Str
 				.map { bound + $0.value.subscriptedDescription }
 				|> sorted
 				|> (join <| ",")
-			return "∀{\(variables)}.\(describe($1, boundVariables.union($0)))"
+			return "∀{\(variables)}.\(toString($1, boundVariables.union($0)))"
 		})
 }
 
