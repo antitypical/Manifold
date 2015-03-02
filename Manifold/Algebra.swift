@@ -2,7 +2,7 @@
 
 public protocol FixpointType {
 	typealias Recur
-	init(Recur)
+	static func In(Recur) -> Self
 	static func out(Self) -> Recur
 }
 

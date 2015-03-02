@@ -1,6 +1,10 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public struct Term: FixpointType, Hashable, Printable {
+	public init(_ type: Recur) {
+		self.type = type
+	}
+
 	public init(_ variable: Manifold.Variable) {
 		self.init(.Variable(variable))
 	}
@@ -131,8 +135,8 @@ public struct Term: FixpointType, Hashable, Printable {
 
 	public typealias Recur = Type<Term>
 
-	public init(_ type: Recur) {
-		self.type = type
+	public static func In(type: Recur) -> Term {
+		return Term(type)
 	}
 
 	public static func out(term: Term) -> Recur {
