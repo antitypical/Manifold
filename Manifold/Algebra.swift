@@ -26,6 +26,15 @@ public func para<T, Fix: FixpointType where Fix.Recur == Type<Fix>>(f: Type<(Fix
 }
 
 
+public func ana<T, Fix: FixpointType where Fix.Recur == Constructor<Fix>>(f: T -> Constructor<T>)(_ seed: T) -> Fix {
+	return seed |> (Fix.In <<< (flip(uncurry(Constructor.map)) <| ana(f)) <<< f)
+}
+
+public func ana<T, Fix: FixpointType where Fix.Recur == Type<Fix>>(f: T -> Type<T>)(_ seed: T) -> Fix {
+	return seed |> (Fix.In <<< (flip(uncurry(Type.map)) <| ana(f)) <<< f)
+}
+
+
 // MARK: - Imports
 
 import Prelude
