@@ -19,7 +19,7 @@ public struct Term: FixpointType, Hashable {
 	}
 
 	public var distinctTerms: Set<Type> {
-		return type.reduce([], { $0.union([ $1 ]) })
+		return type.reduce([]) { $0.union([ $1 ]) }
 	}
 
 
