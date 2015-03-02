@@ -3,8 +3,8 @@
 final class SubstitutionTests: XCTestCase {
 	let (a, b) = (Variable(), Variable())
 	let (c, d) = (Variable(), Variable())
-	var t1: Type { return Type(c) }
-	var t2: Type { return Type(function: Type(d), Type(d)) }
+	var t1: Term { return Term(c) }
+	var t2: Term { return Term(function: Term(d), Term(d)) }
 
 	func testCompositionIsIdempotentIfOperandsAreIdempotent() {
 		let s1: Substitution = [ a: t1 ]
@@ -14,14 +14,14 @@ final class SubstitutionTests: XCTestCase {
 	}
 
 	func testCompositionIsNotIdempotentIfLeftOperandIsNotIdempotent() {
-		let s1: Substitution = [ a: Type(a) ]
+		let s1: Substitution = [ a: Term(a) ]
 		let s2: Substitution = [ b: t2 ]
 		assertEqual(s1.compose(s2).occurringVariables, Set([ a ]))
 	}
 
 	func testCompositionIsNotIdempotentIfRightOperandIsNotIdempotent() {
 		let s1: Substitution = [ a: t1 ]
-		let s2: Substitution = [ b: Type(b) ]
+		let s2: Substitution = [ b: Term(b) ]
 		assertEqual(s1.compose(s2).occurringVariables, Set([ b ]))
 	}
 

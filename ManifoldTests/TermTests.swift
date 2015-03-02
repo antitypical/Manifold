@@ -1,54 +1,54 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-final class TypeTests: XCTestCase {
+final class TermTests: XCTestCase {
 	func testVariableTypesHaveOneFreeVariable() {
 		let variable = Variable()
-		assertEqual(Type(variable).freeVariables, Set([ variable ]))
+		assertEqual(Term(variable).freeVariables, Set([ variable ]))
 	}
 
 	func testFunctionTypesDistributeFreeVariables() {
 		let variable = Variable()
-		assertEqual(Type(function: Type(variable), Type(variable)).freeVariables, Set([ variable ]))
+		assertEqual(Term(function: Term(variable), Term(variable)).freeVariables, Set([ variable ]))
 	}
 
 	func testFreeVariablesIncludeTypeFreeVariables() {
 		let variable = Variable()
-		assertEqual(Type(forall: [], Type(variable)).freeVariables, Set([ variable ]))
+		assertEqual(Term(forall: [], Term(variable)).freeVariables, Set([ variable ]))
 	}
 
 	func testFreeVariablesExcludeBoundVariables() {
 		let (a, b) = (Variable(), Variable())
-		assertEqual(Type(forall: [ a ], Type(function: Type(a), Type(b))).freeVariables, Set([ b ]))
+		assertEqual(Term(forall: [ a ], Term(function: Term(a), Term(b))).freeVariables, Set([ b ]))
 	}
 
 
 	func testVariableTypesPrintAsSubscriptsOfTau() {
-		let t: Type = .Variable(1234567890)
+		let t = Term(1234567890)
 		assert(t.description, ==, "τ₁₂₃₄₅₆₇₈₉₀")
 	}
 
 	func testFunctionTypesPrintWithArrow() {
-		let t: Type = .Unit --> .Unit
+		let t: Term = .Unit --> .Unit
 		assert(t.description, ==, "Unit → Unit")
 	}
 
 	func testFunctionTypesParenthesizeParameterFunctions() {
-		let t: Type = (.Unit --> .Unit) --> .Unit
+		let t: Term = (.Unit --> .Unit) --> .Unit
 		assert(t.description, ==, "(Unit → Unit) → Unit")
 	}
 
 	func testFunctionTypesParenthesizeQuantifiedParameterFunctions() {
-		let t: Type = Type(forall: [ 0 ], Type(0) --> .Unit) --> .Unit
+		let t: Term = Term(forall: [ 0 ], Term(0) --> .Unit) --> .Unit
 		assert(t.description, ==, "(∀{α₀}.α₀ → Unit) → Unit")
 	}
 
 	func testFunctionTypesDoNotParenthesizeReturnedFunctions() {
-		let t: Type = .Unit --> .Unit --> .Unit
+		let t: Term = .Unit --> .Unit --> .Unit
 		assert(t.description, ==, "Unit → Unit → Unit")
 	}
 
 	func testUniversalTypesPrintWithQuantifier() {
-		let t = Type(forall: [ 1, 2 ], .Variable(1) --> .Variable(2) --> .Variable(3))
+		let t = Term(forall: [ 1, 2 ], Term(1) --> Term(2) --> Term(3))
 		assert(t.description, ==, "∀{α₁,α₂}.α₁ → α₂ → τ₃")
 	}
 }

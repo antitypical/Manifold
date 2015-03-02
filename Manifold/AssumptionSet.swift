@@ -1,7 +1,7 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public struct AssumptionSet: DictionaryLiteralConvertible, Equatable, Printable, SequenceType {
-	public subscript(variable: Int) -> [Type] {
+	public subscript(variable: Int) -> [Term] {
 		get { return assumptions[variable] ?? [] }
 		set { assumptions[variable] = self[variable] + newValue }
 	}
@@ -14,7 +14,7 @@ public struct AssumptionSet: DictionaryLiteralConvertible, Equatable, Printable,
 
 	// MARK: DictionaryLiteralConvertible
 
-	public init(dictionaryLiteral elements: (Int, [Type])...) {
+	public init(dictionaryLiteral elements: (Int, [Term])...) {
 		assumptions = [:] + elements
 	}
 
@@ -37,14 +37,14 @@ public struct AssumptionSet: DictionaryLiteralConvertible, Equatable, Printable,
 
 	// MARK: SequenceType
 
-	public func generate() -> GeneratorOf<(Int, [Type])> {
+	public func generate() -> GeneratorOf<(Int, [Term])> {
 		return GeneratorOf(assumptions.generate())
 	}
 
 
 	// MARK: Private
 
-	private var assumptions: [Int: [Type]]
+	private var assumptions: [Int: [Term]]
 }
 
 

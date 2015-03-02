@@ -1,7 +1,7 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public struct Environment: DictionaryLiteralConvertible {
-	public init(_ bindings: [Int: Type]) {
+	public init(_ bindings: [Int: Term]) {
 		self.typings = bindings
 	}
 
@@ -13,18 +13,18 @@ public struct Environment: DictionaryLiteralConvertible {
 
 	// MARK: DictionaryLiteralConvertible
 
-	public init(dictionaryLiteral elements: (Int, Type)...) {
+	public init(dictionaryLiteral elements: (Int, Term)...) {
 		self.init([:] + elements)
 	}
 
 
 	// MARK: Private
 
-	private init<S: SequenceType where S.Generator.Element == Dictionary<Int, Type>.Element>(_ sequence: S) {
+	private init<S: SequenceType where S.Generator.Element == Dictionary<Int, Term>.Element>(_ sequence: S) {
 		self.init([:] + sequence)
 	}
 
-	private let typings: [Int: Type]
+	private let typings: [Int: Term]
 }
 
 

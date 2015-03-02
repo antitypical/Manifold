@@ -1,12 +1,12 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public enum Constraint: Hashable, Printable {
-	public init(equality t1: Type, _ t2: Type) {
+	public init(equality t1: Term, _ t2: Term) {
 		self = Equality(t1, t2)
 	}
 
 
-	case Equality(Type, Type)
+	case Equality(Term, Term)
 
 
 	public var activeVariables: Set<Variable> {
@@ -14,7 +14,7 @@ public enum Constraint: Hashable, Printable {
 	}
 
 
-	public func analysis<T>(#ifEquality: (Type, Type) -> T) -> T {
+	public func analysis<T>(#ifEquality: (Term, Term) -> T) -> T {
 		switch self {
 		case let Equality(t1, t2):
 			return ifEquality(t1, t2)
@@ -24,7 +24,7 @@ public enum Constraint: Hashable, Printable {
 
 	// MARK: Decomposition
 
-	var equality: (Type, Type)? {
+	var equality: (Term, Term)? {
 		return analysis(
 			ifEquality: unit)
 	}
@@ -56,7 +56,7 @@ public func == (left: Constraint, right: Constraint) -> Bool {
 	}
 }
 
-public func === (left: Type, right: Type) -> Constraint {
+public func === (left: Term, right: Term) -> Constraint {
 	return Constraint(equality: left, right)
 }
 
@@ -65,8 +65,8 @@ public func === (left: Type, right: Type) -> Constraint {
 
 public typealias ConstraintSet = Multiset<Constraint>
 
-private func reduce<T>(t1: Type, t2: Type, initial: T, combine: (T, Type, Type) -> T) -> T {
-	let recur: ((Type, Type), (Type, Type)) -> T = {
+private func reduce<T>(t1: Term, t2: Term, initial: T, combine: (T, Term, Term) -> T) -> T {
+	let recur: ((Term, Term), (Term, Term)) -> T = {
 		reduce($0.0, $1.0, reduce($0.1, $1.1, combine(initial, t1, t2), combine), combine)
 	}
 	let function = (t1.function &&& t2.function).map(recur)
@@ -75,20 +75,20 @@ private func reduce<T>(t1: Type, t2: Type, initial: T, combine: (T, Type, Type) 
 }
 
 
-public func occurs(v: Variable, t: Type) -> Bool {
+public func occurs(v: Variable, t: Term) -> Bool {
 	return t.freeVariables.contains(v)
 }
 
-private func unify(c1: Constructor<Type>, c2: Constructor<Type>) -> Either<Error, Substitution> {
+private func unify(c1: Constructor<Term>, c2: Constructor<Term>) -> Either<Error, Substitution> {
 	let identity: Either<Error, Substitution> = .right([:])
 	if c1.isUnit && c2.isUnit { return identity }
-	let recur: ((Type, Type), (Type, Type)) -> Either<Error, Substitution> = { (unify($0.0, $1.0) &&& unify($0.1, $1.1)).map(uncurry(Substitution.compose)) }
+	let recur: ((Term, Term), (Term, Term)) -> Either<Error, Substitution> = { (unify($0.0, $1.0) &&& unify($0.1, $1.1)).map(uncurry(Substitution.compose)) }
 	let function = (c1.function &&& c2.function).map(recur)
 	let sum = (c1.sum &&& c2.sum).map(recur)
-	return function ?? sum ?? .left("mutually exclusive types: \(Type(c1)), \(Type(c2))")
+	return function ?? sum ?? .left("mutually exclusive types: \(Term(c1)), \(Term(c2))")
 }
 
-public func unify(t1: Type, t2: Type) -> Either<Error, Substitution> {
+public func unify(t1: Term, t2: Term) -> Either<Error, Substitution> {
 	let infinite: Either<Error, Substitution> = .left("{\(t1), \(t2)} form an infinite type")
 	let v1 = t1.variable.map { occurs($0, t2) ? infinite : .right([$0: t2]) }
 	let v2 = t2.variable.map { occurs($0, t1) ? infinite : .right([$0: t1]) }
@@ -97,9 +97,9 @@ public func unify(t1: Type, t2: Type) -> Either<Error, Substitution> {
 }
 
 
-public func checkForInconsistencies(partition: [Type]) -> (Error?, Substitution) {
-	typealias Result = (Error?, Substitution, Type)
-	let initial: Result = (nil, [:], Type(Variable()))
+public func checkForInconsistencies(partition: [Term]) -> (Error?, Substitution) {
+	typealias Result = (Error?, Substitution, Term)
+	let initial: Result = (nil, [:], Term(Variable()))
 	let result: Result = reduce(partition, initial) { into, each in
 		unify(into.2, each).either({ error in (into.0.map { $0 + error } ?? error, into.1, each) }, { (into.0, into.1.compose($0), each) })
 	}
@@ -107,14 +107,14 @@ public func checkForInconsistencies(partition: [Type]) -> (Error?, Substitution)
 }
 
 public func solve(constraints: ConstraintSet) -> Either<Error, Substitution> {
-	func findOrAdd(type: Type, inout equivalences: DisjointSet<Type>, inout indices: [Type: Int]) -> Int {
+	func findOrAdd(type: Term, inout equivalences: DisjointSet<Term>, inout indices: [Term: Int]) -> Int {
 		if let index = indices[type] { return index }
 		let index = equivalences.count
 		indices[type] = index
 		equivalences.append(type)
 		return index
 	}
-	let (graph: DisjointSet<Type>, indexByType: [Type: Int]) = reduce(constraints, ([], [:])) { (pair, constraint) in
+	let (graph: DisjointSet<Term>, indexByType: [Term: Int]) = reduce(constraints, ([], [:])) { (pair, constraint) in
 		constraint.analysis { t1, t2 in
 			reduce(t1.instantiate(), t2.instantiate(), pair) { (var pair, t1, t2) in
 				let i1 = findOrAdd(t1, &pair.0, &pair.1)
