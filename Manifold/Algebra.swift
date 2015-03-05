@@ -35,6 +35,18 @@ public func ana<T, Fix: FixpointType where Fix.Recur == Type<Fix>>(f: T -> Type<
 }
 
 
+public func apo<T, Fix: FixpointType where Fix.Recur == Constructor<Fix>>(f: T -> Constructor<Either<Fix, T>>)(_ seed: T) -> Fix {
+	let fanin = flip(uncurry(Either<Fix, T>.either)) <| (id, { apo(f)($0) })
+	return seed |> (Fix.In <<< (flip(uncurry(Constructor.map)) <| fanin) <<< f)
+}
+
+public func apo<T, Fix: FixpointType where Fix.Recur == Type<Fix>>(f: T -> Type<Either<Fix, T>>)(_ seed: T) -> Fix {
+	let fanin = flip(uncurry(Either<Fix, T>.either)) <| (id, { apo(f)($0) })
+	return seed |> (Fix.In <<< (flip(uncurry(Type.map)) <| fanin) <<< f)
+}
+
+
 // MARK: - Imports
 
+import Either
 import Prelude
