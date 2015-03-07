@@ -25,8 +25,8 @@ public struct Term: FixpointType, Hashable, Printable {
 		return Term(.Product(Box(t1), Box(t2)))
 	}
 
-	public init(forall a: Set<Manifold.Variable>, _ t: Term) {
-		self.init(.Universal(a, Box(t)))
+	public static func forall(a: Set<Manifold.Variable>, _ t: Term) -> Term {
+		return Term(.Universal(a, Box(t)))
 	}
 
 

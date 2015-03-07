@@ -36,7 +36,7 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable, Printable {
 					ifSum: binary >>> Term.sum,
 					ifProduct: binary >>> Term.product)
 			},
-			ifUniversal: { Term(forall: $0, self.apply($1)) })
+			ifUniversal: { Term.forall($0, self.apply($1)) })
 	}
 
 
