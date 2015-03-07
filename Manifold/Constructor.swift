@@ -15,6 +15,10 @@ public enum Constructor<T>: Printable {
 		return Sum(Box(t1), Box(t2))
 	}
 
+	public static func product(t1: T, t2: T) -> Constructor {
+		return Product(Box(t1), Box(t2))
+	}
+
 
 	// MARK: Decomposition
 
