@@ -21,6 +21,14 @@ public struct Term: FixpointType, Hashable, Printable {
 		self.init(.Sum(Box(t1), Box(t2)))
 	}
 
+	public init(product t1: Term, _ t2: Term) {
+		self.init(.Product(Box(t1), Box(t2)))
+	}
+
+	public static func product(t1: Term, t2: Term) -> Term {
+		return Term(.Product(Box(t1), Box(t2)))
+	}
+
 	public init(forall a: Set<Manifold.Variable>, _ t: Term) {
 		self.init(.Universal(a, Box(t)))
 	}
@@ -57,13 +65,15 @@ public struct Term: FixpointType, Hashable, Printable {
 	}
 
 	private static func distinctTerms(type: Type<Set<Term>>) -> Set<Term> {
+		let binary: (Set<Term>, Set<Term>) -> Set<Term> = { $0.union($1) }
 		return type.analysis(
 			ifVariable: const([]),
 			ifConstructed: {
 				$0.analysis(
 					ifUnit: [],
-					ifFunction: { $0.union($1) },
-					ifSum: { $0.union($1) })
+					ifFunction: binary,
+					ifSum: binary,
+					ifProduct: binary)
 			},
 			ifUniversal: { $1 })
 	}
@@ -75,7 +85,8 @@ public struct Term: FixpointType, Hashable, Printable {
 				$0.analysis(
 					ifUnit: self,
 					ifFunction: { Term(function: $0.instantiate(), $1.instantiate()) },
-					ifSum: { Term(sum: $0.instantiate(), $1.instantiate()) })
+					ifSum: { Term(sum: $0.instantiate(), $1.instantiate()) },
+					ifProduct: { Term(product: $0.instantiate(), $1.instantiate()) })
 			},
 			ifUniversal: { parameters, type in
 				Substitution(lazy(parameters).map { ($0, Term(Manifold.Variable())) }).apply(type.instantiate())
@@ -125,9 +136,10 @@ public struct Term: FixpointType, Hashable, Printable {
 				$0.analysis(
 					ifUnit: 1,
 					ifFunction: hash(2),
-					ifSum: hash(3))
+					ifSum: hash(3),
+					ifProduct: hash(4))
 			},
-			ifUniversal: hash(4))
+			ifUniversal: hash(-1))
 	}
 
 
@@ -191,7 +203,8 @@ private func toStringWithBoundVariables(boundVariables: Set<Variable>)(type: Typ
 				ifFunction: { t1, t2 in
 					"\((t1.0.function ?? t1.0.sum != nil ? parenthesize : id)(t1.1)) → \(t2.1)"
 				},
-				ifSum: { "\($0.1) | \($1.1)" })
+				ifSum: { "\($0.1) | \($1.1)" },
+				ifProduct: { "(\($0.1), \($1.1))" })
 		},
 		ifUniversal: {
 			let variables = lazy($0)

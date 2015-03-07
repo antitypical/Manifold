@@ -32,7 +32,8 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable, Printable {
 				$0.analysis(
 					ifUnit: term,
 					ifFunction: { Term(function: self.apply($0), self.apply($1)) },
-					ifSum: { Term(sum: self.apply($0), self.apply($1)) })
+					ifSum: { Term(sum: self.apply($0), self.apply($1)) },
+					ifProduct: { Term(product: self.apply($0), self.apply($1)) })
 			},
 			ifUniversal: { Term(forall: $0, self.apply($1)) })
 	}
