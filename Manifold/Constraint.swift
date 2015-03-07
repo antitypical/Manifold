@@ -71,7 +71,8 @@ private func reduce<T>(t1: Term, t2: Term, initial: T, combine: (T, Term, Term) 
 	}
 	let function = (t1.function &&& t2.function).map(recur)
 	let sum = (t1.sum &&& t2.sum).map(recur)
-	return function ?? sum ?? combine(initial, t1, t2)
+	let product = (t1.product &&& t2.product).map(recur)
+	return function ?? sum ?? product ?? combine(initial, t1, t2)
 }
 
 
@@ -85,7 +86,8 @@ private func unify(c1: Constructor<Term>, c2: Constructor<Term>) -> Either<Error
 	let recur: ((Term, Term), (Term, Term)) -> Either<Error, Substitution> = { (unify($0.0, $1.0) &&& unify($0.1, $1.1)).map(uncurry(Substitution.compose)) }
 	let function = (c1.function &&& c2.function).map(recur)
 	let sum = (c1.sum &&& c2.sum).map(recur)
-	return function ?? sum ?? .left("mutually exclusive types: \(Term(c1)), \(Term(c2))")
+	let product = (c1.product &&& c2.product).map(recur)
+	return function ?? sum ?? product ?? .left("mutually exclusive types: \(Term(c1)), \(Term(c2))")
 }
 
 public func unify(t1: Term, t2: Term) -> Either<Error, Substitution> {
