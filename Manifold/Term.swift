@@ -172,6 +172,11 @@ private func hash<A: Hashable, B: Hashable>(n: Int)(a: A, b: B) -> Int {
 	return n ^ a.hashValue ^ b.hashValue
 }
 
+/// Parenthesizes its argument.
+private func parenthesize(string: String) -> String {
+	return "(\(string))"
+}
+
 /// Describes a type given a set of bound variables.
 ///
 /// This would be nested within `Type.description`, but that crashes the Swift compiler.
