@@ -26,14 +26,15 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable, Printable {
 
 
 	public func apply(term: Term) -> Term {
+		let binary = { (self.apply($0), self.apply($1)) }
 		return term.type.analysis(
 			ifVariable: { self.elements[$0] ?? term },
 			ifConstructed: {
 				$0.analysis(
 					ifUnit: term,
-					ifFunction: { Term.function(self.apply($0), self.apply($1)) },
-					ifSum: { Term.sum(self.apply($0), self.apply($1)) },
-					ifProduct: { Term.product(self.apply($0), self.apply($1)) })
+					ifFunction: binary >>> Term.function,
+					ifSum: binary >>> Term.sum,
+					ifProduct: binary >>> Term.product)
 			},
 			ifUniversal: { Term(forall: $0, self.apply($1)) })
 	}
