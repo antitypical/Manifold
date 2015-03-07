@@ -1,7 +1,7 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public struct Substitution: DictionaryLiteralConvertible, Equatable, Printable {
-	public init<S: SequenceType where S.Generator.Element == (Variable, Type)>(_ sequence: S) {
+	public init<S: SequenceType where S.Generator.Element == (Variable, Term)>(_ sequence: S) {
 		self.elements = [:] + sequence
 	}
 
@@ -25,22 +25,22 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable, Printable {
 	}
 
 
-	public func apply(type: Type) -> Type {
-		return type.analysis(
-			ifVariable: { self.elements[$0] ?? type },
+	public func apply(term: Term) -> Term {
+		return term.type.analysis(
+			ifVariable: { self.elements[$0] ?? term },
 			ifConstructed: {
 				$0.analysis(
-					ifUnit: type,
-					ifFunction: { Type(function: self.apply($0), self.apply($1)) },
-					ifSum: { Type(sum: self.apply($0), self.apply($1)) })
+					ifUnit: term,
+					ifFunction: { Term(function: self.apply($0), self.apply($1)) },
+					ifSum: { Term(sum: self.apply($0), self.apply($1)) })
 			},
-			ifUniversal: { Type(forall: $0, self.apply($1)) })
+			ifUniversal: { Term(forall: $0, self.apply($1)) })
 	}
 
 
 	// MARK: DictionaryLiteralConvertible
 
-	public init(dictionaryLiteral elements: (Variable, Type)...) {
+	public init(dictionaryLiteral elements: (Variable, Term)...) {
 		self.init(elements)
 	}
 
@@ -48,13 +48,13 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable, Printable {
 	// MARK: Printable
 
 	public var description: String {
-		return "[" + ", ".join(lazy(elements).map { "\(Type($0)) := \($1)" }) + "]"
+		return "[" + ", ".join(lazy(elements).map { "\(Term($0)) := \($1)" }) + "]"
 	}
 
 
 	// MARK: Private
 
-	private let elements: [Variable: Type]
+	private let elements: [Variable: Term]
 }
 
 

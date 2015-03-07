@@ -23,10 +23,10 @@ public enum Expression: Hashable, IntegerLiteralConvertible {
 		case Bool(Swift.Bool)
 
 
-		public var type: Type {
+		public var type: Term {
 			return analysis(
-				ifUnit: const(Type.Unit),
-				ifBool: const(Type.Bool))
+				ifUnit: const(Term.Unit),
+				ifBool: const(Term.Bool))
 		}
 
 

@@ -2,7 +2,7 @@
 
 public protocol FixpointType {
 	typealias Recur
-	init(Recur)
+	static func In(Recur) -> Self
 	static func out(Self) -> Recur
 }
 
@@ -10,13 +10,43 @@ public func cata<T, Fix: FixpointType where Fix.Recur == Constructor<Fix>>(f: Co
 	return term |> (Fix.out >>> (flip(uncurry(Constructor.map)) <| cata(f)) >>> f)
 }
 
+public func cata<T, Fix: FixpointType where Fix.Recur == Type<Fix>>(f: Type<T> -> T)(_ term: Fix) -> T {
+	return term |> (Fix.out >>> (flip(uncurry(Type.map)) <| cata(f)) >>> f)
+}
+
 
 public func para<T, Fix: FixpointType where Fix.Recur == Constructor<Fix>>(f: Constructor<(Fix, T)> -> T)(_ term: Fix) -> T {
-	let fanout: Fix -> (Fix, T) = { ($0, para(f)($0)) }
+	let fanout = { ($0, para(f)($0)) }
 	return term |> (Fix.out >>> (flip(uncurry(Constructor.map)) <| fanout) >>> f)
+}
+
+public func para<T, Fix: FixpointType where Fix.Recur == Type<Fix>>(f: Type<(Fix, T)> -> T)(_ term: Fix) -> T {
+	let fanout = { ($0, para(f)($0)) }
+	return term |> (Fix.out >>> (flip(uncurry(Type.map)) <| fanout) >>> f)
+}
+
+
+public func ana<T, Fix: FixpointType where Fix.Recur == Constructor<Fix>>(f: T -> Constructor<T>)(_ seed: T) -> Fix {
+	return seed |> (Fix.In <<< (flip(uncurry(Constructor.map)) <| ana(f)) <<< f)
+}
+
+public func ana<T, Fix: FixpointType where Fix.Recur == Type<Fix>>(f: T -> Type<T>)(_ seed: T) -> Fix {
+	return seed |> (Fix.In <<< (flip(uncurry(Type.map)) <| ana(f)) <<< f)
+}
+
+
+public func apo<T, Fix: FixpointType where Fix.Recur == Constructor<Fix>>(f: T -> Constructor<Either<Fix, T>>)(_ seed: T) -> Fix {
+	let fanin = flip(uncurry(Either<Fix, T>.either)) <| (id, { apo(f)($0) })
+	return seed |> (Fix.In <<< (flip(uncurry(Constructor.map)) <| fanin) <<< f)
+}
+
+public func apo<T, Fix: FixpointType where Fix.Recur == Type<Fix>>(f: T -> Type<Either<Fix, T>>)(_ seed: T) -> Fix {
+	let fanin = flip(uncurry(Either<Fix, T>.either)) <| (id, { apo(f)($0) })
+	return seed |> (Fix.In <<< (flip(uncurry(Type.map)) <| fanin) <<< f)
 }
 
 
 // MARK: - Imports
 
+import Either
 import Prelude

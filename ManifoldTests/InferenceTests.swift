@@ -36,14 +36,14 @@ final class InferenceTests: XCTestCase {
 	}
 
 	func testTautologicalTypesAreAccepted() {
-		let t = Type(Variable())
+		let t = Term(Variable())
 		let solved = solve([ t === t ])
 		assert(solved.left, ==, nil)
 	}
 
 	func testInfiniteTypesAreRejected() {
-		let t = Type(Variable())
-		let solved = solve([ t === Type(function: t, t) ])
+		let t = Term(Variable())
+		let solved = solve([ t === Term(function: t, t) ])
 		assert(solved.right, ==, nil)
 	}
 }

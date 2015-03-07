@@ -1,26 +1,62 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 final class AlgebraTests: XCTestCase {
+	// MARK: Catamorphisms
+
 	func testCountingUnit() {
-		XCTAssertEqual(cata(count)(Term(.Unit)), 1)
+		XCTAssertEqual(cata(count)(Unit), 1)
 	}
 
 	func testCountingBool() {
-		XCTAssertEqual(cata(count)(Term(.Sum(Box(Term(.Unit)), Box(Term(.Unit))))), 3)
+		XCTAssertEqual(cata(count)(Bool), 3)
+	}
+
+
+	// MARK: Paramorphisms
+
+	func testBoolIsPrettyPrintedAsSuch() {
+		XCTAssertEqual(para(toString)(Bool), "Bool")
 	}
 }
 
+private let Unit = Term.Unit
+private let Bool = Term.Bool
 
-public func count(c: Constructor<Int>) -> Int {
-	return 1 + c.analysis(
-		ifUnit: 0,
-		ifFunction: +,
-		ifSum: +)
+
+private func count(type: Type<Int>) -> Int {
+	return 1 + type.analysis(
+		ifVariable: const(0),
+		ifConstructed: {
+			$0.analysis(
+				ifUnit: 0,
+				ifFunction: +,
+				ifSum: +)
+		},
+		ifUniversal: { $1 })
+}
+
+
+private func toString(type: Type<(Term, String)>) -> String {
+	return type.analysis(
+		ifVariable: { "τ\($0)" },
+		ifConstructed: {
+			$0.analysis(
+				ifUnit: "Unit",
+				ifFunction: { "\($0.1) → \($1.1)" },
+				ifSum: {
+					($0.0 == Unit && $1.0 == Unit) ?
+						"Bool"
+					:	"\($0.1) | \($1.1)"
+				})
+		},
+		ifUniversal: {
+			"∀\($0).\($1.1)"
+		})
 }
 
 
 // MARK: - Imports
 
-import Box
 import Manifold
+import Prelude
 import XCTest
