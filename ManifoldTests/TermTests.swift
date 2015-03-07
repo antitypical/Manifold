@@ -8,7 +8,7 @@ final class TermTests: XCTestCase {
 
 	func testFunctionTypesDistributeFreeVariables() {
 		let variable = Variable()
-		assertEqual(Term(function: Term(variable), Term(variable)).freeVariables, Set([ variable ]))
+		assertEqual(Term.function(Term(variable), Term(variable)).freeVariables, Set([ variable ]))
 	}
 
 	func testFreeVariablesIncludeTypeFreeVariables() {
@@ -18,7 +18,7 @@ final class TermTests: XCTestCase {
 
 	func testFreeVariablesExcludeBoundVariables() {
 		let (a, b) = (Variable(), Variable())
-		assertEqual(Term(forall: [ a ], Term(function: Term(a), Term(b))).freeVariables, Set([ b ]))
+		assertEqual(Term(forall: [ a ], Term.function(Term(a), Term(b))).freeVariables, Set([ b ]))
 	}
 
 

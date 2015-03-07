@@ -43,7 +43,7 @@ final class InferenceTests: XCTestCase {
 
 	func testInfiniteTypesAreRejected() {
 		let t = Term(Variable())
-		let solved = solve([ t === Term(function: t, t) ])
+		let solved = solve([ t === .function(t, t) ])
 		assert(solved.right, ==, nil)
 	}
 }

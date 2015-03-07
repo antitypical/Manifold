@@ -4,7 +4,7 @@ final class SubstitutionTests: XCTestCase {
 	let (a, b) = (Variable(), Variable())
 	let (c, d) = (Variable(), Variable())
 	var t1: Term { return Term(c) }
-	var t2: Term { return Term(function: Term(d), Term(d)) }
+	var t2: Term { return Term.function(Term(d), Term(d)) }
 
 	func testCompositionIsIdempotentIfOperandsAreIdempotent() {
 		let s1: Substitution = [ a: t1 ]
