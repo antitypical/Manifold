@@ -35,7 +35,7 @@ public struct Term: FixpointType, Hashable, Printable {
 	}
 
 	public static var Bool: Term {
-		return Term(Type(sum: .Unit, .Unit))
+		return .sum(.Unit, .Unit)
 	}
 
 
