@@ -75,16 +75,16 @@ public struct Term: FixpointType, Hashable, Printable {
 	}
 
 	public func instantiate() -> Term {
-		return Term.instantiate(self)
+		return cata(Term.instantiate)(self)
 	}
 
-	private static func instantiate(term: Term) -> Term {
+	private static func instantiate(type: Type<Term>) -> Term {
 		let binary: (Term, Term) -> (Term, Term) = { ($0.instantiate(), $1.instantiate()) }
-		return term.type.analysis(
-			ifVariable: const(term),
+		return type.analysis(
+			ifVariable: const(Term(type)),
 			ifConstructed: {
 				$0.analysis(
-					ifUnit: term,
+					ifUnit: Term(type),
 					ifFunction: binary >>> Term.function,
 					ifSum: binary >>> Term.sum,
 					ifProduct: binary >>> Term.product)
