@@ -6,6 +6,15 @@ public enum Constructor<T>: Printable {
 	case Sum(Box<T>, Box<T>)
 
 
+	public static func function(t1: T, t2: T) -> Constructor {
+		return Function(Box(t1), Box(t2))
+	}
+
+	public static func sum(t1: T, t2: T) -> Constructor {
+		return Sum(Box(t1), Box(t2))
+	}
+
+
 	// MARK: Decomposition
 
 	public var isUnit: Swift.Bool {
