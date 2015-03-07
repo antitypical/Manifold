@@ -13,19 +13,15 @@ public struct Term: FixpointType, Hashable, Printable {
 		self.init(.Constructed(Box(constructor)))
 	}
 
-	public init(function t1: Term, _ t2: Term) {
-		self.init(.Function(Box(t1), Box(t2)))
+	public static func function(t1: Term, _ t2: Term) -> Term {
+		return Term(.Function(Box(t1), Box(t2)))
 	}
 
-	public init(sum t1: Term, _ t2: Term) {
-		self.init(.Sum(Box(t1), Box(t2)))
+	public static func sum(t1: Term, _ t2: Term) -> Term {
+		return Term(.Sum(Box(t1), Box(t2)))
 	}
 
-	public init(product t1: Term, _ t2: Term) {
-		self.init(.Product(Box(t1), Box(t2)))
-	}
-
-	public static func product(t1: Term, t2: Term) -> Term {
+	public static func product(t1: Term, _ t2: Term) -> Term {
 		return Term(.Product(Box(t1), Box(t2)))
 	}
 
@@ -79,14 +75,15 @@ public struct Term: FixpointType, Hashable, Printable {
 	}
 
 	public func instantiate() -> Term {
+		let binary: (Term, Term) -> (Term, Term) = { ($0.instantiate(), $1.instantiate()) }
 		return type.analysis(
 			ifVariable: const(self),
 			ifConstructed: {
 				$0.analysis(
 					ifUnit: self,
-					ifFunction: { Term(function: $0.instantiate(), $1.instantiate()) },
-					ifSum: { Term(sum: $0.instantiate(), $1.instantiate()) },
-					ifProduct: { Term(product: $0.instantiate(), $1.instantiate()) })
+					ifFunction: binary >>> Term.function,
+					ifSum: binary >>> Term.sum,
+					ifProduct: binary >>> Term.product)
 			},
 			ifUniversal: { parameters, type in
 				Substitution(lazy(parameters).map { ($0, Term(Manifold.Variable())) }).apply(type.instantiate())
@@ -174,7 +171,7 @@ infix operator --> {
 }
 
 public func --> (left: Term, right: Term) -> Term {
-	return Term(function: left, right)
+	return .function(left, right)
 }
 
 
