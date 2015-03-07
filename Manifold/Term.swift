@@ -119,6 +119,13 @@ public struct Term: FixpointType, Hashable, Printable {
 			ifUniversal: { $1.sum })
 	}
 
+	public var product: (Term, Term)? {
+		return type.analysis(
+			ifVariable: const(nil),
+			ifConstructed: { $0.product },
+			ifUniversal: { $1.product })
+	}
+
 	public var universal: (Set<Manifold.Variable>, Term)? {
 		return type.analysis(
 			ifVariable: const(nil),
