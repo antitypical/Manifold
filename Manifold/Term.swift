@@ -147,7 +147,7 @@ public struct Term: FixpointType, Hashable, Printable {
 	// MARK: Printable
 
 	public var description: String {
-		return toString(self, [])
+		return para(toStringWithBoundVariables([]))(self)
 	}
 }
 
@@ -180,29 +180,25 @@ private func parenthesize(string: String) -> String {
 /// Describes a type given a set of bound variables.
 ///
 /// This would be nested within `Type.description`, but that crashes the Swift compiler.
-private func toString(term: Term, boundVariables: Set<Manifold.Variable>) -> String {
+private func toStringWithBoundVariables(boundVariables: Set<Variable>)(type: Type<(Term, String)>) -> String {
 	let bound = "α"
 	let free = "τ"
-	return term.type.analysis(
+	return type.analysis(
 		ifVariable: { (boundVariables.contains($0) ? bound : free) + $0.value.subscriptedDescription },
 		ifConstructed: { c in
 			c.analysis(
 				ifUnit: "Unit",
 				ifFunction: { t1, t2 in
-					let d1 = toString(t1, boundVariables)
-					let parameter = t1.function ?? t1.sum != nil ?
-						"(\(d1))"
-					:	d1
-					return "\(parameter) → \(toString(t2, boundVariables))"
+					"\((t1.0.function ?? t1.0.sum != nil ? parenthesize : id)(t1.1)) → \(t2.1)"
 				},
-				ifSum: { "\($0) | \($1)" })
+				ifSum: { "\($0.1) | \($1.1)" })
 		},
 		ifUniversal: {
 			let variables = lazy($0)
 				.map { bound + $0.value.subscriptedDescription }
 				|> sorted
 				|> (join <| ",")
-			return "∀{\(variables)}.\(toString($1, boundVariables.union($0)))"
+			return "∀{\(variables)}.\(para(toStringWithBoundVariables(boundVariables.union($0)))($1.0))"
 		})
 }
 
