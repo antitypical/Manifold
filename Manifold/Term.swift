@@ -13,25 +13,29 @@ public struct Term: FixpointType, Hashable, Printable {
 		self.init(.Constructed(Box(constructor)))
 	}
 
-	public init(function t1: Term, _ t2: Term) {
-		self.init(.Function(Box(t1), Box(t2)))
+	public static func function(t1: Term, _ t2: Term) -> Term {
+		return Term(.Function(Box(t1), Box(t2)))
 	}
 
-	public init(sum t1: Term, _ t2: Term) {
-		self.init(.Sum(Box(t1), Box(t2)))
+	public static func sum(t1: Term, _ t2: Term) -> Term {
+		return Term(.Sum(Box(t1), Box(t2)))
 	}
 
-	public init(forall a: Set<Manifold.Variable>, _ t: Term) {
-		self.init(.Universal(a, Box(t)))
+	public static func product(t1: Term, _ t2: Term) -> Term {
+		return Term(.Product(Box(t1), Box(t2)))
+	}
+
+	public static func forall(a: Set<Manifold.Variable>, _ t: Term) -> Term {
+		return Term(.Universal(a, Box(t)))
 	}
 
 
 	public static var Unit: Term {
-		return Term(Type(.Unit))
+		return Term(.Unit)
 	}
 
 	public static var Bool: Term {
-		return Term(Type(sum: .Unit, .Unit))
+		return .sum(.Unit, .Unit)
 	}
 
 
@@ -57,25 +61,33 @@ public struct Term: FixpointType, Hashable, Printable {
 	}
 
 	private static func distinctTerms(type: Type<Set<Term>>) -> Set<Term> {
+		let binary: (Set<Term>, Set<Term>) -> Set<Term> = { $0.union($1) }
 		return type.analysis(
 			ifVariable: const([]),
 			ifConstructed: {
 				$0.analysis(
 					ifUnit: [],
-					ifFunction: { $0.union($1) },
-					ifSum: { $0.union($1) })
+					ifFunction: binary,
+					ifSum: binary,
+					ifProduct: binary)
 			},
 			ifUniversal: { $1 })
 	}
 
 	public func instantiate() -> Term {
+		return cata(Term.instantiate)(self)
+	}
+
+	private static func instantiate(type: Type<Term>) -> Term {
+		let binary: (Term, Term) -> (Term, Term) = { ($0.instantiate(), $1.instantiate()) }
 		return type.analysis(
-			ifVariable: const(self),
+			ifVariable: const(Term(type)),
 			ifConstructed: {
 				$0.analysis(
-					ifUnit: self,
-					ifFunction: { Term(function: $0.instantiate(), $1.instantiate()) },
-					ifSum: { Term(sum: $0.instantiate(), $1.instantiate()) })
+					ifUnit: Term(type),
+					ifFunction: binary >>> Term.function,
+					ifSum: binary >>> Term.sum,
+					ifProduct: binary >>> Term.product)
 			},
 			ifUniversal: { parameters, type in
 				Substitution(lazy(parameters).map { ($0, Term(Manifold.Variable())) }).apply(type.instantiate())
@@ -107,6 +119,13 @@ public struct Term: FixpointType, Hashable, Printable {
 			ifUniversal: { $1.sum })
 	}
 
+	public var product: (Term, Term)? {
+		return type.analysis(
+			ifVariable: const(nil),
+			ifConstructed: { $0.product },
+			ifUniversal: { $1.product })
+	}
+
 	public var universal: (Set<Manifold.Variable>, Term)? {
 		return type.analysis(
 			ifVariable: const(nil),
@@ -125,9 +144,10 @@ public struct Term: FixpointType, Hashable, Printable {
 				$0.analysis(
 					ifUnit: 1,
 					ifFunction: hash(2),
-					ifSum: hash(3))
+					ifSum: hash(3),
+					ifProduct: hash(4))
 			},
-			ifUniversal: hash(4))
+			ifUniversal: hash(-1))
 	}
 
 
@@ -162,7 +182,7 @@ infix operator --> {
 }
 
 public func --> (left: Term, right: Term) -> Term {
-	return Term(function: left, right)
+	return .function(left, right)
 }
 
 
@@ -191,7 +211,8 @@ private func toStringWithBoundVariables(boundVariables: Set<Variable>)(type: Typ
 				ifFunction: { t1, t2 in
 					"\((t1.0.function ?? t1.0.sum != nil ? parenthesize : id)(t1.1)) → \(t2.1)"
 				},
-				ifSum: { "\($0.1) | \($1.1)" })
+				ifSum: { "\($0.1) | \($1.1)" },
+				ifProduct: { "(\($0.1), \($1.1))" })
 		},
 		ifUniversal: {
 			let variables = lazy($0)

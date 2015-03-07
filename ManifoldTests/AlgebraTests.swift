@@ -30,7 +30,8 @@ private func count(type: Type<Int>) -> Int {
 			$0.analysis(
 				ifUnit: 0,
 				ifFunction: +,
-				ifSum: +)
+				ifSum: +,
+				ifProduct: +)
 		},
 		ifUniversal: { $1 })
 }
@@ -47,6 +48,9 @@ private func toString(type: Type<(Term, String)>) -> String {
 					($0.0 == Unit && $1.0 == Unit) ?
 						"Bool"
 					:	"\($0.1) | \($1.1)"
+				},
+				ifProduct: {
+					"(\($0.1), \($1.1))"
 				})
 		},
 		ifUniversal: {

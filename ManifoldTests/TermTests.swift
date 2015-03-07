@@ -8,17 +8,17 @@ final class TermTests: XCTestCase {
 
 	func testFunctionTypesDistributeFreeVariables() {
 		let variable = Variable()
-		assertEqual(Term(function: Term(variable), Term(variable)).freeVariables, Set([ variable ]))
+		assertEqual(Term.function(Term(variable), Term(variable)).freeVariables, Set([ variable ]))
 	}
 
 	func testFreeVariablesIncludeTypeFreeVariables() {
 		let variable = Variable()
-		assertEqual(Term(forall: [], Term(variable)).freeVariables, Set([ variable ]))
+		assertEqual(Term.forall([], Term(variable)).freeVariables, Set([ variable ]))
 	}
 
 	func testFreeVariablesExcludeBoundVariables() {
 		let (a, b) = (Variable(), Variable())
-		assertEqual(Term(forall: [ a ], Term(function: Term(a), Term(b))).freeVariables, Set([ b ]))
+		assertEqual(Term.forall([ a ], Term.function(Term(a), Term(b))).freeVariables, Set([ b ]))
 	}
 
 
@@ -38,7 +38,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testFunctionTypesParenthesizeQuantifiedParameterFunctions() {
-		let t: Term = Term(forall: [ 0 ], Term(0) --> .Unit) --> .Unit
+		let t: Term = Term.forall([ 0 ], Term(0) --> .Unit) --> .Unit
 		assert(t.description, ==, "(∀{α₀}.α₀ → Unit) → Unit")
 	}
 
@@ -48,7 +48,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testUniversalTypesPrintWithQuantifier() {
-		let t = Term(forall: [ 1, 2 ], Term(1) --> Term(2) --> Term(3))
+		let t = Term.forall([ 1, 2 ], Term(1) --> Term(2) --> Term(3))
 		assert(t.description, ==, "∀{α₁,α₂}.α₁ → α₂ → τ₃")
 	}
 }

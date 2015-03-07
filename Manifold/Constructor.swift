@@ -4,6 +4,7 @@ public enum Constructor<T>: Printable {
 	case Unit
 	case Function(Box<T>, Box<T>)
 	case Sum(Box<T>, Box<T>)
+	case Product(Box<T>, Box<T>)
 
 
 	// MARK: Decomposition
@@ -12,37 +13,49 @@ public enum Constructor<T>: Printable {
 		return analysis(
 			ifUnit: true,
 			ifFunction: const(false),
-			ifSum: const(false))
+			ifSum: const(false),
+			ifProduct: const(false))
 	}
 
 	public var function: (T, T)? {
 		return analysis(
 			ifUnit: nil,
 			ifFunction: unit,
-			ifSum: const(nil))
+			ifSum: const(nil),
+			ifProduct: const(nil))
 	}
 
 	public var sum: (T, T)? {
 		return analysis(
 			ifUnit: nil,
 			ifFunction: const(nil),
-			ifSum: unit)
+			ifSum: unit,
+			ifProduct: const(nil))
+	}
+
+	public var product: (T, T)? {
+		return analysis(
+			ifUnit: nil,
+			ifFunction: const(nil),
+			ifSum: const(nil),
+			ifProduct: unit)
 	}
 
 
 	// MARK: Functor
 
-	public func map<U>(transform: T -> U) -> Constructor<U> {
+	public func map<U>(@noescape transform: T -> U) -> Constructor<U> {
 		return analysis(
 			ifUnit: .Unit,
 			ifFunction: { .Function(Box(transform($0)), Box(transform($1))) },
-			ifSum: { .Sum(Box(transform($0)), Box(transform($1))) })
+			ifSum: { .Sum(Box(transform($0)), Box(transform($1))) },
+			ifProduct: { .Product(Box(transform($0)), Box(transform($1))) })
 	}
 
 
 	// MARK: Case analysis
 
-	public func analysis<Result>(@autoclosure #ifUnit: () -> Result, @noescape ifFunction: (T, T) -> Result, @noescape ifSum: (T, T) -> Result) -> Result {
+	public func analysis<Result>(@autoclosure #ifUnit: () -> Result, @noescape ifFunction: (T, T) -> Result, @noescape ifSum: (T, T) -> Result, @noescape ifProduct: (T, T) -> Result) -> Result {
 		switch self {
 		case Unit:
 			return ifUnit()
@@ -50,6 +63,8 @@ public enum Constructor<T>: Printable {
 			return ifFunction(t1.value, t2.value)
 		case let Sum(t1, t2):
 			return ifSum(t1.value, t2.value)
+		case let Product(t1, t2):
+			return ifProduct(t1.value, t2.value)
 		}
 	}
 
@@ -57,7 +72,8 @@ public enum Constructor<T>: Printable {
 		return analysis(
 			ifUnit: initial,
 			ifFunction: { combine(combine(initial, $0), $1) },
-			ifSum: { combine(combine(initial, $0), $1) })
+			ifSum: { combine(combine(initial, $0), $1) },
+			ifProduct: { combine(combine(initial, $0), $1) })
 	}
 
 
@@ -67,7 +83,8 @@ public enum Constructor<T>: Printable {
 		return analysis(
 			ifUnit: "Unit",
 			ifFunction: { "(\($0)) → \($1)" },
-			ifSum: { "\($0) | \($1)" })
+			ifSum: { "\($0) | \($1)" },
+			ifProduct: { "(\($0), \($1))" })
 	}
 }
 
@@ -81,6 +98,7 @@ public func == <T: Equatable> (left: Constructor<T>, right: Constructor<T>) -> B
 		(left.isUnit && right.isUnit)
 	||	((left.function &&& right.function).map(==) ?? false)
 	||	((left.sum &&& right.sum).map(==) ?? false)
+	||	((left.product &&& right.product).map(==) ?? false)
 }
 
 

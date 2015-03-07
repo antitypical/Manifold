@@ -1,27 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public enum Type<T>: Printable {
-	public init(_ variable: Manifold.Variable) {
-		self = Variable(variable)
-	}
-
-	public init(_ constructor: Constructor<T>) {
-		self = Constructed(Box(constructor))
-	}
-
-	public init(function t1: T, _ t2: T) {
-		self.init(.Function(Box(t1), Box(t2)))
-	}
-
-	public init(sum t1: T, _ t2: T) {
-		self.init(.Sum(Box(t1), Box(t2)))
-	}
-
-	public init(forall a: Set<Manifold.Variable>, _ t: T) {
-		self = Universal(a, Box(t))
-	}
-
-
 	// MARK: Destructors
 
 	public var variable: Manifold.Variable? {

@@ -15,7 +15,7 @@ public func infer(expression: Expression) -> (Term, assumptions: AssumptionSet, 
 		ifAbstraction: { x, e in
 			let (type, a, c) = infer(e)
 			let parameterType = Term(Variable())
-			return (Term(function: parameterType, type),
+			return (.function(parameterType, type),
 				assumptions: a / x,
 				constraints: c + lazy(a[x]).map { $0 === parameterType })
 		},
@@ -25,7 +25,7 @@ public func infer(expression: Expression) -> (Term, assumptions: AssumptionSet, 
 			let type = Term(Variable())
 			return (type,
 				assumptions: a1 + a2,
-				constraints: c1 + c2 + [ t1 === Term(function: t2, type) ])
+				constraints: c1 + c2 + [ t1 === .function(t2, type) ])
 		})
 }
 
