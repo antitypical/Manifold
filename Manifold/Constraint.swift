@@ -103,7 +103,7 @@ public func checkForInconsistencies(partition: [Term]) -> (Error?, Substitution)
 	typealias Result = (Error?, Substitution, Term)
 	let initial: Result = (nil, [:], Term(Variable()))
 	let result: Result = reduce(partition, initial) { into, each in
-		unify(into.2, each).either({ error in (into.0.map { $0 + error } ?? error, into.1, each) }, { (into.0, into.1.compose($0), each) })
+		unify(into.2, each).either(ifLeft: { error in (into.0.map { $0 + error } ?? error, into.1, each) }, ifRight: { (into.0, into.1.compose($0), each) })
 	}
 	return (result.0, result.1)
 }
