@@ -82,6 +82,25 @@ final class TermTests: XCTestCase {
 	func testUniversalFunctionArity() {
 		assert(Term.forall([ 0 ], .function(Term(0), Term(0))).arity, ==, 1)
 	}
+
+
+	// MARK: Parameters
+
+	func testUnitParametersAreEmpty() {
+		assert(Term.Unit.parameters, ==, [])
+	}
+
+	func testUnaryFunctionParameters() {
+		assert(Term.function(.Unit, .Unit).parameters, ==, [.Unit])
+	}
+
+	func testBinaryFunctionParameters() {
+		assert(Term.function(.Unit, .function(.Unit, .Unit)).parameters, ==, [.Unit, .Unit])
+	}
+
+	func testHigherOrderFunctionParameters() {
+		assert(Term.function(.function(.Unit, .Unit), .Unit).parameters, ==, [.function(.Unit, .Unit)])
+	}
 }
 
 

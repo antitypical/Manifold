@@ -61,21 +61,28 @@ public struct Term: FixpointType, Hashable, Printable {
 	///
 	/// For (possibly quantified) function types, this will be at least one, for all other types, zero.
 	public var arity: Int {
-		func arity(type: Type<Int>) -> Int {
+		return parameters.count
+	}
+
+	/// Returns the receiver’s parameters.
+	///
+	/// For (possibly quantified) function types, this will have at least one element, for all other types, it will be empty.
+	public var parameters: [Term] {
+		func parameters(type: Type<(Term, [Term])>) -> [Term] {
 			return type.analysis(
-				ifVariable: const(0),
+				ifVariable: const([]),
 				ifConstructed: {
 					$0.analysis(
-						ifUnit: 0,
+						ifUnit: [],
 						ifFunction: {
-							1 + $1
+							[ $0.0 ] + $1.1
 						},
-						ifSum: const(0),
-						ifProduct: const(0))
+						ifSum: const([]),
+						ifProduct: const([]))
 				},
-				ifUniversal: { $1 })
+				ifUniversal: { $1.1 })
 		}
-		return cata(arity)(self)
+		return para(parameters)(self)
 	}
 
 
