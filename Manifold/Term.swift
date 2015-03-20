@@ -177,15 +177,6 @@ public func == (left: Term, right: Term) -> Bool {
 }
 
 
-infix operator --> {
-	associativity right
-}
-
-public func --> (left: Term, right: Term) -> Term {
-	return .function(left, right)
-}
-
-
 // MARK: - Implementation details
 
 private func hash<A: Hashable, B: Hashable>(n: Int)(a: A, b: B) -> Int {
