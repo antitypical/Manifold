@@ -21,7 +21,7 @@ final class InferenceTests: XCTestCase {
 		assert(inferred.assumptions.count, ==, 0)
 
 		let solved = solve(inferred.constraints)
-		let e: Error? = solved.either({ $0 }, { failure("expected mutually exclusive types but got \($0)") })
+		let e: Error? = solved.either(ifLeft: { $0 }, ifRight: { failure("expected mutually exclusive types but got \($0)") })
 		assertNotNil(solved.left)
 		assert(solved.right, ==, nil)
 	}
