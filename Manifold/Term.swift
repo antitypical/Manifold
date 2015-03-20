@@ -79,6 +79,9 @@ public struct Term: FixpointType, Hashable, Printable {
 	}
 
 
+	/// Returns the receiver’s parameters.
+	///
+	/// For (possibly quantified) function types, this will have at least one element, for all other types, it will be empty.
 	public var parameters: [Term] {
 		func parameters(type: Type<(Term, [Term])>) -> [Term] {
 			return type.analysis(
