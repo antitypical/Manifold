@@ -93,6 +93,10 @@ final class TermTests: XCTestCase {
 	func testUnaryFunctionParameters() {
 		assert(Term.function(.Unit, .Unit).parameters, ==, [.Unit])
 	}
+
+	func testBinaryFunctionParameters() {
+		assert(Term.function(.Unit, .function(.Unit, .Unit)).parameters, ==, [.Unit, .Unit])
+	}
 }
 
 
