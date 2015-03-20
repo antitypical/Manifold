@@ -70,6 +70,10 @@ final class TermTests: XCTestCase {
 	func testBinaryFunctionArity() {
 		assert(Term.function(.Unit, .function(.Unit, .Unit)).arity, ==, 2)
 	}
+
+	func testUniversalTermArity() {
+		assert(Term.forall([ 0 ], Term(0)).arity, ==, 0)
+	}
 }
 
 
