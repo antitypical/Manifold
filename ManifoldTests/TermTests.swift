@@ -58,6 +58,10 @@ final class TermTests: XCTestCase {
 	func testUnitArityIsZero() {
 		assert(Term.Unit.arity, ==, 0)
 	}
+
+	func testSumArityIsZero() {
+		assert(Term.Bool.arity, ==, 0)
+	}
 }
 
 
