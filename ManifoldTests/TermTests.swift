@@ -66,6 +66,10 @@ final class TermTests: XCTestCase {
 	func testUnaryFunctionArity() {
 		assert(Term.function(.Unit, .Unit).arity, ==, 1)
 	}
+
+	func testBinaryFunctionArity() {
+		assert(Term.function(.Unit, .function(.Unit, .Unit)).arity, ==, 2)
+	}
 }
 
 
