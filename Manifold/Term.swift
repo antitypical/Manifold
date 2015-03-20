@@ -79,6 +79,25 @@ public struct Term: FixpointType, Hashable, Printable {
 	}
 
 
+	public var parameters: [Term] {
+		func parameters(type: Type<(Term, [Term])>) -> [Term] {
+			return type.analysis(
+				ifVariable: const([]),
+				ifConstructed: {
+					$0.analysis(
+						ifUnit: [],
+						ifFunction: {
+							[ $0.0 ] + $1.1
+						},
+						ifSum: const([]),
+						ifProduct: const([]))
+				},
+				ifUniversal: { $1.1 })
+		}
+		return para(parameters)(self)
+	}
+
+
 	public var distinctTerms: Set<Term> {
 		return cata(Term.distinctTerms)(self)
 	}
