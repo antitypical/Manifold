@@ -89,6 +89,10 @@ final class TermTests: XCTestCase {
 	func testUnitParametersAreEmpty() {
 		assert(Term.Unit.parameters, ==, [])
 	}
+
+	func testUnaryFunctionParameters() {
+		assert(Term.function(.Unit, .Unit).parameters, ==, [.Unit])
+	}
 }
 
 
