@@ -57,6 +57,9 @@ public struct Term: FixpointType, Hashable, Printable {
 	}
 
 
+	/// Returns the receiver’s arity.
+	///
+	/// For (possibly quantified) function types, this will be at least one, for all other types, zero.
 	public var arity: Int {
 		func arity(type: Type<Int>) -> Int {
 			return type.analysis(
