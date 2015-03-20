@@ -71,6 +71,10 @@ final class TermTests: XCTestCase {
 		assert(Term.function(.Unit, .function(.Unit, .Unit)).arity, ==, 2)
 	}
 
+	func testHigherOrderFunctionArity() {
+		assert(Term.function(.function(.Unit, .Unit), .Unit).arity, ==, 1)
+	}
+
 	func testUniversalTermArity() {
 		assert(Term.forall([ 0 ], Term(0)).arity, ==, 0)
 	}
