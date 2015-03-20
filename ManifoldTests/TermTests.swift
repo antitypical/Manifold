@@ -97,6 +97,10 @@ final class TermTests: XCTestCase {
 	func testBinaryFunctionParameters() {
 		assert(Term.function(.Unit, .function(.Unit, .Unit)).parameters, ==, [.Unit, .Unit])
 	}
+
+	func testHigherOrderFunctionParameters() {
+		assert(Term.function(.function(.Unit, .Unit), .Unit).parameters, ==, [.function(.Unit, .Unit)])
+	}
 }
 
 
