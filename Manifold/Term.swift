@@ -56,6 +56,29 @@ public struct Term: FixpointType, Hashable, Printable {
 			ifUniversal: { variables, _ in variables })
 	}
 
+
+	/// Returns the receiver’s arity.
+	///
+	/// For (possibly quantified) function types, this will be at least one, for all other types, zero.
+	public var arity: Int {
+		func arity(type: Type<Int>) -> Int {
+			return type.analysis(
+				ifVariable: const(0),
+				ifConstructed: {
+					$0.analysis(
+						ifUnit: 0,
+						ifFunction: {
+							1 + $1
+						},
+						ifSum: const(0),
+						ifProduct: const(0))
+				},
+				ifUniversal: { $1 })
+		}
+		return cata(arity)(self)
+	}
+
+
 	public var distinctTerms: Set<Term> {
 		return cata(Term.distinctTerms)(self)
 	}

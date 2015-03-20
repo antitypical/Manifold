@@ -51,6 +51,37 @@ final class TermTests: XCTestCase {
 		let t = Term.forall([ 1, 2 ], .function(Term(1), .function(Term(2), Term(3))))
 		assert(t.description, ==, "∀{α₁,α₂}.α₁ → α₂ → τ₃")
 	}
+
+
+	// MARK: Arity
+
+	func testUnitArityIsZero() {
+		assert(Term.Unit.arity, ==, 0)
+	}
+
+	func testSumArityIsZero() {
+		assert(Term.Bool.arity, ==, 0)
+	}
+
+	func testUnaryFunctionArity() {
+		assert(Term.function(.Unit, .Unit).arity, ==, 1)
+	}
+
+	func testBinaryFunctionArity() {
+		assert(Term.function(.Unit, .function(.Unit, .Unit)).arity, ==, 2)
+	}
+
+	func testHigherOrderFunctionArity() {
+		assert(Term.function(.function(.Unit, .Unit), .Unit).arity, ==, 1)
+	}
+
+	func testUniversalTermArity() {
+		assert(Term.forall([ 0 ], Term(0)).arity, ==, 0)
+	}
+
+	func testUniversalFunctionArity() {
+		assert(Term.forall([ 0 ], .function(Term(0), Term(0))).arity, ==, 1)
+	}
 }
 
 
