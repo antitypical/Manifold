@@ -82,6 +82,13 @@ final class TermTests: XCTestCase {
 	func testUniversalFunctionArity() {
 		assert(Term.forall([ 0 ], .function(Term(0), Term(0))).arity, ==, 1)
 	}
+
+
+	// MARK: Parameters
+
+	func testUnitParametersAreEmpty() {
+		assert(Term.Unit.parameters, ==, [])
+	}
 }
 
 
