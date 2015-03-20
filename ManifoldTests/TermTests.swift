@@ -28,27 +28,27 @@ final class TermTests: XCTestCase {
 	}
 
 	func testFunctionTypesPrintWithArrow() {
-		let t: Term = .Unit --> .Unit
+		let t: Term = .function(.Unit, .Unit)
 		assert(t.description, ==, "Unit → Unit")
 	}
 
 	func testFunctionTypesParenthesizeParameterFunctions() {
-		let t: Term = (.Unit --> .Unit) --> .Unit
+		let t: Term = .function(.function(.Unit, .Unit), .Unit)
 		assert(t.description, ==, "(Unit → Unit) → Unit")
 	}
 
 	func testFunctionTypesParenthesizeQuantifiedParameterFunctions() {
-		let t: Term = Term.forall([ 0 ], Term(0) --> .Unit) --> .Unit
+		let t: Term = .function(.forall([ 0 ], .function(Term(0), .Unit)), .Unit)
 		assert(t.description, ==, "(∀{α₀}.α₀ → Unit) → Unit")
 	}
 
 	func testFunctionTypesDoNotParenthesizeReturnedFunctions() {
-		let t: Term = .Unit --> .Unit --> .Unit
+		let t: Term = .function(.Unit, .function(.Unit, .Unit))
 		assert(t.description, ==, "Unit → Unit → Unit")
 	}
 
 	func testUniversalTypesPrintWithQuantifier() {
-		let t = Term.forall([ 1, 2 ], Term(1) --> Term(2) --> Term(3))
+		let t = Term.forall([ 1, 2 ], .function(Term(1), .function(Term(2), Term(3))))
 		assert(t.description, ==, "∀{α₁,α₂}.α₁ → α₂ → τ₃")
 	}
 }
