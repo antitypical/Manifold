@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public struct Term: FixpointType, Hashable, Printable {
+public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable {
 	public init(_ type: Recur) {
 		self.type = type
 	}
@@ -178,6 +178,13 @@ public struct Term: FixpointType, Hashable, Printable {
 					ifProduct: hash(4))
 			},
 			ifUniversal: hash(-1))
+	}
+
+
+	// MARK: IntegerLiteralConvertible
+
+	public init(integerLiteral value: IntegerLiteralType) {
+		self.init(Manifold.Variable(integerLiteral: value))
 	}
 
 
