@@ -1,6 +1,10 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable {
+	public init() {
+		self.type = Type.Variable(Variable())
+	}
+
 	public init(_ type: Recur) {
 		self.type = type
 	}
