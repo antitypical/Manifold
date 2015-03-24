@@ -30,7 +30,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 	}
 
 	public static func forall(a: Set<Manifold.Variable>, _ t: Term) -> Term {
-		return a.count > 0 ?
+		return (a.intersect(t.freeVariables)).count > 0 ?
 			Term(.Universal(a, Box(t)))
 		:	t
 	}
