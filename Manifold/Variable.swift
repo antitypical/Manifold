@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public struct Variable: Hashable, IntegerLiteralConvertible, Printable {
+public struct Variable: Comparable, Hashable, IntegerLiteralConvertible, Printable {
 	/// Constructs a fresh type variable.
 	public init() {
 		value = Variable.cursor++
@@ -39,4 +39,9 @@ public struct Variable: Hashable, IntegerLiteralConvertible, Printable {
 
 public func == (left: Variable, right: Variable) -> Bool {
 	return left.value == right.value
+}
+
+
+public func < (left: Variable, right: Variable) -> Bool {
+	return left.value < right.value
 }
