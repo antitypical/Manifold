@@ -62,6 +62,10 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 			ifUniversal: { variables, _ in variables })
 	}
 
+	public func generalize(environment: Environment = [:]) -> Term {
+		return Term.forall(freeVariables.subtract(environment.freeVariables), self)
+	}
+
 
 	/// Returns the receiver’s arity.
 	///
