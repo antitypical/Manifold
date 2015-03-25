@@ -95,6 +95,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 		return para(parameters)(self)
 	}
 
+	/// Returns a function’s return type, defaulting to `self` if not a function type.
 	public var `return`: Term {
 		return function?.1.`return` ?? self
 	}
