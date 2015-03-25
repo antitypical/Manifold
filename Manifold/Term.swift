@@ -95,6 +95,10 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 		return para(parameters)(self)
 	}
 
+	public var `return`: Term {
+		return function?.1.`return` ?? self
+	}
+
 
 	public var distinctTerms: Set<Term> {
 		return cata(Term.distinctTerms)(self)
