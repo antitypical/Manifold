@@ -77,7 +77,7 @@ private func reduce<T>(t1: Term, t2: Term, initial: T, combine: (T, Term, Term) 
 
 
 public func occurs(v: Variable, t: Term) -> Bool {
-	return t.freeVariables.contains(v)
+	return t.variable != v && t.freeVariables.contains(v)
 }
 
 private func unify(c1: Constructor<Term>, c2: Constructor<Term>) -> Either<Error, Substitution> {
