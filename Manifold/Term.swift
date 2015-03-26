@@ -100,9 +100,9 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 		return function?.1.`return` ?? universal?.1.`return` ?? self
 	}
 
-	/// Returns the fields of a function’s return type, defaulting to `[self]` if not a function type.
+	/// Returns the fields of a function’s return type, defaulting to `[return]` if not a function type.
 	public var returns: [Term] {
-		return `return`.product.map { [$0] + $1.returns } ?? [self]
+		return `return`.product.map { [$0] + $1.returns } ?? [`return`]
 	}
 
 
