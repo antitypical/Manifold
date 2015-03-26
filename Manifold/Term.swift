@@ -184,7 +184,6 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 	}
 
 
-
 	// MARK: Hashable
 
 	public var hashValue: Int {
