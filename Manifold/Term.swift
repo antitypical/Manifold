@@ -97,7 +97,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 
 	/// Returns a function’s return type, defaulting to `self` if not a function type.
 	public var `return`: Term {
-		return function?.1.`return` ?? self
+		return function?.1.`return` ?? universal?.1.`return` ?? self
 	}
 
 	/// Returns the fields of a function’s return type, defaulting to `[self]` if not a function type.
