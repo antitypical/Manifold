@@ -2,7 +2,11 @@
 
 public enum Constraint: Hashable, Printable {
 	public init(equality t1: Term, _ t2: Term) {
-		self = Equality(t1, t2)
+		if let (v1, v2) = (t1.variable?.value &&& t2.variable?.value) where v2 > v1 {
+			self = Equality(t2, t1)
+		} else {
+			self = Equality(t1, t2)
+		}
 	}
 
 
