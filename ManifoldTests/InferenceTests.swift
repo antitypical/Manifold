@@ -46,6 +46,14 @@ final class InferenceTests: XCTestCase {
 		let solved = solve([ t === .function(t, t) ])
 		assert(solved.right, ==, nil)
 	}
+
+
+	// MARK: Solving
+
+	func testSolvingAnEqualityConstraintProducesASingleElementSubstitution() {
+		assert(solve([ 0 === 1 ]).left, ==, nil)
+		assert(solve([ 0 === 1 ]).right, ==, [1: Term(0)])
+	}
 }
 
 
