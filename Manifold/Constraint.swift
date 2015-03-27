@@ -2,7 +2,11 @@
 
 public enum Constraint: Hashable, Printable {
 	public init(equality t1: Term, _ t2: Term) {
-		self = Equality(t1, t2)
+		if let (v1, v2) = (t1.variable?.value &&& t2.variable?.value) where v2 > v1 {
+			self = Equality(t2, t1)
+		} else {
+			self = Equality(t1, t2)
+		}
 	}
 
 
@@ -102,7 +106,7 @@ public func unify(t1: Term, t2: Term) -> Either<Error, Substitution> {
 public func checkForInconsistencies(partition: [Term]) -> (Error?, Substitution) {
 	typealias Result = (Error?, Substitution, Term)
 	let initial: Result = (nil, [:], Term(Variable()))
-	let result: Result = reduce(partition, initial) { into, each in
+	let result: Result = reduce(dropFirst(partition), (nil, [:], first(partition)!)) { into, each in
 		unify(into.2, each).either(ifLeft: { error in (into.0.map { $0 + error } ?? error, into.1, each) }, ifRight: { (into.0, into.1.compose($0), each) })
 	}
 	return (result.0, result.1)
