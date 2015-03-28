@@ -25,6 +25,8 @@ public enum Type<T>: Printable {
 	}
 
 
+	// MARK: Cases
+
 	case Variable(Manifold.Variable)
 	case Constructed(Box<Constructor<T>>)
 	case Universal(Set<Manifold.Variable>, Box<T>)
@@ -44,6 +46,9 @@ public enum Type<T>: Printable {
 			return ifUniversal(a, t.value)
 		}
 	}
+
+
+	// MARK: Higher-order
 
 	public func map<U>(transform: T -> U) -> Type<U> {
 		return analysis(
