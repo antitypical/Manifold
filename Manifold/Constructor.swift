@@ -16,13 +16,15 @@ public enum Constructor<T>: Printable {
 	}
 
 
+	// MARK: Cases
+
 	case Unit
 	case Function(Box<T>, Box<T>)
 	case Sum(Box<T>, Box<T>)
 	case Product(Box<T>, Box<T>)
 
 
-	// MARK: Decomposition
+	// MARK: Destructors
 
 	public var isUnit: Swift.Bool {
 		return analysis(
