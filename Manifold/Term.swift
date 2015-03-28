@@ -17,6 +17,10 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 		self.init(.Constructed(Box(constructor)))
 	}
 
+	public static func constructed(c: Constructor<Term>) -> Term {
+		return In(Type.constructed(c))
+	}
+
 	public static func function(t1: Term, _ t2: Term) -> Term {
 		return Term(.Function(Box(t1), Box(t2)))
 	}
