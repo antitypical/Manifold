@@ -18,7 +18,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 	}
 
 	public init(_ constructor: Constructor<Term>) {
-		self.init(.Constructed(Box(constructor)))
+		self.init(Type.constructed(constructor))
 	}
 
 	public static func constructed(c: Constructor<Term>) -> Term {
@@ -26,20 +26,20 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 	}
 
 	public static func function(t1: Term, _ t2: Term) -> Term {
-		return Term(.Function(Box(t1), Box(t2)))
+		return constructed(Constructor.function(t1, t2))
 	}
 
 	public static func sum(t1: Term, _ t2: Term) -> Term {
-		return Term(.Sum(Box(t1), Box(t2)))
+		return constructed(Constructor.sum(t1, t2))
 	}
 
 	public static func product(t1: Term, _ t2: Term) -> Term {
-		return Term(.Product(Box(t1), Box(t2)))
+		return constructed(Constructor.product(t1, t2))
 	}
 
 	public static func forall(a: Set<Manifold.Variable>, _ t: Term) -> Term {
 		return (a.intersect(t.freeVariables)).count > 0 ?
-			Term(.Universal(a, Box(t)))
+			In(Type.universal(a, t))
 		:	t
 	}
 
@@ -49,7 +49,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 	}
 
 	public static var Bool: Term {
-		return .sum(.Unit, .Unit)
+		return sum(Unit, Unit)
 	}
 
 
