@@ -1,6 +1,25 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public enum Type<T>: Printable {
+	// MARK: Constructors
+
+	public static func variable(variable: Manifold.Variable) -> Type {
+		return .Variable(variable)
+	}
+
+	public static func constructed(constructor: Constructor<T>) -> Type {
+		return .Constructed(Box(constructor))
+	}
+
+	public static func universal(variables: Set<Manifold.Variable>, _ quantified: T) -> Type {
+		return .Universal(variables, Box(quantified))
+	}
+
+	public static func Unit<F: FixpointType where F.Recur == Type>() -> F {
+		return F.In(.constructed(.Unit))
+	}
+
+
 	// MARK: Destructors
 
 	public var variable: Manifold.Variable? {
