@@ -1,13 +1,30 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public enum Constructor<T>: Printable {
+	// MARK: Constructors
+
+	public static func function(x: T, _ y: T) -> Constructor {
+		return .Function(Box(x), Box(y))
+	}
+
+	public static func sum(x: T, _ y: T) -> Constructor {
+		return .Sum(Box(x), Box(y))
+	}
+
+	public static func product(x: T, _ y: T) -> Constructor {
+		return .Product(Box(x), Box(y))
+	}
+
+
+	// MARK: Cases
+
 	case Unit
 	case Function(Box<T>, Box<T>)
 	case Sum(Box<T>, Box<T>)
 	case Product(Box<T>, Box<T>)
 
 
-	// MARK: Decomposition
+	// MARK: Destructors
 
 	public var isUnit: Swift.Bool {
 		return analysis(
