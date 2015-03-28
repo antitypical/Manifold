@@ -13,6 +13,10 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 		self.init(.Variable(variable))
 	}
 
+	public static func variable(v: Manifold.Variable) -> Term {
+		return In(Type.variable(v))
+	}
+
 	public init(_ constructor: Constructor<Term>) {
 		self.init(.Constructed(Box(constructor)))
 	}
