@@ -15,10 +15,6 @@ public enum Type<T>: Printable {
 		return .Universal(variables, Box(quantified))
 	}
 
-	public static func Unit<F: FixpointType where F.Recur == Type>() -> F {
-		return F.In(.constructed(.Unit))
-	}
-
 
 	// MARK: Destructors
 
