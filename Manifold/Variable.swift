@@ -21,6 +21,7 @@ public struct Variable: Comparable, Hashable, IntegerLiteralConvertible, Printab
 
 	public init(integerLiteral value: IntegerLiteralType) {
 		self.value = value
+		Variable.cursor = max(Variable.cursor, value + 1)
 	}
 
 
