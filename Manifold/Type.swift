@@ -11,6 +11,18 @@ public enum Type<T>: Printable {
 		return .Constructed(Box(constructor))
 	}
 
+	public static func function(x: T, _ y: T) -> Type {
+		return constructed(.Function(Box(x), Box(y)))
+	}
+
+	public static func sum(x: T, _ y: T) -> Type {
+		return constructed(.Sum(Box(x), Box(y)))
+	}
+
+	public static func product(x: T, _ y: T) -> Type {
+		return constructed(.Product(Box(x), Box(y)))
+	}
+
 	public static func universal(variables: Set<Manifold.Variable>, _ quantified: T) -> Type {
 		return .Universal(variables, Box(quantified))
 	}
