@@ -291,7 +291,7 @@ extension Int {
 
 	private var subscriptedDescription: String {
 		let zero: UnicodeScalar = "₀"
-		return String(lazy(digits).map { Character(UnicodeScalar(zero.value + $0)) })
+		return (self < 0 ? "₋" : "") + String(lazy(digits).map { Character(UnicodeScalar(zero.value + $0)) })
 	}
 }
 
