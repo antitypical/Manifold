@@ -132,24 +132,23 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 			ifUniversal: { $1 })
 	}
 
-	public func instantiate() -> Term {
-		return cata(Term.instantiate)(self)
-	}
-
-	private static func instantiate(type: Type<Term>) -> Term {
-		let binary: (Term, Term) -> (Term, Term) = { ($0.instantiate(), $1.instantiate()) }
-		return type.analysis(
-			ifVariable: const(Term(type)),
-			ifConstructed: {
-				$0.analysis(
-					ifUnit: Term(type),
-					ifFunction: binary >>> Term.function,
-					ifSum: binary >>> Term.sum,
-					ifProduct: binary >>> Term.product)
-			},
-			ifUniversal: { parameters, type in
-				Substitution(lazy(parameters).map { ($0, Term(Manifold.Variable())) }).apply(type.instantiate())
+	public func instantiate(_ freshVariable: (() -> Variable)? = nil) -> Term {
+		func instantiate(type: Type<Term>) -> Term {
+			let binary: (Term, Term) -> (Term, Term) = { ($0.instantiate(freshVariable), $1.instantiate(freshVariable)) }
+			return type.analysis(
+				ifVariable: const(Term(type)),
+				ifConstructed: {
+					$0.analysis(
+						ifUnit: Term(type),
+						ifFunction: binary >>> Term.function,
+						ifSum: binary >>> Term.sum,
+						ifProduct: binary >>> Term.product)
+				},
+				ifUniversal: { parameters, type in
+					Substitution(lazy(parameters).map { ($0, Term(freshVariable?() ?? Manifold.Variable())) }).apply(type.instantiate(freshVariable))
 			})
+		}
+		return cata(instantiate)(self)
 	}
 
 
