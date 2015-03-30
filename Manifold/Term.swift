@@ -280,7 +280,7 @@ private func toStringWithBoundVariables(boundVariables: Set<Variable>)(type: Typ
 extension Int {
 	private var digits: [UInt32] {
 		var digits: [UInt32] = []
-		var remainder = self
+		var remainder = abs(self)
 		do {
 			digits.append(UInt32(remainder % 10))
 			remainder /= 10
