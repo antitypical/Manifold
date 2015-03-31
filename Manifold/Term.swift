@@ -167,10 +167,9 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 
 	public var sum: (Term, Term)? {
 		return type.analysis(
-			ifVariable: const(nil),
-			ifUnit: const(nil),
 			ifConstructed: { $0.sum },
-			ifUniversal: { $1.sum })
+			ifUniversal: { $1.sum },
+			otherwise: const(nil))
 	}
 
 	public var product: (Term, Term)? {
