@@ -62,10 +62,8 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 
 	public var boundVariables: Set<Variable> {
 		return type.analysis(
-			ifVariable: const([]),
-			ifUnit: const([]),
-			ifConstructed: const([]),
-			ifUniversal: { variables, _ in variables })
+			ifUniversal: { variables, _ in variables },
+			otherwise: const([]))
 	}
 
 	public func generalize(environment: Environment = [:]) -> Term {
