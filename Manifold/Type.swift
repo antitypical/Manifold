@@ -54,6 +54,12 @@ public enum Type<T>: Printable {
 			otherwise: const(nil))
 	}
 
+	public var product: (T, T)? {
+		return analysis(
+			ifProduct: unit,
+			otherwise: const(nil))
+	}
+
 	public var constructed: Constructor<T>? {
 		return analysis(
 			ifConstructed: unit,
