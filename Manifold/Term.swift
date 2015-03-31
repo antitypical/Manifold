@@ -173,6 +173,10 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 			otherwise: const(nil))
 	}
 
+	public var isUnit: Swift.Bool {
+		return type.isUnit
+	}
+
 	public var sum: (Term, Term)? {
 		return type.analysis(
 			ifConstructed: { $0.sum },
