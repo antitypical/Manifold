@@ -25,6 +25,7 @@ private let Bool = Term.Bool
 
 private func count(type: Type<Int>) -> Int {
 	return 1 + type.analysis(
+		ifFunction: +,
 		ifConstructed: {
 			$0.analysis(
 				ifUnit: 0,
@@ -41,10 +42,11 @@ private func toString(type: Type<(Term, String)>) -> String {
 	return type.analysis(
 		ifVariable: { "τ\($0)" },
 		ifUnit: const("Unit"),
+		ifFunction: { "(\($0.1)) → \($1.1)" },
 		ifConstructed: {
 			$0.analysis(
 				ifUnit: "Unit",
-				ifFunction: { "\($0.1) → \($1.1)" },
+				ifFunction: { "(\($0.1)) → \($1.1)" },
 				ifSum: {
 					($0.0 == Unit && $1.0 == Unit) ?
 						"Bool"

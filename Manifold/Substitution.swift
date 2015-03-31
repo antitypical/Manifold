@@ -30,6 +30,7 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable, Printable {
 		return term.type.analysis(
 			ifVariable: { self.elements[$0] ?? term },
 			ifUnit: const(term),
+			ifFunction: binary >>> Term.function,
 			ifConstructed: {
 				$0.analysis(
 					ifUnit: term,

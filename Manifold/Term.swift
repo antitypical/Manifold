@@ -56,6 +56,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 		return type.analysis(
 			ifVariable: { [ $0 ] },
 			ifUnit: const([]),
+			ifFunction: { $0.freeVariables.union($1.freeVariables) },
 			ifConstructed: { $0.reduce([]) { $0.union($1.freeVariables) } },
 			ifUniversal: { $1.freeVariables.subtract($0) })
 	}
@@ -84,6 +85,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 	public var parameters: [Term] {
 		func parameters(type: Type<(Term, [Term])>) -> [Term] {
 			return type.analysis(
+				ifFunction: { [ $0.0 ] + $1.1 },
 				ifConstructed: {
 					$0.analysis(
 						ifUnit: [],
@@ -117,6 +119,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 	private static func distinctTerms(type: Type<Set<Term>>) -> Set<Term> {
 		let binary: (Set<Term>, Set<Term>) -> Set<Term> = { $0.union($1) }
 		return type.analysis(
+			ifFunction: binary,
 			ifConstructed: {
 				$0.analysis(
 					ifUnit: [],
@@ -132,6 +135,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 		func instantiate(type: Type<Term>) -> Term {
 			let binary: (Term, Term) -> (Term, Term) = { ($0.instantiate(freshVariable), $1.instantiate(freshVariable)) }
 			return type.analysis(
+				ifFunction: binary >>> Term.function,
 				ifConstructed: {
 					$0.analysis(
 						ifUnit: Term(type),
@@ -160,6 +164,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 
 	public var function: (Term, Term)? {
 		return type.analysis(
+			ifFunction: unit,
 			ifConstructed: { $0.function },
 			ifUniversal: { $1.function },
 			otherwise: const(nil))
@@ -192,6 +197,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 		return type.analysis(
 			ifVariable: { $0.hashValue },
 			ifUnit: { 1 },
+			ifFunction: hash(2),
 			ifConstructed: {
 				$0.analysis(
 					ifUnit: 1,
@@ -256,6 +262,9 @@ private func toStringWithBoundVariables(boundVariables: Set<Variable>)(type: Typ
 	return type.analysis(
 		ifVariable: { (boundVariables.contains($0) ? bound : free) + $0.value.subscriptedDescription },
 		ifUnit: const("Unit"),
+		ifFunction: { t1, t2 in
+			"\((t1.0.function ?? t1.0.sum != nil ? parenthesize : id)(t1.1)) → \(t2.1)"
+		},
 		ifConstructed: { c in
 			c.analysis(
 				ifUnit: "Unit",

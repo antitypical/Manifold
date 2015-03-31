@@ -12,7 +12,7 @@ public enum Type<T>: Printable {
 	}
 
 	public static func function(x: T, _ y: T) -> Type {
-		return constructed(.Function(Box(x), Box(y)))
+		return .Function(Box(x), Box(y))
 	}
 
 	public static func sum(x: T, _ y: T) -> Type {
@@ -59,6 +59,7 @@ public enum Type<T>: Printable {
 
 	case Variable(Manifold.Variable)
 	case Unit
+	case Function(Box<T>, Box<T>)
 	case Constructed(Box<Constructor<T>>)
 	case Universal(Set<Manifold.Variable>, Box<T>)
 
@@ -66,13 +67,16 @@ public enum Type<T>: Printable {
 	// MARK: Case analysis
 
 	/// Exhaustive analysis specifying zero or more cases and a default case.
-	public func analysis<Result>(ifVariable: (Manifold.Variable -> Result)? = nil, ifUnit: (() -> Result)? = nil, ifConstructed: (Constructor<T> -> Result)? = nil, ifUniversal: ((Set<Manifold.Variable>, T) -> Result)? = nil, otherwise: () -> Result) -> Result {
+	public func analysis<Result>(ifVariable: (Manifold.Variable -> Result)? = nil, ifUnit: (() -> Result)? = nil, ifFunction: ((T, T) -> Result)? = nil, ifConstructed: (Constructor<T> -> Result)? = nil, ifUniversal: ((Set<Manifold.Variable>, T) -> Result)? = nil, otherwise: () -> Result) -> Result {
 		switch self {
 		case let .Variable(v):
 			return ifVariable?(v) ?? otherwise()
 
 		case .Unit:
 			return ifUnit?() ?? otherwise()
+
+		case let .Function(t1, t2):
+			return ifFunction?(t1.value, t2.value) ?? otherwise()
 
 		case let .Constructed(c):
 			return ifConstructed?(c.value) ?? otherwise()
@@ -83,13 +87,16 @@ public enum Type<T>: Printable {
 	}
 
 	/// Exhaustive analysis specifying all cases.
-	public func analysis<Result>(@noescape #ifVariable: Manifold.Variable -> Result, @noescape ifUnit: () -> Result, @noescape ifConstructed: Constructor<T> -> Result, @noescape ifUniversal: (Set<Manifold.Variable>, T) -> Result) -> Result {
+	public func analysis<Result>(@noescape #ifVariable: Manifold.Variable -> Result, @noescape ifUnit: () -> Result, @noescape ifFunction: (T, T) -> Result, @noescape ifConstructed: Constructor<T> -> Result, @noescape ifUniversal: (Set<Manifold.Variable>, T) -> Result) -> Result {
 		switch self {
 		case let .Variable(v):
 			return ifVariable(v)
 
 		case .Unit:
 			return ifUnit()
+
+		case let .Function(t1, t2):
+			return ifFunction(t1.value, t2.value)
 
 		case let .Constructed(c):
 			return ifConstructed(c.value)
@@ -106,6 +113,7 @@ public enum Type<T>: Printable {
 		return analysis(
 			ifVariable: { .Variable($0) },
 			ifUnit: { .Unit },
+			ifFunction: { .function(transform($0), transform($1)) },
 			ifConstructed: { .Constructed(Box($0.map(transform))) },
 			ifUniversal: { .Universal($0, Box(transform($1))) })
 	}
@@ -117,6 +125,7 @@ public enum Type<T>: Printable {
 		return analysis(
 			ifVariable: { "τ\($0.value)" },
 			ifUnit: const("Unit"),
+			ifFunction: { "(\($0)) → \($1)" },
 			ifConstructed: { $0.description },
 			ifUniversal: { "∀\($0).\($1)" })
 	}
