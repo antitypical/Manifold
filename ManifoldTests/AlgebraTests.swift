@@ -50,6 +50,9 @@ private func toString(type: Type<(Term, String)>) -> String {
 				"Bool"
 			:	"\($0.1) | \($1.1)"
 		},
+		ifProduct: {
+			"(\($0.1), \($1.1))"
+		},
 		ifConstructed: {
 			$0.analysis(
 				ifUnit: "Unit",

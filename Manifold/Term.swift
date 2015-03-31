@@ -59,6 +59,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 			ifUnit: const([]),
 			ifFunction: binary,
 			ifSum: binary,
+			ifProduct: binary,
 			ifConstructed: { $0.reduce([]) { $0.union($1.freeVariables) } },
 			ifUniversal: { $1.freeVariables.subtract($0) })
 	}
@@ -201,6 +202,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 			ifUnit: { 1 },
 			ifFunction: hash(2),
 			ifSum: hash(3),
+			ifProduct: hash(4),
 			ifConstructed: {
 				$0.analysis(
 					ifUnit: 1,
@@ -269,6 +271,7 @@ private func toStringWithBoundVariables(boundVariables: Set<Variable>)(type: Typ
 			"\((t1.0.function ?? t1.0.sum != nil ? parenthesize : id)(t1.1)) → \(t2.1)"
 		},
 		ifSum: { "\($0.1) | \($1.1)" },
+		ifProduct: { "(\($0.1), \($1.1))" },
 		ifConstructed: { c in
 			c.analysis(
 				ifUnit: "Unit",
