@@ -33,33 +33,25 @@ public enum Type<T>: Printable {
 	public var variable: Manifold.Variable? {
 		return analysis(
 			ifVariable: unit,
-			ifUnit: const(nil),
-			ifConstructed: const(nil),
-			ifUniversal: const(nil))
+			otherwise: const(nil))
 	}
 
 	public var isUnit: Bool {
 		return analysis(
-			ifVariable: const(false),
 			ifUnit:  const(true),
-			ifConstructed:  const(false),
-			ifUniversal:  const(false))
+			otherwise: const(false))
 	}
 
 	public var constructed: Constructor<T>? {
 		return analysis(
-			ifVariable: const(nil),
-			ifUnit: const(nil),
 			ifConstructed: unit,
-			ifUniversal: const(nil))
+			otherwise: const(nil))
 	}
 
 	public var universal: (Set<Manifold.Variable>, T)? {
 		return analysis(
-			ifVariable: const(nil),
-			ifUnit: const(nil),
-			ifConstructed: const(nil),
-			ifUniversal: unit)
+			ifUniversal: unit,
+			otherwise: const(nil))
 	}
 
 
