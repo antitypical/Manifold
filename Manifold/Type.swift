@@ -7,10 +7,6 @@ public enum Type<T>: Printable {
 		return .Variable(variable)
 	}
 
-	public static func constructed(constructor: Constructor<T>) -> Type {
-		return .Constructed(Box(constructor))
-	}
-
 	public static func function(x: T, _ y: T) -> Type {
 		return .Function(Box(x), Box(y))
 	}
@@ -60,12 +56,6 @@ public enum Type<T>: Printable {
 			otherwise: const(nil))
 	}
 
-	public var constructed: Constructor<T>? {
-		return analysis(
-			ifConstructed: unit,
-			otherwise: const(nil))
-	}
-
 	public var universal: (Set<Manifold.Variable>, T)? {
 		return analysis(
 			ifUniversal: unit,
@@ -80,14 +70,13 @@ public enum Type<T>: Printable {
 	case Function(Box<T>, Box<T>)
 	case Sum(Box<T>, Box<T>)
 	case Product(Box<T>, Box<T>)
-	case Constructed(Box<Constructor<T>>)
 	case Universal(Set<Manifold.Variable>, Box<T>)
 
 
 	// MARK: Case analysis
 
 	/// Exhaustive analysis specifying zero or more cases and a default case.
-	public func analysis<Result>(ifVariable: (Manifold.Variable -> Result)? = nil, ifUnit: (() -> Result)? = nil, ifFunction: ((T, T) -> Result)? = nil, ifSum: ((T, T) -> Result)? = nil, ifProduct: ((T, T) -> Result)? = nil, ifConstructed: (Constructor<T> -> Result)? = nil, ifUniversal: ((Set<Manifold.Variable>, T) -> Result)? = nil, otherwise: () -> Result) -> Result {
+	public func analysis<Result>(ifVariable: (Manifold.Variable -> Result)? = nil, ifUnit: (() -> Result)? = nil, ifFunction: ((T, T) -> Result)? = nil, ifSum: ((T, T) -> Result)? = nil, ifProduct: ((T, T) -> Result)? = nil, ifUniversal: ((Set<Manifold.Variable>, T) -> Result)? = nil, otherwise: () -> Result) -> Result {
 		switch self {
 		case let .Variable(v):
 			return ifVariable?(v) ?? otherwise()
@@ -104,16 +93,13 @@ public enum Type<T>: Printable {
 		case let .Product(t1, t2):
 			return ifProduct?(t1.value, t2.value) ?? otherwise()
 
-		case let .Constructed(c):
-			return ifConstructed?(c.value) ?? otherwise()
-
 		case let .Universal(a, t):
 			return ifUniversal?(a, t.value) ?? otherwise()
 		}
 	}
 
 	/// Exhaustive analysis specifying all cases.
-	public func analysis<Result>(@noescape #ifVariable: Manifold.Variable -> Result, @noescape ifUnit: () -> Result, @noescape ifFunction: (T, T) -> Result, @noescape ifSum: (T, T) -> Result, @noescape ifProduct: (T, T) -> Result, @noescape ifConstructed: Constructor<T> -> Result, @noescape ifUniversal: (Set<Manifold.Variable>, T) -> Result) -> Result {
+	public func analysis<Result>(@noescape #ifVariable: Manifold.Variable -> Result, @noescape ifUnit: () -> Result, @noescape ifFunction: (T, T) -> Result, @noescape ifSum: (T, T) -> Result, @noescape ifProduct: (T, T) -> Result, @noescape ifUniversal: (Set<Manifold.Variable>, T) -> Result) -> Result {
 		switch self {
 		case let .Variable(v):
 			return ifVariable(v)
@@ -129,9 +115,6 @@ public enum Type<T>: Printable {
 
 		case let .Product(t1, t2):
 			return ifProduct(t1.value, t2.value)
-
-		case let .Constructed(c):
-			return ifConstructed(c.value)
 
 		case let .Universal(a, t):
 			return ifUniversal(a, t.value)
@@ -149,7 +132,6 @@ public enum Type<T>: Printable {
 			ifFunction: binary >>> Type<U>.function,
 			ifSum: binary >>> Type<U>.sum,
 			ifProduct: binary >>> Type<U>.product,
-			ifConstructed: { .Constructed(Box($0.map(transform))) },
 			ifUniversal: { .Universal($0, Box(transform($1))) })
 	}
 
@@ -163,7 +145,6 @@ public enum Type<T>: Printable {
 			ifFunction: { "(\($0)) → \($1)" },
 			ifSum: { "\($0) | \($1)" },
 			ifProduct: { "(\($0), \($1))" },
-			ifConstructed: { $0.description },
 			ifUniversal: { "∀\($0).\($1)" })
 	}
 }
@@ -175,9 +156,8 @@ public func == <T: Equatable> (left: Type<T>, right: Type<T>) -> Bool {
 	let function: Bool? = (left.function &&& right.function).map(==)
 	let sum: Bool? = (left.sum &&& right.sum).map(==)
 	let product: Bool? = (left.product &&& right.product).map(==)
-	let constructed: Bool? = (left.constructed &&& right.constructed).map(==)
 	let universal: Bool? = (left.universal &&& right.universal).map(==)
-	return unit || variable ?? function ?? sum ?? product ?? constructed ?? universal ?? false
+	return unit || variable ?? function ?? sum ?? product ?? universal ?? false
 }
 
 

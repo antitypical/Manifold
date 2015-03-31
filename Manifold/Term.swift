@@ -17,20 +17,16 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 		return In(Type.variable(v))
 	}
 
-	public static func constructed(c: Constructor<Term>) -> Term {
-		return In(Type.constructed(c))
-	}
-
 	public static func function(t1: Term, _ t2: Term) -> Term {
-		return constructed(Constructor.function(t1, t2))
+		return In(.function(t1, t2))
 	}
 
 	public static func sum(t1: Term, _ t2: Term) -> Term {
-		return constructed(Constructor.sum(t1, t2))
+		return In(.sum(t1, t2))
 	}
 
 	public static func product(t1: Term, _ t2: Term) -> Term {
-		return constructed(Constructor.product(t1, t2))
+		return In(.product(t1, t2))
 	}
 
 	public static func forall(a: Set<Manifold.Variable>, _ t: Term) -> Term {
@@ -60,7 +56,6 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 			ifFunction: binary,
 			ifSum: binary,
 			ifProduct: binary,
-			ifConstructed: { $0.reduce([]) { $0.union($1.freeVariables) } },
 			ifUniversal: { $1.freeVariables.subtract($0) })
 	}
 
@@ -89,15 +84,6 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 		func parameters(type: Type<(Term, [Term])>) -> [Term] {
 			return type.analysis(
 				ifFunction: { [ $0.0 ] + $1.1 },
-				ifConstructed: {
-					$0.analysis(
-						ifUnit: [],
-						ifFunction: {
-							[ $0.0 ] + $1.1
-						},
-						ifSum: const([]),
-						ifProduct: const([]))
-				},
 				ifUniversal: { $1.1 },
 				otherwise: const([]))
 		}
@@ -123,13 +109,8 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 		let binary: (Set<Term>, Set<Term>) -> Set<Term> = { $0.union($1) }
 		return type.analysis(
 			ifFunction: binary,
-			ifConstructed: {
-				$0.analysis(
-					ifUnit: [],
-					ifFunction: binary,
-					ifSum: binary,
-					ifProduct: binary)
-			},
+			ifSum: binary,
+			ifProduct: binary,
 			ifUniversal: { $1 },
 			otherwise: const([]))
 	}
@@ -139,13 +120,8 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 			let binary: (Term, Term) -> (Term, Term) = { ($0.instantiate(freshVariable), $1.instantiate(freshVariable)) }
 			return type.analysis(
 				ifFunction: binary >>> Term.function,
-				ifConstructed: {
-					$0.analysis(
-						ifUnit: Term(type),
-						ifFunction: binary >>> Term.function,
-						ifSum: binary >>> Term.sum,
-						ifProduct: binary >>> Term.product)
-				},
+				ifSum: binary >>> Term.sum,
+				ifProduct: binary >>> Term.product,
 				ifUniversal: { parameters, type in
 					Substitution(lazy(parameters).map { ($0, Term(freshVariable?() ?? Manifold.Variable())) }).apply(type.instantiate(freshVariable))
 				},
@@ -161,14 +137,9 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 		return type.variable
 	}
 
-	public var constructed: Constructor<Term>? {
-		return type.constructed
-	}
-
 	public var function: (Term, Term)? {
 		return type.analysis(
 			ifFunction: unit,
-			ifConstructed: { $0.function },
 			ifUniversal: { $1.function },
 			otherwise: const(nil))
 	}
@@ -179,14 +150,14 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 
 	public var sum: (Term, Term)? {
 		return type.analysis(
-			ifConstructed: { $0.sum },
+			ifSum: unit,
 			ifUniversal: { $1.sum },
 			otherwise: const(nil))
 	}
 
 	public var product: (Term, Term)? {
 		return type.analysis(
-			ifConstructed: { $0.product },
+			ifProduct: unit,
 			ifUniversal: { $1.product },
 			otherwise: const(nil))
 	}
@@ -207,13 +178,6 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 			ifFunction: hash(2),
 			ifSum: hash(3),
 			ifProduct: hash(4),
-			ifConstructed: {
-				$0.analysis(
-					ifUnit: 1,
-					ifFunction: hash(2),
-					ifSum: hash(3),
-					ifProduct: hash(4))
-			},
 			ifUniversal: hash(-1))
 	}
 
@@ -276,15 +240,6 @@ private func toStringWithBoundVariables(boundVariables: Set<Variable>)(type: Typ
 		},
 		ifSum: { "\($0.1) | \($1.1)" },
 		ifProduct: { "(\($0.1), \($1.1))" },
-		ifConstructed: { c in
-			c.analysis(
-				ifUnit: "Unit",
-				ifFunction: { t1, t2 in
-					"\((t1.0.function ?? t1.0.sum != nil ? parenthesize : id)(t1.1)) → \(t2.1)"
-				},
-				ifSum: { "\($0.1) | \($1.1)" },
-				ifProduct: { "(\($0.1), \($1.1))" })
-		},
 		ifUniversal: {
 			let variables = lazy($0)
 				.map { bound + $0.value.subscriptedDescription }
