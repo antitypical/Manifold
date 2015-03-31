@@ -33,13 +33,23 @@ public enum Type<T>: Printable {
 	public var variable: Manifold.Variable? {
 		return analysis(
 			ifVariable: unit,
+			ifUnit: const(nil),
 			ifConstructed: const(nil),
 			ifUniversal: const(nil))
+	}
+
+	public var isUnit: Bool {
+		return analysis(
+			ifVariable: const(false),
+			ifUnit:  const(true),
+			ifConstructed:  const(false),
+			ifUniversal:  const(false))
 	}
 
 	public var constructed: Constructor<T>? {
 		return analysis(
 			ifVariable: const(nil),
+			ifUnit: const(nil),
 			ifConstructed: unit,
 			ifUniversal: const(nil))
 	}
@@ -47,6 +57,7 @@ public enum Type<T>: Printable {
 	public var universal: (Set<Manifold.Variable>, T)? {
 		return analysis(
 			ifVariable: const(nil),
+			ifUnit: const(nil),
 			ifConstructed: const(nil),
 			ifUniversal: unit)
 	}
@@ -55,21 +66,25 @@ public enum Type<T>: Printable {
 	// MARK: Cases
 
 	case Variable(Manifold.Variable)
+	case Unit
 	case Constructed(Box<Constructor<T>>)
 	case Universal(Set<Manifold.Variable>, Box<T>)
 
 
 	// MARK: Case analysis
 
-	public func analysis<Result>(@noescape #ifVariable: Manifold.Variable -> Result, @noescape ifConstructed: Constructor<T> -> Result, @noescape ifUniversal: (Set<Manifold.Variable>, T) -> Result) -> Result {
+	public func analysis<Result>(@noescape #ifVariable: Manifold.Variable -> Result, @noescape ifUnit: () -> Result, @noescape ifConstructed: Constructor<T> -> Result, @noescape ifUniversal: (Set<Manifold.Variable>, T) -> Result) -> Result {
 		switch self {
-		case let Variable(v):
+		case let .Variable(v):
 			return ifVariable(v)
 
-		case let Constructed(c):
+		case .Unit:
+			return ifUnit()
+
+		case let .Constructed(c):
 			return ifConstructed(c.value)
 
-		case let Universal(a, t):
+		case let .Universal(a, t):
 			return ifUniversal(a, t.value)
 		}
 	}
@@ -80,6 +95,7 @@ public enum Type<T>: Printable {
 	public func map<U>(transform: T -> U) -> Type<U> {
 		return analysis(
 			ifVariable: { .Variable($0) },
+			ifUnit: { .Unit },
 			ifConstructed: { .Constructed(Box($0.map(transform))) },
 			ifUniversal: { .Universal($0, Box(transform($1))) })
 	}
@@ -90,6 +106,7 @@ public enum Type<T>: Printable {
 	public var description: String {
 		return analysis(
 			ifVariable: { "τ\($0.value)" },
+			ifUnit: const("Unit"),
 			ifConstructed: { $0.description },
 			ifUniversal: { "∀\($0).\($1)" })
 	}
@@ -97,10 +114,11 @@ public enum Type<T>: Printable {
 
 
 public func == <T: Equatable> (left: Type<T>, right: Type<T>) -> Bool {
+	let unit: Bool = left.isUnit && right.isUnit
 	let variable: Bool? = (left.variable &&& right.variable).map(==)
 	let constructed: Bool? = (left.constructed &&& right.constructed).map(==)
 	let universal: Bool? = (left.universal &&& right.universal).map(==)
-	return variable ?? constructed ?? universal ?? false
+	return unit || variable ?? constructed ?? universal ?? false
 }
 
 

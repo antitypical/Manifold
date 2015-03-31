@@ -26,6 +26,7 @@ private let Bool = Term.Bool
 private func count(type: Type<Int>) -> Int {
 	return 1 + type.analysis(
 		ifVariable: const(0),
+		ifUnit: const(0),
 		ifConstructed: {
 			$0.analysis(
 				ifUnit: 0,
@@ -40,6 +41,7 @@ private func count(type: Type<Int>) -> Int {
 private func toString(type: Type<(Term, String)>) -> String {
 	return type.analysis(
 		ifVariable: { "τ\($0)" },
+		ifUnit: const("Unit"),
 		ifConstructed: {
 			$0.analysis(
 				ifUnit: "Unit",

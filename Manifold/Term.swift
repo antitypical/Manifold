@@ -55,6 +55,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 	public var freeVariables: Set<Variable> {
 		return type.analysis(
 			ifVariable: { [ $0 ] },
+			ifUnit: const([]),
 			ifConstructed: { $0.reduce([]) { $0.union($1.freeVariables) } },
 			ifUniversal: { $1.freeVariables.subtract($0) })
 	}
@@ -62,6 +63,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 	public var boundVariables: Set<Variable> {
 		return type.analysis(
 			ifVariable: const([]),
+			ifUnit: const([]),
 			ifConstructed: const([]),
 			ifUniversal: { variables, _ in variables })
 	}
@@ -85,6 +87,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 		func parameters(type: Type<(Term, [Term])>) -> [Term] {
 			return type.analysis(
 				ifVariable: const([]),
+				ifUnit: const([]),
 				ifConstructed: {
 					$0.analysis(
 						ifUnit: [],
@@ -118,6 +121,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 		let binary: (Set<Term>, Set<Term>) -> Set<Term> = { $0.union($1) }
 		return type.analysis(
 			ifVariable: const([]),
+			ifUnit: const([]),
 			ifConstructed: {
 				$0.analysis(
 					ifUnit: [],
@@ -133,6 +137,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 			let binary: (Term, Term) -> (Term, Term) = { ($0.instantiate(freshVariable), $1.instantiate(freshVariable)) }
 			return type.analysis(
 				ifVariable: const(Term(type)),
+				ifUnit: const(Term(type)),
 				ifConstructed: {
 					$0.analysis(
 						ifUnit: Term(type),
@@ -161,6 +166,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 	public var function: (Term, Term)? {
 		return type.analysis(
 			ifVariable: const(nil),
+			ifUnit: const(nil),
 			ifConstructed: { $0.function },
 			ifUniversal: { $1.function })
 	}
@@ -168,6 +174,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 	public var sum: (Term, Term)? {
 		return type.analysis(
 			ifVariable: const(nil),
+			ifUnit: const(nil),
 			ifConstructed: { $0.sum },
 			ifUniversal: { $1.sum })
 	}
@@ -175,6 +182,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 	public var product: (Term, Term)? {
 		return type.analysis(
 			ifVariable: const(nil),
+			ifUnit: const(nil),
 			ifConstructed: { $0.product },
 			ifUniversal: { $1.product })
 	}
@@ -182,6 +190,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 	public var universal: (Set<Manifold.Variable>, Term)? {
 		return type.analysis(
 			ifVariable: const(nil),
+			ifUnit: const(nil),
 			ifConstructed: const(nil),
 			ifUniversal: unit)
 	}
@@ -192,6 +201,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 	public var hashValue: Int {
 		return type.analysis(
 			ifVariable: { $0.hashValue },
+			ifUnit: { 1 },
 			ifConstructed: {
 				$0.analysis(
 					ifUnit: 1,
@@ -255,6 +265,7 @@ private func toStringWithBoundVariables(boundVariables: Set<Variable>)(type: Typ
 	let free = "τ"
 	return type.analysis(
 		ifVariable: { (boundVariables.contains($0) ? bound : free) + $0.value.subscriptedDescription },
+		ifUnit: const("Unit"),
 		ifConstructed: { c in
 			c.analysis(
 				ifUnit: "Unit",
