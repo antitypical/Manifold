@@ -73,6 +73,7 @@ public enum Type<T>: Printable {
 
 	// MARK: Case analysis
 
+	/// Exhaustive analysis specifying zero or more cases and a default case.
 	public func analysis<Result>(ifVariable: (Manifold.Variable -> Result)? = nil, ifUnit: (() -> Result)? = nil, ifConstructed: (Constructor<T> -> Result)? = nil, ifUniversal: ((Set<Manifold.Variable>, T) -> Result)? = nil, otherwise: () -> Result) -> Result {
 		switch self {
 		case let .Variable(v):
@@ -89,6 +90,7 @@ public enum Type<T>: Printable {
 		}
 	}
 
+	/// Exhaustive analysis specifying all cases.
 	public func analysis<Result>(@noescape #ifVariable: Manifold.Variable -> Result, @noescape ifUnit: () -> Result, @noescape ifConstructed: Constructor<T> -> Result, @noescape ifUniversal: (Set<Manifold.Variable>, T) -> Result) -> Result {
 		switch self {
 		case let .Variable(v):
