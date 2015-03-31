@@ -16,7 +16,7 @@ public enum Type<T>: Printable {
 	}
 
 	public static func sum(x: T, _ y: T) -> Type {
-		return constructed(.Sum(Box(x), Box(y)))
+		return .Sum(Box(x), Box(y))
 	}
 
 	public static func product(x: T, _ y: T) -> Type {
@@ -78,6 +78,7 @@ public enum Type<T>: Printable {
 	case Variable(Manifold.Variable)
 	case Unit
 	case Function(Box<T>, Box<T>)
+	case Sum(Box<T>, Box<T>)
 	case Constructed(Box<Constructor<T>>)
 	case Universal(Set<Manifold.Variable>, Box<T>)
 
@@ -96,8 +97,8 @@ public enum Type<T>: Printable {
 		case let .Function(t1, t2):
 			return ifFunction?(t1.value, t2.value) ?? otherwise()
 
-		case let .Constructed(c) where c.value.sum != nil:
-			return ifSum.map { c.value.sum! |> $0 } ?? otherwise()
+		case let .Sum(t1, t2):
+			return ifSum?(t1.value, t2.value) ?? otherwise()
 
 		case let .Constructed(c) where c.value.product != nil:
 			return ifProduct.map { c.value.product! |> $0 } ?? otherwise()
@@ -122,8 +123,8 @@ public enum Type<T>: Printable {
 		case let .Function(t1, t2):
 			return ifFunction(t1.value, t2.value)
 
-		case let .Constructed(c) where c.value.sum != nil:
-			return c.value.sum! |> ifSum
+		case let .Sum(t1, t2):
+			return ifSum(t1.value, t2.value)
 
 		case let .Constructed(c) where c.value.product != nil:
 			return c.value.product! |> ifProduct
