@@ -17,10 +17,6 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 		return In(Type.variable(v))
 	}
 
-	public init(_ constructor: Constructor<Term>) {
-		self.init(Type.constructed(constructor))
-	}
-
 	public static func constructed(c: Constructor<Term>) -> Term {
 		return In(Type.constructed(c))
 	}

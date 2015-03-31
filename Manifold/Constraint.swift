@@ -91,7 +91,7 @@ private func unify(c1: Constructor<Term>, c2: Constructor<Term>) -> Either<Error
 	let function = (c1.function &&& c2.function).map(recur)
 	let sum = (c1.sum &&& c2.sum).map(recur)
 	let product = (c1.product &&& c2.product).map(recur)
-	return function ?? sum ?? product ?? .left("mutually exclusive types: \(Term(c1)), \(Term(c2))")
+	return function ?? sum ?? product ?? .left("mutually exclusive types: \(Term.constructed(c1)), \(Term.constructed(c2))")
 }
 
 public func unify(t1: Term, t2: Term) -> Either<Error, Substitution> {
