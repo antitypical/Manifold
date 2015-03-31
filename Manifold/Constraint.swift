@@ -84,22 +84,21 @@ public func occurs(v: Variable, t: Term) -> Bool {
 	return t.variable != v && t.freeVariables.contains(v)
 }
 
-private func unify(c1: Constructor<Term>, c2: Constructor<Term>) -> Either<Error, Substitution> {
-	let identity: Either<Error, Substitution> = .right([:])
-	if c1.isUnit && c2.isUnit { return identity }
-	let recur: ((Term, Term), (Term, Term)) -> Either<Error, Substitution> = { (unify($0.0, $1.0) &&& unify($0.1, $1.1)).map(uncurry(Substitution.compose)) }
-	let function = (c1.function &&& c2.function).map(recur)
-	let sum = (c1.sum &&& c2.sum).map(recur)
-	let product = (c1.product &&& c2.product).map(recur)
-	return function ?? sum ?? product ?? .left("mutually exclusive types: \(Term(c1)), \(Term(c2))")
-}
-
 public func unify(t1: Term, t2: Term) -> Either<Error, Substitution> {
+	if t1.isUnit && t2.isUnit { return .right([:]) }
+
 	let infinite: Either<Error, Substitution> = .left("{\(t1), \(t2)} form an infinite type")
 	let v1 = t1.variable.map { occurs($0, t2) ? infinite : .right([$0: t2]) }
 	let v2 = t2.variable.map { occurs($0, t1) ? infinite : .right([$0: t1]) }
-	let constructed = (t1.constructed &&& t2.constructed).map(unify)
-	return v1 ?? v2 ?? constructed ?? .left("don’t know how to unify \(t1) with \(t2)")
+
+	if let v = v1 ?? v2 { return v }
+
+	let recur: ((Term, Term), (Term, Term)) -> Either<Error, Substitution> = { (unify($0.0, $1.0) &&& unify($0.1, $1.1)).map(uncurry(Substitution.compose)) }
+
+	let function = (t1.function &&& t2.function).map(recur)
+	let sum = (t1.sum &&& t2.sum).map(recur)
+	let product = (t1.product &&& t2.product).map(recur)
+	return function ?? sum ?? product ?? .left("don’t know how to unify \(t1) with \(t2)")
 }
 
 

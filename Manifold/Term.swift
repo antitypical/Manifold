@@ -17,24 +17,16 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 		return In(Type.variable(v))
 	}
 
-	public init(_ constructor: Constructor<Term>) {
-		self.init(Type.constructed(constructor))
-	}
-
-	public static func constructed(c: Constructor<Term>) -> Term {
-		return In(Type.constructed(c))
-	}
-
 	public static func function(t1: Term, _ t2: Term) -> Term {
-		return constructed(Constructor.function(t1, t2))
+		return In(.function(t1, t2))
 	}
 
 	public static func sum(t1: Term, _ t2: Term) -> Term {
-		return constructed(Constructor.sum(t1, t2))
+		return In(.sum(t1, t2))
 	}
 
 	public static func product(t1: Term, _ t2: Term) -> Term {
-		return constructed(Constructor.product(t1, t2))
+		return In(.product(t1, t2))
 	}
 
 	public static func forall(a: Set<Manifold.Variable>, _ t: Term) -> Term {
@@ -57,17 +49,20 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 
 
 	public var freeVariables: Set<Variable> {
+		let binary: (Term, Term) -> Set<Variable> = { $0.freeVariables.union($1.freeVariables) }
 		return type.analysis(
 			ifVariable: { [ $0 ] },
-			ifConstructed: { $0.reduce([]) { $0.union($1.freeVariables) } },
+			ifUnit: const([]),
+			ifFunction: binary,
+			ifSum: binary,
+			ifProduct: binary,
 			ifUniversal: { $1.freeVariables.subtract($0) })
 	}
 
 	public var boundVariables: Set<Variable> {
 		return type.analysis(
-			ifVariable: const([]),
-			ifConstructed: const([]),
-			ifUniversal: { variables, _ in variables })
+			ifUniversal: { variables, _ in variables },
+			otherwise: const([]))
 	}
 
 	public func generalize(environment: Environment = [:]) -> Term {
@@ -88,17 +83,9 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 	public var parameters: [Term] {
 		func parameters(type: Type<(Term, [Term])>) -> [Term] {
 			return type.analysis(
-				ifVariable: const([]),
-				ifConstructed: {
-					$0.analysis(
-						ifUnit: [],
-						ifFunction: {
-							[ $0.0 ] + $1.1
-						},
-						ifSum: const([]),
-						ifProduct: const([]))
-				},
-				ifUniversal: { $1.1 })
+				ifFunction: { [ $0.0 ] + $1.1 },
+				ifUniversal: { $1.1 },
+				otherwise: const([]))
 		}
 		return para(parameters)(self)
 	}
@@ -121,32 +108,24 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 	private static func distinctTerms(type: Type<Set<Term>>) -> Set<Term> {
 		let binary: (Set<Term>, Set<Term>) -> Set<Term> = { $0.union($1) }
 		return type.analysis(
-			ifVariable: const([]),
-			ifConstructed: {
-				$0.analysis(
-					ifUnit: [],
-					ifFunction: binary,
-					ifSum: binary,
-					ifProduct: binary)
-			},
-			ifUniversal: { $1 })
+			ifFunction: binary,
+			ifSum: binary,
+			ifProduct: binary,
+			ifUniversal: { $1 },
+			otherwise: const([]))
 	}
 
 	public func instantiate(_ freshVariable: (() -> Variable)? = nil) -> Term {
 		func instantiate(type: Type<Term>) -> Term {
 			let binary: (Term, Term) -> (Term, Term) = { ($0.instantiate(freshVariable), $1.instantiate(freshVariable)) }
 			return type.analysis(
-				ifVariable: const(Term(type)),
-				ifConstructed: {
-					$0.analysis(
-						ifUnit: Term(type),
-						ifFunction: binary >>> Term.function,
-						ifSum: binary >>> Term.sum,
-						ifProduct: binary >>> Term.product)
-				},
+				ifFunction: binary >>> Term.function,
+				ifSum: binary >>> Term.sum,
+				ifProduct: binary >>> Term.product,
 				ifUniversal: { parameters, type in
 					Substitution(lazy(parameters).map { ($0, Term(freshVariable?() ?? Manifold.Variable())) }).apply(type.instantiate(freshVariable))
-			})
+				},
+				otherwise: const(Term(type)))
 		}
 		return cata(instantiate)(self)
 	}
@@ -158,36 +137,35 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 		return type.variable
 	}
 
-	public var constructed: Constructor<Term>? {
-		return type.constructed
-	}
-
 	public var function: (Term, Term)? {
 		return type.analysis(
-			ifVariable: const(nil),
-			ifConstructed: { $0.function },
-			ifUniversal: { $1.function })
+			ifFunction: unit,
+			ifUniversal: { $1.function },
+			otherwise: const(nil))
+	}
+
+	public var isUnit: Swift.Bool {
+		return type.isUnit
 	}
 
 	public var sum: (Term, Term)? {
 		return type.analysis(
-			ifVariable: const(nil),
-			ifConstructed: { $0.sum },
-			ifUniversal: { $1.sum })
+			ifSum: unit,
+			ifUniversal: { $1.sum },
+			otherwise: const(nil))
 	}
 
 	public var product: (Term, Term)? {
 		return type.analysis(
-			ifVariable: const(nil),
-			ifConstructed: { $0.product },
-			ifUniversal: { $1.product })
+			ifProduct: unit,
+			ifUniversal: { $1.product },
+			otherwise: const(nil))
 	}
 
 	public var universal: (Set<Manifold.Variable>, Term)? {
 		return type.analysis(
-			ifVariable: const(nil),
-			ifConstructed: const(nil),
-			ifUniversal: unit)
+			ifUniversal: unit,
+			otherwise: const(nil))
 	}
 
 
@@ -196,13 +174,10 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 	public var hashValue: Int {
 		return type.analysis(
 			ifVariable: { $0.hashValue },
-			ifConstructed: {
-				$0.analysis(
-					ifUnit: 1,
-					ifFunction: hash(2),
-					ifSum: hash(3),
-					ifProduct: hash(4))
-			},
+			ifUnit: { 1 },
+			ifFunction: hash(2),
+			ifSum: hash(3),
+			ifProduct: hash(4),
 			ifUniversal: hash(-1))
 	}
 
@@ -259,15 +234,12 @@ private func toStringWithBoundVariables(boundVariables: Set<Variable>)(type: Typ
 	let free = "τ"
 	return type.analysis(
 		ifVariable: { (boundVariables.contains($0) ? bound : free) + $0.value.subscriptedDescription },
-		ifConstructed: { c in
-			c.analysis(
-				ifUnit: "Unit",
-				ifFunction: { t1, t2 in
-					"\((t1.0.function ?? t1.0.sum != nil ? parenthesize : id)(t1.1)) → \(t2.1)"
-				},
-				ifSum: { "\($0.1) | \($1.1)" },
-				ifProduct: { "(\($0.1), \($1.1))" })
+		ifUnit: const("Unit"),
+		ifFunction: { t1, t2 in
+			"\((t1.0.function ?? t1.0.sum != nil ? parenthesize : id)(t1.1)) → \(t2.1)"
 		},
+		ifSum: { "\($0.1) | \($1.1)" },
+		ifProduct: { "(\($0.1), \($1.1))" },
 		ifUniversal: {
 			let variables = lazy($0)
 				.map { bound + $0.value.subscriptedDescription }

@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		D44474451AA3AE84001F0782 /* Term.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44474441AA3AE84001F0782 /* Term.swift */; };
-		D4A31B241AA3593200B3FC68 /* Constructor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A31B231AA3593200B3FC68 /* Constructor.swift */; };
 		D4A31B2A1AA366EC00B3FC68 /* Algebra.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A31B291AA366EC00B3FC68 /* Algebra.swift */; };
 		D4A31B2C1AA3708F00B3FC68 /* AlgebraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A31B2B1AA3708F00B3FC68 /* AlgebraTests.swift */; };
 		D4B3FBF11A83515800DA2AC3 /* Manifold.h in Headers */ = {isa = PBXBuildFile; fileRef = D4B3FBF01A83515800DA2AC3 /* Manifold.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -52,7 +51,6 @@
 
 /* Begin PBXFileReference section */
 		D44474441AA3AE84001F0782 /* Term.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Term.swift; sourceTree = "<group>"; };
-		D4A31B231AA3593200B3FC68 /* Constructor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constructor.swift; sourceTree = "<group>"; };
 		D4A31B291AA366EC00B3FC68 /* Algebra.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Algebra.swift; sourceTree = "<group>"; };
 		D4A31B2B1AA3708F00B3FC68 /* AlgebraTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlgebraTests.swift; sourceTree = "<group>"; };
 		D4B3FBEB1A83515800DA2AC3 /* Manifold.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Manifold.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -135,7 +133,6 @@
 			children = (
 				D4B3FBF01A83515800DA2AC3 /* Manifold.h */,
 				D4B3FC0C1A8351ED00DA2AC3 /* Constraint.swift */,
-				D4A31B231AA3593200B3FC68 /* Constructor.swift */,
 				D4B3FC0E1A8351F400DA2AC3 /* Type.swift */,
 				D4A31B291AA366EC00B3FC68 /* Algebra.swift */,
 				D4B3FC121A83520100DA2AC3 /* Expression.swift */,
@@ -296,7 +293,6 @@
 			files = (
 				D4B3FC0D1A8351ED00DA2AC3 /* Constraint.swift in Sources */,
 				D4F9F8611A84694600B7071E /* Variable.swift in Sources */,
-				D4A31B241AA3593200B3FC68 /* Constructor.swift in Sources */,
 				D4B3FC191A835A7200DA2AC3 /* Environment.swift in Sources */,
 				D4F1C3ED1A8FA13B0087648A /* FlatMapSequenceView.swift in Sources */,
 				D4B4AA571A90320F0089A5F2 /* Dictionary.swift in Sources */,
