@@ -53,10 +53,11 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 
 
 	public var freeVariables: Set<Variable> {
+		let binary: (Term, Term) -> Set<Variable> = { $0.freeVariables.union($1.freeVariables) }
 		return type.analysis(
 			ifVariable: { [ $0 ] },
 			ifUnit: const([]),
-			ifFunction: { $0.freeVariables.union($1.freeVariables) },
+			ifFunction: binary,
 			ifConstructed: { $0.reduce([]) { $0.union($1.freeVariables) } },
 			ifUniversal: { $1.freeVariables.subtract($0) })
 	}
