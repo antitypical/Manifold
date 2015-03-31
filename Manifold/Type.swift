@@ -73,7 +73,7 @@ public enum Type<T>: Printable {
 	// MARK: Case analysis
 
 	/// Exhaustive analysis specifying zero or more cases and a default case.
-	public func analysis<Result>(ifVariable: (Manifold.Variable -> Result)? = nil, ifUnit: (() -> Result)? = nil, ifFunction: ((T, T) -> Result)? = nil, ifConstructed: (Constructor<T> -> Result)? = nil, ifUniversal: ((Set<Manifold.Variable>, T) -> Result)? = nil, otherwise: () -> Result) -> Result {
+	public func analysis<Result>(ifVariable: (Manifold.Variable -> Result)? = nil, ifUnit: (() -> Result)? = nil, ifFunction: ((T, T) -> Result)? = nil, ifSum: ((T, T) -> Result)? = nil, ifConstructed: (Constructor<T> -> Result)? = nil, ifUniversal: ((Set<Manifold.Variable>, T) -> Result)? = nil, otherwise: () -> Result) -> Result {
 		switch self {
 		case let .Variable(v):
 			return ifVariable?(v) ?? otherwise()
@@ -83,6 +83,9 @@ public enum Type<T>: Printable {
 
 		case let .Function(t1, t2):
 			return ifFunction?(t1.value, t2.value) ?? otherwise()
+
+		case let .Constructed(c) where c.value.sum != nil:
+			return ifSum.map { c.value.sum! |> $0 } ?? otherwise()
 
 		case let .Constructed(c):
 			return ifConstructed?(c.value) ?? otherwise()
