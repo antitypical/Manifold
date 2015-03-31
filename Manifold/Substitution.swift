@@ -31,6 +31,7 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable, Printable {
 			ifVariable: { self.elements[$0] ?? term },
 			ifUnit: const(term),
 			ifFunction: binary >>> Term.function,
+			ifSum: binary >>> Term.sum,
 			ifConstructed: {
 				$0.analysis(
 					ifUnit: term,

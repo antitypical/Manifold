@@ -45,6 +45,11 @@ private func toString(type: Type<(Term, String)>) -> String {
 		ifVariable: { "τ\($0)" },
 		ifUnit: const("Unit"),
 		ifFunction: { "(\($0.1)) → \($1.1)" },
+		ifSum: {
+			($0.0 == Unit && $1.0 == Unit) ?
+				"Bool"
+			:	"\($0.1) | \($1.1)"
+		},
 		ifConstructed: {
 			$0.analysis(
 				ifUnit: "Unit",

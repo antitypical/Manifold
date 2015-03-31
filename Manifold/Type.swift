@@ -111,7 +111,7 @@ public enum Type<T>: Printable {
 	}
 
 	/// Exhaustive analysis specifying all cases.
-	public func analysis<Result>(@noescape #ifVariable: Manifold.Variable -> Result, @noescape ifUnit: () -> Result, @noescape ifFunction: (T, T) -> Result, @noescape ifConstructed: Constructor<T> -> Result, @noescape ifUniversal: (Set<Manifold.Variable>, T) -> Result) -> Result {
+	public func analysis<Result>(@noescape #ifVariable: Manifold.Variable -> Result, @noescape ifUnit: () -> Result, @noescape ifFunction: (T, T) -> Result, @noescape ifSum: (T, T) -> Result, @noescape ifConstructed: Constructor<T> -> Result, @noescape ifUniversal: (Set<Manifold.Variable>, T) -> Result) -> Result {
 		switch self {
 		case let .Variable(v):
 			return ifVariable(v)
@@ -121,6 +121,9 @@ public enum Type<T>: Printable {
 
 		case let .Function(t1, t2):
 			return ifFunction(t1.value, t2.value)
+
+		case let .Constructed(c) where c.value.sum != nil:
+			return c.value.sum! |> ifSum
 
 		case let .Constructed(c):
 			return ifConstructed(c.value)
@@ -134,10 +137,12 @@ public enum Type<T>: Printable {
 	// MARK: Higher-order
 
 	public func map<U>(transform: T -> U) -> Type<U> {
+		let binary: (T, T) -> (U, U) = { (transform($0), transform($1)) }
 		return analysis(
 			ifVariable: { .Variable($0) },
 			ifUnit: { .Unit },
-			ifFunction: { .function(transform($0), transform($1)) },
+			ifFunction: binary >>> Type<U>.function,
+			ifSum: binary >>> Type<U>.sum,
 			ifConstructed: { .Constructed(Box($0.map(transform))) },
 			ifUniversal: { .Universal($0, Box(transform($1))) })
 	}
@@ -150,6 +155,7 @@ public enum Type<T>: Printable {
 			ifVariable: { "τ\($0.value)" },
 			ifUnit: const("Unit"),
 			ifFunction: { "(\($0)) → \($1)" },
+			ifSum: { "\($0) | \($1)" },
 			ifConstructed: { $0.description },
 			ifUniversal: { "∀\($0).\($1)" })
 	}
