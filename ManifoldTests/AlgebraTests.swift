@@ -26,6 +26,8 @@ private let Bool = Term.Bool
 private func count(type: Type<Int>) -> Int {
 	return 1 + type.analysis(
 		ifFunction: +,
+		ifSum: +,
+		ifProduct: +,
 		ifConstructed: {
 			$0.analysis(
 				ifUnit: 0,
