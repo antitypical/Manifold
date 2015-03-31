@@ -165,9 +165,12 @@ public enum Type<T>: Printable {
 public func == <T: Equatable> (left: Type<T>, right: Type<T>) -> Bool {
 	let unit: Bool = left.isUnit && right.isUnit
 	let variable: Bool? = (left.variable &&& right.variable).map(==)
+	let function: Bool? = (left.function &&& right.function).map(==)
+	let sum: Bool? = (left.sum &&& right.sum).map(==)
+	let product: Bool? = (left.product &&& right.product).map(==)
 	let constructed: Bool? = (left.constructed &&& right.constructed).map(==)
 	let universal: Bool? = (left.universal &&& right.universal).map(==)
-	return unit || variable ?? constructed ?? universal ?? false
+	return unit || variable ?? function ?? sum ?? product ?? constructed ?? universal ?? false
 }
 
 
