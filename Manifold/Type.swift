@@ -48,6 +48,12 @@ public enum Type<T>: Printable {
 			otherwise: const(nil))
 	}
 
+	public var sum: (T, T)? {
+		return analysis(
+			ifSum: unit,
+			otherwise: const(nil))
+	}
+
 	public var constructed: Constructor<T>? {
 		return analysis(
 			ifConstructed: unit,
