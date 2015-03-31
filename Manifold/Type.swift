@@ -150,6 +150,10 @@ public enum Type<T>: Printable {
 }
 
 
+private func == <T: Equatable, U: Equatable> (left: (T, U), right: (T, U)) -> Bool {
+	return left.0 == right.0 && left.1 == right.1
+}
+
 public func == <T: Equatable> (left: Type<T>, right: Type<T>) -> Bool {
 	let unit: Bool = left.isUnit && right.isUnit
 	let variable: Bool? = (left.variable &&& right.variable).map(==)
