@@ -102,8 +102,9 @@ public func unify(t1: Term, t2: Term) -> Either<Error, Substitution> {
 }
 
 
-public func checkForInconsistencies(partition: [Term]) -> (Error?, Substitution) {
+public func checkForInconsistencies(var partition: [Term]) -> (Error?, Substitution) {
 	typealias Result = (Error?, Substitution, Term)
+	sort(&partition) { $0.variable != nil || $1.variable == nil }
 	let result: Result = reduce(dropFirst(partition), (nil, [:], partition[0])) { into, each in
 		unify(into.2, each).either(
 			ifLeft: { error in (into.0.map { $0 + error } ?? error, into.1, each) },
