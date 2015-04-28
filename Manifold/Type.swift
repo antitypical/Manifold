@@ -32,6 +32,12 @@ public enum Type<T>: Printable {
 			otherwise: const(nil))
 	}
 
+	public var isKind: Bool {
+		return analysis(
+			ifKind: const(true),
+			otherwise: const(false))
+	}
+
 	public var isUnit: Bool {
 		return analysis(
 			ifUnit: const(true),
