@@ -29,6 +29,7 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable, Printable {
 		let binary = { (self.apply($0), self.apply($1)) }
 		return term.type.analysis(
 			ifVariable: { self.elements[$0] ?? term },
+			ifKind: const(term),
 			ifUnit: const(term),
 			ifFunction: binary >>> Term.function,
 			ifSum: binary >>> Term.sum,

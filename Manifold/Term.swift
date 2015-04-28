@@ -52,6 +52,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 		let binary: (Term, Term) -> Set<Variable> = { $0.freeVariables.union($1.freeVariables) }
 		return type.analysis(
 			ifVariable: { [ $0 ] },
+			ifKind: const([]),
 			ifUnit: const([]),
 			ifFunction: binary,
 			ifSum: binary,
@@ -174,10 +175,11 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 	public var hashValue: Int {
 		return type.analysis(
 			ifVariable: { $0.hashValue },
-			ifUnit: { 1 },
-			ifFunction: hash(2),
-			ifSum: hash(3),
-			ifProduct: hash(4),
+			ifKind: { 1 },
+			ifUnit: { 2 },
+			ifFunction: hash(3),
+			ifSum: hash(4),
+			ifProduct: hash(5),
 			ifUniversal: hash(-1))
 	}
 
@@ -234,6 +236,7 @@ private func toStringWithBoundVariables(boundVariables: Set<Variable>)(type: Typ
 	let free = "τ"
 	return type.analysis(
 		ifVariable: { (boundVariables.contains($0) ? bound : free) + $0.value.subscriptedDescription },
+		ifKind: const("Type"),
 		ifUnit: const("Unit"),
 		ifFunction: { t1, t2 in
 			"\((t1.0.function ?? t1.0.sum != nil ? parenthesize : id)(t1.1)) → \(t2.1)"

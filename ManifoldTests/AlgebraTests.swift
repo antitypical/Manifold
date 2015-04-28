@@ -36,6 +36,7 @@ private func count(type: Type<Int>) -> Int {
 private func toString(type: Type<(Term, String)>) -> String {
 	return type.analysis(
 		ifVariable: { "τ\($0)" },
+		ifKind: const("Kind"),
 		ifUnit: const("Unit"),
 		ifFunction: { "(\($0.1)) → \($1.1)" },
 		ifSum: {
