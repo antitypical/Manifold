@@ -66,6 +66,7 @@ public enum Type<T>: Printable {
 	// MARK: Cases
 
 	case Variable(Manifold.Variable)
+	case Kind
 	case Unit
 	case Function(Box<T>, Box<T>)
 	case Sum(Box<T>, Box<T>)
@@ -76,33 +77,25 @@ public enum Type<T>: Printable {
 	// MARK: Case analysis
 
 	/// Exhaustive analysis specifying zero or more cases and a default case.
-	public func analysis<Result>(ifVariable: (Manifold.Variable -> Result)? = nil, ifUnit: (() -> Result)? = nil, ifFunction: ((T, T) -> Result)? = nil, ifSum: ((T, T) -> Result)? = nil, ifProduct: ((T, T) -> Result)? = nil, ifUniversal: ((Set<Manifold.Variable>, T) -> Result)? = nil, otherwise: () -> Result) -> Result {
-		switch self {
-		case let .Variable(v):
-			return ifVariable?(v) ?? otherwise()
-
-		case .Unit:
-			return ifUnit?() ?? otherwise()
-
-		case let .Function(t1, t2):
-			return ifFunction?(t1.value, t2.value) ?? otherwise()
-
-		case let .Sum(t1, t2):
-			return ifSum?(t1.value, t2.value) ?? otherwise()
-
-		case let .Product(t1, t2):
-			return ifProduct?(t1.value, t2.value) ?? otherwise()
-
-		case let .Universal(a, t):
-			return ifUniversal?(a, t.value) ?? otherwise()
-		}
+	public func analysis<Result>(ifVariable: (Manifold.Variable -> Result)? = nil, ifKind: (() -> Result)? = nil, ifUnit: (() -> Result)? = nil, ifFunction: ((T, T) -> Result)? = nil, ifSum: ((T, T) -> Result)? = nil, ifProduct: ((T, T) -> Result)? = nil, ifUniversal: ((Set<Manifold.Variable>, T) -> Result)? = nil, otherwise: () -> Result) -> Result {
+		return analysis(
+			ifVariable: { ifVariable?($0) ?? otherwise() },
+			ifKind: { ifKind?() ?? otherwise() },
+			ifUnit: { ifUnit?() ?? otherwise() },
+			ifFunction: { ifFunction?($0) ?? otherwise() },
+			ifSum: { ifSum?($0) ?? otherwise() },
+			ifProduct: { ifProduct?($0) ?? otherwise() },
+			ifUniversal: { ifUniversal?($0) ?? otherwise() })
 	}
 
 	/// Exhaustive analysis specifying all cases.
-	public func analysis<Result>(@noescape #ifVariable: Manifold.Variable -> Result, @noescape ifUnit: () -> Result, @noescape ifFunction: (T, T) -> Result, @noescape ifSum: (T, T) -> Result, @noescape ifProduct: (T, T) -> Result, @noescape ifUniversal: (Set<Manifold.Variable>, T) -> Result) -> Result {
+	public func analysis<Result>(@noescape #ifVariable: Manifold.Variable -> Result, @noescape ifKind: () -> Result, @noescape ifUnit: () -> Result, @noescape ifFunction: (T, T) -> Result, @noescape ifSum: (T, T) -> Result, @noescape ifProduct: (T, T) -> Result, @noescape ifUniversal: (Set<Manifold.Variable>, T) -> Result) -> Result {
 		switch self {
 		case let .Variable(v):
 			return ifVariable(v)
+
+		case Kind:
+			return ifKind()
 
 		case .Unit:
 			return ifUnit()
@@ -128,6 +121,7 @@ public enum Type<T>: Printable {
 		let binary: (T, T) -> (U, U) = { (transform($0), transform($1)) }
 		return analysis(
 			ifVariable: { .Variable($0) },
+			ifKind: { .Kind },
 			ifUnit: { .Unit },
 			ifFunction: binary >>> Type<U>.function,
 			ifSum: binary >>> Type<U>.sum,
@@ -141,6 +135,7 @@ public enum Type<T>: Printable {
 	public var description: String {
 		return analysis(
 			ifVariable: { "τ\($0.value)" },
+			ifKind: const("Type"),
 			ifUnit: const("Unit"),
 			ifFunction: { "(\($0)) → \($1)" },
 			ifSum: { "\($0) | \($1)" },
