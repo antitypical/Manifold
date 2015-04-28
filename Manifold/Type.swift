@@ -77,25 +77,14 @@ public enum Type<T>: Printable {
 
 	/// Exhaustive analysis specifying zero or more cases and a default case.
 	public func analysis<Result>(ifVariable: (Manifold.Variable -> Result)? = nil, ifUnit: (() -> Result)? = nil, ifFunction: ((T, T) -> Result)? = nil, ifSum: ((T, T) -> Result)? = nil, ifProduct: ((T, T) -> Result)? = nil, ifUniversal: ((Set<Manifold.Variable>, T) -> Result)? = nil, otherwise: () -> Result) -> Result {
-		switch self {
-		case let .Variable(v):
-			return ifVariable?(v) ?? otherwise()
-
-		case .Unit:
-			return ifUnit?() ?? otherwise()
-
-		case let .Function(t1, t2):
-			return ifFunction?(t1.value, t2.value) ?? otherwise()
-
-		case let .Sum(t1, t2):
-			return ifSum?(t1.value, t2.value) ?? otherwise()
-
-		case let .Product(t1, t2):
-			return ifProduct?(t1.value, t2.value) ?? otherwise()
-
-		case let .Universal(a, t):
-			return ifUniversal?(a, t.value) ?? otherwise()
-		}
+	public func analysis<Result>(ifVariable: (Manifold.Variable -> Result)? = nil, ifKind: (() -> Result)? = nil, ifUnit: (() -> Result)? = nil, ifFunction: ((T, T) -> Result)? = nil, ifSum: ((T, T) -> Result)? = nil, ifProduct: ((T, T) -> Result)? = nil, ifUniversal: ((Set<Manifold.Variable>, T) -> Result)? = nil, otherwise: () -> Result) -> Result {
+		return analysis(
+			ifVariable: { ifVariable?($0) ?? otherwise() },
+			ifUnit: { ifUnit?() ?? otherwise() },
+			ifFunction: { ifFunction?($0) ?? otherwise() },
+			ifSum: { ifSum?($0) ?? otherwise() },
+			ifProduct: { ifProduct?($0) ?? otherwise() },
+			ifUniversal: { ifUniversal?($0) ?? otherwise() })
 	}
 
 	/// Exhaustive analysis specifying all cases.
