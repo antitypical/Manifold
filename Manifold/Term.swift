@@ -36,6 +36,10 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 	}
 
 
+	public static var Kind: Term {
+		return Term(.Kind)
+	}
+
 	public static var Unit: Term {
 		return Term(.Unit)
 	}
