@@ -34,7 +34,7 @@ public enum Type<T>: Printable {
 
 	public var isUnit: Bool {
 		return analysis(
-			ifUnit:  const(true),
+			ifUnit: const(true),
 			otherwise: const(false))
 	}
 
