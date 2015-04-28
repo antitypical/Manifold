@@ -149,6 +149,10 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 			otherwise: const(nil))
 	}
 
+	public var isKind: Swift.Bool {
+		return type.isKind
+	}
+
 	public var isUnit: Swift.Bool {
 		return type.isUnit
 	}
