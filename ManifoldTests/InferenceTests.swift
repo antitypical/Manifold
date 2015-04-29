@@ -52,7 +52,7 @@ final class InferenceTests: XCTestCase {
 
 	func testSolvingAnEqualityConstraintProducesASingleElementSubstitution() {
 		assert(solve([ 0 === 1 ]).left, ==, nil)
-		assert(solve([ 0 === 1 ]).right, ==, [1: Term(0)])
+		assert(solve([ 0 === 1 ]).right, ==, [0: Term(1)])
 	}
 }
 
