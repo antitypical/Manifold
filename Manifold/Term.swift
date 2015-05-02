@@ -158,6 +158,13 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 		return type.isUnit
 	}
 
+	public var opaque: String? {
+		return type.analysis(
+			ifOpaque: unit,
+			ifUniversal: { $1.opaque },
+			otherwise: const(nil))
+	}
+
 	public var sum: (Term, Term)? {
 		return type.analysis(
 			ifSum: unit,
