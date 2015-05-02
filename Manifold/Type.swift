@@ -83,7 +83,15 @@ public enum Type<T>: Printable {
 	// MARK: Case analysis
 
 	/// Exhaustive analysis specifying zero or more cases and a default case.
-	public func analysis<Result>(ifVariable: (Manifold.Variable -> Result)? = nil, ifKind: (() -> Result)? = nil, ifUnit: (() -> Result)? = nil, ifFunction: ((T, T) -> Result)? = nil, ifSum: ((T, T) -> Result)? = nil, ifProduct: ((T, T) -> Result)? = nil, ifUniversal: ((Set<Manifold.Variable>, T) -> Result)? = nil, otherwise: () -> Result) -> Result {
+	public func analysis<Result>(
+		ifVariable: (Manifold.Variable -> Result)? = nil,
+		ifKind: (() -> Result)? = nil,
+		ifUnit: (() -> Result)? = nil,
+		ifFunction: ((T, T) -> Result)? = nil,
+		ifSum: ((T, T) -> Result)? = nil,
+		ifProduct: ((T, T) -> Result)? = nil,
+		ifUniversal: ((Set<Manifold.Variable>, T) -> Result)? = nil,
+		otherwise: () -> Result) -> Result {
 		return analysis(
 			ifVariable: { ifVariable?($0) ?? otherwise() },
 			ifKind: { ifKind?() ?? otherwise() },
@@ -95,7 +103,14 @@ public enum Type<T>: Printable {
 	}
 
 	/// Exhaustive analysis specifying all cases.
-	public func analysis<Result>(@noescape #ifVariable: Manifold.Variable -> Result, @noescape ifKind: () -> Result, @noescape ifUnit: () -> Result, @noescape ifFunction: (T, T) -> Result, @noescape ifSum: (T, T) -> Result, @noescape ifProduct: (T, T) -> Result, @noescape ifUniversal: (Set<Manifold.Variable>, T) -> Result) -> Result {
+	public func analysis<Result>(
+		@noescape #ifVariable: Manifold.Variable -> Result,
+		@noescape ifKind: () -> Result,
+		@noescape ifUnit: () -> Result,
+		@noescape ifFunction: (T, T) -> Result,
+		@noescape ifSum: (T, T) -> Result,
+		@noescape ifProduct: (T, T) -> Result,
+		@noescape ifUniversal: (Set<Manifold.Variable>, T) -> Result) -> Result {
 		switch self {
 		case let .Variable(v):
 			return ifVariable(v)
