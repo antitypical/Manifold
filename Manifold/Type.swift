@@ -115,7 +115,7 @@ public enum Type<T>: Printable {
 		case let .Variable(v):
 			return ifVariable(v)
 
-		case Kind:
+		case .Kind:
 			return ifKind()
 
 		case .Unit:
