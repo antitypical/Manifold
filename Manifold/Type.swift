@@ -44,6 +44,12 @@ public enum Type<T>: Printable {
 			otherwise: const(false))
 	}
 
+	public var opaque: String? {
+		return analysis(
+			ifOpaque: unit,
+			otherwise: const(nil))
+	}
+
 	public var function: (T, T)? {
 		return analysis(
 			ifFunction: unit,
