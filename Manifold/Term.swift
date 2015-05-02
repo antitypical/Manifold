@@ -49,7 +49,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 	}
 
 
-	public let type: Type<Term>
+	public let type: Recur
 
 
 	public var freeVariables: Set<Variable> {
