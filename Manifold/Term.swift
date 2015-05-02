@@ -17,6 +17,10 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 		return In(Type.variable(v))
 	}
 
+	public static func opaque(name: String) -> Term {
+		return In(Type.Opaque(name))
+	}
+
 	public static func function(t1: Term, _ t2: Term) -> Term {
 		return In(.function(t1, t2))
 	}
