@@ -17,6 +17,10 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 		return In(Type.variable(v))
 	}
 
+	public static func opaque(name: String) -> Term {
+		return In(Type.Opaque(name))
+	}
+
 	public static func function(t1: Term, _ t2: Term) -> Term {
 		return In(.function(t1, t2))
 	}
@@ -49,7 +53,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 	}
 
 
-	public let type: Type<Term>
+	public let type: Recur
 
 
 	public var freeVariables: Set<Variable> {
@@ -58,6 +62,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 			ifVariable: { [ $0 ] },
 			ifKind: const([]),
 			ifUnit: const([]),
+			ifOpaque: const([]),
 			ifFunction: binary,
 			ifSum: binary,
 			ifProduct: binary,
@@ -157,6 +162,13 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 		return type.isUnit
 	}
 
+	public var opaque: String? {
+		return type.analysis(
+			ifOpaque: unit,
+			ifUniversal: { $1.opaque },
+			otherwise: const(nil))
+	}
+
 	public var sum: (Term, Term)? {
 		return type.analysis(
 			ifSum: unit,
@@ -185,6 +197,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 			ifVariable: { $0.hashValue },
 			ifKind: { 1 },
 			ifUnit: { 2 },
+			ifOpaque: { $0.hashValue },
 			ifFunction: hash(3),
 			ifSum: hash(4),
 			ifProduct: hash(5),
@@ -246,6 +259,7 @@ private func toStringWithBoundVariables(boundVariables: Set<Variable>)(type: Typ
 		ifVariable: { (boundVariables.contains($0) ? bound : free) + $0.value.subscriptedDescription },
 		ifKind: const("Type"),
 		ifUnit: const("Unit"),
+		ifOpaque: id,
 		ifFunction: { t1, t2 in
 			"\((t1.0.function ?? t1.0.sum != nil ? parenthesize : id)(t1.1)) → \(t2.1)"
 		},

@@ -44,6 +44,12 @@ public enum Type<T>: Printable {
 			otherwise: const(false))
 	}
 
+	public var opaque: String? {
+		return analysis(
+			ifOpaque: unit,
+			otherwise: const(nil))
+	}
+
 	public var function: (T, T)? {
 		return analysis(
 			ifFunction: unit,
@@ -74,6 +80,7 @@ public enum Type<T>: Printable {
 	case Variable(Manifold.Variable)
 	case Kind
 	case Unit
+	case Opaque(String)
 	case Function(Box<T>, Box<T>)
 	case Sum(Box<T>, Box<T>)
 	case Product(Box<T>, Box<T>)
@@ -83,11 +90,21 @@ public enum Type<T>: Printable {
 	// MARK: Case analysis
 
 	/// Exhaustive analysis specifying zero or more cases and a default case.
-	public func analysis<Result>(ifVariable: (Manifold.Variable -> Result)? = nil, ifKind: (() -> Result)? = nil, ifUnit: (() -> Result)? = nil, ifFunction: ((T, T) -> Result)? = nil, ifSum: ((T, T) -> Result)? = nil, ifProduct: ((T, T) -> Result)? = nil, ifUniversal: ((Set<Manifold.Variable>, T) -> Result)? = nil, otherwise: () -> Result) -> Result {
+	public func analysis<Result>(
+		ifVariable: (Manifold.Variable -> Result)? = nil,
+		ifKind: (() -> Result)? = nil,
+		ifUnit: (() -> Result)? = nil,
+		ifOpaque: (String -> Result)? = nil,
+		ifFunction: ((T, T) -> Result)? = nil,
+		ifSum: ((T, T) -> Result)? = nil,
+		ifProduct: ((T, T) -> Result)? = nil,
+		ifUniversal: ((Set<Manifold.Variable>, T) -> Result)? = nil,
+		otherwise: () -> Result) -> Result {
 		return analysis(
 			ifVariable: { ifVariable?($0) ?? otherwise() },
 			ifKind: { ifKind?() ?? otherwise() },
 			ifUnit: { ifUnit?() ?? otherwise() },
+			ifOpaque: { ifOpaque?($0) ?? otherwise() },
 			ifFunction: { ifFunction?($0) ?? otherwise() },
 			ifSum: { ifSum?($0) ?? otherwise() },
 			ifProduct: { ifProduct?($0) ?? otherwise() },
@@ -95,16 +112,27 @@ public enum Type<T>: Printable {
 	}
 
 	/// Exhaustive analysis specifying all cases.
-	public func analysis<Result>(@noescape #ifVariable: Manifold.Variable -> Result, @noescape ifKind: () -> Result, @noescape ifUnit: () -> Result, @noescape ifFunction: (T, T) -> Result, @noescape ifSum: (T, T) -> Result, @noescape ifProduct: (T, T) -> Result, @noescape ifUniversal: (Set<Manifold.Variable>, T) -> Result) -> Result {
+	public func analysis<Result>(
+		@noescape #ifVariable: Manifold.Variable -> Result,
+		@noescape ifKind: () -> Result,
+		@noescape ifUnit: () -> Result,
+		@noescape ifOpaque: String -> Result,
+		@noescape ifFunction: (T, T) -> Result,
+		@noescape ifSum: (T, T) -> Result,
+		@noescape ifProduct: (T, T) -> Result,
+		@noescape ifUniversal: (Set<Manifold.Variable>, T) -> Result) -> Result {
 		switch self {
 		case let .Variable(v):
 			return ifVariable(v)
 
-		case Kind:
+		case .Kind:
 			return ifKind()
 
 		case .Unit:
 			return ifUnit()
+
+		case let .Opaque(name):
+			return ifOpaque(name)
 
 		case let .Function(t1, t2):
 			return ifFunction(t1.value, t2.value)
@@ -129,6 +157,7 @@ public enum Type<T>: Printable {
 			ifVariable: { .Variable($0) },
 			ifKind: { .Kind },
 			ifUnit: { .Unit },
+			ifOpaque: { .Opaque($0) },
 			ifFunction: binary >>> Type<U>.function,
 			ifSum: binary >>> Type<U>.sum,
 			ifProduct: binary >>> Type<U>.product,
@@ -143,6 +172,7 @@ public enum Type<T>: Printable {
 			ifVariable: { "τ\($0.value)" },
 			ifKind: const("Type"),
 			ifUnit: const("Unit"),
+			ifOpaque: id,
 			ifFunction: { "(\($0)) → \($1)" },
 			ifSum: { "\($0) | \($1)" },
 			ifProduct: { "(\($0), \($1))" },
@@ -159,11 +189,12 @@ public func == <T: Equatable> (left: Type<T>, right: Type<T>) -> Bool {
 	let kind: Bool = left.isKind && right.isKind
 	let unit: Bool = left.isUnit && right.isUnit
 	let variable: Bool? = (left.variable &&& right.variable).map(==)
+	let opaque: Bool? = (left.opaque &&& right.opaque).map(==)
 	let function: Bool? = (left.function &&& right.function).map(==)
 	let sum: Bool? = (left.sum &&& right.sum).map(==)
 	let product: Bool? = (left.product &&& right.product).map(==)
 	let universal: Bool? = (left.universal &&& right.universal).map(==)
-	return kind || unit || variable ?? function ?? sum ?? product ?? universal ?? false
+	return kind || unit || variable ?? opaque ?? function ?? sum ?? product ?? universal ?? false
 }
 
 
