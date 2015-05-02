@@ -189,11 +189,12 @@ public func == <T: Equatable> (left: Type<T>, right: Type<T>) -> Bool {
 	let kind: Bool = left.isKind && right.isKind
 	let unit: Bool = left.isUnit && right.isUnit
 	let variable: Bool? = (left.variable &&& right.variable).map(==)
+	let opaque: Bool? = (left.opaque &&& right.opaque).map(==)
 	let function: Bool? = (left.function &&& right.function).map(==)
 	let sum: Bool? = (left.sum &&& right.sum).map(==)
 	let product: Bool? = (left.product &&& right.product).map(==)
 	let universal: Bool? = (left.universal &&& right.universal).map(==)
-	return kind || unit || variable ?? function ?? sum ?? product ?? universal ?? false
+	return kind || unit || variable ?? opaque ?? function ?? sum ?? product ?? universal ?? false
 }
 
 
