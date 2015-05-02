@@ -58,6 +58,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 			ifVariable: { [ $0 ] },
 			ifKind: const([]),
 			ifUnit: const([]),
+			ifOpaque: const([]),
 			ifFunction: binary,
 			ifSum: binary,
 			ifProduct: binary,
@@ -185,6 +186,7 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 			ifVariable: { $0.hashValue },
 			ifKind: { 1 },
 			ifUnit: { 2 },
+			ifOpaque: { $0.hashValue },
 			ifFunction: hash(3),
 			ifSum: hash(4),
 			ifProduct: hash(5),
@@ -246,6 +248,7 @@ private func toStringWithBoundVariables(boundVariables: Set<Variable>)(type: Typ
 		ifVariable: { (boundVariables.contains($0) ? bound : free) + $0.value.subscriptedDescription },
 		ifKind: const("Type"),
 		ifUnit: const("Unit"),
+		ifOpaque: id,
 		ifFunction: { t1, t2 in
 			"\((t1.0.function ?? t1.0.sum != nil ? parenthesize : id)(t1.1)) → \(t2.1)"
 		},

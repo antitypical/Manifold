@@ -31,6 +31,7 @@ public struct Substitution: DictionaryLiteralConvertible, Equatable, Printable {
 			ifVariable: { self.elements[$0] ?? term },
 			ifKind: const(term),
 			ifUnit: const(term),
+			ifOpaque: const(term),
 			ifFunction: binary >>> Term.function,
 			ifSum: binary >>> Term.sum,
 			ifProduct: binary >>> Term.product,

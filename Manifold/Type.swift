@@ -74,6 +74,7 @@ public enum Type<T>: Printable {
 	case Variable(Manifold.Variable)
 	case Kind
 	case Unit
+	case Opaque(String)
 	case Function(Box<T>, Box<T>)
 	case Sum(Box<T>, Box<T>)
 	case Product(Box<T>, Box<T>)
@@ -87,6 +88,7 @@ public enum Type<T>: Printable {
 		ifVariable: (Manifold.Variable -> Result)? = nil,
 		ifKind: (() -> Result)? = nil,
 		ifUnit: (() -> Result)? = nil,
+		ifOpaque: (String -> Result)? = nil,
 		ifFunction: ((T, T) -> Result)? = nil,
 		ifSum: ((T, T) -> Result)? = nil,
 		ifProduct: ((T, T) -> Result)? = nil,
@@ -96,6 +98,7 @@ public enum Type<T>: Printable {
 			ifVariable: { ifVariable?($0) ?? otherwise() },
 			ifKind: { ifKind?() ?? otherwise() },
 			ifUnit: { ifUnit?() ?? otherwise() },
+			ifOpaque: { ifOpaque?($0) ?? otherwise() },
 			ifFunction: { ifFunction?($0) ?? otherwise() },
 			ifSum: { ifSum?($0) ?? otherwise() },
 			ifProduct: { ifProduct?($0) ?? otherwise() },
@@ -107,6 +110,7 @@ public enum Type<T>: Printable {
 		@noescape #ifVariable: Manifold.Variable -> Result,
 		@noescape ifKind: () -> Result,
 		@noescape ifUnit: () -> Result,
+		@noescape ifOpaque: String -> Result,
 		@noescape ifFunction: (T, T) -> Result,
 		@noescape ifSum: (T, T) -> Result,
 		@noescape ifProduct: (T, T) -> Result,
@@ -120,6 +124,9 @@ public enum Type<T>: Printable {
 
 		case .Unit:
 			return ifUnit()
+
+		case let .Opaque(name):
+			return ifOpaque(name)
 
 		case let .Function(t1, t2):
 			return ifFunction(t1.value, t2.value)
@@ -144,6 +151,7 @@ public enum Type<T>: Printable {
 			ifVariable: { .Variable($0) },
 			ifKind: { .Kind },
 			ifUnit: { .Unit },
+			ifOpaque: { .Opaque($0) },
 			ifFunction: binary >>> Type<U>.function,
 			ifSum: binary >>> Type<U>.sum,
 			ifProduct: binary >>> Type<U>.product,
@@ -158,6 +166,7 @@ public enum Type<T>: Printable {
 			ifVariable: { "τ\($0.value)" },
 			ifKind: const("Type"),
 			ifUnit: const("Unit"),
+			ifOpaque: id,
 			ifFunction: { "(\($0)) → \($1)" },
 			ifSum: { "\($0) | \($1)" },
 			ifProduct: { "(\($0), \($1))" },

@@ -38,6 +38,7 @@ private func toString(type: Type<(Term, String)>) -> String {
 		ifVariable: { "τ\($0)" },
 		ifKind: const("Kind"),
 		ifUnit: const("Unit"),
+		ifOpaque: id,
 		ifFunction: { "(\($0.1)) → \($1.1)" },
 		ifSum: {
 			($0.0 == Unit && $1.0 == Unit) ?
