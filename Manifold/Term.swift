@@ -14,24 +14,24 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 	}
 
 	public static func variable(v: Manifold.Variable) -> Term {
-		return In(Type.variable(v))
+		return Term(Type.variable(v))
 	}
 
 	public static func function(t1: Term, _ t2: Term) -> Term {
-		return In(.function(t1, t2))
+		return Term(.function(t1, t2))
 	}
 
 	public static func sum(t1: Term, _ t2: Term) -> Term {
-		return In(.sum(t1, t2))
+		return Term(.sum(t1, t2))
 	}
 
 	public static func product(t1: Term, _ t2: Term) -> Term {
-		return In(.product(t1, t2))
+		return Term(.product(t1, t2))
 	}
 
 	public static func forall(a: Set<Manifold.Variable>, _ t: Term) -> Term {
 		return (a.intersect(t.freeVariables)).count > 0 ?
-			In(Type.universal(a, t))
+			Term(Type.universal(a, t))
 		:	t
 	}
 
@@ -202,10 +202,6 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 	// MARK: FixpointType
 
 	public typealias Recur = Type<Term>
-
-	public static func In(type: Recur) -> Term {
-		return Term(type)
-	}
 
 	public static func out(term: Term) -> Recur {
 		return term.type
