@@ -6,6 +6,11 @@ public struct DTerm {
 	}
 
 
+	public static func application(a: DTerm, _ b: DTerm) -> DTerm {
+		return DTerm(.Application(Box(a), Box(b)))
+	}
+
+
 	public let expression: DExpression<DTerm>
 }
 
