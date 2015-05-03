@@ -6,6 +6,8 @@ public struct DTerm {
 	}
 
 
+	// MARK: Constructors
+
 	public static var kind: DTerm {
 		return DTerm(.Kind)
 	}
@@ -49,6 +51,15 @@ public struct DTerm {
 				let (mb, buildb) = lambdaHelper(b)
 				return (i, { self.abstraction(i == -1 ? $0 : i, buildt($0, $1), buildb($0, $1)) })
 			})
+	}
+
+
+	// MARK: Destructors
+
+	public var variable: Int? {
+		return expression.analysis(
+			ifVariable: { $0.0 },
+			otherwise: const(nil))
 	}
 
 
