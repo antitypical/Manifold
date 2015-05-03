@@ -6,11 +6,11 @@ public struct DTerm {
 	}
 
 
-	public static var Kind: DTerm {
+	public static var kind: DTerm {
 		return DTerm(.Kind)
 	}
 
-	public static var Type: DTerm {
+	public static var type: DTerm {
 		return DTerm(.Type)
 	}
 
