@@ -22,7 +22,7 @@ public struct DTerm: Equatable, Printable {
 	}
 
 
-	public static func lambda(type: DTerm, f: DTerm -> DTerm) -> DTerm {
+	public static func lambda(type: DTerm, _ f: DTerm -> DTerm) -> DTerm {
 		let body = f(lambdaPlaceholder)
 		let (n, build) = lambdaHelper(DTerm.abstraction(lambdaPlaceholder, body))
 		return build(Box(variable(n + 1, type)))
