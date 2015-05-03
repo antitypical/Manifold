@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D44474451AA3AE84001F0782 /* Term.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44474441AA3AE84001F0782 /* Term.swift */; };
+		D4809FBD1AF6BD400084B8FE /* DTermTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4809FBC1AF6BD400084B8FE /* DTermTests.swift */; };
 		D4809FBF1AF6CD720084B8FE /* Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4809FBE1AF6CD720084B8FE /* Equatable.swift */; };
 		D4A31B2A1AA366EC00B3FC68 /* Algebra.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A31B291AA366EC00B3FC68 /* Algebra.swift */; };
 		D4A31B2C1AA3708F00B3FC68 /* AlgebraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A31B2B1AA3708F00B3FC68 /* AlgebraTests.swift */; };
@@ -53,6 +54,7 @@
 
 /* Begin PBXFileReference section */
 		D44474441AA3AE84001F0782 /* Term.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Term.swift; sourceTree = "<group>"; };
+		D4809FBC1AF6BD400084B8FE /* DTermTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTermTests.swift; sourceTree = "<group>"; };
 		D4809FBE1AF6CD720084B8FE /* Equatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Equatable.swift; sourceTree = "<group>"; };
 		D4A31B291AA366EC00B3FC68 /* Algebra.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Algebra.swift; sourceTree = "<group>"; };
 		D4A31B2B1AA3708F00B3FC68 /* AlgebraTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlgebraTests.swift; sourceTree = "<group>"; };
@@ -176,6 +178,7 @@
 				D4EAE23D1A87F28900931323 /* TermTests.swift */,
 				D4EAE2481A88092600931323 /* SubstitutionTests.swift */,
 				D4EAE25C1A889A3A00931323 /* InferenceTests.swift */,
+				D4809FBC1AF6BD400084B8FE /* DTermTests.swift */,
 				D4B3FC001A83515800DA2AC3 /* Supporting Files */,
 			);
 			path = ManifoldTests;
@@ -320,6 +323,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4EAE2491A88092600931323 /* SubstitutionTests.swift in Sources */,
+				D4809FBD1AF6BD400084B8FE /* DTermTests.swift in Sources */,
 				D4A31B2C1AA3708F00B3FC68 /* AlgebraTests.swift in Sources */,
 				D4EAE23E1A87F28900931323 /* TermTests.swift in Sources */,
 				D4EAE25D1A889A3A00931323 /* InferenceTests.swift in Sources */,
