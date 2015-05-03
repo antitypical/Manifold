@@ -2,7 +2,8 @@
 
 public protocol FixpointType {
 	typealias Recur
-	static func In(Recur) -> Self
+
+	init(_ : Recur)
 	static func out(Self) -> Recur
 }
 
@@ -18,17 +19,21 @@ public func para<T, Fix: FixpointType where Fix.Recur == Type<Fix>>(f: Type<(Fix
 
 
 public func ana<T, Fix: FixpointType where Fix.Recur == Type<Fix>>(f: T -> Type<T>)(_ seed: T) -> Fix {
-	return seed |> (Fix.In <<< (flip(uncurry(Type.map)) <| ana(f)) <<< f)
+	return seed |> (`in` <<< (flip(uncurry(Type.map)) <| ana(f)) <<< f)
 }
 
 
 public func apo<T, Fix: FixpointType where Fix.Recur == Type<Fix>>(f: T -> Type<Either<Fix, T>>)(_ seed: T) -> Fix {
 	let fanin = flip(uncurry(Either<Fix, T>.either)) <| (id, { apo(f)($0) })
-	return seed |> (Fix.In <<< (flip(uncurry(Type.map)) <| fanin) <<< f)
+	return seed |> (`in` <<< (flip(uncurry(Type.map)) <| fanin) <<< f)
 }
 
 
-// MARK: - Imports
+
+private func `in`<Fix: FixpointType>(v: Fix.Recur) -> Fix {
+	return Fix(v)
+}
+
 
 import Either
 import Prelude
