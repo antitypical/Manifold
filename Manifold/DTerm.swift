@@ -38,11 +38,6 @@ public struct DTerm {
 				let (mt, buildt) = lambdaHelper(t)
 				let (mb, buildb) = lambdaHelper(b)
 				return (i, { self.abstraction(i == -1 ? $0 : i, buildt($0), buildb($0)) })
-			},
-			ifQuantification: { i, t, b in
-				let (mt, buildt) = lambdaHelper(t)
-				let (mb, buildb) = lambdaHelper(b)
-				return (i, { self.abstraction(i == -1 ? $0 : i, buildt($0), buildb($0)) })
 			})
 	}
 
@@ -57,8 +52,7 @@ public enum DExpression<Recur> {
 		@noescape #ifConstant: () -> T,
 		@noescape ifVariable: Int -> T,
 		@noescape ifApplication: (Recur, Recur) -> T,
-		@noescape ifAbstraction: (Int, Recur, Recur) -> T,
-		@noescape ifQuantification: (Int, Recur, Recur) -> T) -> T {
+		@noescape ifAbstraction: (Int, Recur, Recur) -> T) -> T {
 		switch self {
 		case .Constant:
 			return ifConstant()
@@ -68,8 +62,6 @@ public enum DExpression<Recur> {
 			return ifApplication(a.value, b.value)
 		case let .Abstraction(x, a, b):
 			return ifAbstraction(x, a.value, b.value)
-		case let .Quantification(x, a, b):
-			return ifQuantification(x, a.value, b.value)
 		}
 	}
 
@@ -78,14 +70,12 @@ public enum DExpression<Recur> {
 		ifVariable: (Int -> T)? = nil,
 		ifApplication: ((Recur, Recur) -> T)? = nil,
 		ifAbstraction: ((Int, Recur, Recur) -> T)? = nil,
-		ifQuantification: ((Int, Recur, Recur) -> T)? = nil,
 		otherwise: () -> T) -> T {
 		return analysis(
 			ifConstant: { ifConstant?() ?? otherwise() },
 			ifVariable: { ifVariable?($0) ?? otherwise() },
 			ifApplication: { ifApplication?($0) ?? otherwise() },
-			ifAbstraction: { ifAbstraction?($0) ?? otherwise() },
-			ifQuantification: { ifQuantification?($0) ?? otherwise() })
+			ifAbstraction: { ifAbstraction?($0) ?? otherwise() })
 	}
 
 
@@ -95,7 +85,6 @@ public enum DExpression<Recur> {
 	case Variable(Int)
 	case Application(Box<Recur>, Box<Recur>)
 	case Abstraction(Int, Box<Recur>, Box<Recur>)
-	case Quantification(Int, Box<Recur>, Box<Recur>)
 }
 
 
