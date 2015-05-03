@@ -67,6 +67,10 @@ public struct DTerm: Equatable, Printable {
 			otherwise: const(nil))
 	}
 
+	public let expression: DExpression<DTerm>
+
+
+	// MARK: Type-checking
 
 	public var freeVariables: Set<Int> {
 		return expression.analysis(
@@ -84,9 +88,6 @@ public struct DTerm: Equatable, Printable {
 			ifApplication: { DTerm.application($0.type, $1.type) },
 			ifAbstraction: { type, body in DTerm.lambda(type) { x in DTerm.application(x, body) } })
 	}
-
-
-	public let expression: DExpression<DTerm>
 
 
 	// MARK: Printable
