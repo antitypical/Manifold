@@ -51,6 +51,16 @@ public struct DTerm {
 			})
 	}
 
+
+	public var freeVariables: Set<Int> {
+		return expression.analysis(
+			ifVariable: { [ $0 ] },
+			ifApplication: { $0.freeVariables.union($1.freeVariables) },
+			ifAbstraction: { $2.freeVariables.subtract([ $0 ]).union($1.freeVariables) },
+			otherwise: const([]))
+	}
+
+
 	public let expression: DExpression<DTerm>
 }
 
