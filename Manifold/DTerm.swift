@@ -28,6 +28,7 @@ public struct DTerm {
 	private static func lambdaHelper(t: DTerm) -> (Int, Int -> DTerm) {
 		return t.expression.analysis(
 			ifKind: const(0, const(t)),
+			ifType: const(0, const(t)),
 			ifVariable: { i in (0, { i == -1 ? self.variable($0) : t }) },
 			ifApplication: { a, b in
 				let (ma, builda) = lambdaHelper(a)
@@ -49,12 +50,15 @@ public enum DExpression<Recur> {
 
 	public func analysis<T>(
 		@noescape #ifKind: () -> T,
+		@noescape ifType: () -> T,
 		@noescape ifVariable: Int -> T,
 		@noescape ifApplication: (Recur, Recur) -> T,
 		@noescape ifAbstraction: (Int, Recur, Recur) -> T) -> T {
 		switch self {
 		case .Kind:
 			return ifKind()
+		case .Type:
+			return ifType()
 		case let .Variable(x):
 			return ifVariable(x)
 		case let .Application(a, b):
@@ -66,12 +70,14 @@ public enum DExpression<Recur> {
 
 	public func analysis<T>(
 		ifKind: (() -> T)? = nil,
+		ifType: (() -> T)? = nil,
 		ifVariable: (Int -> T)? = nil,
 		ifApplication: ((Recur, Recur) -> T)? = nil,
 		ifAbstraction: ((Int, Recur, Recur) -> T)? = nil,
 		otherwise: () -> T) -> T {
 		return analysis(
 			ifKind: { ifKind?() ?? otherwise() },
+			ifType: { ifType?() ?? otherwise() },
 			ifVariable: { ifVariable?($0) ?? otherwise() },
 			ifApplication: { ifApplication?($0) ?? otherwise() },
 			ifAbstraction: { ifAbstraction?($0) ?? otherwise() })
@@ -81,6 +87,7 @@ public enum DExpression<Recur> {
 	// MARK: Cases
 
 	case Kind
+	case Type
 	case Variable(Int)
 	case Application(Box<Recur>, Box<Recur>)
 	case Abstraction(Int, Box<Recur>, Box<Recur>)
