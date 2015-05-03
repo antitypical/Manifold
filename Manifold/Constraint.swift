@@ -50,16 +50,6 @@ public enum Constraint: Hashable, Printable {
 	}
 }
 
-public func == (left: Constraint, right: Constraint) -> Bool {
-	switch (left, right) {
-	case let (.Equality(x1, y1), .Equality(x2, y2)):
-		return x1 == x2 && y1 == y2
-
-	default:
-		return false
-	}
-}
-
 public func === (left: Term, right: Term) -> Constraint {
 	return Constraint(equality: left, right)
 }
