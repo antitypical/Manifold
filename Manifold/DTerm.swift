@@ -22,8 +22,8 @@ public struct DTerm: Equatable, Printable {
 	}
 
 
-	public static func lambda(f: DTerm -> (DTerm, DTerm)) -> DTerm {
-		let (type, body) = f(lambdaPlaceholder)
+	public static func lambda(type: DTerm, f: DTerm -> DTerm) -> DTerm {
+		let body = f(lambdaPlaceholder)
 		let (n, build) = lambdaHelper(DTerm.abstraction(lambdaPlaceholder, body))
 		return build(Box(variable(n + 1, type)))
 	}
@@ -82,7 +82,7 @@ public struct DTerm: Equatable, Printable {
 			ifType: { DTerm.kind },
 			ifVariable: { $1 },
 			ifApplication: { DTerm.application($0.type, $1.type) },
-			ifAbstraction: { type, body in DTerm.lambda { x in (type, DTerm.application(x, body)) } })
+			ifAbstraction: { type, body in DTerm.lambda(type) { x in DTerm.application(x, body) } })
 	}
 
 
