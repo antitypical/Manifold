@@ -60,6 +60,15 @@ public struct DTerm {
 			otherwise: const([]))
 	}
 
+	public var type: DTerm {
+		return expression.analysis(
+			ifKind: { self },
+			ifType: { DTerm.kind },
+			ifVariable: { $1 },
+			ifApplication: { DTerm.application($0.type, $1.type) },
+			ifAbstraction: { _, type, body in DTerm.lambda { x in (type, DTerm.application(x, body)) } })
+	}
+
 
 	public let expression: DExpression<DTerm>
 }
