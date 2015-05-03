@@ -203,8 +203,8 @@ public struct Term: FixpointType, Hashable, IntegerLiteralConvertible, Printable
 
 	public typealias Recur = Type<Term>
 
-	public static func out(term: Term) -> Recur {
-		return term.type
+	public var out: Type<Term> {
+		return type
 	}
 
 

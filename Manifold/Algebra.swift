@@ -4,17 +4,17 @@ public protocol FixpointType {
 	typealias Recur
 
 	init(_ : Recur)
-	static func out(Self) -> Recur
+	var out: Recur { get }
 }
 
 public func cata<T, Fix: FixpointType where Fix.Recur == Type<Fix>>(f: Type<T> -> T)(_ term: Fix) -> T {
-	return term |> (Fix.out >>> (flip(uncurry(Type.map)) <| cata(f)) >>> f)
+	return term |> (out >>> (flip(uncurry(Type.map)) <| cata(f)) >>> f)
 }
 
 
 public func para<T, Fix: FixpointType where Fix.Recur == Type<Fix>>(f: Type<(Fix, T)> -> T)(_ term: Fix) -> T {
 	let fanout = { ($0, para(f)($0)) }
-	return term |> (Fix.out >>> (flip(uncurry(Type.map)) <| fanout) >>> f)
+	return term |> (out >>> (flip(uncurry(Type.map)) <| fanout) >>> f)
 }
 
 
@@ -32,6 +32,10 @@ public func apo<T, Fix: FixpointType where Fix.Recur == Type<Fix>>(f: T -> Type<
 
 private func `in`<Fix: FixpointType>(v: Fix.Recur) -> Fix {
 	return Fix(v)
+}
+
+private func out<Fix: FixpointType>(v: Fix) -> Fix.Recur {
+	return v.out
 }
 
 
