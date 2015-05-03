@@ -10,6 +10,10 @@ public struct DTerm {
 		return DTerm(.Kind)
 	}
 
+	public static var Type: DTerm {
+		return DTerm(.Type)
+	}
+
 
 	public static func application(a: DTerm, _ b: DTerm) -> DTerm {
 		return DTerm(.Application(Box(a), Box(b)))
