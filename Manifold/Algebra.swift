@@ -29,7 +29,6 @@ public func apo<T, Fix: FixpointType where Fix.Recur == Type<Fix>>(f: T -> Type<
 }
 
 
-
 private func `in`<Fix: FixpointType>(v: Fix.Recur) -> Fix {
 	return Fix(v)
 }
