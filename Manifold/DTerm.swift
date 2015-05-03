@@ -1,6 +1,11 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public struct DTerm {
+	public init(_ expression: DExpression<DTerm>) {
+		self.expression = expression
+	}
+
+
 	public let expression: DExpression<DTerm>
 }
 
