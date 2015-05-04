@@ -57,7 +57,7 @@ final class InferenceTests: XCTestCase {
 }
 
 
-let identity = Expression(abstract: 0, body: Expression(variable: 0))
+private let identity = Expression(abstract: 0, body: Expression(variable: 0))
 
 
 // MARK: - Imports
