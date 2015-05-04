@@ -61,9 +61,9 @@ public struct DTerm: FixpointType, Hashable, Printable {
 
 	// MARK: Destructors
 
-	public var variable: Int? {
+	public var variable: (Int, DTerm)? {
 		return expression.analysis(
-			ifVariable: { $0.0 },
+			ifVariable: unit,
 			otherwise: const(nil))
 	}
 
@@ -80,7 +80,7 @@ public struct DTerm: FixpointType, Hashable, Printable {
 		return expression.analysis(
 			ifVariable: { [ $0.0 ] },
 			ifApplication: { $0.freeVariables.union($1.freeVariables) },
-			ifAbstraction: { $0.freeVariables.subtract([ $0.variable! ]).union($1.freeVariables) },
+			ifAbstraction: { $0.freeVariables.subtract([ $0.variable!.0 ]).union($1.freeVariables) },
 			otherwise: const([]))
 	}
 
