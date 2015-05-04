@@ -168,7 +168,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 	}
 
 	private func evaluate(environment: Multiset<Binding>) -> Either<Error, DTerm> {
-		return typecheck()
+		return typecheck(environment)
 			.map {
 				$0.expression.analysis(
 					ifApplication: { abs, arg in
