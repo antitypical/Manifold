@@ -105,9 +105,9 @@ public struct DTerm: FixpointType, Hashable, Printable {
 			ifVariable: { environment.contains(Binding($0, $1)) ? $1.typecheck(environment) : Either.left("unexpected free variable \($0)") },
 			ifApplication: { ($0.typecheck(environment) &&& $1.typecheck(environment)).map(DTerm.application) },
 			ifAbstraction: { type, body in
-				type.variable.map {
-					body.typecheck(environment.union([ Binding($0, $1) ]))
-						.map { b in DTerm.lambda(type.variable!.1, const(b)) }
+				type.variable.map { i, t in
+					body.typecheck(environment.union([ Binding(i, t) ]))
+						.map { b in DTerm.lambda(t, const(b)) }
 					}
 					?? Either.left("unexpected non-variable parameter type: \(type)")
 			})
