@@ -103,6 +103,11 @@ public struct DTerm: FixpointType, Hashable, Printable {
 	}
 
 	private struct Binding: Hashable {
+		init(_ variable: Int, value: DTerm) {
+			self.variable = variable
+			self.value = value
+		}
+
 		let variable: Int
 		let value: DTerm
 
