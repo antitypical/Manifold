@@ -127,6 +127,13 @@ public struct DTerm: FixpointType, Hashable, Printable {
 	}
 
 
+	// MARK: Evaluation
+
+	public func evaluate(value: DTerm) -> Either<Error, DTerm> {
+		return .left("unimplemented")
+	}
+
+
 	// MARK: FixpointType
 
 	public var out: DExpression<DTerm> {
