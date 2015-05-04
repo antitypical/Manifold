@@ -162,7 +162,14 @@ public struct DTerm: FixpointType, Hashable, Printable {
 	}
 
 	public func evaluate() -> Either<Error, DTerm> {
-		return .left("unimplemented")
+		return typecheck()
+			.map {
+				$0.expression.analysis(
+					ifApplication: { abs, arg in
+						abs.abstraction.map { $1.substitute(arg, forVariable: $0) }!
+					},
+					otherwise: const($0))
+			}
 	}
 
 
