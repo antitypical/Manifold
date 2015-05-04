@@ -9,6 +9,12 @@ final class DTermTests: XCTestCase {
 	func testTypechecking() {
 		assert(identity.typecheck().right, ==, .lambda(.type, const(.lambda(.type, const(.type)))))
 	}
+
+	func testEvaluation() {
+		let value = identity.typecheck().flatMap { DTerm.application(DTerm.application(identity, $0), identity).evaluate() }
+		assert(value.right, ==, identity)
+		assert(value.left, ==, nil)
+	}
 }
 
 
