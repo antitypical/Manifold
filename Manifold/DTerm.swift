@@ -147,7 +147,7 @@ public struct DTerm: FixpointType, Hashable, Printable {
 			ifKind: const("Kind"),
 			ifType: const("Type"),
 			ifVariable: { "\($0) : \($1)" },
-			ifApplication: { "(\($0) \($1))" },
+			ifApplication: { "(\($0)) (\($1))" },
 			ifAbstraction: { "λ \($0) . \($1)" })
 	}
 }
