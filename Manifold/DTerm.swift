@@ -69,10 +69,6 @@ public struct DTerm: FixpointType, Hashable, Printable {
 
 	public let expression: DExpression<DTerm>
 
-	public var out: DExpression<DTerm> {
-		return expression
-	}
-
 
 	// MARK: Type-checking
 
@@ -128,6 +124,13 @@ public struct DTerm: FixpointType, Hashable, Printable {
 			ifVariable: { DTerm.variable($0, $1.substitute(value, forVariable: variable)) },
 			ifApplication: { DTerm.application($0.substitute(value, forVariable: variable), $1.substitute(value, forVariable: variable)) },
 			ifAbstraction: { DTerm.abstraction($0.substitute(value, forVariable: variable), $1.substitute(value, forVariable: variable)) })
+	}
+
+
+	// MARK: FixpointType
+
+	public var out: DExpression<DTerm> {
+		return expression
 	}
 
 
