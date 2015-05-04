@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public struct DTerm: Equatable, Printable {
+public struct DTerm: Equatable, FixpointType, Printable {
 	public init(_ expression: DExpression<DTerm>) {
 		self.expression = expression
 	}
@@ -68,6 +68,10 @@ public struct DTerm: Equatable, Printable {
 	}
 
 	public let expression: DExpression<DTerm>
+
+	public var out: DExpression<DTerm> {
+		return expression
+	}
 
 
 	// MARK: Type-checking
