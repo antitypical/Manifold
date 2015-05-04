@@ -104,7 +104,7 @@ public struct DTerm: Equatable, FixpointType, Printable {
 
 	private struct Binding: Hashable {
 		let variable: Int
-		let type: DTerm
+		let value: DTerm
 
 		var hashValue: Int {
 			return variable
@@ -186,7 +186,7 @@ public enum DExpression<Recur> {
 
 
 private func == (left: DTerm.Binding, right: DTerm.Binding) -> Bool {
-	return left.variable == right.variable && left.type == right.type
+	return left.variable == right.variable && left.value == right.value
 }
 
 
