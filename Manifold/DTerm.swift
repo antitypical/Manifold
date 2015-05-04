@@ -145,6 +145,18 @@ public enum DExpression<Recur> {
 	}
 
 
+	// MARK: Functor
+
+	public func map<T>(transform: Recur -> T) -> DExpression<T> {
+		return analysis(
+			ifKind: { .Kind },
+			ifType: { .Type },
+			ifVariable: { .Variable($0, Box(transform($1))) },
+			ifApplication: { .Application(Box(transform($0)), Box(transform($1))) },
+			ifAbstraction: { .Abstraction(Box(transform($0)), Box(transform($1))) })
+	}
+
+
 	// MARK: Cases
 
 	case Kind
