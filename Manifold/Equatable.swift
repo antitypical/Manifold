@@ -22,7 +22,7 @@ public func == (left: DTerm, right: DTerm) -> Bool {
 
 // MARK: DExpression
 
-func == <Recur: Equatable> (left: DExpression<Recur>, right: DExpression<Recur>) -> Bool {
+public func == <Recur: Equatable> (left: DExpression<Recur>, right: DExpression<Recur>) -> Bool {
 	switch (left, right) {
 	case (.Kind, .Kind), (.Type, .Type):
 		return true
