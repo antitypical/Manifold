@@ -90,7 +90,7 @@ public struct DTerm: FixpointType, Hashable, Printable {
 			ifType: { DTerm.kind },
 			ifVariable: { $1 },
 			ifApplication: { DTerm.application($0.type, $1.type) },
-			ifAbstraction: { type, body in DTerm.lambda(type) { x in DTerm.application(x, body) } })
+			ifAbstraction: { type, body in DTerm.lambda(type.variable!.1) { x in DTerm.application(x, body) } })
 	}
 
 
