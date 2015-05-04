@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public struct DTerm: Equatable, FixpointType, Printable {
+public struct DTerm: FixpointType, Hashable, Printable {
 	public init(_ expression: DExpression<DTerm>) {
 		self.expression = expression
 	}
@@ -107,8 +107,20 @@ public struct DTerm: Equatable, FixpointType, Printable {
 		let value: DTerm
 
 		var hashValue: Int {
-			return variable
+			return variable & value.hashValue
 		}
+	}
+
+
+	// MARK: Hashable
+
+	public var hashValue: Int {
+		return expression.analysis(
+			ifKind: { 2 },
+			ifType: { 3 },
+			ifVariable: { 5 ^ $0 ^ $1.hashValue },
+			ifApplication: { 7 ^ $0.hashValue ^ $1.hashValue },
+			ifAbstraction: { 11 ^ $0.hashValue ^ $1.hashValue })
 	}
 
 
