@@ -176,7 +176,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 	// MARK: DebugPrintable
 
 	public var debugDescription: String {
-		return description
+		return expression.debugDescription
 	}
 
 
@@ -202,16 +202,11 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 	// MARK: Printable
 
 	public var description: String {
-		return expression.analysis(
-			ifKind: const("Kind"),
-			ifType: const("Type"),
-			ifVariable: { "\($0) : \($1)" },
-			ifApplication: { "(\($0)) (\($1))" },
-			ifAbstraction: { "λ \($0) . \($1)" })
+		return expression.debugDescription
 	}
 }
 
-public enum DExpression<Recur> {
+public enum DExpression<Recur>: DebugPrintable {
 	// MARK: Analyses
 
 	public func analysis<T>(
@@ -269,6 +264,18 @@ public enum DExpression<Recur> {
 	case Variable(Int, Box<Recur>)
 	case Application(Box<Recur>, Box<Recur>)
 	case Abstraction(Box<Recur>, Box<Recur>)
+
+
+	// MARK: DebugPrintable
+
+	public var debugDescription: String {
+		return analysis(
+			ifKind: const("Kind"),
+			ifType: const("Type"),
+			ifVariable: { "\($0) : \($1)" },
+			ifApplication: { "(\($0)) (\($1))" },
+			ifAbstraction: { "λ \($0) . \($1)" })
+	}
 }
 
 
