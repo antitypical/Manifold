@@ -61,6 +61,12 @@ public struct DTerm: FixpointType, Hashable, Printable {
 
 	// MARK: Destructors
 
+	public var isKind: Bool {
+		return expression.analysis(
+			ifKind: const(true),
+			otherwise: const(false))
+	}
+
 	public var variable: (Int, DTerm)? {
 		return expression.analysis(
 			ifVariable: unit,
