@@ -94,6 +94,24 @@ public struct DTerm: Equatable, FixpointType, Printable {
 	}
 
 
+	public func typecheck() -> Either<Error, DTerm> {
+		return typecheck([])
+	}
+
+	private func typecheck(environment: Multiset<Binding>) -> Either<Error, DTerm> {
+		return .left("unimplemented")
+	}
+
+	private struct Binding: Hashable {
+		let variable: Int
+		let type: DTerm
+
+		var hashValue: Int {
+			return variable
+		}
+	}
+
+
 	// MARK: Printable
 
 	public var description: String {
@@ -167,5 +185,12 @@ public enum DExpression<Recur> {
 }
 
 
+private func == (left: DTerm.Binding, right: DTerm.Binding) -> Bool {
+	return left.variable == right.variable && left.type == right.type
+}
+
+
 import Box
+import Either
 import Prelude
+import Set
