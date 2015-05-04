@@ -5,6 +5,10 @@ final class DTermTests: XCTestCase {
 		let expected = DTerm(.Abstraction(Box(DTerm(.Variable(1, Box(.type)))), Box(DTerm(.Abstraction(Box(DTerm(.Variable(0, Box(DTerm(.Variable(1, Box(.type))))))), Box(DTerm(.Variable(0, Box(DTerm(.Variable(1, Box(.type))))))))))))
 		assert(identity, ==, expected)
 	}
+
+	func testTypechecking() {
+		assert(identity.typecheck().right, ==, .lambda(.type, const(.lambda(.type, const(.type)))))
+	}
 }
 
 
