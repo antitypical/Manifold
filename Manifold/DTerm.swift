@@ -182,7 +182,7 @@ public enum DExpression<Recur> {
 
 	// MARK: Functor
 
-	public func map<T>(transform: Recur -> T) -> DExpression<T> {
+	public func map<T>(@noescape transform: Recur -> T) -> DExpression<T> {
 		return analysis(
 			ifKind: { .Kind },
 			ifType: { .Type },
