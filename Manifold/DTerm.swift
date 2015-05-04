@@ -113,7 +113,9 @@ public struct DTerm: FixpointType, Hashable, Printable {
 			ifKind: const(Either.right(self)),
 			ifType: const(Either.right(self)),
 			ifVariable: { environment.contains(Binding($0, $1)) ? $1.typecheck(environment) : Either.left("unexpected free variable \($0)") },
-			ifApplication: { ($0.typecheck(environment) &&& $1.typecheck(environment)).map(DTerm.application) },
+			ifApplication: {
+				($0.typecheck(environment).flatMap { $0.abstraction != nil ? Either.right($0) : Either.left("cannot apply to instances of type \($0)") } &&& $1.typecheck(environment)).map(DTerm.application)
+			},
 			ifAbstraction: { type, body in
 				type.variable.map { i, t in
 					body.typecheck(environment.union([ Binding(i, t) ]))
