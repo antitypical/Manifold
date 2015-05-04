@@ -164,6 +164,10 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 	}
 
 	public func evaluate() -> Either<Error, DTerm> {
+		return evaluate([])
+	}
+
+	private func evaluate(environment: Multiset<Binding>) -> Either<Error, DTerm> {
 		return typecheck()
 			.map {
 				$0.expression.analysis(
