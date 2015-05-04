@@ -84,16 +84,6 @@ public struct DTerm: FixpointType, Hashable, Printable {
 			otherwise: const([]))
 	}
 
-	public var type: DTerm {
-		return expression.analysis(
-			ifKind: { self },
-			ifType: { DTerm.kind },
-			ifVariable: { $1 },
-			ifApplication: { DTerm.application($0.type, $1.type) },
-			ifAbstraction: { type, body in DTerm.lambda(type.type) { x in DTerm.application(x, body.type) } })
-	}
-
-
 	public func typecheck() -> Either<Error, DTerm> {
 		return typecheck([])
 	}
