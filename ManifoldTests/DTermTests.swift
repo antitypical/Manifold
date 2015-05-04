@@ -2,11 +2,13 @@
 
 final class DTermTests: XCTestCase {
 	func testHigherOrderConstruction() {
-		let identity = DTerm.lambda(.type) { A in .lambda(A, id) }
 		let expected = DTerm(.Abstraction(Box(DTerm(.Variable(1, Box(.type)))), Box(DTerm(.Abstraction(Box(DTerm(.Variable(0, Box(DTerm(.Variable(1, Box(.type))))))), Box(DTerm(.Variable(0, Box(DTerm(.Variable(1, Box(.type))))))))))))
 		assert(identity, ==, expected)
 	}
 }
+
+
+private let identity = DTerm.lambda(.type) { A in .lambda(A, id) }
 
 
 import Assertions
