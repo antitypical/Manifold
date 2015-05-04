@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public struct DTerm: FixpointType, Hashable, Printable {
+public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 	public init(_ expression: DExpression<DTerm>) {
 		self.expression = expression
 	}
@@ -170,6 +170,13 @@ public struct DTerm: FixpointType, Hashable, Printable {
 					},
 					otherwise: const($0))
 			}
+	}
+
+
+	// MARK: DebugPrintable
+
+	public var debugDescription: String {
+		return description
 	}
 
 
