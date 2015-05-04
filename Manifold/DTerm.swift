@@ -155,6 +155,12 @@ public struct DTerm: FixpointType, Hashable, Printable {
 
 	// MARK: Evaluation
 
+	public var isValue: Bool {
+		return expression.analysis(
+			ifApplication: const(false),
+			otherwise: const(true))
+	}
+
 	public func evaluate(value: DTerm) -> Either<Error, DTerm> {
 		return .left("unimplemented")
 	}
