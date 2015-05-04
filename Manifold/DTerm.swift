@@ -161,7 +161,7 @@ public struct DTerm: FixpointType, Hashable, Printable {
 			otherwise: const(true))
 	}
 
-	public func evaluate(value: DTerm) -> Either<Error, DTerm> {
+	public func evaluate() -> Either<Error, DTerm> {
 		return .left("unimplemented")
 	}
 
