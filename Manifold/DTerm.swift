@@ -79,6 +79,12 @@ public struct DTerm: FixpointType, Hashable, Printable {
 			otherwise: const(nil))
 	}
 
+	public var application: (DTerm, DTerm)? {
+		return expression.analysis(
+			ifApplication: unit,
+			otherwise: const(nil))
+	}
+
 	public let expression: DExpression<DTerm>
 
 
