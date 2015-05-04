@@ -67,6 +67,12 @@ public struct DTerm: FixpointType, Hashable, Printable {
 			otherwise: const(false))
 	}
 
+	public var isType: Bool {
+		return expression.analysis(
+			ifType: const(true),
+			otherwise: const(false))
+	}
+
 	public var variable: (Int, DTerm)? {
 		return expression.analysis(
 			ifVariable: unit,
