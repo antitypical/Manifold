@@ -115,7 +115,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 			ifVariable: { environment.contains(Binding($0, $1)) ? $1.typecheck(environment) : Either.left("unexpected free variable \($0)") },
 			ifApplication: { abs, arg in
 				(abs.typecheck(environment)
-					.flatMap { $0.evaluate() }
+					.flatMap { $0.evaluate(environment) }
 					.flatMap { $0.abstraction != nil ? Either.right($0) : Either.left("cannot apply \(abs) : \($0) to \(arg)") } &&& arg.typecheck(environment)).map(DTerm.application)
 			},
 			ifAbstraction: { type, body in
