@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Error: Printable, StringInterpolationConvertible, StringLiteralConvertible {
+public enum Error: Equatable, Printable, StringInterpolationConvertible, StringLiteralConvertible {
 	public init(reason: String) {
 		self = Leaf(reason)
 	}

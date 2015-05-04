@@ -36,3 +36,11 @@ public func == <Recur: Equatable> (left: DExpression<Recur>, right: DExpression<
 		return false
 	}
 }
+
+
+// MARK: Error
+
+public func == (left: Error, right: Error) -> Bool {
+	return reduce(lazy(zip(left.errors, right.errors))
+		.map(==), true) { $0 && $1 }
+}
