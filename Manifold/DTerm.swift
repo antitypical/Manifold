@@ -170,12 +170,14 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 	private func evaluate(environment: Multiset<Binding>) -> Either<Error, DTerm> {
 		return
 			typecheck(environment)
-			.map {
-				$0.expression.analysis(
-					ifApplication: { abs, arg in
-						abs.abstraction.map { $1.substitute(arg, forVariable: $0) }!
+			.flatMap { _ in
+				self.expression.analysis(
+					ifApplication: {
+						($0.evaluate(environment) &&& $1.evaluate(environment)).map { abs, arg in
+							abs.abstraction.map { $1.substitute(arg, forVariable: $0) }!
+						}
 					},
-					otherwise: const($0))
+					otherwise: const(Either.right(self)))
 			}
 	}
 
