@@ -11,7 +11,7 @@ final class DTermTests: XCTestCase {
 	}
 
 	func testFunctionTypesArePrintedWithAnArrow() {
-		assert(identity.typecheck().right?.description, ==, "(b : Type) → (a : Type) → Type")
+		assert(identity.typecheck().right?.description, ==, "(Type) → (Type) → Type")
 	}
 
 	func testEvaluation() {

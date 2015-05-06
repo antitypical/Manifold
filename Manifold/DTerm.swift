@@ -224,7 +224,8 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 			},
 			ifApplication: { "(\($0.1)) (\($1.1))" },
 			ifAbstraction: { param, body in
-				contains(body.0.freeVariables, param.0.variable!.0) ? "∏ \(param.1) . \(body.1)" : "(\(param.1)) → \(body.1)"
+				let (n, t) = param.0.variable!
+				return contains(body.0.freeVariables, n) ? "∏ \(param.1) . \(body.1)" : "(\(t)) → \(body.1)"
 			})
 	}
 }
