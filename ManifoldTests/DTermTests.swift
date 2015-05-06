@@ -10,6 +10,10 @@ final class DTermTests: XCTestCase {
 		assert(identity.typecheck().right, ==, .lambda(.type, const(.lambda(.type, const(.type)))))
 	}
 
+	func testFunctionTypesArePrintedWithAnArrow() {
+		assert(identity.typecheck().right?.description, ==, "(b : Type) → (a : Type) → Type")
+	}
+
 	func testEvaluation() {
 		let value = identity.typecheck().flatMap { DTerm.application(DTerm.application(identity, $0), identity).evaluate() }
 		assert(value.right, ==, identity)

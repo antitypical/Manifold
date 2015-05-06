@@ -211,7 +211,21 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 	// MARK: Printable
 
 	public var description: String {
-		return expression.debugDescription
+		return para(DTerm.toString)(self)
+	}
+
+	private static func toString(expression: DExpression<(DTerm, String)>) -> String {
+		let alphabet = "abcdefghijklmnopqrstuvwxyz"
+		return expression.analysis(
+			ifKind: const("Kind"),
+			ifType: const("Type"),
+			ifVariable: { index, type in
+				"\(alphabet[advance(alphabet.startIndex, index)]) : \(type.1)"
+			},
+			ifApplication: { "(\($0.1)) (\($1.1))" },
+			ifAbstraction: { param, body in
+				contains(body.0.freeVariables, param.0.variable!.0) ? "∏ \(param.1) . \(body.1)" : "(\(param.1)) → \(body.1)"
+			})
 	}
 }
 
