@@ -214,8 +214,9 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 		return para(DTerm.toString)(self)
 	}
 
+	private static let alphabet = "abcdefghijklmnopqrstuvwxyz"
+
 	private static func toString(expression: DExpression<(DTerm, String)>) -> String {
-		let alphabet = "abcdefghijklmnopqrstuvwxyz"
 		return expression.analysis(
 			ifKind: const("Kind"),
 			ifType: const("Type"),
