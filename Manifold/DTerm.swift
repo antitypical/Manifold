@@ -122,7 +122,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 				type.variable.map { i, t in
 					body.typecheck(environment.union([ Binding(i, t) ]))
 						.map { b in DTerm.lambda(t) { x in b.substitute(t, forVariable: type) } }
-					}
+				}
 					?? Either.left("unexpected non-variable parameter type: \(type)")
 			})
 	}
