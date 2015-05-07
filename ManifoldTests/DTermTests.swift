@@ -2,7 +2,7 @@
 
 final class DTermTests: XCTestCase {
 	func testHigherOrderConstruction() {
-		let expected = DTerm(.Abstraction(Box(DTerm(.Variable(1, Box(.type)))), Box(DTerm(.Abstraction(Box(DTerm(.Variable(0, Box(DTerm(.Variable(1, Box(.type))))))), Box(DTerm(.Variable(0, Box(DTerm(.Variable(1, Box(.type))))))))))))
+		let expected = DTerm(.Pi(Box(DTerm(.Variable(1, Box(.type)))), Box(DTerm(.Pi(Box(DTerm(.Variable(0, Box(DTerm(.Variable(1, Box(.type))))))), Box(DTerm(.Variable(0, Box(DTerm(.Variable(1, Box(.type))))))))))))
 		assert(identity, ==, expected)
 	}
 
