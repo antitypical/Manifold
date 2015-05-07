@@ -28,12 +28,22 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 		return build(Box(variable(n + 1, type)))
 	}
 
+	public static func pair(type: DTerm, _ f: DTerm -> DTerm) -> DTerm {
+		let body = f(lambdaPlaceholder)
+		let (n, build) = repMax(DTerm.sigma(lambdaPlaceholder, body))
+		return build(Box(variable(n + 1, type)))
+	}
+
 	private static func variable(i: Int, _ type: DTerm) -> DTerm {
 		return DTerm(.Variable(i, Box(type)))
 	}
 
 	private static func pi(variable: DTerm, _ body: DTerm) -> DTerm {
 		return DTerm(.Pi(Box(variable), Box(body)))
+	}
+
+	private static func sigma(variable: DTerm, _ body: DTerm) -> DTerm {
+		return DTerm(.Sigma(Box(variable), Box(body)))
 	}
 
 	private static var lambdaPlaceholder = variable(-1, DTerm.kind)
@@ -55,6 +65,11 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 				let (mt, buildt) = repMax(t)
 				let (mb, buildb) = repMax(b)
 				return (max(mt, mb), { DTerm(.Pi(t == DTerm.lambdaPlaceholder ? $0 : Box(buildt($0)), b == DTerm.lambdaPlaceholder ? $0 : Box(buildb($0)))) })
+			},
+			ifSigma: { a, b in
+				let (ma, builda) = repMax(a)
+				let (mb, buildb) = repMax(b)
+				return (max(ma, mb), { DTerm(.Sigma(a == DTerm.lambdaPlaceholder ? $0 : Box(builda($0)), b == DTerm.lambdaPlaceholder ? $0 : Box(buildb($0)))) })
 			})
 	}
 
@@ -91,6 +106,12 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 			otherwise: const(nil))
 	}
 
+	public var sigma: (DTerm, DTerm)? {
+		return expression.analysis(
+			ifSigma: unit,
+			otherwise: const(nil))
+	}
+
 	public let expression: DExpression<DTerm>
 
 
@@ -124,6 +145,13 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 						.map { b in DTerm.lambda(t) { x in b.substitute(t, forVariable: type) } }
 				}
 					?? Either.left("unexpected non-variable parameter type: \(type)")
+			},
+			ifSigma: { type, body in
+				type.variable.map { i, t in
+					body.typecheck(environment.union([ Binding(i, t) ]))
+						.map { b in DTerm.pair(t) { x in b.substitute(t, forVariable: type) } }
+				}
+					?? Either.left("unexpected non-variable parameter type: \(type)")
 			})
 	}
 
@@ -151,7 +179,8 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 			ifType: const(self),
 			ifVariable: { DTerm.variable($0, $1.substitute(value, forVariable: variable)) },
 			ifApplication: { DTerm.application($0.substitute(value, forVariable: variable), $1.substitute(value, forVariable: variable)) },
-			ifPi: { DTerm.pi($0.substitute(value, forVariable: variable), $1.substitute(value, forVariable: variable)) })
+			ifPi: { DTerm.pi($0.substitute(value, forVariable: variable), $1.substitute(value, forVariable: variable)) },
+			ifSigma: { DTerm.sigma($0.substitute(value, forVariable: variable), $1.substitute(value, forVariable: variable)) })
 	}
 
 
@@ -204,7 +233,8 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 			ifType: { 3 },
 			ifVariable: { 5 ^ $0 ^ $1.hashValue },
 			ifApplication: { 7 ^ $0.hashValue ^ $1.hashValue },
-			ifPi: { 11 ^ $0.hashValue ^ $1.hashValue })
+			ifPi: { 11 ^ $0.hashValue ^ $1.hashValue },
+			ifSigma: { 13 ^ $0.hashValue ^ $1.hashValue })
 	}
 
 
@@ -227,6 +257,9 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 			ifPi: { param, body in
 				let (n, t) = param.0.variable!
 				return contains(body.0.freeVariables, n) ? "∏ \(param.1) . \(body.1)" : "(\(t)) → \(body.1)"
+			},
+			ifSigma: { a, b in
+				"∑ \(a.1) . \(b.1)"
 			})
 	}
 }
@@ -239,7 +272,8 @@ public enum DExpression<Recur>: DebugPrintable {
 		@noescape ifType: () -> T,
 		@noescape ifVariable: (Int, Recur) -> T,
 		@noescape ifApplication: (Recur, Recur) -> T,
-		@noescape ifPi: (Recur, Recur) -> T) -> T {
+		@noescape ifPi: (Recur, Recur) -> T,
+		@noescape ifSigma: (Recur, Recur) -> T) -> T {
 		switch self {
 		case .Kind:
 			return ifKind()
@@ -251,6 +285,8 @@ public enum DExpression<Recur>: DebugPrintable {
 			return ifApplication(a.value, b.value)
 		case let .Pi(a, b):
 			return ifPi(a.value, b.value)
+		case let .Sigma(a, b):
+			return ifSigma(a.value, b.value)
 		}
 	}
 
@@ -260,13 +296,15 @@ public enum DExpression<Recur>: DebugPrintable {
 		ifVariable: ((Int, Recur) -> T)? = nil,
 		ifApplication: ((Recur, Recur) -> T)? = nil,
 		ifPi: ((Recur, Recur) -> T)? = nil,
+		ifSigma: ((Recur, Recur) -> T)? = nil,
 		otherwise: () -> T) -> T {
 		return analysis(
 			ifKind: { ifKind?() ?? otherwise() },
 			ifType: { ifType?() ?? otherwise() },
 			ifVariable: { ifVariable?($0) ?? otherwise() },
 			ifApplication: { ifApplication?($0) ?? otherwise() },
-			ifPi: { ifPi?($0) ?? otherwise() })
+			ifPi: { ifPi?($0) ?? otherwise() },
+			ifSigma: { ifSigma?($0) ?? otherwise() })
 	}
 
 
@@ -278,7 +316,8 @@ public enum DExpression<Recur>: DebugPrintable {
 			ifType: { .Type },
 			ifVariable: { .Variable($0, Box(transform($1))) },
 			ifApplication: { .Application(Box(transform($0)), Box(transform($1))) },
-			ifPi: { .Pi(Box(transform($0)), Box(transform($1))) })
+			ifPi: { .Pi(Box(transform($0)), Box(transform($1))) },
+			ifSigma: { .Sigma(Box(transform($0)), Box(transform($1))) })
 	}
 
 
@@ -289,6 +328,7 @@ public enum DExpression<Recur>: DebugPrintable {
 	case Variable(Int, Box<Recur>)
 	case Application(Box<Recur>, Box<Recur>)
 	case Pi(Box<Recur>, Box<Recur>) // (∏x:A)B where B can depend on x
+	case Sigma(Box<Recur>, Box<Recur>) // (∑x:A)B where B can depend on x
 
 
 	// MARK: DebugPrintable
@@ -299,7 +339,8 @@ public enum DExpression<Recur>: DebugPrintable {
 			ifType: const("Type"),
 			ifVariable: { "\($0) : \($1)" },
 			ifApplication: { "(\($0)) (\($1))" },
-			ifPi: { "∏ \($0) . \($1)" })
+			ifPi: { "∏ \($0) . \($1)" },
+			ifSigma: { "∑ \($0) . \($1)" })
 	}
 }
 
