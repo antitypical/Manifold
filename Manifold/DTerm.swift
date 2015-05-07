@@ -258,8 +258,9 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 				let (n, t) = param.0.variable!
 				return contains(body.0.freeVariables, n) ? "∏ \(param.1) . \(body.1)" : "(\(t)) → \(body.1)"
 			},
-			ifSigma: { a, b in
-				"∑ \(a.1) . \(b.1)"
+			ifSigma: { tag, body in
+				let (n, t) = tag.0.variable!
+				return contains(body.0.freeVariables, n) ? "∑ \(tag.1) . \(body.1)" : "(\(t) ✕ \(body.1))"
 			})
 	}
 }

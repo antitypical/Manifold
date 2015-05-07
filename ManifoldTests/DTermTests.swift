@@ -14,6 +14,10 @@ final class DTermTests: XCTestCase {
 		assert(identity.typecheck().right?.description, ==, "(Type) → (Type) → Type")
 	}
 
+	func testProductTypesArePrintedWithAnX() {
+		assert(DTerm.pair(.type, const(.type)).typecheck().right?.description == "(Type ✕ Type)")
+	}
+
 	func testEvaluation() {
 		let value = identity.typecheck().flatMap { DTerm.application(DTerm.application(identity, $0), identity).evaluate() }
 		assert(value.right, ==, identity)
