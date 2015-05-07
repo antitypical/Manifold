@@ -24,7 +24,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public static func lambda(type: DTerm, _ f: DTerm -> DTerm) -> DTerm {
 		let body = f(lambdaPlaceholder)
-		let (n, build) = lambdaHelper(DTerm.abstraction(lambdaPlaceholder, body))
+		let (n, build) = lambdaHelper(DTerm.pi(lambdaPlaceholder, body))
 		return build(Box(variable(n + 1, type)))
 	}
 
@@ -32,7 +32,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 		return DTerm(.Variable(i, Box(type)))
 	}
 
-	private static func abstraction(variable: DTerm, _ body: DTerm) -> DTerm {
+	private static func pi(variable: DTerm, _ body: DTerm) -> DTerm {
 		return DTerm(.Pi(Box(variable), Box(body)))
 	}
 
@@ -151,7 +151,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 			ifType: const(self),
 			ifVariable: { DTerm.variable($0, $1.substitute(value, forVariable: variable)) },
 			ifApplication: { DTerm.application($0.substitute(value, forVariable: variable), $1.substitute(value, forVariable: variable)) },
-			ifPi: { DTerm.abstraction($0.substitute(value, forVariable: variable), $1.substitute(value, forVariable: variable)) })
+			ifPi: { DTerm.pi($0.substitute(value, forVariable: variable), $1.substitute(value, forVariable: variable)) })
 	}
 
 
