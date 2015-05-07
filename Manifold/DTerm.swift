@@ -51,7 +51,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 				let (mb, buildb) = lambdaHelper(b)
 				return (max(ma, mb), { DTerm(.Application(a == DTerm.lambdaPlaceholder ? $0 : Box(builda($0)), b == DTerm.lambdaPlaceholder ? $0 : Box(buildb($0)))) })
 			},
-			ifAbstraction: { t, b in
+			ifPi: { t, b in
 				let (mt, buildt) = lambdaHelper(t)
 				let (mb, buildb) = lambdaHelper(b)
 				return (max(mt, mb), { DTerm(.Pi(t == DTerm.lambdaPlaceholder ? $0 : Box(buildt($0)), b == DTerm.lambdaPlaceholder ? $0 : Box(buildb($0)))) })
@@ -85,9 +85,9 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 			otherwise: const(nil))
 	}
 
-	public var abstraction: (DTerm, DTerm)? {
+	public var pi: (DTerm, DTerm)? {
 		return expression.analysis(
-			ifAbstraction: unit,
+			ifPi: unit,
 			otherwise: const(nil))
 	}
 
@@ -100,7 +100,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 		return expression.analysis(
 			ifVariable: { [ $0.0 ] },
 			ifApplication: { $0.freeVariables.union($1.freeVariables) },
-			ifAbstraction: { $0.freeVariables.subtract([ $0.variable!.0 ]).union($1.freeVariables) },
+			ifPi: { $0.freeVariables.subtract([ $0.variable!.0 ]).union($1.freeVariables) },
 			otherwise: const([]))
 	}
 
@@ -116,9 +116,9 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 			ifApplication: { abs, arg in
 				(abs.typecheck(environment)
 					.flatMap { $0.evaluate(environment) }
-					.flatMap { $0.abstraction != nil ? Either.right($0) : Either.left("cannot apply \(abs) : \($0) to \(arg)") } &&& arg.typecheck(environment)).map(DTerm.application)
+					.flatMap { $0.pi != nil ? Either.right($0) : Either.left("cannot apply \(abs) : \($0) to \(arg)") } &&& arg.typecheck(environment)).map(DTerm.application)
 			},
-			ifAbstraction: { type, body in
+			ifPi: { type, body in
 				type.variable.map { i, t in
 					body.typecheck(environment.union([ Binding(i, t) ]))
 						.map { b in DTerm.lambda(t) { x in b.substitute(t, forVariable: type) } }
@@ -151,7 +151,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 			ifType: const(self),
 			ifVariable: { DTerm.variable($0, $1.substitute(value, forVariable: variable)) },
 			ifApplication: { DTerm.application($0.substitute(value, forVariable: variable), $1.substitute(value, forVariable: variable)) },
-			ifAbstraction: { DTerm.abstraction($0.substitute(value, forVariable: variable), $1.substitute(value, forVariable: variable)) })
+			ifPi: { DTerm.abstraction($0.substitute(value, forVariable: variable), $1.substitute(value, forVariable: variable)) })
 	}
 
 
@@ -174,7 +174,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 				self.expression.analysis(
 					ifApplication: {
 						($0.evaluate(environment) &&& $1.evaluate(environment)).map { abs, arg in
-							abs.abstraction.map { $1.substitute(arg, forVariable: $0) }!
+							abs.pi.map { $1.substitute(arg, forVariable: $0) }!
 						}
 					},
 					otherwise: const(Either.right(self)))
@@ -204,7 +204,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 			ifType: { 3 },
 			ifVariable: { 5 ^ $0 ^ $1.hashValue },
 			ifApplication: { 7 ^ $0.hashValue ^ $1.hashValue },
-			ifAbstraction: { 11 ^ $0.hashValue ^ $1.hashValue })
+			ifPi: { 11 ^ $0.hashValue ^ $1.hashValue })
 	}
 
 
@@ -224,7 +224,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 				"\(alphabet[advance(alphabet.startIndex, index)]) : \(type.1)"
 			},
 			ifApplication: { "(\($0.1)) (\($1.1))" },
-			ifAbstraction: { param, body in
+			ifPi: { param, body in
 				let (n, t) = param.0.variable!
 				return contains(body.0.freeVariables, n) ? "∏ \(param.1) . \(body.1)" : "(\(t)) → \(body.1)"
 			})
@@ -239,7 +239,7 @@ public enum DExpression<Recur>: DebugPrintable {
 		@noescape ifType: () -> T,
 		@noescape ifVariable: (Int, Recur) -> T,
 		@noescape ifApplication: (Recur, Recur) -> T,
-		@noescape ifAbstraction: (Recur, Recur) -> T) -> T {
+		@noescape ifPi: (Recur, Recur) -> T) -> T {
 		switch self {
 		case .Kind:
 			return ifKind()
@@ -250,7 +250,7 @@ public enum DExpression<Recur>: DebugPrintable {
 		case let .Application(a, b):
 			return ifApplication(a.value, b.value)
 		case let .Pi(a, b):
-			return ifAbstraction(a.value, b.value)
+			return ifPi(a.value, b.value)
 		}
 	}
 
@@ -259,14 +259,14 @@ public enum DExpression<Recur>: DebugPrintable {
 		ifType: (() -> T)? = nil,
 		ifVariable: ((Int, Recur) -> T)? = nil,
 		ifApplication: ((Recur, Recur) -> T)? = nil,
-		ifAbstraction: ((Recur, Recur) -> T)? = nil,
+		ifPi: ((Recur, Recur) -> T)? = nil,
 		otherwise: () -> T) -> T {
 		return analysis(
 			ifKind: { ifKind?() ?? otherwise() },
 			ifType: { ifType?() ?? otherwise() },
 			ifVariable: { ifVariable?($0) ?? otherwise() },
 			ifApplication: { ifApplication?($0) ?? otherwise() },
-			ifAbstraction: { ifAbstraction?($0) ?? otherwise() })
+			ifPi: { ifPi?($0) ?? otherwise() })
 	}
 
 
@@ -278,7 +278,7 @@ public enum DExpression<Recur>: DebugPrintable {
 			ifType: { .Type },
 			ifVariable: { .Variable($0, Box(transform($1))) },
 			ifApplication: { .Application(Box(transform($0)), Box(transform($1))) },
-			ifAbstraction: { .Pi(Box(transform($0)), Box(transform($1))) })
+			ifPi: { .Pi(Box(transform($0)), Box(transform($1))) })
 	}
 
 
@@ -299,7 +299,7 @@ public enum DExpression<Recur>: DebugPrintable {
 			ifType: const("Type"),
 			ifVariable: { "\($0) : \($1)" },
 			ifApplication: { "(\($0)) (\($1))" },
-			ifAbstraction: { "λ \($0) . \($1)" })
+			ifPi: { "λ \($0) . \($1)" })
 	}
 }
 
