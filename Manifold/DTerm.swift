@@ -24,7 +24,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public static func lambda(type: DTerm, _ f: DTerm -> DTerm) -> DTerm {
 		let body = f(lambdaPlaceholder)
-		let (n, build) = lambdaHelper(DTerm.pi(lambdaPlaceholder, body))
+		let (n, build) = repMax(DTerm.pi(lambdaPlaceholder, body))
 		return build(Box(variable(n + 1, type)))
 	}
 
@@ -38,22 +38,22 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 
 	private static var lambdaPlaceholder = variable(-1, DTerm.kind)
 
-	private static func lambdaHelper(term: DTerm) -> (Int, Box<DTerm> -> DTerm) {
+	private static func repMax(term: DTerm) -> (Int, Box<DTerm> -> DTerm) {
 		return term.expression.analysis(
 			ifKind: const(-3, const(term)),
 			ifType: const(-2, const(term)),
 			ifVariable: { i, t in
-				let (mt, buildt) = lambdaHelper(t)
+				let (mt, buildt) = repMax(t)
 				return (max(i, mt), { DTerm(.Variable(i, t == DTerm.lambdaPlaceholder ? $0 : Box(buildt($0)))) })
 			},
 			ifApplication: { a, b in
-				let (ma, builda) = lambdaHelper(a)
-				let (mb, buildb) = lambdaHelper(b)
+				let (ma, builda) = repMax(a)
+				let (mb, buildb) = repMax(b)
 				return (max(ma, mb), { DTerm(.Application(a == DTerm.lambdaPlaceholder ? $0 : Box(builda($0)), b == DTerm.lambdaPlaceholder ? $0 : Box(buildb($0)))) })
 			},
 			ifPi: { t, b in
-				let (mt, buildt) = lambdaHelper(t)
-				let (mb, buildb) = lambdaHelper(b)
+				let (mt, buildt) = repMax(t)
+				let (mb, buildb) = repMax(b)
 				return (max(mt, mb), { DTerm(.Pi(t == DTerm.lambdaPlaceholder ? $0 : Box(buildt($0)), b == DTerm.lambdaPlaceholder ? $0 : Box(buildb($0)))) })
 			})
 	}
