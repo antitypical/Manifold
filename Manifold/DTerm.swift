@@ -299,7 +299,7 @@ public enum DExpression<Recur>: DebugPrintable {
 			ifType: const("Type"),
 			ifVariable: { "\($0) : \($1)" },
 			ifApplication: { "(\($0)) (\($1))" },
-			ifPi: { "λ \($0) . \($1)" })
+			ifPi: { "∏ \($0) . \($1)" })
 	}
 }
 
