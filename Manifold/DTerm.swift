@@ -33,7 +33,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 	}
 
 	private static func abstraction(variable: DTerm, _ body: DTerm) -> DTerm {
-		return DTerm(.Abstraction(Box(variable), Box(body)))
+		return DTerm(.Pi(Box(variable), Box(body)))
 	}
 
 	private static var lambdaPlaceholder = variable(-1, DTerm.kind)
@@ -54,7 +54,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 			ifAbstraction: { t, b in
 				let (mt, buildt) = lambdaHelper(t)
 				let (mb, buildb) = lambdaHelper(b)
-				return (max(mt, mb), { DTerm(.Abstraction(t == DTerm.lambdaPlaceholder ? $0 : Box(buildt($0)), b == DTerm.lambdaPlaceholder ? $0 : Box(buildb($0)))) })
+				return (max(mt, mb), { DTerm(.Pi(t == DTerm.lambdaPlaceholder ? $0 : Box(buildt($0)), b == DTerm.lambdaPlaceholder ? $0 : Box(buildb($0)))) })
 			})
 	}
 
@@ -249,7 +249,7 @@ public enum DExpression<Recur>: DebugPrintable {
 			return ifVariable(x, type.value)
 		case let .Application(a, b):
 			return ifApplication(a.value, b.value)
-		case let .Abstraction(a, b):
+		case let .Pi(a, b):
 			return ifAbstraction(a.value, b.value)
 		}
 	}
@@ -278,7 +278,7 @@ public enum DExpression<Recur>: DebugPrintable {
 			ifType: { .Type },
 			ifVariable: { .Variable($0, Box(transform($1))) },
 			ifApplication: { .Application(Box(transform($0)), Box(transform($1))) },
-			ifAbstraction: { .Abstraction(Box(transform($0)), Box(transform($1))) })
+			ifAbstraction: { .Pi(Box(transform($0)), Box(transform($1))) })
 	}
 
 
@@ -288,7 +288,7 @@ public enum DExpression<Recur>: DebugPrintable {
 	case Type
 	case Variable(Int, Box<Recur>)
 	case Application(Box<Recur>, Box<Recur>)
-	case Abstraction(Box<Recur>, Box<Recur>)
+	case Pi(Box<Recur>, Box<Recur>)
 
 
 	// MARK: DebugPrintable

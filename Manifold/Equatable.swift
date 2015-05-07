@@ -30,7 +30,7 @@ public func == <Recur: Equatable> (left: DExpression<Recur>, right: DExpression<
 		return m == n && t.value == u.value
 	case let (.Application(t1, t2), .Application(u1, u2)):
 		return t1.value == u1.value && t2.value == u2.value
-	case let (.Abstraction(t, a), .Abstraction(u, b)):
+	case let (.Pi(t, a), .Pi(u, b)):
 		return t.value == u.value && a.value == b.value
 	default:
 		return false
