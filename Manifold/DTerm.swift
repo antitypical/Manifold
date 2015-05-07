@@ -288,7 +288,7 @@ public enum DExpression<Recur>: DebugPrintable {
 	case Type
 	case Variable(Int, Box<Recur>)
 	case Application(Box<Recur>, Box<Recur>)
-	case Pi(Box<Recur>, Box<Recur>)
+	case Pi(Box<Recur>, Box<Recur>) // (∏x:A)B where B can depend on x
 
 
 	// MARK: DebugPrintable
