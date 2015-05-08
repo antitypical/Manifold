@@ -122,6 +122,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 			ifVariable: { [ $0.0 ] },
 			ifApplication: { $0.freeVariables.union($1.freeVariables) },
 			ifPi: { $0.freeVariables.union($1.freeVariables).subtract([ $0.variable!.0 ]) },
+			ifSigma: { $0.freeVariables.union($1.freeVariables).subtract([ $0.variable!.0 ]) },
 			otherwise: const([]))
 	}
 
