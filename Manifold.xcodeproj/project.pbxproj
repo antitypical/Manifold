@@ -11,6 +11,7 @@
 		D4809FBD1AF6BD400084B8FE /* DTermTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4809FBC1AF6BD400084B8FE /* DTermTests.swift */; };
 		D4809FBF1AF6CD720084B8FE /* Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4809FBE1AF6CD720084B8FE /* Equatable.swift */; };
 		D4809FCD1AFC6AFB0084B8FE /* Comparable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4809FCC1AFC6AFB0084B8FE /* Comparable.swift */; };
+		D4809FCF1AFC8BA10084B8FE /* Find.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4809FCE1AFC8BA10084B8FE /* Find.swift */; };
 		D4A31B2A1AA366EC00B3FC68 /* Algebra.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A31B291AA366EC00B3FC68 /* Algebra.swift */; };
 		D4A31B2C1AA3708F00B3FC68 /* AlgebraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A31B2B1AA3708F00B3FC68 /* AlgebraTests.swift */; };
 		D4B3FBF11A83515800DA2AC3 /* Manifold.h in Headers */ = {isa = PBXBuildFile; fileRef = D4B3FBF01A83515800DA2AC3 /* Manifold.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -58,6 +59,7 @@
 		D4809FBC1AF6BD400084B8FE /* DTermTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DTermTests.swift; sourceTree = "<group>"; };
 		D4809FBE1AF6CD720084B8FE /* Equatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Equatable.swift; sourceTree = "<group>"; };
 		D4809FCC1AFC6AFB0084B8FE /* Comparable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comparable.swift; sourceTree = "<group>"; };
+		D4809FCE1AFC8BA10084B8FE /* Find.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Find.swift; sourceTree = "<group>"; };
 		D4A31B291AA366EC00B3FC68 /* Algebra.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Algebra.swift; sourceTree = "<group>"; };
 		D4A31B2B1AA3708F00B3FC68 /* AlgebraTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlgebraTests.swift; sourceTree = "<group>"; };
 		D4B3FBEB1A83515800DA2AC3 /* Manifold.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Manifold.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -169,6 +171,7 @@
 				D4EAE23F1A87F45500931323 /* Set.framework */,
 				D4B3FBEF1A83515800DA2AC3 /* Info.plist */,
 				D4F1C3EC1A8FA13B0087648A /* FlatMapSequenceView.swift */,
+				D4809FCE1AFC8BA10084B8FE /* Find.swift */,
 				D4B4AA561A90320F0089A5F2 /* Dictionary.swift */,
 			);
 			name = "Supporting Files";
@@ -313,6 +316,7 @@
 				D4B3FC0F1A8351F400DA2AC3 /* Type.swift in Sources */,
 				D4EAE25B1A889A2200931323 /* Inference.swift in Sources */,
 				D4A31B2A1AA366EC00B3FC68 /* Algebra.swift in Sources */,
+				D4809FCF1AFC8BA10084B8FE /* Find.swift in Sources */,
 				D4D23F941A8AE58F00C4698C /* AssumptionSet.swift in Sources */,
 				D4B3FC131A83520100DA2AC3 /* Expression.swift in Sources */,
 				D44474451AA3AE84001F0782 /* Term.swift in Sources */,
