@@ -15,7 +15,7 @@ final class DTermTests: XCTestCase {
 	}
 
 	func testProductTypesArePrintedWithAnX() {
-		assert(DTerm.pair(.type, const(.type)).typecheck().right?.description == "(Type ✕ Type)")
+		assert(DTerm.pair(.type, const(.type)).typecheck().right?.description, ==, "(Type ✕ Type)")
 	}
 
 	func testEvaluation() {
