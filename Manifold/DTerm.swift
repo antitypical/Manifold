@@ -298,21 +298,20 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 	private static let alphabet = "abcdefghijklmnopqrstuvwxyz"
 
 	private static func toString(expression: DExpression<(DTerm, String)>) -> String {
+		let alphabetize: Int -> String = { index in Swift.toString(DTerm.alphabet[advance(DTerm.alphabet.startIndex, index)]) }
 		return expression.analysis(
 			ifKind: const("Kind"),
 			ifType: const("Type"),
-			ifVariable: { index in
-				Swift.toString(alphabet[advance(alphabet.startIndex, index)])
-			},
+			ifVariable: alphabetize,
 			ifApplication: { "(\($0.1)) (\($1.1))" },
 			ifPi: {
 				$2.0.freeVariables.contains($0)
-					? "∏ \($0) : \($1.1) . \($2.1)"
+					? "∏ \(alphabetize($0)) : \($1.1) . \($2.1)"
 					: "(\($1.1)) → \($2.1)"
 			},
 			ifSigma: {
 				$2.0.freeVariables.contains($0)
-					? "∑ \($0) : \($1.1) . \($2.1)"
+					? "∑ \(alphabetize($0)) : \($1.1) . \($2.1)"
 					: "(\($1.1) ✕ \($2.1))"
 			})
 	}
