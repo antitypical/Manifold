@@ -153,6 +153,16 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 		}
 	}
 
+	public var sort: Sort {
+		return expression.analysis(
+			ifKind: const(.Kind),
+			ifType: const(.Type),
+			ifVariable: { $1.sort.predecessor() },
+			ifApplication: { $1.sort },
+			ifPi: { $1.sort.successor() },
+			ifSigma: { $1.sort.successor() })
+	}
+
 	public func typecheck() -> Either<Error, DTerm> {
 		return typecheck([])
 	}
