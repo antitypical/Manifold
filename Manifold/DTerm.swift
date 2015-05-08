@@ -23,53 +23,50 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 
 
 	public static func lambda(type: DTerm, _ f: DTerm -> DTerm) -> DTerm {
-		let body = f(lambdaPlaceholder)
-		let (n, build) = repMax(DTerm.pi(lambdaPlaceholder, body))
-		return build(Box(variable(n + 1, type)))
+		let body = f(variable(-1))
+		let (n, build) = repMax(DTerm.pi(-1, type, body))
+		return build(Box(variable(n + 1)))
 	}
 
 	public static func pair(type: DTerm, _ f: DTerm -> DTerm) -> DTerm {
-		let body = f(lambdaPlaceholder)
-		let (n, build) = repMax(DTerm.sigma(lambdaPlaceholder, body))
-		return build(Box(variable(n + 1, type)))
+		let body = f(variable(-1))
+		let (n, build) = repMax(DTerm.sigma(-1, type, body))
+		return build(Box(variable(n + 1)))
 	}
 
-	private static func variable(i: Int, _ type: DTerm) -> DTerm {
-		return DTerm(.Variable(i, Box(type)))
+	private static func variable(i: Int) -> DTerm {
+		return DTerm(.Variable(i))
 	}
 
-	private static func pi(variable: DTerm, _ body: DTerm) -> DTerm {
-		return DTerm(.Pi(Box(variable), Box(body)))
+	private static func pi(variable: Int, _ type: DTerm, _ body: DTerm) -> DTerm {
+		return DTerm(.Pi(variable, Box(type), Box(body)))
 	}
 
-	private static func sigma(variable: DTerm, _ body: DTerm) -> DTerm {
-		return DTerm(.Sigma(Box(variable), Box(body)))
+	private static func sigma(variable: Int, _ type: DTerm, _ body: DTerm) -> DTerm {
+		return DTerm(.Sigma(variable, Box(type), Box(body)))
 	}
-
-	private static var lambdaPlaceholder = variable(-1, DTerm.kind)
 
 	private static func repMax(term: DTerm) -> (Int, Box<DTerm> -> DTerm) {
 		return term.expression.analysis(
 			ifKind: const(-3, const(term)),
 			ifType: const(-2, const(term)),
-			ifVariable: { i, t in
-				let (mt, buildt) = repMax(t)
-				return (max(i, mt), { DTerm(.Variable(i, t == DTerm.lambdaPlaceholder ? $0 : Box(buildt($0)))) })
+			ifVariable: { i in
+				return (i, const(term))
 			},
 			ifApplication: { a, b in
 				let (ma, builda) = repMax(a)
 				let (mb, buildb) = repMax(b)
-				return (max(ma, mb), { DTerm(.Application(a == DTerm.lambdaPlaceholder ? $0 : Box(builda($0)), b == DTerm.lambdaPlaceholder ? $0 : Box(buildb($0)))) })
+				return (max(ma, mb), { DTerm(.Application(Box(builda($0)), Box(buildb($0)))) })
 			},
-			ifPi: { t, b in
+			ifPi: { i, t, b in
 				let (mt, buildt) = repMax(t)
 				let (mb, buildb) = repMax(b)
-				return (max(mt, mb), { DTerm(.Pi(t == DTerm.lambdaPlaceholder ? $0 : Box(buildt($0)), b == DTerm.lambdaPlaceholder ? $0 : Box(buildb($0)))) })
+				return (max(i, mt, mb), { DTerm(.Pi(i, Box(buildt($0)), Box(buildb($0)))) })
 			},
-			ifSigma: { a, b in
+			ifSigma: { i, a, b in
 				let (ma, builda) = repMax(a)
 				let (mb, buildb) = repMax(b)
-				return (max(ma, mb), { DTerm(.Sigma(a == DTerm.lambdaPlaceholder ? $0 : Box(builda($0)), b == DTerm.lambdaPlaceholder ? $0 : Box(buildb($0)))) })
+				return (max(i, ma, mb), { DTerm(.Sigma(i, Box(builda($0)), Box(buildb($0)))) })
 			})
 	}
 
@@ -88,7 +85,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 			otherwise: const(false))
 	}
 
-	public var variable: (Int, DTerm)? {
+	public var variable: Int? {
 		return expression.analysis(
 			ifVariable: unit,
 			otherwise: const(nil))
@@ -100,13 +97,13 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 			otherwise: const(nil))
 	}
 
-	public var pi: (DTerm, DTerm)? {
+	public var pi: (Int, DTerm, DTerm)? {
 		return expression.analysis(
 			ifPi: unit,
 			otherwise: const(nil))
 	}
 
-	public var sigma: (DTerm, DTerm)? {
+	public var sigma: (Int, DTerm, DTerm)? {
 		return expression.analysis(
 			ifSigma: unit,
 			otherwise: const(nil))
@@ -121,8 +118,8 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 		return expression.analysis(
 			ifVariable: { [ $0.0 ] },
 			ifApplication: { $0.freeVariables.union($1.freeVariables) },
-			ifPi: { $0.freeVariables.union($1.freeVariables).subtract([ $0.variable!.0 ]) },
-			ifSigma: { $0.freeVariables.union($1.freeVariables).subtract([ $0.variable!.0 ]) },
+			ifPi: { i, type, body in type.freeVariables.union(body.freeVariables).subtract([ i ]) },
+			ifSigma: { i, type, body in type.freeVariables.union(body.freeVariables).subtract([ i ]) },
 			otherwise: const([]))
 	}
 
@@ -170,14 +167,14 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 		}
 	}
 
-	public var sort: Sort {
+	public func sort(environment: [Int: DTerm]) -> Sort {
 		return expression.analysis(
 			ifKind: const(.Kind),
 			ifType: const(.Type),
-			ifVariable: { $1.sort.predecessor() },
-			ifApplication: { $1.sort },
-			ifPi: { $1.sort.successor() },
-			ifSigma: { $1.sort.successor() })
+			ifVariable: { environment[$0]?.sort(environment) ?? .Kind },
+			ifApplication: { $1.sort(environment) },
+			ifPi: { $2.sort(environment + [$0: $1]) },
+			ifSigma: { $2.sort(environment + [$0: $1]) })
 	}
 
 	public func typecheck() -> Either<Error, DTerm> {
@@ -188,25 +185,24 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 		return expression.analysis(
 			ifKind: const(Either.right(self)),
 			ifType: const(Either.right(self)),
-			ifVariable: { environment.contains(Binding($0, $1)) ? $1.typecheck(environment) : Either.left("unexpected free variable \($0)") },
-			ifApplication: { abs, arg in
+			ifVariable: { i -> Either<Error, DTerm> in
+				find(environment) { $0.variable == i }
+					.flatMap { environment[$0] }
+					.map { Either.right($0.value) }
+					?? Either.left("unexpected free variable \(i)")
+			},
+			ifApplication: { abs, arg -> Either<Error, DTerm> in
 				(abs.typecheck(environment)
 					.flatMap { $0.evaluate(environment) }
 					.flatMap { $0.pi != nil ? Either.right($0) : Either.left("cannot apply \(abs) : \($0) to \(arg)") } &&& arg.typecheck(environment)).map(DTerm.application)
 			},
-			ifPi: { type, body in
-				type.variable.map { i, t in
-					body.typecheck(environment.union([ Binding(i, t) ]))
-						.map { b in DTerm.lambda(t) { x in b.substitute(t, forVariable: type) } }
-				}
-					?? Either.left("unexpected non-variable parameter type: \(type)")
+			ifPi: { i, type, body -> Either<Error, DTerm> in
+				(type.typecheck(environment) &&& body.typecheck(environment.union([ Binding(i, type) ])))
+					.map { t, b in DTerm.lambda(t) { _ in b.substitute(t, forVariable: i) } }
 			},
-			ifSigma: { type, body in
-				type.variable.map { i, t in
-					body.typecheck(environment.union([ Binding(i, t) ]))
-						.map { b in DTerm.pair(t) { x in b.substitute(t, forVariable: type) } }
-				}
-					?? Either.left("unexpected non-variable parameter type: \(type)")
+			ifSigma: { i, type, body -> Either<Error, DTerm> in
+				(type.typecheck(environment) &&& body.typecheck(environment.union([ Binding(i, type) ])))
+					.map { t, b in DTerm.pair(t) { _ in b.substitute(t, forVariable: i) } }
 			})
 	}
 
@@ -227,15 +223,14 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 
 	// MARK: Substitution
 
-	public func substitute(value: DTerm, forVariable variable: DTerm) -> DTerm {
-		if self == variable { return value }
+	public func substitute(value: DTerm, forVariable i: Int) -> DTerm {
 		return expression.analysis(
 			ifKind: const(self),
 			ifType: const(self),
-			ifVariable: { DTerm.variable($0, $1.substitute(value, forVariable: variable)) },
-			ifApplication: { DTerm.application($0.substitute(value, forVariable: variable), $1.substitute(value, forVariable: variable)) },
-			ifPi: { DTerm.pi($0.substitute(value, forVariable: variable), $1.substitute(value, forVariable: variable)) },
-			ifSigma: { DTerm.sigma($0.substitute(value, forVariable: variable), $1.substitute(value, forVariable: variable)) })
+			ifVariable: { $0 == i ? value : DTerm.variable($0) },
+			ifApplication: { DTerm.application($0.substitute(value, forVariable: i), $1.substitute(value, forVariable: i)) },
+			ifPi: { DTerm.pi($0, $1.substitute(value, forVariable: i), $2.substitute(value, forVariable: i)) },
+			ifSigma: { DTerm.sigma($0, $1.substitute(value, forVariable: i), $2.substitute(value, forVariable: i)) })
 	}
 
 
@@ -258,7 +253,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 				self.expression.analysis(
 					ifApplication: {
 						($0.evaluate(environment) &&& $1.evaluate(environment)).map { abs, arg in
-							abs.pi.map { $1.substitute(arg, forVariable: $0) }!
+							abs.pi.map { $2.substitute(arg, forVariable: $0) }!
 						}
 					},
 					otherwise: const(Either.right(self)))
@@ -286,10 +281,10 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 		return expression.analysis(
 			ifKind: { 2 },
 			ifType: { 3 },
-			ifVariable: { 5 ^ $0 ^ $1.hashValue },
+			ifVariable: { 5 ^ $0.hashValue },
 			ifApplication: { 7 ^ $0.hashValue ^ $1.hashValue },
-			ifPi: { 11 ^ $0.hashValue ^ $1.hashValue },
-			ifSigma: { 13 ^ $0.hashValue ^ $1.hashValue })
+			ifPi: { 11 ^ $0.hashValue ^ $1.hashValue ^ $2.hashValue },
+			ifSigma: { 13 ^ $0.hashValue ^ $1.hashValue ^ $2.hashValue })
 	}
 
 
@@ -305,17 +300,19 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 		return expression.analysis(
 			ifKind: const("Kind"),
 			ifType: const("Type"),
-			ifVariable: { index, type in
-				"\(alphabet[advance(alphabet.startIndex, index)]) : \(type.1)"
+			ifVariable: { index in
+				Swift.toString(alphabet[advance(alphabet.startIndex, index)])
 			},
 			ifApplication: { "(\($0.1)) (\($1.1))" },
-			ifPi: { param, body in
-				let (n, t) = param.0.variable!
-				return contains(body.0.freeVariables, n) ? "∏ \(param.1) . \(body.1)" : "(\(t)) → \(body.1)"
+			ifPi: {
+				$2.0.freeVariables.contains($0)
+					? "∏ \($0) : \($1.1) . \($2.1)"
+					: "(\($1.1)) → \($2.1)"
 			},
-			ifSigma: { tag, body in
-				let (n, t) = tag.0.variable!
-				return contains(body.0.freeVariables, n) ? "∑ \(tag.1) . \(body.1)" : "(\(t) ✕ \(body.1))"
+			ifSigma: {
+				$2.0.freeVariables.contains($0)
+					? "∑ \($0) : \($1.1) . \($2.1)"
+					: "(\($1.1) ✕ \($2.1))"
 			})
 	}
 }
@@ -326,33 +323,33 @@ public enum DExpression<Recur>: DebugPrintable {
 	public func analysis<T>(
 		@noescape #ifKind: () -> T,
 		@noescape ifType: () -> T,
-		@noescape ifVariable: (Int, Recur) -> T,
+		@noescape ifVariable: Int -> T,
 		@noescape ifApplication: (Recur, Recur) -> T,
-		@noescape ifPi: (Recur, Recur) -> T,
-		@noescape ifSigma: (Recur, Recur) -> T) -> T {
+		@noescape ifPi: (Int, Recur, Recur) -> T,
+		@noescape ifSigma: (Int, Recur, Recur) -> T) -> T {
 		switch self {
 		case .Kind:
 			return ifKind()
 		case .Type:
 			return ifType()
-		case let .Variable(x, type):
-			return ifVariable(x, type.value)
+		case let .Variable(x):
+			return ifVariable(x)
 		case let .Application(a, b):
 			return ifApplication(a.value, b.value)
-		case let .Pi(a, b):
-			return ifPi(a.value, b.value)
-		case let .Sigma(a, b):
-			return ifSigma(a.value, b.value)
+		case let .Pi(i, a, b):
+			return ifPi(i, a.value, b.value)
+		case let .Sigma(i, a, b):
+			return ifSigma(i, a.value, b.value)
 		}
 	}
 
 	public func analysis<T>(
 		ifKind: (() -> T)? = nil,
 		ifType: (() -> T)? = nil,
-		ifVariable: ((Int, Recur) -> T)? = nil,
+		ifVariable: (Int -> T)? = nil,
 		ifApplication: ((Recur, Recur) -> T)? = nil,
-		ifPi: ((Recur, Recur) -> T)? = nil,
-		ifSigma: ((Recur, Recur) -> T)? = nil,
+		ifPi: ((Int, Recur, Recur) -> T)? = nil,
+		ifSigma: ((Int, Recur, Recur) -> T)? = nil,
 		otherwise: () -> T) -> T {
 		return analysis(
 			ifKind: { ifKind?() ?? otherwise() },
@@ -370,10 +367,10 @@ public enum DExpression<Recur>: DebugPrintable {
 		return analysis(
 			ifKind: { .Kind },
 			ifType: { .Type },
-			ifVariable: { .Variable($0, Box(transform($1))) },
+			ifVariable: { .Variable($0) },
 			ifApplication: { .Application(Box(transform($0)), Box(transform($1))) },
-			ifPi: { .Pi(Box(transform($0)), Box(transform($1))) },
-			ifSigma: { .Sigma(Box(transform($0)), Box(transform($1))) })
+			ifPi: { .Pi($0, Box(transform($1)), Box(transform($2))) },
+			ifSigma: { .Sigma($0, Box(transform($1)), Box(transform($2))) })
 	}
 
 
@@ -381,10 +378,10 @@ public enum DExpression<Recur>: DebugPrintable {
 
 	case Kind
 	case Type
-	case Variable(Int, Box<Recur>)
+	case Variable(Int)
 	case Application(Box<Recur>, Box<Recur>)
-	case Pi(Box<Recur>, Box<Recur>) // (∏x:A)B where B can depend on x
-	case Sigma(Box<Recur>, Box<Recur>) // (∑x:A)B where B can depend on x
+	case Pi(Int, Box<Recur>, Box<Recur>) // (∏x:A)B where B can depend on x
+	case Sigma(Int, Box<Recur>, Box<Recur>) // (∑x:A)B where B can depend on x
 
 
 	// MARK: DebugPrintable
@@ -393,10 +390,10 @@ public enum DExpression<Recur>: DebugPrintable {
 		return analysis(
 			ifKind: const("Kind"),
 			ifType: const("Type"),
-			ifVariable: { "\($0) : \($1)" },
+			ifVariable: { "\($0)" },
 			ifApplication: { "(\($0)) (\($1))" },
-			ifPi: { "∏ \($0) . \($1)" },
-			ifSigma: { "∑ \($0) . \($1)" })
+			ifPi: { "∏ \($0) : \($1) . \($2)" },
+			ifSigma: { "∑ \($0) : \($1) . \($2)" })
 	}
 }
 
