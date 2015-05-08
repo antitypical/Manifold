@@ -51,7 +51,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 			ifKind: const(-3, const(term)),
 			ifType: const(-2, const(term)),
 			ifVariable: { i in
-				return (i, const(term))
+				return (i, { i == -1 ? $0.value : term })
 			},
 			ifApplication: { a, b in
 				let (ma, builda) = repMax(a)
