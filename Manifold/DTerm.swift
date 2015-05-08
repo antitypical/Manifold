@@ -48,8 +48,8 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 
 	private static func repMax(term: DTerm) -> (Int, DTerm -> DTerm) {
 		return term.expression.analysis(
-			ifKind: const(-3, const(term)),
-			ifType: const(-2, const(term)),
+			ifKind: const(-1, const(term)),
+			ifType: const(-1, const(term)),
 			ifVariable: { i in
 				return (i, { i == -1 ? $0 : term })
 			},
