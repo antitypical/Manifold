@@ -126,7 +126,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 			otherwise: const([]))
 	}
 
-	public enum Sort: BidirectionalIndexType, Comparable {
+	public enum Sort: BidirectionalIndexType, Comparable, Printable {
 		case Term
 		case Type
 		case Kind
@@ -152,6 +152,20 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 				return .Type
 			default:
 				return .Kind
+			}
+		}
+
+
+		// MARK: Printable
+
+		public var description: String {
+			switch self {
+			case .Term:
+				return "Term"
+			case .Type:
+				return "Type"
+			case .Kind:
+				return "Kind"
 			}
 		}
 	}
