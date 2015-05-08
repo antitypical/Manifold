@@ -265,7 +265,17 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 	// MARK: DebugPrintable
 
 	public var debugDescription: String {
-		return expression.debugDescription
+		return cata(DTerm.toDebugString)(self)
+	}
+
+	private static func toDebugString(expression: DExpression<String>) -> String {
+		return expression.analysis(
+			ifKind: const("Kind"),
+			ifType: const("Type"),
+			ifVariable: { "\($0)" },
+			ifApplication: { "(\($0)) (\($1))" },
+			ifPi: { "∏ \($0) : \($1) . \($2)" },
+			ifSigma: { "∑ \($0) : \($1) . \($2)" })
 	}
 
 
@@ -317,7 +327,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 	}
 }
 
-public enum DExpression<Recur>: DebugPrintable {
+public enum DExpression<Recur> {
 	// MARK: Analyses
 
 	public func analysis<T>(
@@ -382,19 +392,6 @@ public enum DExpression<Recur>: DebugPrintable {
 	case Application(Box<Recur>, Box<Recur>)
 	case Pi(Int, Box<Recur>, Box<Recur>) // (∏x:A)B where B can depend on x
 	case Sigma(Int, Box<Recur>, Box<Recur>) // (∑x:A)B where B can depend on x
-
-
-	// MARK: DebugPrintable
-
-	public var debugDescription: String {
-		return analysis(
-			ifKind: const("Kind"),
-			ifType: const("Type"),
-			ifVariable: { "\($0)" },
-			ifApplication: { "(\($0)) (\($1))" },
-			ifPi: { "∏ \($0) : \($1) . \($2)" },
-			ifSigma: { "∑ \($0) : \($1) . \($2)" })
-	}
 }
 
 
