@@ -25,13 +25,13 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 	public static func lambda(type: DTerm, _ f: DTerm -> DTerm) -> DTerm {
 		let body = f(variable(-1))
 		let (n, build) = repMax(DTerm.pi(-1, type, body))
-		return build(Box(variable(n + 1)))
+		return build(variable(n + 1))
 	}
 
 	public static func pair(type: DTerm, _ f: DTerm -> DTerm) -> DTerm {
 		let body = f(variable(-1))
 		let (n, build) = repMax(DTerm.sigma(-1, type, body))
-		return build(Box(variable(n + 1)))
+		return build(variable(n + 1))
 	}
 
 	private static func variable(i: Int) -> DTerm {
@@ -46,12 +46,12 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 		return DTerm(.Sigma(variable, Box(type), Box(body)))
 	}
 
-	private static func repMax(term: DTerm) -> (Int, Box<DTerm> -> DTerm) {
+	private static func repMax(term: DTerm) -> (Int, DTerm -> DTerm) {
 		return term.expression.analysis(
 			ifKind: const(-3, const(term)),
 			ifType: const(-2, const(term)),
 			ifVariable: { i in
-				return (i, { i == -1 ? $0.value : term })
+				return (i, { i == -1 ? $0 : term })
 			},
 			ifApplication: { a, b in
 				let (ma, builda) = repMax(a)
