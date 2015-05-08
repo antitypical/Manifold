@@ -121,7 +121,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 		return expression.analysis(
 			ifVariable: { [ $0.0 ] },
 			ifApplication: { $0.freeVariables.union($1.freeVariables) },
-			ifPi: { $0.freeVariables.subtract([ $0.variable!.0 ]).union($1.freeVariables) },
+			ifPi: { $0.freeVariables.union($1.freeVariables).subtract([ $0.variable!.0 ]) },
 			otherwise: const([]))
 	}
 
