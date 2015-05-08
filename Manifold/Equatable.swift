@@ -20,6 +20,18 @@ public func == (left: DTerm, right: DTerm) -> Bool {
 }
 
 
+// MARK: DTerm.Sort
+
+public func == (left: DTerm.Sort, right: DTerm.Sort) -> Bool {
+	switch (left, right) {
+	case (.Term, .Term), (.Type, .Type), (.Kind, .Kind):
+		return true
+	default:
+		return false
+	}
+}
+
+
 // MARK: DExpression
 
 public func == <Recur: Equatable> (left: DExpression<Recur>, right: DExpression<Recur>) -> Bool {

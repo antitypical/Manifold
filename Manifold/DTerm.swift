@@ -126,6 +126,33 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 			otherwise: const([]))
 	}
 
+	public enum Sort: BidirectionalIndexType, Comparable {
+		case Term
+		case Type
+		case Kind
+
+
+		// MARK: BidirectionalIndexType
+
+		public func predecessor() -> Sort {
+			switch self {
+			case .Kind:
+				return .Type
+			default:
+				return .Term
+			}
+		}
+
+		public func successor() -> Sort {
+			switch self {
+			case .Term:
+				return .Type
+			default:
+				return .Kind
+			}
+		}
+	}
+
 	public func typecheck() -> Either<Error, DTerm> {
 		return typecheck([])
 	}
