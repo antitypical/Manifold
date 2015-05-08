@@ -143,6 +143,9 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 			}
 		}
 
+
+		// MARK: ForwardIndexType
+
 		public func successor() -> Sort {
 			switch self {
 			case .Term:
