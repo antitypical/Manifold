@@ -178,17 +178,15 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 	}
 
 	public func typecheck() -> Either<Error, DTerm> {
-		return typecheck([])
+		return typecheck([:])
 	}
 
-	private func typecheck(environment: Multiset<Binding>) -> Either<Error, DTerm> {
+	private func typecheck(environment: [Int: DTerm]) -> Either<Error, DTerm> {
 		return expression.analysis(
 			ifKind: const(Either.right(self)),
 			ifType: const(Either.right(self)),
 			ifVariable: { i -> Either<Error, DTerm> in
-				find(environment) { $0.variable == i }
-					.flatMap { environment[$0] }
-					.map { Either.right($0.value) }
+				environment[i].map(Either.right)
 					?? Either.left("unexpected free variable \(i)")
 			},
 			ifApplication: { abs, arg -> Either<Error, DTerm> in
@@ -197,11 +195,11 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 					.flatMap { $0.pi != nil ? Either.right($0) : Either.left("cannot apply \(abs) : \($0) to \(arg)") } &&& arg.typecheck(environment)).map(DTerm.application)
 			},
 			ifPi: { i, type, body -> Either<Error, DTerm> in
-				(type.typecheck(environment) &&& body.typecheck(environment.union([ Binding(i, type) ])))
+				(type.typecheck(environment) &&& body.typecheck(environment + [i: type]))
 					.map { t, b in DTerm.lambda(t) { _ in b.substitute(t, forVariable: i) } }
 			},
 			ifSigma: { i, type, body -> Either<Error, DTerm> in
-				(type.typecheck(environment) &&& body.typecheck(environment.union([ Binding(i, type) ])))
+				(type.typecheck(environment) &&& body.typecheck(environment + [i: type]))
 					.map { t, b in DTerm.pair(t) { _ in b.substitute(t, forVariable: i) } }
 			})
 	}
@@ -243,14 +241,17 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 	}
 
 	public func evaluate() -> Either<Error, DTerm> {
-		return evaluate([])
+		return evaluate([:])
 	}
 
-	private func evaluate(environment: Multiset<Binding>) -> Either<Error, DTerm> {
+	private func evaluate(environment: [Int: DTerm]) -> Either<Error, DTerm> {
 		return
 			typecheck(environment)
 			.flatMap { _ in
 				self.expression.analysis(
+					ifVariable: {
+						environment[$0].map(Either.right)!
+					},
 					ifApplication: {
 						($0.evaluate(environment) &&& $1.evaluate(environment)).map { abs, arg in
 							abs.pi.map { $2.substitute(arg, forVariable: $0) }!
