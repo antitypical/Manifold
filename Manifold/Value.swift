@@ -1,6 +1,17 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public enum Value {
+	// MARK: Construction
+
+	static func pi(value: Value, _ f: Value -> Value) -> Value {
+		return .Pi(Box(value), f >>> unit)
+	}
+
+	static func sigma(value: Value, _ f: Value -> Value) -> Value {
+		return .Sigma(Box(value), f >>> unit)
+	}
+
+
 	// MARK: Application
 
 	public func apply(other: Value) -> Value? {
