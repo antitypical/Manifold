@@ -21,7 +21,7 @@ public func == (left: DTerm.Sort, right: DTerm.Sort) -> Bool {
 
 // MARK: DExpression
 
-public func == <Recur: Equatable> (left: DExpression<Recur>, right: DExpression<Recur>) -> Bool {
+public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Recur>) -> Bool {
 	switch (left, right) {
 	case (.Kind, .Kind), (.Type, .Type):
 		return true

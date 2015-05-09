@@ -1,7 +1,7 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
-	public init(_ expression: DExpression<DTerm>) {
+	public init(_ expression: Expression<DTerm>) {
 		self.expression = expression
 	}
 
@@ -109,7 +109,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 			otherwise: const(nil))
 	}
 
-	public let expression: DExpression<DTerm>
+	public let expression: Expression<DTerm>
 
 
 	// MARK: Type-checking
@@ -254,7 +254,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 		return cata(DTerm.toDebugString)(self)
 	}
 
-	private static func toDebugString(expression: DExpression<String>) -> String {
+	private static func toDebugString(expression: Expression<String>) -> String {
 		return expression.analysis(
 			ifKind: const("Kind"),
 			ifType: const("Type"),
@@ -267,7 +267,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 
 	// MARK: FixpointType
 
-	public var out: DExpression<DTerm> {
+	public var out: Expression<DTerm> {
 		return expression
 	}
 
@@ -293,7 +293,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 
 	private static let alphabet = "abcdefghijklmnopqrstuvwxyz"
 
-	private static func toString(expression: DExpression<(DTerm, String)>) -> String {
+	private static func toString(expression: Expression<(DTerm, String)>) -> String {
 		let alphabetize: Int -> String = { index in Swift.toString(DTerm.alphabet[advance(DTerm.alphabet.startIndex, index)]) }
 		return expression.analysis(
 			ifKind: const("Kind"),
@@ -313,7 +313,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 	}
 }
 
-public enum DExpression<Recur> {
+public enum Expression<Recur> {
 	// MARK: Analyses
 
 	public func analysis<T>(
@@ -359,7 +359,7 @@ public enum DExpression<Recur> {
 
 	// MARK: Functor
 
-	public func map<T>(@noescape transform: Recur -> T) -> DExpression<T> {
+	public func map<T>(@noescape transform: Recur -> T) -> Expression<T> {
 		return analysis(
 			ifKind: { .Kind },
 			ifType: { .Type },
