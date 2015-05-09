@@ -3,11 +3,11 @@
 public enum Value {
 	// MARK: Construction
 
-	static func pi(value: Value, _ f: Value -> Value) -> Value {
+	public static func pi(value: Value, _ f: Value -> Value) -> Value {
 		return .Pi(Box(value), f >>> unit)
 	}
 
-	static func sigma(value: Value, _ f: Value -> Value) -> Value {
+	public static func sigma(value: Value, _ f: Value -> Value) -> Value {
 		return .Sigma(Box(value), f >>> unit)
 	}
 
