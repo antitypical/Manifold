@@ -104,6 +104,7 @@
 				D4B3FBEC1A83515800DA2AC3 /* Products */,
 			);
 			sourceTree = "<group>";
+			usesTabs = 1;
 		};
 		D4B3FBEC1A83515800DA2AC3 /* Products */ = {
 			isa = PBXGroup;
