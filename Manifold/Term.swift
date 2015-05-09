@@ -205,7 +205,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			ifVariable: { "\($0)" },
 			ifApplication: { "(\($0)) (\($1))" },
 			ifPi: { "Π \($0) : \($1) . \($2)" },
-			ifSigma: { "∑ \($0) : \($1) . \($2)" })
+			ifSigma: { "Σ \($0) : \($1) . \($2)" })
 	}
 
 
@@ -249,7 +249,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			},
 			ifSigma: {
 				$2.0.freeVariables.contains($0)
-					? "∑ \(alphabetize($0)) : \($1.1) . \($2.1)"
+					? "Σ \(alphabetize($0)) : \($1.1) . \($2.1)"
 					: "(\($1.1) ✕ \($2.1))"
 			})
 	}

@@ -57,7 +57,7 @@ public enum Expression<Recur> {
 	case Variable(Int)
 	case Application(Box<Recur>, Box<Recur>)
 	case Pi(Int, Box<Recur>, Box<Recur>) // (Πx:A)B where B can depend on x
-	case Sigma(Int, Box<Recur>, Box<Recur>) // (∑x:A)B where B can depend on x
+	case Sigma(Int, Box<Recur>, Box<Recur>) // (Σx:A)B where B can depend on x
 }
 
 
