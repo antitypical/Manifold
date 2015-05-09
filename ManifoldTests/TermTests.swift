@@ -7,20 +7,23 @@ final class TermTests: XCTestCase {
 	}
 
 	func testTypechecking() {
-		assert(identity.typecheck().right, ==, .lambda(.type, const(.lambda(.type, const(.type)))))
+		assert(identity.typecheck().right?.quote, ==, .lambda(.type, const(.lambda(.type, const(.type)))))
 	}
 
 	func testFunctionTypesArePrintedWithAnArrow() {
-		assert(identity.typecheck().right?.description, ==, "(Type) → (Type) → Type")
+		assert(identity.typecheck().right?.quote.description, ==, "(Type) → (Type) → Type")
 	}
 
 	func testProductTypesArePrintedWithAnX() {
-		assert(Term.pair(.type, const(.type)).typecheck().right?.description, ==, "(Type ✕ Type)")
+		assert(Term.pair(.type, const(.type)).typecheck().right?.quote.description, ==, "(Type ✕ Type)")
 	}
 
 	func testEvaluation() {
-		let value = identity.typecheck().flatMap { Term.application(Term.application(identity, $0), identity).evaluate() }
-		assert(value.right, ==, identity)
+		let value = identity.typecheck().flatMap {
+			Term.application(Term.application(identity, $0.quote), identity).evaluate().map(Either.right)
+				?? Either.left("evaluation returned nil for some reason")
+		}
+		assert(value.right?.quote, ==, identity)
 		assert(value.left, ==, nil)
 	}
 }
@@ -31,6 +34,7 @@ private let identity = Term.lambda(.type) { A in .lambda(A, id) }
 
 import Assertions
 import Box
+import Either
 import Manifold
 import Prelude
 import XCTest

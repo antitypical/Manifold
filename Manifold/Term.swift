@@ -112,30 +112,43 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			otherwise: const([]))
 	}
 
-	public func typecheck() -> Either<Error, Term> {
-		return typecheck([:])
-	}
-
-	private func typecheck(environment: [Int: Term]) -> Either<Error, Term> {
+	public func typecheck(_ environment: [Int: Value] = [:]) -> Either<Error, Value> {
 		return expression.analysis(
-			ifType: const(Either.right(self)),
-			ifVariable: { i -> Either<Error, Term> in
+			ifType: const(Either.right(.Type)),
+			ifVariable: { i -> Either<Error, Value> in
 				environment[i].map(Either.right)
 					?? Either.left("unexpected free variable \(i)")
 			},
-			ifApplication: { abs, arg -> Either<Error, Term> in
-				(abs.typecheck(environment)
-					.flatMap { $0.evaluate(environment) }
-					.flatMap { $0.pi != nil ? Either.right($0) : Either.left("cannot apply \(abs) : \($0) to \(arg)") } &&& arg.typecheck(environment)).map(Term.application)
+			ifApplication: { a, b -> Either<Error, Value> in
+				a.typecheck(environment)
+					.flatMap { t in
+						t.analysis(
+							ifPi: { v, f in b.typecheck(environment, v).map { _ in b.evaluate().flatMap(f)! } },
+							otherwise: const(Either.left("illegal application of \(a) : \(t) to \(b)")))
+					}
 			},
-			ifPi: { i, type, body -> Either<Error, Term> in
-				(type.typecheck(environment) &&& body.typecheck(environment + [i: type]))
-					.map { t, b in Term.lambda(t) { _ in b.substitute(t, forVariable: i) } }
+			ifPi: { i, t, b -> Either<Error, Value> in
+				t.typecheck(environment, .Type)
+					.flatMap { _ in
+						b.typecheck(environment + [ i: t.evaluate(environment)! ])
+					}
 			},
-			ifSigma: { i, type, body -> Either<Error, Term> in
-				(type.typecheck(environment) &&& body.typecheck(environment + [i: type]))
-					.map { t, b in Term.pair(t) { _ in b.substitute(t, forVariable: i) } }
+			ifSigma: { i, t, b -> Either<Error, Value> in
+				t.typecheck(environment, .Type)
+					.flatMap { _ in
+						b.typecheck(environment + [ i: t.evaluate(environment)! ])
+					}
 			})
+	}
+
+	public func typecheck(environment: [Int: Value], _ against: Value) -> Either<Error, Value> {
+		return typecheck(environment)
+			.flatMap { t in
+				let (q, r) = (t.quote, against.quote)
+				return q == r
+					? Either.right(t)
+					: Either.left("type mismatch: got \(q) for \(self) but expected \(r)")
+		}
 	}
 
 
@@ -169,27 +182,6 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 				type.evaluate(environment)
 					.map { type in Value.Sigma(Box(type)) { body.evaluate(environment + [ i: $0 ]) } }
 		})
-	}
-
-	public func evaluate() -> Either<Error, Term> {
-		return evaluate([:])
-	}
-
-	private func evaluate(environment: [Int: Term]) -> Either<Error, Term> {
-		return
-			typecheck(environment)
-			.flatMap { _ in
-				expression.analysis(
-					ifVariable: {
-						environment[$0].map(Either.right)!
-					},
-					ifApplication: {
-						($0.evaluate(environment) &&& $1.evaluate(environment)).map { abs, arg in
-							abs.pi.map { $2.substitute(arg, forVariable: $0) }!
-						}
-					},
-					otherwise: const(Either.right(self)))
-			}
 	}
 
 
