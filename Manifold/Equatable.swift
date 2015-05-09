@@ -11,7 +11,7 @@ public func == (left: Term, right: Term) -> Bool {
 
 public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Recur>) -> Bool {
 	switch (left, right) {
-	case (.Kind, .Kind), (.Type, .Type):
+	case (.Type, .Type):
 		return true
 	case let (.Variable(m), .Variable(n)):
 		return m == n

@@ -4,16 +4,13 @@ public enum Expression<Recur> {
 	// MARK: Analyses
 
 	public func analysis<T>(
-		@noescape #ifKind: () -> T,
-		@noescape ifType: () -> T,
+		@noescape #ifType: () -> T,
 		@noescape ifVariable: Int -> T,
 		@noescape ifApplication: (Recur, Recur) -> T,
 		@noescape ifPi: (Int, Recur, Recur) -> T,
 		@noescape ifSigma: (Int, Recur, Recur) -> T) -> T {
-			switch self {
-			case .Kind:
-				return ifKind()
-			case .Type:
+		switch self {
+		case .Type:
 			return ifType()
 		case let .Variable(x):
 			return ifVariable(x)
@@ -27,7 +24,6 @@ public enum Expression<Recur> {
 	}
 
 	public func analysis<T>(
-		ifKind: (() -> T)? = nil,
 		ifType: (() -> T)? = nil,
 		ifVariable: (Int -> T)? = nil,
 		ifApplication: ((Recur, Recur) -> T)? = nil,
@@ -35,7 +31,6 @@ public enum Expression<Recur> {
 		ifSigma: ((Int, Recur, Recur) -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
-			ifKind: { ifKind?() ?? otherwise() },
 			ifType: { ifType?() ?? otherwise() },
 			ifVariable: { ifVariable?($0) ?? otherwise() },
 			ifApplication: { ifApplication?($0) ?? otherwise() },
@@ -48,7 +43,6 @@ public enum Expression<Recur> {
 
 	public func map<T>(@noescape transform: Recur -> T) -> Expression<T> {
 		return analysis(
-			ifKind: { .Kind },
 			ifType: { .Type },
 			ifVariable: { .Variable($0) },
 			ifApplication: { .Application(Box(transform($0)), Box(transform($1))) },
@@ -59,7 +53,6 @@ public enum Expression<Recur> {
 
 	// MARK: Cases
 
-	case Kind
 	case Type
 	case Variable(Int)
 	case Application(Box<Recur>, Box<Recur>)

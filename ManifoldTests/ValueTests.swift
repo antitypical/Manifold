@@ -6,8 +6,8 @@ final class ValueTests: XCTestCase {
 	}
 
 	func testNestedQuotation() {
-		// α-convertible to Term.lambda(.type) { Term.lambda(.kind, const($0)) } — inside out vs. outside in assignment of indices
-		assert(Value.pi(.Type) { Value.pi(.Kind, const($0)) }.quote, ==, Term(.Pi(0, Box(.type), Box(Term(.Pi(1, Box(.kind), Box(Term(.Variable(1)))))))))
+		// α-convertible to Term.lambda(.type) { Term.lambda(.type, const($0)) } — inside out vs. outside in assignment of indices
+		assert(Value.pi(.Type) { Value.pi(.Type, const($0)) }.quote, ==, Term(.Pi(0, Box(.type), Box(Term(.Pi(1, Box(.type), Box(Term(.Variable(1)))))))))
 	}
 }
 

@@ -28,7 +28,6 @@ public enum Value {
 
 	private func quote(n: Int) -> Term {
 		return analysis(
-			ifKind: const(.kind),
 			ifType: const(.type),
 			ifQuote: { Term(.Variable(n - $0 - 1)) },
 			ifPi: { type, f in Term(.Pi(n, Box(type.quote(n)), Box(f(.Quote(n))!.quote(n + 1)))) },
@@ -39,14 +38,11 @@ public enum Value {
 	// MARK: Analyses
 
 	public func analysis<T>(
-		@noescape #ifKind: () -> T,
-		@noescape ifType: () -> T,
+		@noescape #ifType: () -> T,
 		@noescape ifQuote: Int -> T,
 		@noescape ifPi: (Value, Value -> Value?) -> T,
 		@noescape ifSigma: (Value, Value -> Value?) -> T) -> T {
 		switch self {
-		case .Kind:
-			return ifKind()
 		case .Type:
 			return ifType()
 		case let .Quote(n):
@@ -59,14 +55,12 @@ public enum Value {
 	}
 
 	public func analysis<T>(
-		ifKind: (() -> T)? = nil,
 		ifType: (() -> T)? = nil,
 		ifQuote: (Int -> T)? = nil,
 		ifPi: ((Value, Value -> Value?) -> T)? = nil,
 		ifSigma: ((Value, Value -> Value?) -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
-			ifKind: { ifKind?() ?? otherwise() },
 			ifType: { ifType?() ?? otherwise() },
 			ifQuote: { ifQuote?($0) ?? otherwise() },
 			ifPi: { ifPi?($0) ?? otherwise() },
@@ -76,7 +70,6 @@ public enum Value {
 
 	// MARK: Cases
 
-	case Kind
 	case Type
 	case Quote(Int)
 	case Pi(Box<Value>, Value -> Value?)

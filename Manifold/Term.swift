@@ -8,10 +8,6 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	// MARK: Constructors
 
-	public static var kind: Term {
-		return Term(.Kind)
-	}
-
 	public static var type: Term {
 		return Term(.Type)
 	}
@@ -48,7 +44,6 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	private static func repMax(term: Term) -> (Int, Term -> Term) {
 		return term.expression.analysis(
-			ifKind: const(-1, const(term)),
 			ifType: const(-1, const(term)),
 			ifVariable: { i in
 				return (i, { i == -1 ? $0 : term })
@@ -72,12 +67,6 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 
 	// MARK: Destructors
-
-	public var isKind: Bool {
-		return expression.analysis(
-			ifKind: const(true),
-			otherwise: const(false))
-	}
 
 	public var isType: Bool {
 		return expression.analysis(
@@ -129,7 +118,6 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	private func typecheck(environment: [Int: Term]) -> Either<Error, Term> {
 		return expression.analysis(
-			ifKind: const(Either.right(self)),
 			ifType: const(Either.right(self)),
 			ifVariable: { i -> Either<Error, Term> in
 				environment[i].map(Either.right)
@@ -155,7 +143,6 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public func substitute(value: Term, forVariable i: Int) -> Term {
 		return expression.analysis(
-			ifKind: const(self),
 			ifType: const(self),
 			ifVariable: { $0 == i ? value : Term.variable($0) },
 			ifApplication: { Term.application($0.substitute(value, forVariable: i), $1.substitute(value, forVariable: i)) },
@@ -168,7 +155,6 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public func evaluate(environment: [Int: Value]) -> Value? {
 		return expression.analysis(
-			ifKind: const(.Kind),
 			ifType: const(.Type),
 			ifVariable: { environment[$0] },
 			ifApplication: { a, b -> Value? in
@@ -215,7 +201,6 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	private static func toDebugString(expression: Expression<String>) -> String {
 		return expression.analysis(
-			ifKind: const("Kind"),
 			ifType: const("Type"),
 			ifVariable: { "\($0)" },
 			ifApplication: { "(\($0)) (\($1))" },
@@ -235,7 +220,6 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public var hashValue: Int {
 		return expression.analysis(
-			ifKind: { 2 },
 			ifType: { 3 },
 			ifVariable: { 5 ^ $0.hashValue },
 			ifApplication: { 7 ^ $0.hashValue ^ $1.hashValue },
@@ -255,7 +239,6 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	private static func toString(expression: Expression<(Term, String)>) -> String {
 		let alphabetize: Int -> String = { index in Swift.toString(Term.alphabet[advance(Term.alphabet.startIndex, index)]) }
 		return expression.analysis(
-			ifKind: const("Kind"),
 			ifType: const("Type"),
 			ifVariable: alphabetize,
 			ifApplication: { "(\($0.1)) (\($1.1))" },
