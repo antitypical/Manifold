@@ -118,8 +118,6 @@
 				D4F9F86D1A84977400B7071E /* Error.swift */,
 				D4DE7E721AF66E25004D0CB9 /* Term.swift */,
 				D4B56CB01AFDA26A00D7BD6F /* Expression.swift */,
-				D4809FCC1AFC6AFB0084B8FE /* Comparable.swift */,
-				D4809FBE1AF6CD720084B8FE /* Equatable.swift */,
 				D4B3FBEE1A83515800DA2AC3 /* Supporting Files */,
 			);
 			path = Manifold;
@@ -136,6 +134,8 @@
 				D4F1C3EC1A8FA13B0087648A /* FlatMapSequenceView.swift */,
 				D4809FCE1AFC8BA10084B8FE /* Find.swift */,
 				D4B4AA561A90320F0089A5F2 /* Dictionary.swift */,
+				D4809FCC1AFC6AFB0084B8FE /* Comparable.swift */,
+				D4809FBE1AF6CD720084B8FE /* Equatable.swift */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
