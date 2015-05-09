@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D46974251AFE4EB5005D3AA3 /* ValueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46974241AFE4EB5005D3AA3 /* ValueTests.swift */; };
 		D4809FBD1AF6BD400084B8FE /* TermTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4809FBC1AF6BD400084B8FE /* TermTests.swift */; };
 		D4809FBF1AF6CD720084B8FE /* Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4809FBE1AF6CD720084B8FE /* Equatable.swift */; };
 		D4809FCD1AFC6AFB0084B8FE /* Comparable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4809FCC1AFC6AFB0084B8FE /* Comparable.swift */; };
@@ -40,6 +41,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D46974241AFE4EB5005D3AA3 /* ValueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueTests.swift; sourceTree = "<group>"; };
 		D4809FBC1AF6BD400084B8FE /* TermTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TermTests.swift; sourceTree = "<group>"; };
 		D4809FBE1AF6CD720084B8FE /* Equatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Equatable.swift; sourceTree = "<group>"; };
 		D4809FCC1AFC6AFB0084B8FE /* Comparable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comparable.swift; sourceTree = "<group>"; };
@@ -141,6 +143,7 @@
 			isa = PBXGroup;
 			children = (
 				D4809FBC1AF6BD400084B8FE /* TermTests.swift */,
+				D46974241AFE4EB5005D3AA3 /* ValueTests.swift */,
 				D4B3FC001A83515800DA2AC3 /* Supporting Files */,
 			);
 			path = ManifoldTests;
@@ -280,6 +283,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4809FBD1AF6BD400084B8FE /* TermTests.swift in Sources */,
+				D46974251AFE4EB5005D3AA3 /* ValueTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
