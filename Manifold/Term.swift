@@ -134,18 +134,6 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	}
 
 
-	// MARK: Substitution
-
-	public func substitute(value: Term, forVariable i: Int) -> Term {
-		return expression.analysis(
-			ifType: const(self),
-			ifVariable: { $0 == i ? value : Term.variable($0) },
-			ifApplication: { Term.application($0.substitute(value, forVariable: i), $1.substitute(value, forVariable: i)) },
-			ifPi: { Term.pi($0, $1.substitute(value, forVariable: i), $2.substitute(value, forVariable: i)) },
-			ifSigma: { Term.sigma($0, $1.substitute(value, forVariable: i), $2.substitute(value, forVariable: i)) })
-	}
-
-
 	// MARK: Evaluation
 
 	public func evaluate(_ environment: [Int: Value] = [:]) -> Value? {
