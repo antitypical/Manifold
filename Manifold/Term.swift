@@ -317,4 +317,3 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 import Box
 import Either
 import Prelude
-import Set

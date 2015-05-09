@@ -16,7 +16,4 @@
    <FileRef
       location = "group:External/Prelude/Prelude.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:External/Set/Set.xcodeproj">
-   </FileRef>
 </Workspace>
