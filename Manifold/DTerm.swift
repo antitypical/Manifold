@@ -234,7 +234,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 		return
 			typecheck(environment)
 			.flatMap { _ in
-				self.expression.analysis(
+				expression.analysis(
 					ifVariable: {
 						environment[$0].map(Either.right)!
 					},
