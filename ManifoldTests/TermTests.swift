@@ -18,6 +18,10 @@ final class TermTests: XCTestCase {
 		assert(Term.pair(.type, const(.type)).typecheck().right?.quote.description, ==, "(Type ✕ Type)")
 	}
 
+	func testAbstractionEvaluatesToItself() {
+		assert(identity.evaluate()?.quote, ==, identity)
+	}
+
 	func testEvaluation() {
 		let value = identity.typecheck().flatMap {
 			Term.application(Term.application(identity, $0.quote), identity).evaluate().map(Either.right)
