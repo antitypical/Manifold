@@ -204,20 +204,6 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 			})
 	}
 
-	private struct Binding: Hashable {
-		init(_ variable: Int, _ value: DTerm) {
-			self.variable = variable
-			self.value = value
-		}
-
-		let variable: Int
-		let value: DTerm
-
-		var hashValue: Int {
-			return variable & value.hashValue
-		}
-	}
-
 
 	// MARK: Substitution
 
@@ -392,11 +378,6 @@ public enum DExpression<Recur> {
 	case Application(Box<Recur>, Box<Recur>)
 	case Pi(Int, Box<Recur>, Box<Recur>) // (∏x:A)B where B can depend on x
 	case Sigma(Int, Box<Recur>, Box<Recur>) // (∑x:A)B where B can depend on x
-}
-
-
-private func == (left: DTerm.Binding, right: DTerm.Binding) -> Bool {
-	return left.variable == right.variable && left.value == right.value
 }
 
 
