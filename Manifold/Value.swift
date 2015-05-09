@@ -11,6 +11,16 @@ public enum Value {
 	}
 
 
+	func quote(_ n: Int = 0) -> Term {
+		return analysis(
+			ifKind: const(.kind),
+			ifType: const(.type),
+			ifQuote: { Term(.Variable(n - $0 - 1)) },
+			ifPi: { type, f in Term(.Pi(n, Box(type.quote(n)), Box(f(.Quote(n))!.quote(n + 1)))) },
+			ifSigma: { type, f in Term(.Sigma(n, Box(type.quote(n)), Box(f(.Quote(n))!.quote(n + 1)))) })
+	}
+
+
 	// MARK: Analyses
 
 	public func analysis<T>(
