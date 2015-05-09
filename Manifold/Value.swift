@@ -22,7 +22,11 @@ public enum Value {
 	}
 
 
-	public func quote(_ n: Int = 0) -> Term {
+	public var quote: Term {
+		return quote(0)
+	}
+
+	private func quote(n: Int) -> Term {
 		return analysis(
 			ifKind: const(.kind),
 			ifType: const(.type),
