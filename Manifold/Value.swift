@@ -20,6 +20,12 @@ public enum Value {
 			otherwise: const(false))
 	}
 
+	var pi: (Value, Value -> Value?)? {
+		return analysis(
+			ifPi: unit,
+			otherwise: const(nil))
+	}
+
 
 	// MARK: Application
 
