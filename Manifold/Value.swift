@@ -20,6 +20,19 @@ public enum Value {
 		}
 	}
 
+	public func analysis<T>(
+		ifKind: (() -> T)? = nil,
+		ifType: (() -> T)? = nil,
+		ifPi: ((Value, Value -> Value) -> T)? = nil,
+		ifSigma: ((Value, Value -> Value) -> T)? = nil,
+		@noescape otherwise: () -> T) -> T {
+		return analysis(
+			ifKind: { ifKind?() ?? otherwise() },
+			ifType: { ifType?() ?? otherwise() },
+			ifPi: { ifPi?($0) ?? otherwise() },
+			ifSigma: { ifSigma?($0) ?? otherwise() })
+	}
+
 
 	// MARK: Cases
 
