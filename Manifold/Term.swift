@@ -220,20 +220,23 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	// MARK: Evaluation
 
-	public func evaluate(environment: [Int: Value]) -> Value {
+	public func evaluate(environment: [Int: Value]) -> Value? {
 		return expression.analysis(
 			ifKind: const(.Kind),
 			ifType: const(.Type),
-			ifVariable: { environment[$0]! },
-			ifApplication: { a, b -> Value in
-				a.evaluate(environment).apply(b.evaluate(environment))!
+			ifVariable: { environment[$0] },
+			ifApplication: { a, b -> Value? in
+				(a.evaluate(environment) &&& b.evaluate(environment))
+					.flatMap { $0.apply($1) }
 			},
-			ifPi: { i, type, body -> Value in
-				Value.Pi(Box(type.evaluate(environment))) { body.evaluate(environment + [ i: $0 ]) }
+			ifPi: { i, type, body -> Value? in
+				type.evaluate(environment)
+					.map { type in Value.Pi(Box(type)) { body.evaluate(environment + [ i: $0 ]) } }
 			},
-			ifSigma: { i, type, body -> Value in
-				Value.Sigma(Box(type.evaluate(environment))) { body.evaluate(environment + [ i: $0 ]) }
-			})
+			ifSigma: { i, type, body -> Value? in
+				type.evaluate(environment)
+					.map { type in Value.Sigma(Box(type)) { body.evaluate(environment + [ i: $0 ]) } }
+		})
 	}
 
 	public func evaluate() -> Either<Error, Term> {
