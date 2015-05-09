@@ -1,6 +1,16 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public enum Value {
+	// MARK: Application
+
+	public func apply(other: Value) -> Either<Error, Value> {
+		return analysis(
+			ifPi: { _, f in Either.right(f(other)) },
+			ifSigma: { _, f in Either.right(f(other)) },
+			otherwise: const(Either.left("Cannot apply non-abstraction value \(self)")))
+	}
+
+
 	// MARK: Analyses
 
 	public func analysis<T>(
@@ -44,3 +54,5 @@ public enum Value {
 
 
 import Box
+import Either
+import Prelude
