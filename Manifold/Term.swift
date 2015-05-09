@@ -153,7 +153,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	// MARK: Evaluation
 
-	public func evaluate(environment: [Int: Value]) -> Value? {
+	public func evaluate(_ environment: [Int: Value] = [:]) -> Value? {
 		return expression.analysis(
 			ifType: const(.Type),
 			ifVariable: { environment[$0] },
