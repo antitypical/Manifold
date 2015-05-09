@@ -11,7 +11,7 @@ public enum Value {
 	}
 
 
-	func quote(_ n: Int = 0) -> Term {
+	public func quote(_ n: Int = 0) -> Term {
 		return analysis(
 			ifKind: const(.kind),
 			ifType: const(.type),
