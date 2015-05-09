@@ -7,18 +7,6 @@ public func == (left: Term, right: Term) -> Bool {
 }
 
 
-// MARK: Term.Sort
-
-public func == (left: Term.Sort, right: Term.Sort) -> Bool {
-	switch (left, right) {
-	case (.Term, .Term), (.Type, .Type), (.Kind, .Kind):
-		return true
-	default:
-		return false
-	}
-}
-
-
 // MARK: DExpression
 
 public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Recur>) -> Bool {

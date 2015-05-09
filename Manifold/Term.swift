@@ -123,60 +123,6 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			otherwise: const([]))
 	}
 
-	public enum Sort: BidirectionalIndexType, Comparable, Printable {
-		case Term
-		case Type
-		case Kind
-
-
-		// MARK: BidirectionalIndexType
-
-		public func predecessor() -> Sort {
-			switch self {
-			case .Kind:
-				return .Type
-			default:
-				return .Term
-			}
-		}
-
-
-		// MARK: ForwardIndexType
-
-		public func successor() -> Sort {
-			switch self {
-			case .Term:
-				return .Type
-			default:
-				return .Kind
-			}
-		}
-
-
-		// MARK: Printable
-
-		public var description: String {
-			switch self {
-			case .Term:
-				return "Term"
-			case .Type:
-				return "Type"
-			case .Kind:
-				return "Kind"
-			}
-		}
-	}
-
-	public func sort(environment: [Int: Term]) -> Sort {
-		return expression.analysis(
-			ifKind: const(.Kind),
-			ifType: const(.Type),
-			ifVariable: { environment[$0]?.sort(environment) ?? .Kind },
-			ifApplication: { $1.sort(environment) },
-			ifPi: { $2.sort(environment + [$0: $1]) },
-			ifSigma: { $2.sort(environment + [$0: $1]) })
-	}
-
 	public func typecheck() -> Either<Error, Term> {
 		return typecheck([:])
 	}
