@@ -1,15 +1,15 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-// MARK: DTerm
+// MARK: Term
 
-public func == (left: DTerm, right: DTerm) -> Bool {
+public func == (left: Term, right: Term) -> Bool {
 	return left.expression == right.expression
 }
 
 
-// MARK: DTerm.Sort
+// MARK: Term.Sort
 
-public func == (left: DTerm.Sort, right: DTerm.Sort) -> Bool {
+public func == (left: Term.Sort, right: Term.Sort) -> Bool {
 	switch (left, right) {
 	case (.Term, .Term), (.Type, .Type), (.Kind, .Kind):
 		return true

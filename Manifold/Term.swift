@@ -1,52 +1,52 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
-	public init(_ expression: Expression<DTerm>) {
+public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
+	public init(_ expression: Expression<Term>) {
 		self.expression = expression
 	}
 
 
 	// MARK: Constructors
 
-	public static var kind: DTerm {
-		return DTerm(.Kind)
+	public static var kind: Term {
+		return Term(.Kind)
 	}
 
-	public static var type: DTerm {
-		return DTerm(.Type)
-	}
-
-
-	public static func application(a: DTerm, _ b: DTerm) -> DTerm {
-		return DTerm(.Application(Box(a), Box(b)))
+	public static var type: Term {
+		return Term(.Type)
 	}
 
 
-	public static func lambda(type: DTerm, _ f: DTerm -> DTerm) -> DTerm {
+	public static func application(a: Term, _ b: Term) -> Term {
+		return Term(.Application(Box(a), Box(b)))
+	}
+
+
+	public static func lambda(type: Term, _ f: Term -> Term) -> Term {
 		let body = f(variable(-1))
 		let (n, build) = repMax(body)
 		return pi(n + 1, type, build(variable(n + 1)))
 	}
 
-	public static func pair(type: DTerm, _ f: DTerm -> DTerm) -> DTerm {
+	public static func pair(type: Term, _ f: Term -> Term) -> Term {
 		let body = f(variable(-1))
 		let (n, build) = repMax(body)
 		return sigma(n + 1, type, build(variable(n + 1)))
 	}
 
-	private static func variable(i: Int) -> DTerm {
-		return DTerm(.Variable(i))
+	private static func variable(i: Int) -> Term {
+		return Term(.Variable(i))
 	}
 
-	private static func pi(variable: Int, _ type: DTerm, _ body: DTerm) -> DTerm {
-		return DTerm(.Pi(variable, Box(type), Box(body)))
+	private static func pi(variable: Int, _ type: Term, _ body: Term) -> Term {
+		return Term(.Pi(variable, Box(type), Box(body)))
 	}
 
-	private static func sigma(variable: Int, _ type: DTerm, _ body: DTerm) -> DTerm {
-		return DTerm(.Sigma(variable, Box(type), Box(body)))
+	private static func sigma(variable: Int, _ type: Term, _ body: Term) -> Term {
+		return Term(.Sigma(variable, Box(type), Box(body)))
 	}
 
-	private static func repMax(term: DTerm) -> (Int, DTerm -> DTerm) {
+	private static func repMax(term: Term) -> (Int, Term -> Term) {
 		return term.expression.analysis(
 			ifKind: const(-1, const(term)),
 			ifType: const(-1, const(term)),
@@ -56,17 +56,17 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 			ifApplication: { a, b in
 				let (ma, builda) = repMax(a)
 				let (mb, buildb) = repMax(b)
-				return (max(ma, mb), { DTerm(.Application(Box(builda($0)), Box(buildb($0)))) })
+				return (max(ma, mb), { Term(.Application(Box(builda($0)), Box(buildb($0)))) })
 			},
 			ifPi: { i, t, b in
 				let (mt, buildt) = repMax(t)
 				let (mb, buildb) = repMax(b)
-				return (max(i, mt, mb), { DTerm(.Pi(i, Box(buildt($0)), Box(buildb($0)))) })
+				return (max(i, mt, mb), { Term(.Pi(i, Box(buildt($0)), Box(buildb($0)))) })
 			},
 			ifSigma: { i, a, b in
 				let (ma, builda) = repMax(a)
 				let (mb, buildb) = repMax(b)
-				return (max(i, ma, mb), { DTerm(.Sigma(i, Box(builda($0)), Box(buildb($0)))) })
+				return (max(i, ma, mb), { Term(.Sigma(i, Box(builda($0)), Box(buildb($0)))) })
 			})
 	}
 
@@ -91,25 +91,25 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 			otherwise: const(nil))
 	}
 
-	public var application: (DTerm, DTerm)? {
+	public var application: (Term, Term)? {
 		return expression.analysis(
 			ifApplication: unit,
 			otherwise: const(nil))
 	}
 
-	public var pi: (Int, DTerm, DTerm)? {
+	public var pi: (Int, Term, Term)? {
 		return expression.analysis(
 			ifPi: unit,
 			otherwise: const(nil))
 	}
 
-	public var sigma: (Int, DTerm, DTerm)? {
+	public var sigma: (Int, Term, Term)? {
 		return expression.analysis(
 			ifSigma: unit,
 			otherwise: const(nil))
 	}
 
-	public let expression: Expression<DTerm>
+	public let expression: Expression<Term>
 
 
 	// MARK: Type-checking
@@ -167,7 +167,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 		}
 	}
 
-	public func sort(environment: [Int: DTerm]) -> Sort {
+	public func sort(environment: [Int: Term]) -> Sort {
 		return expression.analysis(
 			ifKind: const(.Kind),
 			ifType: const(.Type),
@@ -177,44 +177,44 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 			ifSigma: { $2.sort(environment + [$0: $1]) })
 	}
 
-	public func typecheck() -> Either<Error, DTerm> {
+	public func typecheck() -> Either<Error, Term> {
 		return typecheck([:])
 	}
 
-	private func typecheck(environment: [Int: DTerm]) -> Either<Error, DTerm> {
+	private func typecheck(environment: [Int: Term]) -> Either<Error, Term> {
 		return expression.analysis(
 			ifKind: const(Either.right(self)),
 			ifType: const(Either.right(self)),
-			ifVariable: { i -> Either<Error, DTerm> in
+			ifVariable: { i -> Either<Error, Term> in
 				environment[i].map(Either.right)
 					?? Either.left("unexpected free variable \(i)")
 			},
-			ifApplication: { abs, arg -> Either<Error, DTerm> in
+			ifApplication: { abs, arg -> Either<Error, Term> in
 				(abs.typecheck(environment)
 					.flatMap { $0.evaluate(environment) }
-					.flatMap { $0.pi != nil ? Either.right($0) : Either.left("cannot apply \(abs) : \($0) to \(arg)") } &&& arg.typecheck(environment)).map(DTerm.application)
+					.flatMap { $0.pi != nil ? Either.right($0) : Either.left("cannot apply \(abs) : \($0) to \(arg)") } &&& arg.typecheck(environment)).map(Term.application)
 			},
-			ifPi: { i, type, body -> Either<Error, DTerm> in
+			ifPi: { i, type, body -> Either<Error, Term> in
 				(type.typecheck(environment) &&& body.typecheck(environment + [i: type]))
-					.map { t, b in DTerm.lambda(t) { _ in b.substitute(t, forVariable: i) } }
+					.map { t, b in Term.lambda(t) { _ in b.substitute(t, forVariable: i) } }
 			},
-			ifSigma: { i, type, body -> Either<Error, DTerm> in
+			ifSigma: { i, type, body -> Either<Error, Term> in
 				(type.typecheck(environment) &&& body.typecheck(environment + [i: type]))
-					.map { t, b in DTerm.pair(t) { _ in b.substitute(t, forVariable: i) } }
+					.map { t, b in Term.pair(t) { _ in b.substitute(t, forVariable: i) } }
 			})
 	}
 
 
 	// MARK: Substitution
 
-	public func substitute(value: DTerm, forVariable i: Int) -> DTerm {
+	public func substitute(value: Term, forVariable i: Int) -> Term {
 		return expression.analysis(
 			ifKind: const(self),
 			ifType: const(self),
-			ifVariable: { $0 == i ? value : DTerm.variable($0) },
-			ifApplication: { DTerm.application($0.substitute(value, forVariable: i), $1.substitute(value, forVariable: i)) },
-			ifPi: { DTerm.pi($0, $1.substitute(value, forVariable: i), $2.substitute(value, forVariable: i)) },
-			ifSigma: { DTerm.sigma($0, $1.substitute(value, forVariable: i), $2.substitute(value, forVariable: i)) })
+			ifVariable: { $0 == i ? value : Term.variable($0) },
+			ifApplication: { Term.application($0.substitute(value, forVariable: i), $1.substitute(value, forVariable: i)) },
+			ifPi: { Term.pi($0, $1.substitute(value, forVariable: i), $2.substitute(value, forVariable: i)) },
+			ifSigma: { Term.sigma($0, $1.substitute(value, forVariable: i), $2.substitute(value, forVariable: i)) })
 	}
 
 
@@ -226,11 +226,11 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 			otherwise: const(true))
 	}
 
-	public func evaluate() -> Either<Error, DTerm> {
+	public func evaluate() -> Either<Error, Term> {
 		return evaluate([:])
 	}
 
-	private func evaluate(environment: [Int: DTerm]) -> Either<Error, DTerm> {
+	private func evaluate(environment: [Int: Term]) -> Either<Error, Term> {
 		return
 			typecheck(environment)
 			.flatMap { _ in
@@ -251,7 +251,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 	// MARK: DebugPrintable
 
 	public var debugDescription: String {
-		return cata(DTerm.toDebugString)(self)
+		return cata(Term.toDebugString)(self)
 	}
 
 	private static func toDebugString(expression: Expression<String>) -> String {
@@ -267,7 +267,7 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 
 	// MARK: FixpointType
 
-	public var out: Expression<DTerm> {
+	public var out: Expression<Term> {
 		return expression
 	}
 
@@ -288,13 +288,13 @@ public struct DTerm: DebugPrintable, FixpointType, Hashable, Printable {
 	// MARK: Printable
 
 	public var description: String {
-		return para(DTerm.toString)(self)
+		return para(Term.toString)(self)
 	}
 
 	private static let alphabet = "abcdefghijklmnopqrstuvwxyz"
 
-	private static func toString(expression: Expression<(DTerm, String)>) -> String {
-		let alphabetize: Int -> String = { index in Swift.toString(DTerm.alphabet[advance(DTerm.alphabet.startIndex, index)]) }
+	private static func toString(expression: Expression<(Term, String)>) -> String {
+		let alphabetize: Int -> String = { index in Swift.toString(Term.alphabet[advance(Term.alphabet.startIndex, index)]) }
 		return expression.analysis(
 			ifKind: const("Kind"),
 			ifType: const("Type"),

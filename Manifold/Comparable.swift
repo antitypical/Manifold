@@ -1,8 +1,8 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-// MARK: DTerm.Sort
+// MARK: Term.Sort
 
-public func < (left: DTerm.Sort, right: DTerm.Sort) -> Bool {
+public func < (left: Term.Sort, right: Term.Sort) -> Bool {
 	switch (left, right) {
 	case (.Term, .Type), (.Type, .Kind):
 		return true

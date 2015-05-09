@@ -1,8 +1,8 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-final class DTermTests: XCTestCase {
+final class TermTests: XCTestCase {
 	func testHigherOrderConstruction() {
-		let expected = DTerm(.Pi(1, Box(.type), Box(DTerm(.Pi(0, Box(DTerm(.Variable(1))), Box(DTerm(.Variable(0))))))))
+		let expected = Term(.Pi(1, Box(.type), Box(Term(.Pi(0, Box(Term(.Variable(1))), Box(Term(.Variable(0))))))))
 		assert(identity, ==, expected)
 	}
 
@@ -15,18 +15,18 @@ final class DTermTests: XCTestCase {
 	}
 
 	func testProductTypesArePrintedWithAnX() {
-		assert(DTerm.pair(.type, const(.type)).typecheck().right?.description, ==, "(Type ✕ Type)")
+		assert(Term.pair(.type, const(.type)).typecheck().right?.description, ==, "(Type ✕ Type)")
 	}
 
 	func testEvaluation() {
-		let value = identity.typecheck().flatMap { DTerm.application(DTerm.application(identity, $0), identity).evaluate() }
+		let value = identity.typecheck().flatMap { Term.application(Term.application(identity, $0), identity).evaluate() }
 		assert(value.right, ==, identity)
 		assert(value.left, ==, nil)
 	}
 }
 
 
-private let identity = DTerm.lambda(.type) { A in .lambda(A, id) }
+private let identity = Term.lambda(.type) { A in .lambda(A, id) }
 
 
 import Assertions
