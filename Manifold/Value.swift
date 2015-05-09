@@ -16,6 +16,7 @@ public enum Value {
 	public func analysis<T>(
 		@noescape #ifKind: () -> T,
 		@noescape ifType: () -> T,
+		@noescape ifQuote: Int -> T,
 		@noescape ifPi: (Value, Value -> Value?) -> T,
 		@noescape ifSigma: (Value, Value -> Value?) -> T) -> T {
 		switch self {
@@ -23,6 +24,8 @@ public enum Value {
 			return ifKind()
 		case .Type:
 			return ifType()
+		case let .Quote(n):
+			return ifQuote(n)
 		case let .Pi(type, body):
 			return ifPi(type.value, body)
 		case let .Sigma(type, body):
@@ -33,12 +36,14 @@ public enum Value {
 	public func analysis<T>(
 		ifKind: (() -> T)? = nil,
 		ifType: (() -> T)? = nil,
+		ifQuote: (Int -> T)? = nil,
 		ifPi: ((Value, Value -> Value?) -> T)? = nil,
 		ifSigma: ((Value, Value -> Value?) -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifKind: { ifKind?() ?? otherwise() },
 			ifType: { ifType?() ?? otherwise() },
+			ifQuote: { ifQuote?($0) ?? otherwise() },
 			ifPi: { ifPi?($0) ?? otherwise() },
 			ifSigma: { ifSigma?($0) ?? otherwise() })
 	}
@@ -48,6 +53,7 @@ public enum Value {
 
 	case Kind
 	case Type
+	case Quote(Int)
 	case Pi(Box<Value>, Value -> Value?)
 	case Sigma(Box<Value>, Value -> Value?)
 }
