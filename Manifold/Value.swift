@@ -14,19 +14,19 @@ public enum Value {
 
 	// MARK: Destructors
 
-	var isType: Bool {
+	public var isType: Bool {
 		return analysis(
 			ifType: const(true),
 			otherwise: const(false))
 	}
 
-	var pi: (Value, Value -> Value?)? {
+	public var pi: (Value, Value -> Value?)? {
 		return analysis(
 			ifPi: unit,
 			otherwise: const(nil))
 	}
 
-	var sigma: (Value, Value -> Value?)? {
+	public var sigma: (Value, Value -> Value?)? {
 		return analysis(
 			ifSigma: unit,
 			otherwise: const(nil))
