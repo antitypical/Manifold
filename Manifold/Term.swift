@@ -220,12 +220,6 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	// MARK: Evaluation
 
-	public var isValue: Bool {
-		return expression.analysis(
-			ifApplication: const(false),
-			otherwise: const(true))
-	}
-
 	public func evaluate() -> Either<Error, Term> {
 		return evaluate([:])
 	}
