@@ -151,7 +151,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			ifSigma: { i, type, body -> Value? in
 				type.evaluate(environment)
 					.map { type in Value.Sigma(Box(type)) { body.evaluate(environment + [ i: $0 ]) } }
-		})
+			})
 	}
 
 
