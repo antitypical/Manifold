@@ -1,18 +1,5 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-// MARK: Constraint
-
-public func == (left: Constraint, right: Constraint) -> Bool {
-	switch (left, right) {
-	case let (.Equality(x1, y1), .Equality(x2, y2)):
-		return x1 == x2 && y1 == y2
-
-	default:
-		return false
-	}
-}
-
-
 // MARK: DTerm
 
 public func == (left: DTerm, right: DTerm) -> Bool {
