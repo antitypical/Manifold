@@ -26,6 +26,12 @@ public enum Value {
 			otherwise: const(nil))
 	}
 
+	var sigma: (Value, Value -> Value?)? {
+		return analysis(
+			ifSigma: unit,
+			otherwise: const(nil))
+	}
+
 
 	// MARK: Application
 
