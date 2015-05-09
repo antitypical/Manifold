@@ -3,11 +3,11 @@
 public enum Value {
 	// MARK: Application
 
-	public func apply(other: Value) -> Either<Error, Value> {
+	public func apply(other: Value) -> Value? {
 		return analysis(
-			ifPi: { _, f in Either.right(f(other)) },
-			ifSigma: { _, f in Either.right(f(other)) },
-			otherwise: const(Either.left("Cannot apply non-abstraction value \(self)")))
+			ifPi: { _, f in f(other) },
+			ifSigma: { _, f in f(other) },
+			otherwise: const(nil))
 	}
 
 
