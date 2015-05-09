@@ -19,15 +19,11 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 
 	public static func lambda(type: Term, _ f: Term -> Term) -> Term {
-		let body = f(variable(-1))
-		let (n, build) = repMax(body)
-		return pi(n + 1, type, build(variable(n + 1)))
+		return pi(0, type, f(variable(0)).quote(1))
 	}
 
 	public static func pair(type: Term, _ f: Term -> Term) -> Term {
-		let body = f(variable(-1))
-		let (n, build) = repMax(body)
-		return sigma(n + 1, type, build(variable(n + 1)))
+		return sigma(0, type, f(variable(0).quote(1)))
 	}
 
 	private static func variable(i: Int) -> Term {
@@ -42,27 +38,13 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 		return Term(.Sigma(variable, Box(type), Box(body)))
 	}
 
-	private static func repMax(term: Term) -> (Int, Term -> Term) {
-		return term.expression.analysis(
-			ifType: const(-1, const(term)),
-			ifVariable: { i in
-				return (i, { i == -1 ? $0 : term })
-			},
-			ifApplication: { a, b in
-				let (ma, builda) = repMax(a)
-				let (mb, buildb) = repMax(b)
-				return (max(ma, mb), { Term(.Application(Box(builda($0)), Box(buildb($0)))) })
-			},
-			ifPi: { i, t, b in
-				let (mt, buildt) = repMax(t)
-				let (mb, buildb) = repMax(b)
-				return (max(i, mt, mb), { Term(.Pi(i, Box(buildt($0)), Box(buildb($0)))) })
-			},
-			ifSigma: { i, a, b in
-				let (ma, builda) = repMax(a)
-				let (mb, buildb) = repMax(b)
-				return (max(i, ma, mb), { Term(.Sigma(i, Box(builda($0)), Box(buildb($0)))) })
-			})
+	private func quote(n: Int) -> Term {
+		return expression.analysis(
+			ifType: const(self),
+			ifVariable: { Term.variable(n - $0 - 1) },
+			ifApplication: { Term.application($0.quote(n), $1.quote(n)) },
+			ifPi: { Term.pi(n, $1.quote(n), $2.quote(n + 1)) },
+			ifSigma: { Term.sigma(n, $1.quote(n), $2.quote(n + 1)) })
 	}
 
 
