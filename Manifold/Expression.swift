@@ -33,7 +33,7 @@ public enum Expression<Recur> {
 		ifApplication: ((Recur, Recur) -> T)? = nil,
 		ifPi: ((Int, Recur, Recur) -> T)? = nil,
 		ifSigma: ((Int, Recur, Recur) -> T)? = nil,
-		otherwise: () -> T) -> T {
+		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifKind: { ifKind?() ?? otherwise() },
 			ifType: { ifType?() ?? otherwise() },
