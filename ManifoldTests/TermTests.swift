@@ -2,7 +2,7 @@
 
 final class TermTests: XCTestCase {
 	func testHigherOrderConstruction() {
-		let expected = Term(.Pi(1, Box(.type), Box(Term(.Pi(0, Box(Term(.Variable(1))), Box(Term(.Variable(0))))))))
+		let expected = Term(.Pi(0, Box(.type), Box(Term(.Pi(1, Box(Term(.Variable(0))), Box(Term(.Variable(1))))))))
 		assert(identity, ==, expected)
 	}
 
