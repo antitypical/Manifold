@@ -1,7 +1,7 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public enum Value {
-	// MARK: Construction
+	// MARK: Constructors
 
 	public static func pi(value: Value, _ f: Value -> Value) -> Value {
 		return .Pi(Box(value), f >>> unit)
