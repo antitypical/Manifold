@@ -22,6 +22,10 @@ final class TermTests: XCTestCase {
 		assert(identity.evaluate()?.quote, ==, identity)
 	}
 
+	func testTypeEvaluatesToItself() {
+		assert(Term.type.evaluate()?.quote, ==, Term.type)
+	}
+
 	func testEvaluation() {
 		let value = identity.typecheck().flatMap {
 			Term.application(Term.application(identity, $0.quote), identity).evaluate().map(Either.right)
