@@ -12,6 +12,15 @@ public enum Value {
 	}
 
 
+	// MARK: Destructors
+
+	var isType: Bool {
+		return analysis(
+			ifType: const(true),
+			otherwise: const(false))
+	}
+
+
 	// MARK: Application
 
 	public func apply(other: Value) -> Value? {
