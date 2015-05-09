@@ -220,6 +220,22 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	// MARK: Evaluation
 
+	public func evaluate(environment: [Int: Value]) -> Value {
+		return expression.analysis(
+			ifKind: const(.Kind),
+			ifType: const(.Type),
+			ifVariable: { environment[$0]! },
+			ifApplication: { a, b -> Value in
+				a.evaluate(environment).apply(b.evaluate(environment))!
+			},
+			ifPi: { i, type, body -> Value in
+				Value.Pi(Box(type.evaluate(environment))) { body.evaluate(environment + [ i: $0 ]) }
+			},
+			ifSigma: { i, type, body -> Value in
+				Value.Sigma(Box(type.evaluate(environment))) { body.evaluate(environment + [ i: $0 ]) }
+			})
+	}
+
 	public func evaluate() -> Either<Error, Term> {
 		return evaluate([:])
 	}
