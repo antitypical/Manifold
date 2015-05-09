@@ -7,7 +7,7 @@ public func == (left: Term, right: Term) -> Bool {
 }
 
 
-// MARK: DExpression
+// MARK: Expression
 
 public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Recur>) -> Bool {
 	switch (left, right) {
