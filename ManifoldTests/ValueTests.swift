@@ -10,7 +10,7 @@ final class ValueTests: XCTestCase {
 	}
 
 	func testQuotationMapsQuotedVariablesToBoundVariables() {
-		assert(Value.Free(.Quote(1)).quote, ==, Term(.Bound(-2)))
+		assert(Value.Free(.Quote(1)).quote, ==, Term(.Bound(1)))
 	}
 
 	func testQuotationMapsNestedBoundVariablesToBoundVariables() {
