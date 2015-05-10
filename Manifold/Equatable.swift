@@ -28,6 +28,20 @@ public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Re
 }
 
 
+// MARK: Name
+
+public func == (left: Name, right: Name) -> Bool {
+	switch (left, right) {
+	case let (.Local(x), .Local(y)):
+		return x == y
+	case let (.Quote(x), .Quote(y)):
+		return x == y
+	default:
+		return false
+	}
+}
+
+
 // MARK: Term
 
 public func == (left: Term, right: Term) -> Bool {

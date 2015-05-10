@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Name {
+public enum Name: Equatable {
 	// MARK: Destructors
 
 	public var value: Int {
