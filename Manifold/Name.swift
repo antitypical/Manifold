@@ -7,6 +7,10 @@ public enum Name: Hashable {
 		return analysis(ifLocal: id, ifQuote: id)
 	}
 
+	public static func value(name: Name) -> Int {
+		return name.value
+	}
+
 
 	// MARK: Analysis
 
