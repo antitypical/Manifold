@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Name: Equatable {
+public enum Name: Hashable {
 	// MARK: Destructors
 
 	public var value: Int {
@@ -11,6 +11,15 @@ public enum Name: Equatable {
 			return n
 		}
 	}
+
+
+	// MARK: Hashable
+
+	public var hashValue: Int {
+		return value
+	}
+
+
 	// MARK: Cases
 
 	case Local(Int)
