@@ -53,8 +53,9 @@ public enum Value {
 		return analysis(
 			ifType: const(.type),
 			ifBound: { Term(.Variable(n - $0 - 1)) },
-			ifPi: { type, f in Term(.Pi(n, Box(type.quote(n)), Box(f(.Bound(n))!.quote(n + 1)))) },
-			ifSigma: { type, f in Term(.Sigma(n, Box(type.quote(n)), Box(f(.Bound(n))!.quote(n + 1)))) })
+			ifFree: { Term(.Variable($0)) },
+			ifPi: { type, f in Term(.Pi(n, Box(type.quote(n)), Box(f(.Free(n))!.quote(n + 1)))) },
+			ifSigma: { type, f in Term(.Sigma(n, Box(type.quote(n)), Box(f(.Free(n))!.quote(n + 1)))) })
 	}
 
 
@@ -63,6 +64,7 @@ public enum Value {
 	public func analysis<T>(
 		@noescape #ifType: () -> T,
 		@noescape ifBound: Int -> T,
+		@noescape ifFree: Int -> T,
 		@noescape ifPi: (Value, Value -> Value?) -> T,
 		@noescape ifSigma: (Value, Value -> Value?) -> T) -> T {
 		switch self {
@@ -70,6 +72,8 @@ public enum Value {
 			return ifType()
 		case let .Bound(n):
 			return ifBound(n)
+		case let .Free(n):
+			return ifFree(n)
 		case let .Pi(type, body):
 			return ifPi(type.value, body)
 		case let .Sigma(type, body):
@@ -80,12 +84,14 @@ public enum Value {
 	public func analysis<T>(
 		ifType: (() -> T)? = nil,
 		ifBound: (Int -> T)? = nil,
+		ifFree: (Int -> T)? = nil,
 		ifPi: ((Value, Value -> Value?) -> T)? = nil,
 		ifSigma: ((Value, Value -> Value?) -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifType: { ifType?() ?? otherwise() },
 			ifBound: { ifBound?($0) ?? otherwise() },
+			ifFree: { ifFree?($0) ?? otherwise() },
 			ifPi: { ifPi?($0) ?? otherwise() },
 			ifSigma: { ifSigma?($0) ?? otherwise() })
 	}
@@ -95,6 +101,7 @@ public enum Value {
 
 	case Type
 	case Bound(Int)
+	case Free(Int)
 	case Pi(Box<Value>, Value -> Value?)
 	case Sigma(Box<Value>, Value -> Value?)
 }
