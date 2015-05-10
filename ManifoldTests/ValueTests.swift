@@ -9,8 +9,8 @@ final class ValueTests: XCTestCase {
 		assert(Value.pi(.Type) { Value.pi(.Type, const($0)) }.quote, ==, Term.lambda(.type) { x in Term.lambda(.type, const(x)) })
 	}
 
-	func testQuotationMapsBoundVariablesToBoundVariables() {
-		assert(Value.Bound(1).quote, ==, Term(.Bound(-2)))
+	func testQuotationMapsQuotedVariablesToBoundVariables() {
+		assert(Value.Free(.Quote(1)).quote, ==, Term(.Bound(-2)))
 	}
 
 	func testQuotationMapsNestedBoundVariablesToBoundVariables() {
