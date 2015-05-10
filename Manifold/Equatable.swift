@@ -1,9 +1,10 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-// MARK: Term
+// MARK: Error
 
-public func == (left: Term, right: Term) -> Bool {
-	return left.expression == right.expression
+public func == (left: Error, right: Error) -> Bool {
+	return reduce(lazy(zip(left.errors, right.errors))
+		.map(==), true) { $0 && $1 }
 }
 
 
@@ -27,9 +28,8 @@ public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Re
 }
 
 
-// MARK: Error
+// MARK: Term
 
-public func == (left: Error, right: Error) -> Bool {
-	return reduce(lazy(zip(left.errors, right.errors))
-		.map(==), true) { $0 && $1 }
+public func == (left: Term, right: Term) -> Bool {
+	return left.expression == right.expression
 }
