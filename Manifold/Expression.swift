@@ -6,6 +6,7 @@ public enum Expression<Recur> {
 	public func analysis<T>(
 		@noescape #ifType: () -> T,
 		@noescape ifBound: Int -> T,
+		@noescape ifFree: Int -> T,
 		@noescape ifApplication: (Recur, Recur) -> T,
 		@noescape ifPi: (Int, Recur, Recur) -> T,
 		@noescape ifSigma: (Int, Recur, Recur) -> T) -> T {
@@ -14,6 +15,8 @@ public enum Expression<Recur> {
 			return ifType()
 		case let .Bound(x):
 			return ifBound(x)
+		case let .Free(x):
+			return ifFree(x)
 		case let .Application(a, b):
 			return ifApplication(a.value, b.value)
 		case let .Pi(i, a, b):
@@ -26,6 +29,7 @@ public enum Expression<Recur> {
 	public func analysis<T>(
 		ifType: (() -> T)? = nil,
 		ifBound: (Int -> T)? = nil,
+		ifFree: (Int -> T)? = nil,
 		ifApplication: ((Recur, Recur) -> T)? = nil,
 		ifPi: ((Int, Recur, Recur) -> T)? = nil,
 		ifSigma: ((Int, Recur, Recur) -> T)? = nil,
@@ -33,6 +37,7 @@ public enum Expression<Recur> {
 		return analysis(
 			ifType: { ifType?() ?? otherwise() },
 			ifBound: { ifBound?($0) ?? otherwise() },
+			ifFree: { ifFree?($0) ?? otherwise() },
 			ifApplication: { ifApplication?($0) ?? otherwise() },
 			ifPi: { ifPi?($0) ?? otherwise() },
 			ifSigma: { ifSigma?($0) ?? otherwise() })
@@ -45,6 +50,7 @@ public enum Expression<Recur> {
 		return analysis(
 			ifType: { .Type },
 			ifBound: { .Bound($0) },
+			ifFree: { .Free($0) },
 			ifApplication: { .Application(Box(transform($0)), Box(transform($1))) },
 			ifPi: { .Pi($0, Box(transform($1)), Box(transform($2))) },
 			ifSigma: { .Sigma($0, Box(transform($1)), Box(transform($2))) })
@@ -55,6 +61,7 @@ public enum Expression<Recur> {
 
 	case Type
 	case Bound(Int)
+	case Free(Int)
 	case Application(Box<Recur>, Box<Recur>)
 	case Pi(Int, Box<Recur>, Box<Recur>) // (Πx:A)B where B can depend on x
 	case Sigma(Int, Box<Recur>, Box<Recur>) // (Σx:A)B where B can depend on x
