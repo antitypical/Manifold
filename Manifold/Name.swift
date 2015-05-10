@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Name: Hashable {
+public enum Name: Hashable, DebugPrintable {
 	// MARK: Destructors
 
 	public var value: Int {
@@ -23,6 +23,15 @@ public enum Name: Hashable {
 		case let .Quote(n):
 			return ifQuote(n)
 		}
+	}
+
+
+	// MARK: DebugPrintable
+
+	public var debugDescription: String {
+		return analysis(
+			ifLocal: { "Local(\($0))" },
+			ifQuote: { "Quote(\($0))" })
 	}
 
 
