@@ -19,19 +19,19 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 
 	public static func lambda(type: Term, _ f: Term -> Term) -> Term {
-		return pi(0, type, f(free(0)).quote(1)).quote
+		return pi(0, type, f(free(.Quote(0))).quote(1)).quote
 	}
 
 	public static func pair(type: Term, _ f: Term -> Term) -> Term {
-		return sigma(0, type, f(free(0).quote(1))).quote
+		return sigma(0, type, f(free(.Quote(0)).quote(1))).quote
 	}
 
 	private static func bound(i: Int) -> Term {
 		return Term(.Bound(i))
 	}
 
-	private static func free(i: Int) -> Term {
-		return Term(.Free(i))
+	private static func free(name: Name) -> Term {
+		return Term(.Free(name))
 	}
 
 	private static func pi(bound: Int, _ type: Term, _ body: Term) -> Term {
@@ -49,8 +49,8 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	private func quote(n: Int) -> Term {
 		return expression.analysis(
 			ifType: const(self),
-			ifBound: { Term.bound(n - $0 - 1) },
-			ifFree: { Term.bound($0) },
+			ifBound: { Term.bound($0) },
+			ifFree: { $0.analysis(ifLocal: Term.bound, ifQuote: { Term.bound(n - $0 - 1) }) },
 			ifApplication: { Term.application($0.quote(n), $1.quote(n)) },
 			ifPi: { Term.pi(n, $1.quote(n), $2.quote(n + 1)) },
 			ifSigma: { Term.sigma(n, $1.quote(n), $2.quote(n + 1)) })
@@ -108,11 +108,11 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			ifType: const(Either.right(.Type)),
 			ifBound: { i -> Either<Error, Value> in
 				environment[i].map(Either.right)
-					?? Either.left("unexpected free bound \(i)")
+					?? Either.left("unexpected free variable \(i)")
 			},
 			ifFree: { i -> Either<Error, Value> in
-				environment[i].map(Either.right)
-					?? Either.left("unexpected free bound \(i)")
+				environment[i.value].map(Either.right)
+					?? Either.left("unexpected free variable \(i)")
 			},
 			ifApplication: { a, b -> Either<Error, Value> in
 				a.typecheck(environment)
@@ -153,7 +153,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 		return expression.analysis(
 			ifType: const(.Type),
 			ifBound: { environment[$0] },
-			ifFree: { environment[$0] },
+			ifFree: { environment[$0.value] },
 			ifApplication: { a, b -> Value? in
 				(a.evaluate(environment) &&& b.evaluate(environment))
 					.flatMap { $0.apply($1) }
@@ -219,7 +219,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 		return expression.analysis(
 			ifType: const("Type"),
 			ifBound: alphabetize,
-			ifFree: alphabetize,
+			ifFree: Name.value >>> alphabetize,
 			ifApplication: { "(\($0.1)) (\($1.1))" },
 			ifPi: {
 				$2.0.freeBounds.contains($0)

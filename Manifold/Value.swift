@@ -54,7 +54,7 @@ public enum Value {
 			ifType: const(.type),
 			ifFree: {
 				$0.analysis(
-					ifLocal: { Term(.Free($0)) },
+					ifLocal: const(Term(.Free($0))),
 					ifQuote: { Term(.Bound(n - $0 - 1)) })
 			},
 			ifPi: { type, f in Term(.Pi(n, Box(type.quote(n)), Box(f(.Free(.Quote(n)))!.quote(n + 1)))) },
