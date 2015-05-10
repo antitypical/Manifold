@@ -90,12 +90,12 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	// MARK: Type-checking
 
-	public var freeBounds: Set<Int> {
+	public var freeVariables: Set<Int> {
 		return expression.analysis(
 			ifBound: { [ $0.0 ] },
-			ifApplication: { $0.freeBounds.union($1.freeBounds) },
-			ifPi: { i, type, body in type.freeBounds.union(body.freeBounds).subtract([ i ]) },
-			ifSigma: { i, type, body in type.freeBounds.union(body.freeBounds).subtract([ i ]) },
+			ifApplication: { $0.freeVariables.union($1.freeVariables) },
+			ifPi: { i, type, body in type.freeVariables.union(body.freeVariables).subtract([ i ]) },
+			ifSigma: { i, type, body in type.freeVariables.union(body.freeVariables).subtract([ i ]) },
 			otherwise: const([]))
 	}
 
@@ -218,12 +218,12 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			ifFree: Name.value >>> alphabetize,
 			ifApplication: { "(\($0.1)) (\($1.1))" },
 			ifPi: {
-				$2.0.freeBounds.contains($0)
+				$2.0.freeVariables.contains($0)
 					? "Π \(alphabetize($0)) : \($1.1) . \($2.1)"
 					: "(\($1.1)) → \($2.1)"
 			},
 			ifSigma: {
-				$2.0.freeBounds.contains($0)
+				$2.0.freeVariables.contains($0)
 					? "Σ \(alphabetize($0)) : \($1.1) . \($2.1)"
 					: "(\($1.1) ✕ \($2.1))"
 			})
