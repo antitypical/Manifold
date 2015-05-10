@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Value {
+public enum Value: DebugPrintable {
 	// MARK: Constructors
 
 	public static func pi(value: Value, _ f: Value -> Value) -> Value {
@@ -92,6 +92,17 @@ public enum Value {
 			ifFree: { ifFree?($0) ?? otherwise() },
 			ifPi: { ifPi?($0) ?? otherwise() },
 			ifSigma: { ifSigma?($0) ?? otherwise() })
+	}
+
+
+	// MARK: DebugPrintable
+
+	public var debugDescription: String {
+		return analysis(
+			ifType: const("Type"),
+			ifFree: toDebugString,
+			ifPi: { "(Π ? : \(toDebugString($0)) . \(toDebugString($1)))" },
+			ifSigma: { "(Σ ? : \(toDebugString($0)) . \(toDebugString($1)))" })
 	}
 
 
