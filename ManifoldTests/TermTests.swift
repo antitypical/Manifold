@@ -22,6 +22,10 @@ final class TermTests: XCTestCase {
 		assert(Term.type.typecheck().right?.quote, ==, Term.type)
 	}
 
+	func testTypeOfAbstractionIsAbstractionType() {
+		assert(Term.lambda(.type, id).typecheck().right?.quote, ==, Term(.Pi(0, Box(.type), Box(Term(.Bound(0))))))
+	}
+
 
 	func testBoundVariablesEvaluateToTheValueBoundInTheEnvironment() {
 		assert(Term(.Bound(2)).evaluate([ 2: .Type ])?.quote, ==, Term.type)
