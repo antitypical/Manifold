@@ -55,7 +55,7 @@ public enum Value: DebugPrintable {
 			ifFree: {
 				$0.analysis(
 					ifLocal: const(Term(.Free($0))),
-					ifQuote: { Term(.Bound(n - $0 - 1)) })
+					ifQuote: Term.bound)
 			},
 			ifPi: { type, f in Term(.Pi(n, Box(type.quote(n)), Box(f(.Free(.Quote(n)))!.quote(n + 1)))) },
 			ifSigma: { type, f in Term(.Sigma(n, Box(type.quote(n)), Box(f(.Free(.Quote(n)))!.quote(n + 1)))) })
