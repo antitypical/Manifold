@@ -135,7 +135,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 				return q == r
 					? Either.right(t)
 					: Either.left("type mismatch: expected \(self) : \(r), actually \(self) : \(q) in environment \(environment)")
-		}
+			}
 	}
 
 
