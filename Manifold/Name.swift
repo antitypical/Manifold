@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Name: Hashable, DebugPrintable {
+public enum Name: Hashable, DebugPrintable, Printable {
 	// MARK: Destructors
 
 	public var value: Int {
@@ -39,6 +39,13 @@ public enum Name: Hashable, DebugPrintable {
 
 	public var hashValue: Int {
 		return value
+	}
+
+
+	// MARK: Printable
+
+	public var description: String {
+		return toString(value)
 	}
 
 
