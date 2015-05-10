@@ -26,11 +26,11 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 		return sigma(0, type, f(free(.Quote(0)).quote(1)))
 	}
 
-	private static func bound(i: Int) -> Term {
+	static func bound(i: Int) -> Term {
 		return Term(.Bound(i))
 	}
 
-	private static func free(name: Name) -> Term {
+	static func free(name: Name) -> Term {
 		return Term(.Free(name))
 	}
 
