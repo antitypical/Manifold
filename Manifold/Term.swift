@@ -124,17 +124,11 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			},
 			ifPi: { i, t, b -> Either<Error, Value> in
 				t.typecheck(environment, .Type)
-					.flatMap { t in
-						b.typecheck(environment + [ i: t ])
-							.map { b in Value.pi(t) { _ in b } }
-					}
+					.map { t in Value.Pi(Box(t)) { b.typecheck(environment + [ i: $0 ], t).right } }
 			},
 			ifSigma: { i, t, b -> Either<Error, Value> in
 				t.typecheck(environment, .Type)
-					.flatMap { t in
-						b.typecheck(environment + [ i: t ])
-							.map { b in Value.sigma(t) { _ in b } }
-					}
+					.map { t in Value.Sigma(Box(t)) { b.typecheck(environment + [ i: $0 ], t).right } }
 			})
 	}
 
