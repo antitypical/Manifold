@@ -19,11 +19,11 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 
 	public static func lambda(type: Term, _ f: Term -> Term) -> Term {
-		return pi(0, type, f(free(.Quote(0))).quote(1)).quote
+		return pi(0, type, f(free(.Quote(0))).quote(1))
 	}
 
 	public static func pair(type: Term, _ f: Term -> Term) -> Term {
-		return sigma(0, type, f(free(.Quote(0)).quote(1))).quote
+		return sigma(0, type, f(free(.Quote(0)).quote(1)))
 	}
 
 	private static func bound(i: Int) -> Term {
@@ -40,10 +40,6 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	private static func sigma(bound: Int, _ type: Term, _ body: Term) -> Term {
 		return Term(.Sigma(bound, Box(type), Box(body)))
-	}
-
-	private var quote: Term {
-		return quote(0)
 	}
 
 	private func quote(n: Int) -> Term {
