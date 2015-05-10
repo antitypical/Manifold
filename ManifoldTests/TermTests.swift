@@ -28,31 +28,28 @@ final class TermTests: XCTestCase {
 
 
 	func testBoundVariablesEvaluateToTheValueBoundInTheEnvironment() {
-		assert(Term(.Bound(2)).evaluate([ 2: .Type ])?.quote, ==, Term.type)
+		assert(Term(.Bound(2)).evaluate([ 2: .Type ]).right?.quote, ==, Term.type)
 	}
 
 	func testTrivialAbstractionEvaluatesToItself() {
 		let lambda = Term.lambda(.type, id)
-		assert(lambda.evaluate()?.quote, ==, lambda)
+		assert(lambda.evaluate().right?.quote, ==, lambda)
 	}
 
 	func testAbstractionEvaluatesToItself() {
-		assert(identity.evaluate()?.quote, ==, identity)
+		assert(identity.evaluate().right?.quote, ==, identity)
 	}
 
 	func testTypeEvaluatesToItself() {
-		assert(Term.type.evaluate()?.quote, ==, Term.type)
+		assert(Term.type.evaluate().right?.quote, ==, Term.type)
 	}
 
 	func testApplicationEvaluation() {
-		assert(Term.application(Term.lambda(.type, id), .type).evaluate()?.quote, ==, .type)
+		assert(Term.application(Term.lambda(.type, id), .type).evaluate().right?.quote, ==, .type)
 	}
 
 	func testEvaluation() {
-		let value = identity.typecheck().flatMap {
-			Term.application(Term.application(identity, $0.quote), identity).evaluate().map(Either.right)
-				?? Either.left("evaluation returned nil for some reason")
-		}
+		let value = identity.typecheck().flatMap { Term.application(Term.application(identity, $0.quote), identity).evaluate() }
 		assert(value.right?.quote, ==, identity)
 		assert(value.left, ==, nil)
 	}

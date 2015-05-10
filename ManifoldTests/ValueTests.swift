@@ -14,13 +14,14 @@ final class ValueTests: XCTestCase {
 	}
 
 	func testQuotationMapsNestedBoundVariablesToBoundVariables() {
-		assert(Value.Pi(Box(.Type)) { _ in Value.Pi(Box(.Type), unit) }.quote, ==, Term(.Pi(0, Box(.type), Box(Term(.Pi(1, Box(.type), Box(Term(.Bound(1)))))))))
+		assert(Value.Pi(Box(.Type)) { _ in Either.right(Value.Pi(Box(.Type), Either.right)) }.quote, ==, Term(.Pi(0, Box(.type), Box(Term(.Pi(1, Box(.type), Box(Term(.Bound(1)))))))))
 	}
 }
 
 
 import Assertions
 import Box
+import Either
 import Manifold
 import Prelude
 import XCTest

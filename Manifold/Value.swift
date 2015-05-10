@@ -4,11 +4,11 @@ public enum Value: DebugPrintable {
 	// MARK: Constructors
 
 	public static func pi(value: Value, _ f: Value -> Value) -> Value {
-		return .Pi(Box(value), f >>> unit)
+		return .Pi(Box(value), f >>> Either.right)
 	}
 
 	public static func sigma(value: Value, _ f: Value -> Value) -> Value {
-		return .Sigma(Box(value), f >>> unit)
+		return .Sigma(Box(value), f >>> Either.right)
 	}
 
 
@@ -20,13 +20,13 @@ public enum Value: DebugPrintable {
 			otherwise: const(false))
 	}
 
-	public var pi: (Value, Value -> Value?)? {
+	public var pi: (Value, Value -> Either<Error, Value>)? {
 		return analysis(
 			ifPi: unit,
 			otherwise: const(nil))
 	}
 
-	public var sigma: (Value, Value -> Value?)? {
+	public var sigma: (Value, Value -> Either<Error, Value>)? {
 		return analysis(
 			ifSigma: unit,
 			otherwise: const(nil))
@@ -35,11 +35,11 @@ public enum Value: DebugPrintable {
 
 	// MARK: Application
 
-	public func apply(other: Value) -> Value? {
+	public func apply(other: Value) -> Either<Error, Value> {
 		return analysis(
 			ifPi: { _, f in f(other) },
 			ifSigma: { _, f in f(other) },
-			otherwise: const(nil))
+			otherwise: const(Either.left("illegal application of \(self) to \(other)")))
 	}
 
 
@@ -57,8 +57,8 @@ public enum Value: DebugPrintable {
 					ifLocal: const(Term.free($0)),
 					ifQuote: Term.bound)
 			},
-			ifPi: { type, f in Term(.Pi(n, Box(type.quote(n)), Box(f(.Free(.Quote(n)))!.quote(n + 1)))) },
-			ifSigma: { type, f in Term(.Sigma(n, Box(type.quote(n)), Box(f(.Free(.Quote(n)))!.quote(n + 1)))) })
+			ifPi: { type, f in Term(.Pi(n, Box(type.quote(n)), Box(f(.Free(.Quote(n))).right!.quote(n + 1)))) },
+			ifSigma: { type, f in Term(.Sigma(n, Box(type.quote(n)), Box(f(.Free(.Quote(n))).right!.quote(n + 1)))) })
 	}
 
 
@@ -67,8 +67,8 @@ public enum Value: DebugPrintable {
 	public func analysis<T>(
 		@noescape #ifType: () -> T,
 		@noescape ifFree: Name -> T,
-		@noescape ifPi: (Value, Value -> Value?) -> T,
-		@noescape ifSigma: (Value, Value -> Value?) -> T) -> T {
+		@noescape ifPi: (Value, Value -> Either<Error, Value>) -> T,
+		@noescape ifSigma: (Value, Value -> Either<Error, Value>) -> T) -> T {
 		switch self {
 		case .Type:
 			return ifType()
@@ -84,8 +84,8 @@ public enum Value: DebugPrintable {
 	public func analysis<T>(
 		ifType: (() -> T)? = nil,
 		ifFree: (Name -> T)? = nil,
-		ifPi: ((Value, Value -> Value?) -> T)? = nil,
-		ifSigma: ((Value, Value -> Value?) -> T)? = nil,
+		ifPi: ((Value, Value -> Either<Error, Value>) -> T)? = nil,
+		ifSigma: ((Value, Value -> Either<Error, Value>) -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifType: { ifType?() ?? otherwise() },
@@ -110,8 +110,8 @@ public enum Value: DebugPrintable {
 
 	case Type
 	case Free(Name)
-	case Pi(Box<Value>, Value -> Value?)
-	case Sigma(Box<Value>, Value -> Value?)
+	case Pi(Box<Value>, Value -> Either<Error, Value>)
+	case Sigma(Box<Value>, Value -> Either<Error, Value>)
 }
 
 

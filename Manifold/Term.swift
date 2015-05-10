@@ -114,21 +114,17 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 				a.typecheck(environment)
 					.flatMap { t in
 						t.analysis(
-							ifPi: { v, f in
-								b.typecheck(environment, v).flatMap { u in
-									f(u).map(Either.right) ?? Either.left("application of \(t) to \(u) failed or something?")
-								}
-							},
+							ifPi: { v, f in b.typecheck(environment, v).flatMap(f) },
 							otherwise: const(Either.left("illegal application of \(a) : \(t) to \(b)")))
 					}
 			},
 			ifPi: { i, t, b -> Either<Error, Value> in
 				t.typecheck(environment, .Type)
-					.map { t in Value.Pi(Box(t)) { b.typecheck(environment + [ i: $0 ], t).right } }
+					.map { t in Value.Pi(Box(t)) { b.typecheck(environment + [ i: $0 ], t) } }
 			},
 			ifSigma: { i, t, b -> Either<Error, Value> in
 				t.typecheck(environment, .Type)
-					.map { t in Value.Sigma(Box(t)) { b.typecheck(environment + [ i: $0 ], t).right } }
+					.map { t in Value.Sigma(Box(t)) { b.typecheck(environment + [ i: $0 ], t) } }
 			})
 	}
 
@@ -138,27 +134,31 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 				let (q, r) = (t.quote, against.quote)
 				return q == r
 					? Either.right(t)
-					: Either.left("type mismatch: got \(q) for \(self) but expected \(r)")
+					: Either.left("type mismatch: expected \(self) : \(r), actually \(self) : \(q) in environment \(environment)")
 		}
 	}
 
 
 	// MARK: Evaluation
 
-	public func evaluate(_ environment: [Int: Value] = [:]) -> Value? {
+	public func evaluate(_ environment: [Int: Value] = [:]) -> Either<Error, Value> {
 		return expression.analysis(
-			ifType: const(.Type),
-			ifBound: { environment[$0] },
-			ifFree: { environment[$0.value] },
-			ifApplication: { a, b -> Value? in
+			ifType: const(Either.right(.Type)),
+			ifBound: { i -> Either<Error, Value> in
+				environment[i].map(Either.right) ?? Either.left("unexpected free variable \(i)")
+			},
+			ifFree: { i -> Either<Error, Value> in
+				environment[i.value].map(Either.right) ?? Either.left("unexpected free variable \(i)")
+			},
+			ifApplication: { a, b -> Either<Error, Value> in
 				(a.evaluate(environment) &&& b.evaluate(environment))
 					.flatMap { $0.apply($1) }
 			},
-			ifPi: { i, type, body -> Value? in
+			ifPi: { i, type, body -> Either<Error, Value> in
 				type.evaluate(environment)
 					.map { type in Value.Pi(Box(type)) { body.evaluate(environment + [ i: $0 ]) } }
 			},
-			ifSigma: { i, type, body -> Value? in
+			ifSigma: { i, type, body -> Either<Error, Value> in
 				type.evaluate(environment)
 					.map { type in Value.Sigma(Box(type)) { body.evaluate(environment + [ i: $0 ]) } }
 			})
