@@ -19,29 +19,29 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 
 	public static func lambda(type: Term, _ f: Term -> Term) -> Term {
-		return pi(0, type, f(variable(0)).quote(1))
+		return pi(0, type, f(bound(0)).quote(1))
 	}
 
 	public static func pair(type: Term, _ f: Term -> Term) -> Term {
-		return sigma(0, type, f(variable(0).quote(1)))
+		return sigma(0, type, f(bound(0).quote(1)))
 	}
 
-	private static func variable(i: Int) -> Term {
-		return Term(.Variable(i))
+	private static func bound(i: Int) -> Term {
+		return Term(.Bound(i))
 	}
 
-	private static func pi(variable: Int, _ type: Term, _ body: Term) -> Term {
-		return Term(.Pi(variable, Box(type), Box(body)))
+	private static func pi(bound: Int, _ type: Term, _ body: Term) -> Term {
+		return Term(.Pi(bound, Box(type), Box(body)))
 	}
 
-	private static func sigma(variable: Int, _ type: Term, _ body: Term) -> Term {
-		return Term(.Sigma(variable, Box(type), Box(body)))
+	private static func sigma(bound: Int, _ type: Term, _ body: Term) -> Term {
+		return Term(.Sigma(bound, Box(type), Box(body)))
 	}
 
 	private func quote(n: Int) -> Term {
 		return expression.analysis(
 			ifType: const(self),
-			ifVariable: { Term.variable(n - $0 - 1) },
+			ifBound: { Term.bound(n - $0 - 1) },
 			ifApplication: { Term.application($0.quote(n), $1.quote(n)) },
 			ifPi: { Term.pi(n, $1.quote(n), $2.quote(n + 1)) },
 			ifSigma: { Term.sigma(n, $1.quote(n), $2.quote(n + 1)) })
@@ -56,9 +56,9 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			otherwise: const(false))
 	}
 
-	public var variable: Int? {
+	public var bound: Int? {
 		return expression.analysis(
-			ifVariable: unit,
+			ifBound: unit,
 			otherwise: const(nil))
 	}
 
@@ -85,21 +85,21 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	// MARK: Type-checking
 
-	public var freeVariables: Set<Int> {
+	public var freeBounds: Set<Int> {
 		return expression.analysis(
-			ifVariable: { [ $0.0 ] },
-			ifApplication: { $0.freeVariables.union($1.freeVariables) },
-			ifPi: { i, type, body in type.freeVariables.union(body.freeVariables).subtract([ i ]) },
-			ifSigma: { i, type, body in type.freeVariables.union(body.freeVariables).subtract([ i ]) },
+			ifBound: { [ $0.0 ] },
+			ifApplication: { $0.freeBounds.union($1.freeBounds) },
+			ifPi: { i, type, body in type.freeBounds.union(body.freeBounds).subtract([ i ]) },
+			ifSigma: { i, type, body in type.freeBounds.union(body.freeBounds).subtract([ i ]) },
 			otherwise: const([]))
 	}
 
 	public func typecheck(_ environment: [Int: Value] = [:]) -> Either<Error, Value> {
 		return expression.analysis(
 			ifType: const(Either.right(.Type)),
-			ifVariable: { i -> Either<Error, Value> in
+			ifBound: { i -> Either<Error, Value> in
 				environment[i].map(Either.right)
-					?? Either.left("unexpected free variable \(i)")
+					?? Either.left("unexpected free bound \(i)")
 			},
 			ifApplication: { a, b -> Either<Error, Value> in
 				a.typecheck(environment)
@@ -139,7 +139,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	public func evaluate(_ environment: [Int: Value] = [:]) -> Value? {
 		return expression.analysis(
 			ifType: const(.Type),
-			ifVariable: { environment[$0] },
+			ifBound: { environment[$0] },
 			ifApplication: { a, b -> Value? in
 				(a.evaluate(environment) &&& b.evaluate(environment))
 					.flatMap { $0.apply($1) }
@@ -164,7 +164,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	private static func toDebugString(expression: Expression<String>) -> String {
 		return expression.analysis(
 			ifType: const("Type"),
-			ifVariable: { "\($0)" },
+			ifBound: { "\($0)" },
 			ifApplication: { "(\($0)) (\($1))" },
 			ifPi: { "Π \($0) : \($1) . \($2)" },
 			ifSigma: { "Σ \($0) : \($1) . \($2)" })
@@ -183,7 +183,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	public var hashValue: Int {
 		return expression.analysis(
 			ifType: { 3 },
-			ifVariable: { 5 ^ $0.hashValue },
+			ifBound: { 5 ^ $0.hashValue },
 			ifApplication: { 7 ^ $0.hashValue ^ $1.hashValue },
 			ifPi: { 11 ^ $0.hashValue ^ $1.hashValue ^ $2.hashValue },
 			ifSigma: { 13 ^ $0.hashValue ^ $1.hashValue ^ $2.hashValue })
@@ -202,15 +202,15 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 		let alphabetize: Int -> String = { index in Swift.toString(Term.alphabet[advance(Term.alphabet.startIndex, index)]) }
 		return expression.analysis(
 			ifType: const("Type"),
-			ifVariable: alphabetize,
+			ifBound: alphabetize,
 			ifApplication: { "(\($0.1)) (\($1.1))" },
 			ifPi: {
-				$2.0.freeVariables.contains($0)
+				$2.0.freeBounds.contains($0)
 					? "Π \(alphabetize($0)) : \($1.1) . \($2.1)"
 					: "(\($1.1)) → \($2.1)"
 			},
 			ifSigma: {
-				$2.0.freeVariables.contains($0)
+				$2.0.freeBounds.contains($0)
 					? "Σ \(alphabetize($0)) : \($1.1) . \($2.1)"
 					: "(\($1.1) ✕ \($2.1))"
 			})

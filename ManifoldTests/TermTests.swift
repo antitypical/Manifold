@@ -2,7 +2,7 @@
 
 final class TermTests: XCTestCase {
 	func testHigherOrderConstruction() {
-		let expected = Term(.Pi(0, Box(.type), Box(Term(.Pi(1, Box(Term(.Variable(0))), Box(Term(.Variable(1))))))))
+		let expected = Term(.Pi(0, Box(.type), Box(Term(.Pi(1, Box(Term(.Bound(0))), Box(Term(.Bound(1))))))))
 		assert(identity, ==, expected)
 	}
 
@@ -19,8 +19,8 @@ final class TermTests: XCTestCase {
 	}
 
 
-	func testVariablesEvaluateToTheValueBoundInTheEnvironment() {
-		assert(Term(.Variable(2)).evaluate([2: .Type])?.quote, ==, Term.type)
+	func testBoundVariablesEvaluateToTheValueBoundInTheEnvironment() {
+		assert(Term(.Bound(2)).evaluate([2: .Type])?.quote, ==, Term.type)
 	}
 
 	func testTrivialAbstractionEvaluatesToItself() {

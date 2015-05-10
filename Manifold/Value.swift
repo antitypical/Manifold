@@ -52,8 +52,8 @@ public enum Value {
 	private func quote(n: Int) -> Term {
 		return analysis(
 			ifType: const(.type),
-			ifBound: { Term(.Variable(n - $0 - 1)) },
-			ifFree: { Term(.Variable($0)) },
+			ifBound: { Term(.Bound(n - $0 - 1)) },
+			ifFree: { Term(.Bound($0)) },
 			ifPi: { type, f in Term(.Pi(n, Box(type.quote(n)), Box(f(.Free(n))!.quote(n + 1)))) },
 			ifSigma: { type, f in Term(.Sigma(n, Box(type.quote(n)), Box(f(.Free(n))!.quote(n + 1)))) })
 	}

@@ -9,12 +9,12 @@ final class ValueTests: XCTestCase {
 		assert(Value.pi(.Type) { Value.pi(.Type, const($0)) }.quote, ==, Term.lambda(.type) { x in Term.lambda(.type, const(x)) })
 	}
 
-	func testQuotationMapsBoundVariablesToVariables() {
-		assert(Value.Bound(1).quote, ==, Term(.Variable(-2)))
+	func testQuotationMapsBoundVariablesToBoundVariables() {
+		assert(Value.Bound(1).quote, ==, Term(.Bound(-2)))
 	}
 
-	func testQuotationMapsNestedBoundVariablesToVariables() {
-		assert(Value.Pi(Box(.Type)) { _ in Value.Pi(Box(.Type), unit) }.quote, ==, Term(.Pi(0, Box(.type), Box(Term(.Pi(1, Box(.type), Box(Term(.Variable(1)))))))))
+	func testQuotationMapsNestedBoundVariablesToBoundVariables() {
+		assert(Value.Pi(Box(.Type)) { _ in Value.Pi(Box(.Type), unit) }.quote, ==, Term(.Pi(0, Box(.type), Box(Term(.Pi(1, Box(.type), Box(Term(.Bound(1)))))))))
 	}
 }
 
