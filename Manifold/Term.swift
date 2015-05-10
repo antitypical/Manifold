@@ -114,7 +114,11 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 				a.typecheck(environment)
 					.flatMap { t in
 						t.analysis(
-							ifPi: { v, f in b.typecheck(environment, v).map { _ in b.evaluate().flatMap(f)! } },
+							ifPi: { v, f in
+								b.typecheck(environment, v).flatMap { u in
+									f(u).map(Either.right) ?? Either.left("application of \(t) to \(u) failed or something?")
+								}
+							},
 							otherwise: const(Either.left("illegal application of \(a) : \(t) to \(b)")))
 					}
 			},
