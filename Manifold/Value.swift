@@ -57,8 +57,16 @@ public enum Value: DebugPrintable {
 					ifLocal: const(Term.free($0)),
 					ifQuote: Term.bound)
 			},
-			ifPi: { type, f in Term(.Pi(n, Box(type.quote(n)), Box(f(.Free(.Quote(n))).right!.quote(n + 1)))) },
-			ifSigma: { type, f in Term(.Sigma(n, Box(type.quote(n)), Box(f(.Free(.Quote(n))).right!.quote(n + 1)))) })
+			ifPi: { type, f in
+				f(.Free(.Quote(n))).either(
+					ifLeft: { x in fatalError("\(toString(x)) in \(self)") ; return Term.type },
+					ifRight: { Term(Expression.Pi(n, Box(type.quote(n)), Box($0.quote(n + 1)))) })
+			},
+			ifSigma: { type, f in
+				f(.Free(.Quote(n))).either(
+					ifLeft: { x in fatalError("\(toString(x)) in \(self)") ; return Term.type },
+					ifRight: { Term(Expression.Sigma(n, Box(type.quote(n)), Box($0.quote(n + 1)))) })
+			})
 	}
 
 
