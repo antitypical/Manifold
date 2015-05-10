@@ -54,7 +54,7 @@ public enum Value: DebugPrintable {
 			ifType: const(.type),
 			ifFree: {
 				$0.analysis(
-					ifLocal: const(Term(.Free($0))),
+					ifLocal: const(Term.free($0)),
 					ifQuote: Term.bound)
 			},
 			ifPi: { type, f in Term(.Pi(n, Box(type.quote(n)), Box(f(.Free(.Quote(n)))!.quote(n + 1)))) },
