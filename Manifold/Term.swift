@@ -127,8 +127,9 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			},
 			ifSigma: { i, t, b -> Either<Error, Value> in
 				t.typecheck(environment, .Type)
-					.flatMap { _ in
-						b.typecheck(environment + [ i: t.evaluate(environment)! ])
+					.flatMap { t in
+						b.typecheck(environment + [ i: t ])
+							.map { b in Value.sigma(t) { _ in b } }
 					}
 			})
 	}
