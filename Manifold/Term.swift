@@ -49,7 +49,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	private func quote(n: Int) -> Term {
 		return expression.analysis(
 			ifType: const(self),
-			ifBound: { Term.bound($0) },
+			ifBound: Term.bound,
 			ifFree: { $0.analysis(ifLocal: Term.bound, ifQuote: { Term.bound(n - $0 - 1) }) },
 			ifApplication: { Term.application($0.quote(n), $1.quote(n)) },
 			ifPi: { Term.pi(n, $1.quote(n), $2.quote(n + 1)) },
