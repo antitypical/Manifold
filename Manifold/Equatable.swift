@@ -16,6 +16,8 @@ public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Re
 		return true
 	case let (.Bound(m), .Bound(n)):
 		return m == n
+	case let (.Free(m), .Free(n)):
+		return m == n
 	case let (.Application(t1, t2), .Application(u1, u2)):
 		return t1.value == u1.value && t2.value == u2.value
 	case let (.Pi(i, t, a), .Pi(j, u, b)):
