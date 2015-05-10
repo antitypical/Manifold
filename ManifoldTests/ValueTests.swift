@@ -6,7 +6,7 @@ final class ValueTests: XCTestCase {
 	}
 
 	func testNestedQuotation() {
-		assert(Value.pi(.Type) { Value.pi(.Type, const($0)) }.quote, ==, Term.lambda(.type) { Term.lambda(.type, const($0)) })
+		assert(Value.pi(.Type) { Value.pi(.Type, const($0)) }.quote, ==, Term.lambda(.type) { x in Term.lambda(.type, const(x)) })
 	}
 
 	func testQuotationMapsBoundVariablesToVariables() {
