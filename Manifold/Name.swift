@@ -4,11 +4,20 @@ public enum Name: Hashable {
 	// MARK: Destructors
 
 	public var value: Int {
+		return analysis(ifLocal: id, ifQuote: id)
+	}
+
+
+	// MARK: Analysis
+
+	public func analysis<T>(
+		@noescape #ifLocal: Int -> T,
+		@noescape ifQuote: Int -> T) -> T {
 		switch self {
 		case let .Local(n):
-			return n
+			return ifLocal(n)
 		case let .Quote(n):
-			return n
+			return ifQuote(n)
 		}
 	}
 
@@ -25,3 +34,6 @@ public enum Name: Hashable {
 	case Local(Int)
 	case Quote(Int)
 }
+
+
+import Prelude
