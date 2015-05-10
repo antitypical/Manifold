@@ -7,12 +7,12 @@ public enum Name {
 		switch self {
 		case let .Local(n):
 			return n
-		case let .Free(n):
+		case let .Quote(n):
 			return n
 		}
 	}
 	// MARK: Cases
 
 	case Local(Int)
-	case Free(Int)
+	case Quote(Int)
 }
