@@ -20,7 +20,7 @@ final class TermTests: XCTestCase {
 
 
 	func testBoundVariablesEvaluateToTheValueBoundInTheEnvironment() {
-		assert(Term(.Bound(2)).evaluate([2: .Type])?.quote, ==, Term.type)
+		assert(Term(.Bound(2)).evaluate([ 2: .Type ])?.quote, ==, Term.type)
 	}
 
 	func testTrivialAbstractionEvaluatesToItself() {
