@@ -1,112 +1,72 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 final class TermTests: XCTestCase {
-	func testVariableTypesHaveOneFreeVariable() {
-		let variable = Variable()
-		assertEqual(Term(variable).freeVariables, Set([ variable ]))
+	func testTrivialHigherOrderConstruction() {
+		assert(Value.pi(.Type, id).quote, ==, Term(.Pi(0, Box(.type), Box(Term(.Bound(0))))))
 	}
 
-	func testFunctionTypesDistributeFreeVariables() {
-		let variable = Variable()
-		assertEqual(Term.function(Term(variable), Term(variable)).freeVariables, Set([ variable ]))
+	func testHigherOrderConstruction() {
+		let expected = Term(.Pi(0, Box(.type), Box(Term(.Pi(1, Box(Term(.Bound(0))), Box(Term(.Bound(1))))))))
+		assert(identity, ==, expected)
 	}
 
-	func testFreeVariablesIncludeTypeFreeVariables() {
-		let variable = Variable()
-		assertEqual(Term.forall([], Term(variable)).freeVariables, Set([ variable ]))
+	func testTypechecking() {
+		assert(identity.typecheck().right?.quote, ==, Value.pi(.Type, const(.pi(.Type, const(.Type)))).quote)
 	}
 
-	func testFreeVariablesExcludeBoundVariables() {
-		let (a, b) = (Variable(), Variable())
-		assertEqual(Term.forall([ a ], Term.function(Term(a), Term(b))).freeVariables, Set([ b ]))
+	func testFunctionTypesArePrintedWithAnArrow() {
+		assert(identity.typecheck().right?.quote.description, ==, "(Type) → (Type) → Type")
 	}
 
-
-	func testVariableTypesPrintAsSubscriptsOfTau() {
-		let t = Term(1234567890)
-		assert(t.description, ==, "τ₁₂₃₄₅₆₇₈₉₀")
+	func testProductTypesArePrintedWithAnX() {
+		assert(Value.sigma(.Type, const(.Type)).quote.typecheck().right?.quote.description, ==, "(Type ✕ Type)")
 	}
 
-	func testFunctionTypesPrintWithArrow() {
-		let t: Term = .function(.Unit, .Unit)
-		assert(t.description, ==, "Unit → Unit")
+	func testTypeOfTypeIsType() {
+		assert(Term.type.typecheck().right?.quote, ==, Term.type)
 	}
 
-	func testFunctionTypesParenthesizeParameterFunctions() {
-		let t: Term = .function(.function(.Unit, .Unit), .Unit)
-		assert(t.description, ==, "(Unit → Unit) → Unit")
-	}
-
-	func testFunctionTypesParenthesizeQuantifiedParameterFunctions() {
-		let t: Term = .function(.forall([ 0 ], .function(Term(0), .Unit)), .Unit)
-		assert(t.description, ==, "(∀{α₀}.α₀ → Unit) → Unit")
-	}
-
-	func testFunctionTypesDoNotParenthesizeReturnedFunctions() {
-		let t: Term = .function(.Unit, .function(.Unit, .Unit))
-		assert(t.description, ==, "Unit → Unit → Unit")
-	}
-
-	func testUniversalTypesPrintWithQuantifier() {
-		let t = Term.forall([ 1, 2 ], .function(Term(1), .function(Term(2), Term(3))))
-		assert(t.description, ==, "∀{α₁,α₂}.α₁ → α₂ → τ₃")
+	func testTypeOfAbstractionIsAbstractionType() {
+		assert(Value.pi(.Type, id).quote.typecheck().right?.quote, ==, Term(.Pi(0, Box(.type), Box(.type))))
 	}
 
 
-	// MARK: Arity
-
-	func testUnitArityIsZero() {
-		assert(Term.Unit.arity, ==, 0)
+	func testBoundVariablesEvaluateToTheValueBoundInTheEnvironment() {
+		assert(Term(.Bound(2)).evaluate([ 2: .Type ]).right?.quote, ==, Term.type)
 	}
 
-	func testSumArityIsZero() {
-		assert(Term.Bool.arity, ==, 0)
+	func testTrivialAbstractionEvaluatesToItself() {
+		let lambda = Value.pi(.Type, id).quote
+		assert(lambda.evaluate().right?.quote, ==, lambda)
 	}
 
-	func testUnaryFunctionArity() {
-		assert(Term.function(.Unit, .Unit).arity, ==, 1)
+	func testAbstractionEvaluatesToItself() {
+		assert(identity.evaluate().right?.quote, ==, identity)
 	}
 
-	func testBinaryFunctionArity() {
-		assert(Term.function(.Unit, .function(.Unit, .Unit)).arity, ==, 2)
+	func testTypeEvaluatesToItself() {
+		assert(Term.type.evaluate().right?.quote, ==, Term.type)
 	}
 
-	func testHigherOrderFunctionArity() {
-		assert(Term.function(.function(.Unit, .Unit), .Unit).arity, ==, 1)
+	func testApplicationEvaluation() {
+		assert(Term.application(Value.pi(.Type, id).quote, .type).evaluate().right?.quote, ==, .type)
 	}
 
-	func testUniversalTermArity() {
-		assert(Term.forall([ 0 ], Term(0)).arity, ==, 0)
-	}
-
-	func testUniversalFunctionArity() {
-		assert(Term.forall([ 0 ], .function(Term(0), Term(0))).arity, ==, 1)
-	}
-
-
-	// MARK: Parameters
-
-	func testUnitParametersAreEmpty() {
-		assert(Term.Unit.parameters, ==, [])
-	}
-
-	func testUnaryFunctionParameters() {
-		assert(Term.function(.Unit, .Unit).parameters, ==, [.Unit])
-	}
-
-	func testBinaryFunctionParameters() {
-		assert(Term.function(.Unit, .function(.Unit, .Unit)).parameters, ==, [.Unit, .Unit])
-	}
-
-	func testHigherOrderFunctionParameters() {
-		assert(Term.function(.function(.Unit, .Unit), .Unit).parameters, ==, [.function(.Unit, .Unit)])
+	func testEvaluation() {
+		let value = identity.typecheck().flatMap { Term.application(Term.application(identity, $0.quote), identity).evaluate() }
+		assert(value.right?.quote, ==, identity)
+		assert(value.left, ==, nil)
 	}
 }
 
 
-// MARK: - Imports
+private let identity = Value.pi(.Type) { A in .pi(A, id) }.quote
+private let constant = Value.pi(.Type) { A in Value.pi(.Type) { B in Value.pi(A) { a in Value.pi(B) { b in a } } } }.quote
+
 
 import Assertions
+import Box
+import Either
 import Manifold
-import Set
+import Prelude
 import XCTest
