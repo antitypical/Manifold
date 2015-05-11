@@ -134,7 +134,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 				let (q, r) = (t.quote, against.quote)
 				return q == r
 					? Either.right(t)
-					: Either.left("type mismatch: expected \(toDebugString(self)) : \(toDebugString(r)), actually \(toDebugString(self)) : \(toDebugString(q)) in environment \(environment)")
+					: Either.left("type mismatch: expected (\(toDebugString(self))) : (\(toDebugString(r))), actually (\(toDebugString(self))) : (\(toDebugString(q))) in environment \(environment)")
 			}
 	}
 
