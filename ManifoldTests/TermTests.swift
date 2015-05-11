@@ -61,6 +61,7 @@ final class TermTests: XCTestCase {
 
 
 private let identity = Value.pi(.Type) { A in .pi(A, id) }.quote
+private let constant = Value.pi(.Type) { A in Value.pi(.Type) { B in Value.pi(A) { a in Value.pi(B) { b in a } } } }.quote
 
 
 import Assertions
