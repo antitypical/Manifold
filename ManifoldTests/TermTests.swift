@@ -1,6 +1,10 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 final class TermTests: XCTestCase {
+	func testTrivialHigherOrderConstruction() {
+		assert(Term.lambda(.type, id), ==, Term(.Pi(0, Box(.type), Box(Term(.Bound(0))))))
+	}
+
 	func testHigherOrderConstruction() {
 		let expected = Term(.Pi(0, Box(.type), Box(Term(.Pi(1, Box(Term(.Bound(0))), Box(Term(.Bound(1))))))))
 		assert(identity, ==, expected)
