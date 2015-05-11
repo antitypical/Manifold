@@ -18,38 +18,12 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	}
 
 
-	public static func lambda(type: Term, _ f: Term -> Term) -> Term {
-		return pi(0, type, f(free(.Quote(0))).quote(1))
-	}
-
-	public static func pair(type: Term, _ f: Term -> Term) -> Term {
-		return sigma(0, type, f(free(.Quote(0)).quote(1)))
-	}
-
 	static func bound(i: Int) -> Term {
 		return Term(.Bound(i))
 	}
 
 	static func free(name: Name) -> Term {
 		return Term(.Free(name))
-	}
-
-	private static func pi(bound: Int, _ type: Term, _ body: Term) -> Term {
-		return Term(.Pi(bound, Box(type), Box(body)))
-	}
-
-	private static func sigma(bound: Int, _ type: Term, _ body: Term) -> Term {
-		return Term(.Sigma(bound, Box(type), Box(body)))
-	}
-
-	private func quote(n: Int) -> Term {
-		return expression.analysis(
-			ifType: const(self),
-			ifBound: Term.bound,
-			ifFree: { $0.analysis(ifLocal: Term.bound, ifQuote: { Term.bound(n - $0 - 1) }) },
-			ifApplication: { Term.application($0.quote(n), $1.quote(n)) },
-			ifPi: { Term.pi(n, $1.quote(n), $2.quote(n + 1)) },
-			ifSigma: { Term.sigma(n, $1.quote(n), $2.quote(n + 1)) })
 	}
 
 
