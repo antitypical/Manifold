@@ -2,7 +2,7 @@
 
 final class TermTests: XCTestCase {
 	func testTrivialHigherOrderConstruction() {
-		assert(Term.lambda(.type, id), ==, Term(.Pi(0, Box(.type), Box(Term(.Bound(0))))))
+		assert(Value.pi(.Type, id).quote, ==, Term(.Pi(0, Box(.type), Box(Term(.Bound(0))))))
 	}
 
 	func testHigherOrderConstruction() {
@@ -11,7 +11,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testTypechecking() {
-		assert(identity.typecheck().right?.quote, ==, .lambda(.type, const(.lambda(.type, const(.type)))))
+		assert(identity.typecheck().right?.quote, ==, Value.pi(.Type, const(.pi(.Type, const(.Type)))).quote)
 	}
 
 	func testFunctionTypesArePrintedWithAnArrow() {
@@ -19,7 +19,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testProductTypesArePrintedWithAnX() {
-		assert(Term.pair(.type, const(.type)).typecheck().right?.quote.description, ==, "(Type ✕ Type)")
+		assert(Value.sigma(.Type, const(.Type)).quote.typecheck().right?.quote.description, ==, "(Type ✕ Type)")
 	}
 
 	func testTypeOfTypeIsType() {
@@ -27,7 +27,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testTypeOfAbstractionIsAbstractionType() {
-		assert(Term.lambda(.type, id).typecheck().right?.quote, ==, Term(.Pi(0, Box(.type), Box(Term(.Bound(0))))))
+		assert(Value.pi(.Type, id).quote.typecheck().right?.quote, ==, Term(.Pi(0, Box(.type), Box(Term(.Bound(0))))))
 	}
 
 
@@ -36,7 +36,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testTrivialAbstractionEvaluatesToItself() {
-		let lambda = Term.lambda(.type, id)
+		let lambda = Value.pi(.Type, id).quote
 		assert(lambda.evaluate().right?.quote, ==, lambda)
 	}
 
@@ -49,7 +49,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testApplicationEvaluation() {
-		assert(Term.application(Term.lambda(.type, id), .type).evaluate().right?.quote, ==, .type)
+		assert(Term.application(Value.pi(.Type, id).quote, .type).evaluate().right?.quote, ==, .type)
 	}
 
 	func testEvaluation() {
@@ -60,7 +60,7 @@ final class TermTests: XCTestCase {
 }
 
 
-private let identity = Term.lambda(.type) { A in .lambda(A, id) }
+private let identity = Value.pi(.Type) { A in .pi(A, id) }.quote
 
 
 import Assertions
