@@ -1,5 +1,8 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
+/// `Value` represents a form which cannot undergo further evaluation.
+///
+/// This makes it sort of like a `Term` in normal form, i.e. already evaluated.
 public enum Value: DebugPrintable {
 	// MARK: Constructors
 
