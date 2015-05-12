@@ -64,6 +64,8 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	// MARK: Type-checking
 
+	public typealias Environment = [ Int: Value ]
+
 	public var freeVariables: Set<Int> {
 		return expression.analysis(
 			ifBound: { [ $0.0 ] },
@@ -73,7 +75,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			otherwise: const([]))
 	}
 
-	public func typecheck(_ environment: [Int: Value] = [:]) -> Either<Error, Value> {
+	public func typecheck(_ environment: Environment = [:]) -> Either<Error, Value> {
 		return expression.analysis(
 			ifType: const(Either.right(.Type)),
 			ifBound: { i -> Either<Error, Value> in
@@ -102,7 +104,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			})
 	}
 
-	public func typecheck(environment: [Int: Value], _ against: Value) -> Either<Error, Value> {
+	public func typecheck(environment: Environment, _ against: Value) -> Either<Error, Value> {
 		return typecheck(environment)
 			.flatMap { t in
 				let (q, r) = (t.quote, against.quote)
@@ -115,7 +117,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	// MARK: Evaluation
 
-	public func evaluate(_ environment: [Int: Value] = [:]) -> Either<Error, Value> {
+	public func evaluate(_ environment: Environment = [:]) -> Either<Error, Value> {
 		return expression.analysis(
 			ifType: const(Either.right(.Type)),
 			ifBound: { i -> Either<Error, Value> in
