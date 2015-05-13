@@ -6,6 +6,10 @@
 public enum Value: DebugPrintable {
 	// MARK: Constructors
 
+	public static func constant(value: Any, _ type: Value) -> Value {
+		return .Constant(value, Box(type))
+	}
+
 	public static func pi(value: Value, _ f: Value -> Value) -> Value {
 		return .Pi(Box(value), f >>> Either.right)
 	}
@@ -61,6 +65,9 @@ public enum Value: DebugPrintable {
 					ifLocal: const(Term.free($0)),
 					ifQuote: Term.bound)
 			},
+			ifConstant: {
+				Term.constant($0, $1.quote(n))
+			},
 			ifPi: { type, f in
 				f(.Free(.Quote(n))).either(
 					ifLeft: { x in assert(false, "\(toString(x)) in \(self)") ; return Term.type },
@@ -79,6 +86,7 @@ public enum Value: DebugPrintable {
 	public func analysis<T>(
 		@noescape #ifType: () -> T,
 		@noescape ifFree: Name -> T,
+		@noescape ifConstant: (Any, Value) -> T,
 		@noescape ifPi: (Value, Value -> Either<Error, Value>) -> T,
 		@noescape ifSigma: (Value, Value -> Either<Error, Value>) -> T) -> T {
 		switch self {
@@ -86,6 +94,8 @@ public enum Value: DebugPrintable {
 			return ifType()
 		case let .Free(n):
 			return ifFree(n)
+		case let .Constant(value, type):
+			return ifConstant(value, type.value)
 		case let .Pi(type, body):
 			return ifPi(type.value, body)
 		case let .Sigma(type, body):
@@ -96,12 +106,14 @@ public enum Value: DebugPrintable {
 	public func analysis<T>(
 		ifType: (() -> T)? = nil,
 		ifFree: (Name -> T)? = nil,
+		ifConstant: ((Any, Value) -> T)? = nil,
 		ifPi: ((Value, Value -> Either<Error, Value>) -> T)? = nil,
 		ifSigma: ((Value, Value -> Either<Error, Value>) -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifType: { ifType?() ?? otherwise() },
 			ifFree: { ifFree?($0) ?? otherwise() },
+			ifConstant: { ifConstant?($0) ?? otherwise() },
 			ifPi: { ifPi?($0) ?? otherwise() },
 			ifSigma: { ifSigma?($0) ?? otherwise() })
 	}
@@ -113,6 +125,7 @@ public enum Value: DebugPrintable {
 		return analysis(
 			ifType: const("Type"),
 			ifFree: toDebugString,
+			ifConstant: { "\(toDebugString($0)) : \(toDebugString($1))" },
 			ifPi: { "(Π ? : \(toDebugString($0)) . \(toDebugString($1)))" },
 			ifSigma: { "(Σ ? : \(toDebugString($0)) . \(toDebugString($1)))" })
 	}
@@ -122,6 +135,7 @@ public enum Value: DebugPrintable {
 
 	case Type
 	case Free(Name)
+	case Constant(Any, Box<Value>)
 	case Pi(Box<Value>, Value -> Either<Error, Value>)
 	case Sigma(Box<Value>, Value -> Either<Error, Value>)
 }
