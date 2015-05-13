@@ -27,6 +27,12 @@ public enum Value: DebugPrintable {
 			otherwise: const(false))
 	}
 
+	public var constant: (Any, Value)? {
+		return analysis(
+			ifConstant: unit,
+			otherwise: const(nil))
+	}
+
 	public var pi: (Value, Value -> Either<Error, Value>)? {
 		return analysis(
 			ifPi: unit,
