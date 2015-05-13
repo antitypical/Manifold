@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Name: Hashable, DebugPrintable, Printable, StringLiteralConvertible {
+public enum Name: Hashable, IntegerLiteralConvertible, DebugPrintable, Printable, StringLiteralConvertible {
 	// MARK: Destructors
 
 	public var global: String? {
@@ -43,6 +43,13 @@ public enum Name: Hashable, DebugPrintable, Printable, StringLiteralConvertible 
 
 	public var hashValue: Int {
 		return analysis(ifGlobal: { $0.hashValue }, ifLocal: id, ifQuote: id)
+	}
+
+
+	// MARK: IntegerLiteralConvertible
+
+	public init(integerLiteral value: IntegerLiteralType) {
+		self = Local(value)
 	}
 
 
