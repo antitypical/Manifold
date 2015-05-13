@@ -64,8 +64,6 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	// MARK: Type-checking
 
-	public typealias Environment = [ Name: Value ]
-
 	public var freeVariables: Set<Int> {
 		return expression.analysis(
 			ifBound: { [ $0.0 ] },
