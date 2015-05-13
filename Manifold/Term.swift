@@ -40,6 +40,12 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			otherwise: const(false))
 	}
 
+	public var constant: (Any, Term)? {
+		return expression.analysis(
+			ifConstant: unit,
+			otherwise: const(nil))
+	}
+
 	public var bound: Int? {
 		return expression.analysis(
 			ifBound: unit,
