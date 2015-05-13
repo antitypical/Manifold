@@ -57,6 +57,7 @@ public enum Value: DebugPrintable {
 			ifType: const(.type),
 			ifFree: {
 				$0.analysis(
+					ifGlobal: const(Term.free($0)),
 					ifLocal: const(Term.free($0)),
 					ifQuote: Term.bound)
 			},

@@ -191,7 +191,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 		return expression.analysis(
 			ifType: const("Type"),
 			ifBound: alphabetize,
-			ifFree: Name.value >>> alphabetize,
+			ifFree: { $0.analysis(ifGlobal: id, ifLocal: alphabetize, ifQuote: alphabetize) },
 			ifApplication: { "(\($0.1)) (\($1.1))" },
 			ifPi: {
 				$2.0.freeVariables.contains($0)
