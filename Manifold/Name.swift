@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Name: Hashable, DebugPrintable, Printable {
+public enum Name: Hashable, DebugPrintable, Printable, StringLiteralConvertible {
 	// MARK: Destructors
 
 	public var global: String? {
@@ -50,6 +50,21 @@ public enum Name: Hashable, DebugPrintable, Printable {
 
 	public var description: String {
 		return toString(value)
+	}
+
+
+	// MARK: StringLiteralConvertible
+
+	public init(stringLiteral value: String) {
+		self = Global(value)
+	}
+
+	public init(unicodeScalarLiteral value: String) {
+		self = Global(value)
+	}
+
+	public init(extendedGraphemeClusterLiteral value: String) {
+		self = Global(value)
 	}
 
 
