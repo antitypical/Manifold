@@ -64,7 +64,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	// MARK: Type-checking
 
-	public typealias Environment = [ Int: Value ]
+	public typealias Environment = [ Name: Value ]
 
 	public var freeVariables: Set<Int> {
 		return expression.analysis(
@@ -79,11 +79,11 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 		return expression.analysis(
 			ifType: const(Either.right(.Type)),
 			ifBound: { i -> Either<Error, Value> in
-				environment[i].map(Either.right)
+				environment[.Local(i)].map(Either.right)
 					?? Either.left("unexpected free variable \(i)")
 			},
 			ifFree: { i -> Either<Error, Value> in
-				environment[i.value].map(Either.right)
+				environment[i].map(Either.right)
 					?? Either.left("unexpected free variable \(i)")
 			},
 			ifApplication: { a, b -> Either<Error, Value> in
@@ -96,11 +96,11 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			},
 			ifPi: { i, t, b -> Either<Error, Value> in
 				t.typecheck(environment, .Type)
-					.map { t in Value.Pi(Box(t)) { _ in b.typecheck(environment + [ i: t ]) } }
+					.map { t in Value.Pi(Box(t)) { _ in b.typecheck(environment + [ .Local(i): t ]) } }
 			},
 			ifSigma: { i, t, b -> Either<Error, Value> in
 				t.typecheck(environment, .Type)
-					.map { t in Value.Sigma(Box(t)) { _ in b.typecheck(environment + [ i: t ]) } }
+					.map { t in Value.Sigma(Box(t)) { _ in b.typecheck(environment + [ .Local(i): t ]) } }
 			})
 	}
 
@@ -121,10 +121,10 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 		return expression.analysis(
 			ifType: const(Either.right(.Type)),
 			ifBound: { i -> Either<Error, Value> in
-				environment[i].map(Either.right) ?? Either.left("unexpected free variable \(i)")
+				environment[.Local(i)].map(Either.right) ?? Either.left("unexpected free variable \(i)")
 			},
 			ifFree: { i -> Either<Error, Value> in
-				environment[i.value].map(Either.right) ?? Either.left("unexpected free variable \(i)")
+				environment[i].map(Either.right) ?? Either.left("unexpected free variable \(i)")
 			},
 			ifApplication: { a, b -> Either<Error, Value> in
 				(a.evaluate(environment) &&& b.evaluate(environment))
@@ -132,11 +132,11 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			},
 			ifPi: { i, type, body -> Either<Error, Value> in
 				type.evaluate(environment)
-					.map { type in Value.Pi(Box(type)) { body.evaluate(environment + [ i: $0 ]) } }
+					.map { type in Value.Pi(Box(type)) { body.evaluate(environment + [ .Local(i): $0 ]) } }
 			},
 			ifSigma: { i, type, body -> Either<Error, Value> in
 				type.evaluate(environment)
-					.map { type in Value.Sigma(Box(type)) { body.evaluate(environment + [ i: $0 ]) } }
+					.map { type in Value.Sigma(Box(type)) { body.evaluate(environment + [ .Local(i): $0 ]) } }
 			})
 	}
 
