@@ -90,7 +90,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			ifConstant: { $1.typecheck(environment) },
 			ifBound: { i -> Either<Error, Value> in
 				environment[.Local(i)].map(Either.right)
-					?? Either.left("unexpected free variable \(i)")
+					?? Either.left("unexpectedly free bound variable \(i)")
 			},
 			ifFree: { i -> Either<Error, Value> in
 				environment[i].map(Either.right)
@@ -132,7 +132,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			ifType: const(Either.right(.Type)),
 			ifConstant: { $1.evaluate(environment).map(curry(Value.constant)($0)) },
 			ifBound: { i -> Either<Error, Value> in
-				environment[.Local(i)].map(Either.right) ?? Either.left("unexpected free variable \(i)")
+				environment[.Local(i)].map(Either.right) ?? Either.left("unexpectedly free bound variable \(i)")
 			},
 			ifFree: { i -> Either<Error, Value> in
 				environment[i].map(Either.right) ?? Either.left("unexpected free variable \(i)")
