@@ -34,6 +34,8 @@ public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Re
 
 public func == (left: Name, right: Name) -> Bool {
 	switch (left, right) {
+	case let (.Global(x), .Global(y)):
+		return x == y
 	case let (.Local(x), .Local(y)):
 		return x == y
 	case let (.Quote(x), .Quote(y)):
