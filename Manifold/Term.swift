@@ -203,7 +203,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 		let alphabetize: Int -> String = { index in Swift.toString(Term.alphabet[advance(Term.alphabet.startIndex, index)]) }
 		return expression.analysis(
 			ifType: const("Type"),
-			ifConstant: { "(\($0)) : \($1)" },
+			ifConstant: { "(\($0)) : \($1.1)" },
 			ifBound: alphabetize,
 			ifFree: { $0.analysis(ifGlobal: id, ifLocal: alphabetize, ifQuote: alphabetize) },
 			ifApplication: { "(\($0.1)) (\($1.1))" },
