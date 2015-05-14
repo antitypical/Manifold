@@ -56,7 +56,10 @@ public enum Name: Hashable, IntegerLiteralConvertible, DebugPrintable, Printable
 	// MARK: Printable
 
 	public var description: String {
-		return toString(value)
+		return analysis(
+			ifGlobal: id,
+			ifLocal: toString,
+			ifQuote: toString)
 	}
 
 
