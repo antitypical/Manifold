@@ -33,6 +33,12 @@ public enum Value: DebugPrintable {
 			otherwise: const(nil))
 	}
 
+	public var free: Name? {
+		return analysis(
+			ifFree: unit,
+			otherwise: const(nil))
+	}
+
 	public var pi: (Value, Value -> Either<Error, Value>)? {
 		return analysis(
 			ifPi: unit,
