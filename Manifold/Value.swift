@@ -71,14 +71,14 @@ public enum Value: DebugPrintable {
 	private func quote(n: Int) -> Term {
 		return analysis(
 			ifType: const(.type),
+			ifConstant: {
+				Term.constant($0, $1.quote(n))
+			},
 			ifFree: {
 				$0.analysis(
 					ifGlobal: const(Term.free($0)),
 					ifLocal: const(Term.free($0)),
 					ifQuote: Term.bound)
-			},
-			ifConstant: {
-				Term.constant($0, $1.quote(n))
 			},
 			ifPi: { type, f in
 				f(.Free(.Quote(n))).either(
@@ -97,8 +97,8 @@ public enum Value: DebugPrintable {
 
 	public func analysis<T>(
 		@noescape #ifType: () -> T,
-		@noescape ifFree: Name -> T,
 		@noescape ifConstant: (Any, Value) -> T,
+		@noescape ifFree: Name -> T,
 		@noescape ifPi: (Value, Value -> Either<Error, Value>) -> T,
 		@noescape ifSigma: (Value, Value -> Either<Error, Value>) -> T) -> T {
 		switch self {
@@ -117,15 +117,15 @@ public enum Value: DebugPrintable {
 
 	public func analysis<T>(
 		ifType: (() -> T)? = nil,
-		ifFree: (Name -> T)? = nil,
 		ifConstant: ((Any, Value) -> T)? = nil,
+		ifFree: (Name -> T)? = nil,
 		ifPi: ((Value, Value -> Either<Error, Value>) -> T)? = nil,
 		ifSigma: ((Value, Value -> Either<Error, Value>) -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifType: { ifType?() ?? otherwise() },
-			ifFree: { ifFree?($0) ?? otherwise() },
 			ifConstant: { ifConstant?($0) ?? otherwise() },
+			ifFree: { ifFree?($0) ?? otherwise() },
 			ifPi: { ifPi?($0) ?? otherwise() },
 			ifSigma: { ifSigma?($0) ?? otherwise() })
 	}
@@ -136,8 +136,8 @@ public enum Value: DebugPrintable {
 	public var debugDescription: String {
 		return analysis(
 			ifType: const("Type"),
-			ifFree: toDebugString,
 			ifConstant: { "\(toDebugString($0)) : \(toDebugString($1))" },
+			ifFree: toDebugString,
 			ifPi: { "(Π ? : \(toDebugString($0)) . \(toDebugString($1)))" },
 			ifSigma: { "(Σ ? : \(toDebugString($0)) . \(toDebugString($1)))" })
 	}
@@ -146,8 +146,8 @@ public enum Value: DebugPrintable {
 	// MARK: Cases
 
 	case Type
-	case Free(Name)
 	case Constant(Any, Box<Value>)
+	case Free(Name)
 	case Pi(Box<Value>, Value -> Either<Error, Value>)
 	case Sigma(Box<Value>, Value -> Either<Error, Value>)
 }
