@@ -18,8 +18,15 @@ public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Re
 		return t1.value == t2.value
 	case let (.Bound(m), .Bound(n)):
 		return m == n
-	case let (.Free(m), .Free(n)):
-		return m == n
+	case let (.Free(m), _):
+		// Workaround for rdar://20969594
+		switch right {
+		case let .Free(n):
+			return m == n
+		default:
+			break
+		}
+		return false
 	case let (.Application(t1, t2), .Application(u1, u2)):
 		return t1.value == u1.value && t2.value == u2.value
 	case let (.Pi(i, t, a), .Pi(j, u, b)):
