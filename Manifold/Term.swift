@@ -93,7 +93,8 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 					?? Either.left("unexpectedly free bound variable \(i)")
 			},
 			ifFree: { i -> Either<Error, Value> in
-				environment[i].map(Either.right)
+				environment[i]
+					.map { $0.quote.typecheck(environment) }
 					?? Either.left("unexpected free variable \(i)")
 			},
 			ifApplication: { a, b -> Either<Error, Value> in
