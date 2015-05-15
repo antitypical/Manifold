@@ -13,6 +13,11 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	}
 
 
+	public static func constant(value: Any, _ type: Term) -> Term {
+		return Term(.Constant(value, Box(type)))
+	}
+
+
 	public static func application(a: Term, _ b: Term) -> Term {
 		return Term(.Application(Box(a), Box(b)))
 	}
@@ -33,6 +38,12 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 		return expression.analysis(
 			ifType: const(true),
 			otherwise: const(false))
+	}
+
+	public var constant: (Any, Term)? {
+		return expression.analysis(
+			ifConstant: unit,
+			otherwise: const(nil))
 	}
 
 	public var bound: Int? {
@@ -73,15 +84,17 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			otherwise: const([]))
 	}
 
-	public func typecheck(_ environment: [Int: Value] = [:]) -> Either<Error, Value> {
+	public func typecheck(_ environment: Environment = [:]) -> Either<Error, Value> {
 		return expression.analysis(
 			ifType: const(Either.right(.Type)),
+			ifConstant: { $1.typecheck(environment) },
 			ifBound: { i -> Either<Error, Value> in
-				environment[i].map(Either.right)
-					?? Either.left("unexpected free variable \(i)")
+				environment[.Local(i)].map(Either.right)
+					?? Either.left("unexpectedly free bound variable \(i)")
 			},
 			ifFree: { i -> Either<Error, Value> in
-				environment[i.value].map(Either.right)
+				environment[i]
+					.map { $0.quote.typecheck(environment) }
 					?? Either.left("unexpected free variable \(i)")
 			},
 			ifApplication: { a, b -> Either<Error, Value> in
@@ -94,15 +107,15 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			},
 			ifPi: { i, t, b -> Either<Error, Value> in
 				t.typecheck(environment, .Type)
-					.map { t in Value.Pi(Box(t)) { _ in b.typecheck(environment + [ i: t ]) } }
+					.map { t in Value.Pi(Box(t)) { _ in b.typecheck(environment + [ .Local(i): t ]) } }
 			},
 			ifSigma: { i, t, b -> Either<Error, Value> in
 				t.typecheck(environment, .Type)
-					.map { t in Value.Sigma(Box(t)) { _ in b.typecheck(environment + [ i: t ]) } }
+					.map { t in Value.Sigma(Box(t)) { _ in b.typecheck(environment + [ .Local(i): t ]) } }
 			})
 	}
 
-	public func typecheck(environment: [Int: Value], _ against: Value) -> Either<Error, Value> {
+	public func typecheck(environment: Environment, _ against: Value) -> Either<Error, Value> {
 		return typecheck(environment)
 			.flatMap { t in
 				let (q, r) = (t.quote, against.quote)
@@ -115,14 +128,15 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	// MARK: Evaluation
 
-	public func evaluate(_ environment: [Int: Value] = [:]) -> Either<Error, Value> {
+	public func evaluate(_ environment: Environment = [:]) -> Either<Error, Value> {
 		return expression.analysis(
 			ifType: const(Either.right(.Type)),
+			ifConstant: { $1.evaluate(environment).map(curry(Value.constant)($0)) },
 			ifBound: { i -> Either<Error, Value> in
-				environment[i].map(Either.right) ?? Either.left("unexpected free variable \(i)")
+				environment[.Local(i)].map(Either.right) ?? Either.left("unexpectedly free bound variable \(i)")
 			},
 			ifFree: { i -> Either<Error, Value> in
-				environment[i.value].map(Either.right) ?? Either.left("unexpected free variable \(i)")
+				environment[i].map(Either.right) ?? Either.left("unexpected free variable \(i)")
 			},
 			ifApplication: { a, b -> Either<Error, Value> in
 				(a.evaluate(environment) &&& b.evaluate(environment))
@@ -130,11 +144,11 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			},
 			ifPi: { i, type, body -> Either<Error, Value> in
 				type.evaluate(environment)
-					.map { type in Value.Pi(Box(type)) { body.evaluate(environment + [ i: $0 ]) } }
+					.map { type in Value.Pi(Box(type)) { body.evaluate(environment + [ .Local(i): $0 ]) } }
 			},
 			ifSigma: { i, type, body -> Either<Error, Value> in
 				type.evaluate(environment)
-					.map { type in Value.Sigma(Box(type)) { body.evaluate(environment + [ i: $0 ]) } }
+					.map { type in Value.Sigma(Box(type)) { body.evaluate(environment + [ .Local(i): $0 ]) } }
 			})
 	}
 
@@ -148,6 +162,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	private static func toDebugString(expression: Expression<String>) -> String {
 		return expression.analysis(
 			ifType: const("Type"),
+			ifConstant: { "Constant(\(Swift.toDebugString($0)) : \($1))" },
 			ifBound: { "Bound(\($0))" },
 			ifFree: { "Free(\($0))" },
 			ifApplication: { "(\($0)) (\($1))" },
@@ -167,7 +182,8 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public var hashValue: Int {
 		return expression.analysis(
-			ifType: { 2 },
+			ifType: { 1 },
+			ifConstant: { 2 ^ $1.hashValue },
 			ifBound: { 3 ^ $0.hashValue },
 			ifFree: { 5 ^ $0.hashValue },
 			ifApplication: { 7 ^ $0.hashValue ^ $1.hashValue },
@@ -188,8 +204,9 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 		let alphabetize: Int -> String = { index in Swift.toString(Term.alphabet[advance(Term.alphabet.startIndex, index)]) }
 		return expression.analysis(
 			ifType: const("Type"),
+			ifConstant: { "(\($0)) : \($1.1)" },
 			ifBound: alphabetize,
-			ifFree: Name.value >>> alphabetize,
+			ifFree: { $0.analysis(ifGlobal: id, ifLocal: alphabetize, ifQuote: alphabetize) },
 			ifApplication: { "(\($0.1)) (\($1.1))" },
 			ifPi: {
 				$2.0.freeVariables.contains($0)

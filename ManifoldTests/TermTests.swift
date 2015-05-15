@@ -32,7 +32,7 @@ final class TermTests: XCTestCase {
 
 
 	func testBoundVariablesEvaluateToTheValueBoundInTheEnvironment() {
-		assert(Term(.Bound(2)).evaluate([ 2: .Type ]).right?.quote, ==, Term.type)
+		assert(Term(.Bound(2)).evaluate([ .Local(2): .Type ]).right?.quote, ==, Term.type)
 	}
 
 	func testTrivialAbstractionEvaluatesToItself() {
@@ -56,6 +56,15 @@ final class TermTests: XCTestCase {
 		let value = identity.typecheck().flatMap { Term.application(Term.application(identity, $0.quote), identity).evaluate() }
 		assert(value.right?.quote, ==, identity)
 		assert(value.left, ==, nil)
+	}
+
+
+	func testGlobalsPrintTheirNames() {
+		assert(Term(.Free("Global")).description, ==, "Global")
+	}
+
+	func testConstantsPrintTheirValueAndType() {
+		assert(Term.constant(0, Term(.Free("Global"))).description, ==, "(0) : Global")
 	}
 }
 
