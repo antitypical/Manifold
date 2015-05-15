@@ -22,6 +22,7 @@
 		D4EDEF571AFEDEC5001B9A1D /* Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EDEF561AFEDEC5001B9A1D /* Name.swift */; };
 		D4EE119C1B02FE8C002D9D9A /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EE119B1B02FE8C002D9D9A /* Environment.swift */; };
 		D4EE11A01B030048002D9D9A /* Natural.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EE119F1B030048002D9D9A /* Natural.swift */; };
+		D4EE11A21B041D22002D9D9A /* NaturalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EE11A11B041D22002D9D9A /* NaturalTests.swift */; };
 		D4F9F8651A84958000B7071E /* Either.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4F9F8641A84958000B7071E /* Either.framework */; };
 		D4F9F8661A84959600B7071E /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4B3FC141A83527B00DA2AC3 /* Box.framework */; };
 		D4F9F8671A84959600B7071E /* Either.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4F9F8641A84958000B7071E /* Either.framework */; };
@@ -59,6 +60,7 @@
 		D4EDEF561AFEDEC5001B9A1D /* Name.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Name.swift; sourceTree = "<group>"; };
 		D4EE119B1B02FE8C002D9D9A /* Environment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		D4EE119F1B030048002D9D9A /* Natural.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Natural.swift; sourceTree = "<group>"; };
+		D4EE11A11B041D22002D9D9A /* NaturalTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NaturalTests.swift; sourceTree = "<group>"; };
 		D4F9F8641A84958000B7071E /* Either.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Either.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4F9F86A1A8496F700B7071E /* Prelude.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Prelude.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4F9F86D1A84977400B7071E /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
@@ -144,6 +146,7 @@
 			children = (
 				D4809FBC1AF6BD400084B8FE /* TermTests.swift */,
 				D46974241AFE4EB5005D3AA3 /* ValueTests.swift */,
+				D4EE11A11B041D22002D9D9A /* NaturalTests.swift */,
 				D4B3FC001A83515800DA2AC3 /* Supporting Files */,
 			);
 			path = ManifoldTests;
@@ -283,6 +286,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4809FBD1AF6BD400084B8FE /* TermTests.swift in Sources */,
+				D4EE11A21B041D22002D9D9A /* NaturalTests.swift in Sources */,
 				D46974251AFE4EB5005D3AA3 /* ValueTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
