@@ -27,7 +27,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 		return Term(.Bound(i))
 	}
 
-	static func free(name: Name) -> Term {
+	public static func free(name: Name) -> Term {
 		return Term(.Free(name))
 	}
 
