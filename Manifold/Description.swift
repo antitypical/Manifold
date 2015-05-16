@@ -16,6 +16,19 @@ public enum Description<Index> {
 	}
 
 
+
+	// MARK: Analyses
+
+	public func analysis<T>(ifEnd: Index -> T) -> T {
+		switch self {
+		case let .End(index):
+			return ifEnd(index.value)
+		}
+	}
+
+
+	// MARK: Cases
+
 	case End(Box<Index>)
 }
 
