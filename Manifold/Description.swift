@@ -5,6 +5,17 @@ public enum Description<Index> {
 		return .End(Box(index))
 	}
 
+
+	var end: Index? {
+		switch self {
+		case let .End(index):
+			return index.value
+		default:
+			return nil
+		}
+	}
+
+
 	case End(Box<Index>)
 }
 
