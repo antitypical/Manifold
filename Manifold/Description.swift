@@ -17,13 +17,15 @@ public enum Description<Index> {
 	var end: Index? {
 		return analysis(
 			ifEnd: unit,
-			ifRecursive: const(nil))
+			ifRecursive: const(nil),
+			ifArgument: const(nil))
 	}
 
 	var recursive: (Index, Description)? {
 		return analysis(
 			ifEnd: const(nil),
-			ifRecursive: unit)
+			ifRecursive: unit,
+			ifArgument: const(nil))
 	}
 
 
@@ -31,12 +33,15 @@ public enum Description<Index> {
 
 	public func analysis<T>(
 		@noescape #ifEnd: Index -> T,
-		@noescape ifRecursive: (Index, Description) -> T) -> T {
+		@noescape ifRecursive: (Index, Description) -> T,
+		@noescape ifArgument: (Index, Any -> Description) -> T) -> T {
 		switch self {
 		case let .End(index):
 			return ifEnd(index.value)
 		case let .Recursive(index, description):
 			return ifRecursive(index.value, description.value)
+		case let .Argument(index, argument):
+			return ifArgument(index.value, argument)
 		}
 	}
 
@@ -45,6 +50,7 @@ public enum Description<Index> {
 
 	case End(Box<Index>)
 	case Recursive(Box<Index>, Box<Description>)
+	case Argument(Box<Index>, Any -> Description)
 }
 
 
