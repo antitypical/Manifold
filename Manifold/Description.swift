@@ -19,7 +19,7 @@ public enum Description<Index> {
 
 	// MARK: Analyses
 
-	public func analysis<T>(@noescape ifEnd: Index -> T) -> T {
+	public func analysis<T>(@noescape #ifEnd: Index -> T) -> T {
 		switch self {
 		case let .End(index):
 			return ifEnd(index.value)
