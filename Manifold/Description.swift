@@ -7,12 +7,7 @@ public enum Description<Index> {
 
 
 	var end: Index? {
-		switch self {
-		case let .End(index):
-			return index.value
-		default:
-			return nil
-		}
+		return analysis(ifEnd: unit)
 	}
 
 
