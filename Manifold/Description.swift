@@ -7,6 +7,10 @@ public enum Description<Index> {
 		return .End(Box(index))
 	}
 
+	public static func recursive(index: Index, _ description: Description) -> Description {
+		return .Recursive(Box(index), Box(description))
+	}
+
 
 	// MARK: Destructors
 
