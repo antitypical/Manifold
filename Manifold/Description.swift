@@ -11,6 +11,10 @@ public enum Description<Index> {
 		return .Recursive(Box(index), Box(description))
 	}
 
+	public static func argument(index: Index, _ argument: Any -> Description) -> Description {
+		return .Argument(Box(index), argument)
+	}
+
 
 	// MARK: Destructors
 
