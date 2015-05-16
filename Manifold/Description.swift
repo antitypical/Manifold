@@ -2,4 +2,8 @@
 
 public enum Description<Index> {
 
+	case End(Box<Index>)
 }
+
+
+import Box
