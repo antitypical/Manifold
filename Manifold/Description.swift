@@ -20,6 +20,11 @@ public enum Description<Index> {
 			ifRecursive: const(nil))
 	}
 
+	var recursive: (Index, Description)? {
+		return analysis(
+			ifEnd: const(nil),
+			ifRecursive: unit)
+	}
 
 
 	// MARK: Analyses
@@ -44,3 +49,4 @@ public enum Description<Index> {
 
 
 import Box
+import Prelude
