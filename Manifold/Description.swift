@@ -1,10 +1,14 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public enum Description<Index> {
+	// MARK: Constructors
+
 	public static func end(index: Index) -> Description {
 		return .End(Box(index))
 	}
 
+
+	// MARK: Destructors
 
 	var end: Index? {
 		return analysis(ifEnd: unit)
