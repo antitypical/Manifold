@@ -32,6 +32,13 @@ public enum Description<Index> {
 			ifArgument: const(nil))
 	}
 
+	var argument: (Index, Any -> Description)? {
+		return analysis(
+			ifEnd: const(nil),
+			ifRecursive: const(nil),
+			ifArgument: unit)
+	}
+
 
 	// MARK: Analyses
 
