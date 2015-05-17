@@ -18,21 +18,21 @@ public enum Description<Index> {
 
 	// MARK: Destructors
 
-	var end: Index? {
+	public var end: Index? {
 		return analysis(
 			ifEnd: unit,
 			ifRecursive: const(nil),
 			ifArgument: const(nil))
 	}
 
-	var recursive: (Index, Description)? {
+	public var recursive: (Index, Description)? {
 		return analysis(
 			ifEnd: const(nil),
 			ifRecursive: unit,
 			ifArgument: const(nil))
 	}
 
-	var argument: (Index, Any -> Description)? {
+	public var argument: (Index, Any -> Description)? {
 		return analysis(
 			ifEnd: const(nil),
 			ifRecursive: const(nil),
