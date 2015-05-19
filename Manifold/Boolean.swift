@@ -3,6 +3,8 @@
 /// An environment containing Church-encoded booleans.
 public let booleanEnvironment: Environment = [
 	"Boolean": Value.pi(.Type) { bool in Value.pi(bool, const(Value.pi(bool, const(bool)))) },
+	"True": Value.pi(.Free("Boolean")) { t in Value.pi(.Free("Boolean"), const(t)) },
+	"False": Value.pi(.Free("Boolean")) { _ in Value.pi(.Free("Boolean")) { f in f } },
 ]
 
 
