@@ -107,7 +107,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 		return typecheck(environment)
 			.flatMap { t in
 				let (q, r) = (t.quote, against.quote)
-				return q == r
+				return (q == r) || (r == .type && q == Value.function(.Type, .Type).quote)
 					? Either.right(t)
 					: Either.left("type mismatch: expected (\(toDebugString(self))) : (\(toDebugString(r))), actually (\(toDebugString(self))) : (\(toDebugString(q))) in environment \(environment)")
 			}
