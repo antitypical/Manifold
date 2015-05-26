@@ -62,7 +62,7 @@ public enum Value: DebugPrintable {
 		return quote(0)
 	}
 
-	private func quote(n: Int) -> Term {
+	func quote(n: Int) -> Term {
 		return analysis(
 			ifType: const(.type),
 			ifFree: {

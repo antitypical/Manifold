@@ -1,6 +1,20 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public enum Neutral: DebugPrintable {
+	// MARK: Quotation
+
+	func quote(n: Int) -> Term {
+		return analysis(
+			ifParameter: {
+				$0.analysis(
+					ifGlobal: const(Term.free($0)),
+					ifLocal: const(Term.free($0)),
+					ifQuote: Term.bound)
+			},
+			ifApplication: { Term.application($0.quote(n), $1.quote(n)) })
+	}
+
+
 	// MARK: Analyses
 
 	func analysis<T>(@noescape #ifParameter: Name -> T, @noescape ifApplication: (Neutral, Value) -> T) -> T {
@@ -30,3 +44,4 @@ public enum Neutral: DebugPrintable {
 
 
 import Box
+import Prelude
