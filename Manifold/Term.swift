@@ -151,7 +151,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			ifType: const("Type"),
 			ifBound: { "Bound(\($0))" },
 			ifFree: { "Free(\($0))" },
-			ifApplication: { "(\($0)) (\($1))" },
+			ifApplication: { "\($0)(\($1))" },
 			ifPi: { "Π \($0) : \($1) . \($2)" },
 			ifSigma: { "Σ \($0) : \($1) . \($2)" })
 	}
@@ -191,7 +191,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			ifType: const("Type"),
 			ifBound: alphabetize,
 			ifFree: { $0.analysis(ifGlobal: id, ifLocal: alphabetize, ifQuote: alphabetize) },
-			ifApplication: { "(\($0.1)) (\($1.1))" },
+			ifApplication: { "\($0.1)(\($1.1))" },
 			ifPi: {
 				$2.0.freeVariables.contains($0)
 					? "Π \(alphabetize($0)) : \($1.1) . \($2.1)"
