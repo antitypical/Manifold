@@ -31,12 +31,6 @@ public enum Value: DebugPrintable {
 			otherwise: const(false))
 	}
 
-	public var constant: (Any, Value)? {
-		return analysis(
-			ifConstant: unit,
-			otherwise: const(nil))
-	}
-
 	public var free: Name? {
 		return analysis(
 			ifFree: unit,
