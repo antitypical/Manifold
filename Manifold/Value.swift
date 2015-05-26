@@ -18,6 +18,10 @@ public enum Value: DebugPrintable {
 		return .pi(.Type, f)
 	}
 
+	public static func function(from: Value, _ to: Value) -> Value {
+		return .pi(from, const(to))
+	}
+
 	public static func application(f: Manifold.Neutral, _ v: Value) -> Value {
 		return .neutral(.application(f, v))
 	}
