@@ -80,6 +80,9 @@ public enum Value: DebugPrintable {
 				f(.Free(.Quote(n))).either(
 					ifLeft: { x in assert(false, "\(x) in \(self)") ; return Term.type },
 					ifRight: { Term(Expression.Sigma(n, Box(type.quote(n)), Box($0.quote(n + 1)))) })
+			},
+			ifNeutral: {
+				$0.quote(n)
 			})
 	}
 
@@ -90,7 +93,8 @@ public enum Value: DebugPrintable {
 		@noescape #ifType: () -> T,
 		@noescape ifFree: Name -> T,
 		@noescape ifPi: (Value, Value -> Either<Error, Value>) -> T,
-		@noescape ifSigma: (Value, Value -> Either<Error, Value>) -> T) -> T {
+		@noescape ifSigma: (Value, Value -> Either<Error, Value>) -> T,
+		@noescape ifNeutral: Manifold.Neutral -> T) -> T {
 		switch self {
 		case .Type:
 			return ifType()
@@ -100,6 +104,8 @@ public enum Value: DebugPrintable {
 			return ifPi(type.value, body)
 		case let .Sigma(type, body):
 			return ifSigma(type.value, body)
+		case let .Neutral(n):
+			return ifNeutral(n.value)
 		}
 	}
 
@@ -108,12 +114,14 @@ public enum Value: DebugPrintable {
 		ifFree: (Name -> T)? = nil,
 		ifPi: ((Value, Value -> Either<Error, Value>) -> T)? = nil,
 		ifSigma: ((Value, Value -> Either<Error, Value>) -> T)? = nil,
+		ifNeutral: (Manifold.Neutral -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifType: { ifType?() ?? otherwise() },
 			ifFree: { ifFree?($0) ?? otherwise() },
 			ifPi: { ifPi?($0) ?? otherwise() },
-			ifSigma: { ifSigma?($0) ?? otherwise() })
+			ifSigma: { ifSigma?($0) ?? otherwise() },
+			ifNeutral: { ifNeutral?($0) ?? otherwise() })
 	}
 
 
@@ -124,7 +132,8 @@ public enum Value: DebugPrintable {
 			ifType: const("Type"),
 			ifFree: toDebugString,
 			ifPi: { "(Π ? : \(toDebugString($0)) . \(toDebugString($1)))" },
-			ifSigma: { "(Σ ? : \(toDebugString($0)) . \(toDebugString($1)))" })
+			ifSigma: { "(Σ ? : \(toDebugString($0)) . \(toDebugString($1)))" },
+			ifNeutral: toDebugString)
 	}
 
 
@@ -134,6 +143,7 @@ public enum Value: DebugPrintable {
 	case Free(Name)
 	case Pi(Box<Value>, Value -> Either<Error, Value>)
 	case Sigma(Box<Value>, Value -> Either<Error, Value>)
+	case Neutral(Box<Manifold.Neutral>)
 }
 
 
