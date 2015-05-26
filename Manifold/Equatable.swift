@@ -1,16 +1,8 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-// MARK: Error
+// MARK: Checkable
 
-public func == (left: Error, right: Error) -> Bool {
-	return reduce(lazy(zip(left.errors, right.errors))
-		.map(==), true) { $0 && $1 }
-}
-
-
-// MARK: Expression
-
-public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Recur>) -> Bool {
+public func == <Recur: Equatable> (left: Checkable<Recur>, right: Checkable<Recur>) -> Bool {
 	switch (left, right) {
 	case (.Type, .Type):
 		return true
@@ -34,6 +26,14 @@ public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Re
 	default:
 		return false
 	}
+}
+
+
+// MARK: Error
+
+public func == (left: Error, right: Error) -> Bool {
+	return reduce(lazy(zip(left.errors, right.errors))
+		.map(==), true) { $0 && $1 }
 }
 
 

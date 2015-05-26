@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Expression<Recur> {
+public enum Checkable<Recur> {
 	// MARK: Analyses
 
 	public func analysis<T>(
@@ -46,7 +46,7 @@ public enum Expression<Recur> {
 
 	// MARK: Functor
 
-	public func map<T>(@noescape transform: Recur -> T) -> Expression<T> {
+	public func map<T>(@noescape transform: Recur -> T) -> Checkable<T> {
 		return analysis(
 			ifType: { .Type },
 			ifBound: { .Bound($0) },

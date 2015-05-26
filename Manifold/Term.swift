@@ -1,7 +1,7 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
-	public init(_ expression: Expression<Term>) {
+	public init(_ expression: Checkable<Term>) {
 		self.expression = expression
 	}
 
@@ -59,7 +59,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			otherwise: const(nil))
 	}
 
-	public let expression: Expression<Term>
+	public let expression: Checkable<Term>
 
 
 	// MARK: Type-checking
@@ -146,7 +146,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 		return cata(Term.toDebugString)(self)
 	}
 
-	private static func toDebugString(expression: Expression<String>) -> String {
+	private static func toDebugString(expression: Checkable<String>) -> String {
 		return expression.analysis(
 			ifType: const("Type"),
 			ifBound: { "Bound(\($0))" },
@@ -159,7 +159,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	// MARK: FixpointType
 
-	public var out: Expression<Term> {
+	public var out: Checkable<Term> {
 		return expression
 	}
 
@@ -185,7 +185,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	private static let alphabet = "abcdefghijklmnopqrstuvwxyz"
 
-	private static func toString(expression: Expression<(Term, String)>) -> String {
+	private static func toString(expression: Checkable<(Term, String)>) -> String {
 		let alphabetize: Int -> String = { index in Swift.toString(Term.alphabet[advance(Term.alphabet.startIndex, index)]) }
 		return expression.analysis(
 			ifType: const("Type"),
