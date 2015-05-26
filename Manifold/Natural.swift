@@ -2,6 +2,9 @@
 
 public let naturalEnvironment: Environment = [
 	"Natural": .Type,
-	"Zero": Value.constant(0, .Free("Natural")),
+	"Zero": Value.forall { F in Value.forall { X in Value.pi(F, const(Value.pi(X, id))) } }, // ∀ F : Type . ∀ X : Type . λ f : F . λ x : X . x
 	"Successor": Value.pi(Value.Free("Natural")) { $0.constant.flatMap { i, t in (i as? Int).map { ($0 + 1, t) } }.map(Value.constant) ?? $0 },
 ]
+
+
+import Prelude
