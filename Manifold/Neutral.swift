@@ -16,12 +16,9 @@ public enum Neutral: DebugPrintable {
 	// MARK: DebugPrintable
 
 	public var debugDescription: String {
-		switch self {
-		case let .Parameter(n):
-			return n.debugDescription
-		case let .Application(n, v):
-			return "\(toDebugString(n))(\(toDebugString(v)))"
-		}
+		return analysis(
+			ifParameter: toDebugString,
+			ifApplication: { "\(toDebugString($0))(\(toDebugString($1)))" })
 	}
 
 
