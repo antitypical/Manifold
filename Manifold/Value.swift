@@ -18,6 +18,10 @@ public enum Value: DebugPrintable {
 		return .pi(.Type, f)
 	}
 
+	public static func neutral(value: Manifold.Neutral) -> Value {
+		return .Neutral(Box(value))
+	}
+
 
 	// MARK: Destructors
 
