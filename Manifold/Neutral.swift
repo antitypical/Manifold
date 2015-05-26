@@ -1,6 +1,13 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public enum Neutral: DebugPrintable {
+	// MARK: Constructors
+
+	static func application(f: Neutral, _ v: Value) -> Neutral {
+		return .Application(Box(f), v)
+	}
+
+
 	// MARK: Quotation
 
 	func quote(n: Int) -> Term {
