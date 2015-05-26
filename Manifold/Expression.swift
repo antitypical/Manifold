@@ -5,7 +5,6 @@ public enum Expression<Recur> {
 
 	public func analysis<T>(
 		@noescape #ifType: () -> T,
-		@noescape ifConstant: (Any, Recur) -> T,
 		@noescape ifBound: Int -> T,
 		@noescape ifFree: Name -> T,
 		@noescape ifApplication: (Recur, Recur) -> T,
@@ -14,8 +13,6 @@ public enum Expression<Recur> {
 		switch self {
 		case .Type:
 			return ifType()
-		case let .Constant(value, type):
-			return ifConstant(value, type.value)
 		case let .Bound(x):
 			return ifBound(x)
 		case let .Free(x):
@@ -31,7 +28,6 @@ public enum Expression<Recur> {
 
 	public func analysis<T>(
 		ifType: (() -> T)? = nil,
-		ifConstant: ((Any, Recur) -> T)? = nil,
 		ifBound: (Int -> T)? = nil,
 		ifFree: (Name -> T)? = nil,
 		ifApplication: ((Recur, Recur) -> T)? = nil,
@@ -40,7 +36,6 @@ public enum Expression<Recur> {
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifType: { ifType?() ?? otherwise() },
-			ifConstant: { ifConstant?($0) ?? otherwise() },
 			ifBound: { ifBound?($0) ?? otherwise() },
 			ifFree: { ifFree?($0) ?? otherwise() },
 			ifApplication: { ifApplication?($0) ?? otherwise() },
@@ -54,7 +49,6 @@ public enum Expression<Recur> {
 	public func map<T>(@noescape transform: Recur -> T) -> Expression<T> {
 		return analysis(
 			ifType: { .Type },
-			ifConstant: { .Constant($0, Box(transform($1))) },
 			ifBound: { .Bound($0) },
 			ifFree: { .Free($0) },
 			ifApplication: { .Application(Box(transform($0)), Box(transform($1))) },
@@ -66,7 +60,6 @@ public enum Expression<Recur> {
 	// MARK: Cases
 
 	case Type
-	case Constant(Any, Box<Recur>)
 	case Bound(Int)
 	case Free(Name)
 	case Application(Box<Recur>, Box<Recur>)

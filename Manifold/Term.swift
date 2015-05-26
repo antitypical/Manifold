@@ -13,11 +13,6 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	}
 
 
-	public static func constant(value: Any, _ type: Term) -> Term {
-		return Term(.Constant(value, Box(type)))
-	}
-
-
 	public static func application(a: Term, _ b: Term) -> Term {
 		return Term(.Application(Box(a), Box(b)))
 	}
@@ -81,7 +76,6 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	public func typecheck(_ environment: Environment = [:]) -> Either<Error, Value> {
 		return expression.analysis(
 			ifType: const(Either.right(.Type)),
-			ifConstant: { $1.typecheck(environment) },
 			ifBound: { i -> Either<Error, Value> in
 				environment[.Local(i)].map(Either.right)
 					?? Either.left("unexpectedly free bound variable \(i)")
@@ -125,7 +119,6 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	public func evaluate(_ environment: Environment = [:]) -> Either<Error, Value> {
 		return expression.analysis(
 			ifType: const(Either.right(.Type)),
-			ifConstant: { $1.evaluate(environment).map(curry(Value.constant)($0)) },
 			ifBound: { i -> Either<Error, Value> in
 				environment[.Local(i)].map(Either.right) ?? Either.left("unexpectedly free bound variable \(i)")
 			},
@@ -156,7 +149,6 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	private static func toDebugString(expression: Expression<String>) -> String {
 		return expression.analysis(
 			ifType: const("Type"),
-			ifConstant: { "Constant(\(Swift.toDebugString($0)) : \($1))" },
 			ifBound: { "Bound(\($0))" },
 			ifFree: { "Free(\($0))" },
 			ifApplication: { "(\($0)) (\($1))" },
@@ -176,8 +168,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public var hashValue: Int {
 		return expression.analysis(
-			ifType: { 1 },
-			ifConstant: { 2 ^ $1.hashValue },
+			ifType: { 2 },
 			ifBound: { 3 ^ $0.hashValue },
 			ifFree: { 5 ^ $0.hashValue },
 			ifApplication: { 7 ^ $0.hashValue ^ $1.hashValue },
@@ -198,7 +189,6 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 		let alphabetize: Int -> String = { index in Swift.toString(Term.alphabet[advance(Term.alphabet.startIndex, index)]) }
 		return expression.analysis(
 			ifType: const("Type"),
-			ifConstant: { "(\($0)) : \($1)" },
 			ifBound: alphabetize,
 			ifFree: { $0.analysis(ifGlobal: id, ifLocal: alphabetize, ifQuote: alphabetize) },
 			ifApplication: { "(\($0.1)) (\($1.1))" },
