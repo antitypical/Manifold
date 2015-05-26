@@ -6,12 +6,6 @@ final class NaturalTests: XCTestCase {
 		assert(value, !=, nil)
 		assert(value?.quote, ==, .type)
 	}
-
-	func testReferencesToZeroEvaluateToConstantValueOfZero() {
-		let result = Zero.evaluate(naturalEnvironment)
-		let constant = result.right?.constant
-		assert(constant?.0 as? Int, ==, 0)
-	}
 }
 
 let Zero = Term.free("Zero")
