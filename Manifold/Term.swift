@@ -64,15 +64,6 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	// MARK: Type-checking
 
-	public var freeVariables: Set<Int> {
-		return expression.analysis(
-			ifBound: { [ $0.0 ] },
-			ifApplication: { $0.freeVariables.union($1.freeVariables) },
-			ifPi: { i, type, body in type.freeVariables.union(body.freeVariables).subtract([ i ]) },
-			ifSigma: { i, type, body in type.freeVariables.union(body.freeVariables).subtract([ i ]) },
-			otherwise: const([]))
-	}
-
 	public func typecheck(_ environment: Environment = [:]) -> Either<Error, Value> {
 		return expression.analysis(
 			ifType: const(Either.right(.Type)),
