@@ -45,6 +45,12 @@ public enum Value: DebugPrintable {
 			otherwise: const(nil))
 	}
 
+	public var neutral: Manifold.Neutral? {
+		return analysis(
+			ifNeutral: unit,
+			otherwise: const(nil))
+	}
+
 
 	// MARK: Application
 
