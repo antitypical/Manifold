@@ -14,8 +14,6 @@ public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Re
 	switch (left, right) {
 	case (.Type, .Type):
 		return true
-	case let (.Constant(v1, t1), .Constant(v2, t2)):
-		return t1.value == t2.value
 	case let (.Bound(m), .Bound(n)):
 		return m == n
 	case let (.Free(m), _):
