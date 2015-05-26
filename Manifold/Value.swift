@@ -84,12 +84,12 @@ public enum Value: DebugPrintable {
 					ifQuote: Term.bound)
 			},
 			ifPi: { type, f in
-				f(.Free(.Quote(n))).either(
+				f(.parameter(.Quote(n))).either(
 					ifLeft: { x in assert(false, "\(x) in \(self)") ; return Term.type },
 					ifRight: { Term(Expression.Pi(n, Box(type.quote(n)), Box($0.quote(n + 1)))) })
 			},
 			ifSigma: { type, f in
-				f(.Free(.Quote(n))).either(
+				f(.parameter(.Quote(n))).either(
 					ifLeft: { x in assert(false, "\(x) in \(self)") ; return Term.type },
 					ifRight: { Term(Expression.Sigma(n, Box(type.quote(n)), Box($0.quote(n + 1)))) })
 			},
