@@ -123,7 +123,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 				environment[.Local(i)].map(Either.right) ?? Either.left("unexpectedly free bound variable \(i)")
 			},
 			ifFree: { i -> Either<Error, Value> in
-				environment[i].map(Either.right) ?? Either.left("unexpected free variable \(i)")
+				.right(.parameter(i))
 			},
 			ifApplication: { a, b -> Either<Error, Value> in
 				(a.evaluate(environment) &&& b.evaluate(environment))
