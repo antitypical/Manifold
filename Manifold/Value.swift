@@ -22,6 +22,10 @@ public enum Value: DebugPrintable {
 		return .neutral(.application(f, v))
 	}
 
+	public static func parameter(name: Name) -> Value {
+		return .neutral(.Parameter(name))
+	}
+
 	public static func neutral(value: Manifold.Neutral) -> Value {
 		return .Neutral(Box(value))
 	}
