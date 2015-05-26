@@ -3,14 +3,14 @@
 public enum Neutral: DebugPrintable {
 	// MARK: Constructors
 
-	static func application(f: Neutral, _ v: Value) -> Neutral {
+	public static func application(f: Neutral, _ v: Value) -> Neutral {
 		return .Application(Box(f), v)
 	}
 
 
 	// MARK: Quotation
 
-	func quote(n: Int) -> Term {
+	public func quote(n: Int) -> Term {
 		return analysis(
 			ifParameter: {
 				$0.analysis(
@@ -24,7 +24,7 @@ public enum Neutral: DebugPrintable {
 
 	// MARK: Analyses
 
-	func analysis<T>(@noescape #ifParameter: Name -> T, @noescape ifApplication: (Neutral, Value) -> T) -> T {
+	public func analysis<T>(@noescape #ifParameter: Name -> T, @noescape ifApplication: (Neutral, Value) -> T) -> T {
 		switch self {
 		case let .Parameter(n):
 			return ifParameter(n)
