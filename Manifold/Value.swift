@@ -18,6 +18,10 @@ public enum Value: DebugPrintable {
 		return .Sigma(Box(value), f >>> Either.right)
 	}
 
+	public static func forall(f: Value -> Value) -> Value {
+		return .pi(.Type, f)
+	}
+
 
 	// MARK: Destructors
 
