@@ -68,6 +68,7 @@ public enum Value: DebugPrintable {
 		return analysis(
 			ifPi: { _, f in f(other) },
 			ifSigma: { _, f in f(other) },
+			ifNeutral: { .right(.neutral(.application($0, other))) },
 			otherwise: const(Either.left("illegal application of \(self) to \(other)")))
 	}
 
