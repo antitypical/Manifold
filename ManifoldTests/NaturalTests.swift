@@ -15,11 +15,20 @@ final class NaturalTests: XCTestCase {
 		assert(type, !=, nil)
 		assert(value?.quote, ==, type.quote)
 	}
+
+	func testSuccessorOfZeroIsOne() {
+		let value = Term.application(Successor, Zero).evaluate(naturalEnvironment)
+		let one = One.evaluate(naturalEnvironment)
+		assert(value, !=, nil)
+		assert(one, !=, nil)
+		assert(value.quote, ==, one.quote)
+	}
 }
 
 let Natural = Term.free("Natural")
 let Zero = Term.free("Zero")
 let One = Term.free("One")
+let Successor = Term.free("Successor")
 
 
 import Assertions
