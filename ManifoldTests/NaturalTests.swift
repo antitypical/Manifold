@@ -8,13 +8,13 @@ final class NaturalTests: XCTestCase {
 		assert(value?.quote, ==, type.quote)
 	}
 
-//	func testReferencesToOneAreWellTyped() {
-//		let value = One.typecheck(naturalEnvironment).right
-//		let type = Natural.evaluate(naturalEnvironment).right
-//		assert(value, !=, nil)
-//		assert(type, !=, nil)
-//		assert(value?.quote, ==, type?.quote)
-//	}
+	func testReferencesToOneAreWellTyped() {
+		let value = One.typecheck(naturalEnvironment.global, from: 0).right
+		let type = Natural.evaluate(naturalEnvironment)
+		assert(value, !=, nil)
+		assert(type, !=, nil)
+		assert(value?.quote, ==, type.quote)
+	}
 }
 
 let Natural = Term.free("Natural")
