@@ -2,7 +2,7 @@
 
 public typealias Type = Value
 
-public typealias Context = [(Name, Type)]
+public typealias Context = [Name: Type]
 
 public func lookup<A: Hashable, B>(dictionary: [A: B], key: A) -> B? {
 	return dictionary[key]

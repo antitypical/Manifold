@@ -77,7 +77,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	// MARK: Type-checking
 
 	public func typecheck() -> Either<Error, Value> {
-		return typecheck([], from: 0)
+		return typecheck([:], from: 0)
 	}
 
 	public func typecheck(context: Context, from i: Int) -> Either<Error, Value> {
@@ -104,7 +104,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 				t.typecheck(context, from: i)
 					.flatMap { _ in
 						let t = t.evaluate()
-						return b.substitute(0, .free(.Local(i))).typecheck([ (.Local(i), t) ] + context, from: i + 1)
+						return b.substitute(0, .free(.Local(i))).typecheck([ .Local(i): t ] + context, from: i + 1)
 							.map { Value.function(t, $0) }
 					}
 			},
@@ -112,7 +112,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 				t.typecheck(context, from: i)
 					.flatMap { _ in
 						let t = t.evaluate()
-						return b.substitute(0, .free(.Local(i))).typecheck([ (.Local(i), t) ] + context, from: i + 1)
+						return b.substitute(0, .free(.Local(i))).typecheck([ .Local(i): t ] + context, from: i + 1)
 							.map { Value.product(t, $0) }
 					}
 			})
