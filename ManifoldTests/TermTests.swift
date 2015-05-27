@@ -53,9 +53,9 @@ final class TermTests: XCTestCase {
 	}
 
 	func testEvaluation() {
-//		let value = identity.typecheck().map { Term.application(Term.application(identity, $0.quote), identity).evaluate() }
-//		assert(value.right?.quote, ==, identity)
-//		assert(value.left, ==, nil)
+		let value = identity.typecheck().map { Term.application(Term.application(identity, $0.quote), identity).evaluate() }
+		assert(value.right?.quote, ==, identity)
+		assert(value.left, ==, nil)
 	}
 
 
