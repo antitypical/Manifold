@@ -104,7 +104,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 				t.typecheck(context, from: i)
 					.flatMap { _ in
 						let t = t.evaluate()
-						return b.typecheck([ (.Local(i), t) ] + context, from: i + 1)
+						return b.substitute(0, .free(.Local(i))).typecheck([ (.Local(i), t) ] + context, from: i + 1)
 							.map { Value.function(t, $0) }
 					}
 			},
@@ -112,7 +112,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 				t.typecheck(context, from: i)
 					.flatMap { _ in
 						let t = t.evaluate()
-						return b.typecheck([ (.Local(i), t) ] + context, from: i + 1)
+						return b.substitute(0, .free(.Local(i))).typecheck([ (.Local(i), t) ] + context, from: i + 1)
 							.map { Value.product(t, $0) }
 					}
 			})
