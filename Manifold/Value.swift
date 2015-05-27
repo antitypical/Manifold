@@ -22,6 +22,10 @@ public enum Value: DebugPrintable {
 		return .pi(from, const(to))
 	}
 
+	public static func product(a: Value, _ b: Value) -> Value {
+		return .sigma(a, const(b))
+	}
+
 	public static func application(f: Manifold.Neutral, _ v: Value) -> Value {
 		return .neutral(.application(f, v))
 	}
