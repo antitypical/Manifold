@@ -7,11 +7,11 @@ public enum Value: DebugPrintable {
 	// MARK: Constructors
 
 	public static func pi(value: Value, _ f: Value -> Value) -> Value {
-		return .Pi(Box(value), f >>> Either.right)
+		return .Pi(Box(value), f)
 	}
 
 	public static func sigma(value: Value, _ f: Value -> Value) -> Value {
-		return .Sigma(Box(value), f >>> Either.right)
+		return .Sigma(Box(value), f)
 	}
 
 	public static func forall(f: Value -> Value) -> Value {
@@ -51,13 +51,13 @@ public enum Value: DebugPrintable {
 			otherwise: const(false))
 	}
 
-	public var pi: (Value, Value -> Either<Error, Value>)? {
+	public var pi: (Value, Value -> Value)? {
 		return analysis(
 			ifPi: unit,
 			otherwise: const(nil))
 	}
 
-	public var sigma: (Value, Value -> Either<Error, Value>)? {
+	public var sigma: (Value, Value -> Value)? {
 		return analysis(
 			ifSigma: unit,
 			otherwise: const(nil))
@@ -72,12 +72,12 @@ public enum Value: DebugPrintable {
 
 	// MARK: Application
 
-	public func apply(other: Value) -> Either<Error, Value> {
+	public func apply(other: Value) -> Value {
 		return analysis(
 			ifPi: { _, f in f(other) },
 			ifSigma: { _, f in f(other) },
-			ifNeutral: { .right(.neutral(.application($0, other))) },
-			otherwise: const(Either.left("illegal application of \(self) to \(other)")))
+			ifNeutral: { .neutral(.application($0, other)) },
+			otherwise: { assert(false, "illegal application of \(self) to \(other)") ; return .Type })
 	}
 
 
@@ -91,14 +91,10 @@ public enum Value: DebugPrintable {
 		return analysis(
 			ifType: const(.type),
 			ifPi: { type, f in
-				f(.free(.Quote(n))).either(
-					ifLeft: { x in assert(false, "\(x) in \(self)") ; return Term.type },
-					ifRight: { Term(Checkable.Pi(Box(type.quote(n)), Box($0.quote(n + 1)))) })
+				Term(Checkable.Pi(Box(type.quote(n)), Box(f(.free(.Quote(n))).quote(n + 1))))
 			},
 			ifSigma: { type, f in
-				f(.free(.Quote(n))).either(
-					ifLeft: { x in assert(false, "\(x) in \(self)") ; return Term.type },
-					ifRight: { Term(Checkable.Sigma(Box(type.quote(n)), Box($0.quote(n + 1)))) })
+				Term(Checkable.Sigma(Box(type.quote(n)), Box(f(.free(.Quote(n))).quote(n + 1))))
 			},
 			ifNeutral: {
 				$0.quote(n)
@@ -110,8 +106,8 @@ public enum Value: DebugPrintable {
 
 	public func analysis<T>(
 		@noescape #ifType: () -> T,
-		@noescape ifPi: (Value, Value -> Either<Error, Value>) -> T,
-		@noescape ifSigma: (Value, Value -> Either<Error, Value>) -> T,
+		@noescape ifPi: (Value, Value -> Value) -> T,
+		@noescape ifSigma: (Value, Value -> Value) -> T,
 		@noescape ifNeutral: Manifold.Neutral -> T) -> T {
 		switch self {
 		case .Type:
@@ -127,8 +123,8 @@ public enum Value: DebugPrintable {
 
 	public func analysis<T>(
 		ifType: (() -> T)? = nil,
-		ifPi: ((Value, Value -> Either<Error, Value>) -> T)? = nil,
-		ifSigma: ((Value, Value -> Either<Error, Value>) -> T)? = nil,
+		ifPi: ((Value, Value -> Value) -> T)? = nil,
+		ifSigma: ((Value, Value -> Value) -> T)? = nil,
 		ifNeutral: (Manifold.Neutral -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
@@ -153,12 +149,11 @@ public enum Value: DebugPrintable {
 	// MARK: Cases
 
 	case Type
-	case Pi(Box<Value>, Value -> Either<Error, Value>)
-	case Sigma(Box<Value>, Value -> Either<Error, Value>)
+	case Pi(Box<Value>, Value -> Value)
+	case Sigma(Box<Value>, Value -> Value)
 	case Neutral(Box<Manifold.Neutral>)
 }
 
 
 import Box
-import Either
 import Prelude

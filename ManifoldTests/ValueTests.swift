@@ -14,7 +14,7 @@ final class ValueTests: XCTestCase {
 	}
 
 	func testQuotationMapsNestedBoundVariablesToBoundVariables() {
-		assert(Value.Pi(Box(.Type)) { _ in Either.right(Value.Pi(Box(.Type), Either.right)) }.quote, ==, Term(.Pi(Box(.type), Box(Term(.Pi(Box(.type), Box(Term(.Bound(1)))))))))
+		assert(Value.pi(.type) { _ in Value.pi(.type, id) }.quote, ==, Term(.Pi(Box(.type), Box(Term(.Pi(Box(.type), Box(Term(.Bound(1)))))))))
 	}
 }
 

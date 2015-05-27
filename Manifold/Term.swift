@@ -84,17 +84,25 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 				a.typecheck(context, from: i)
 					.flatMap { t in
 						t.analysis(
-							ifPi: { v, f in b.typecheck(context, against: v, from: i).flatMap(f) },
+							ifPi: { v, f in b.typecheck(context, against: v, from: i).map(f) },
 							otherwise: const(Either.left("illegal application of \(a) : \(t) to \(b)")))
 					}
 			},
 			ifPi: { t, b -> Either<Error, Value> in
-				t.typecheck(context, against: .Type, from: i)
-					.map { t in Value.Pi(Box(t)) { _ in b.typecheck([ (.Local(i), t) ] + context, from: i) } }
+				t.typecheck(context, from: i)
+					.flatMap { _ in
+						let t = t.evaluate()
+						return b.typecheck([ (.Local(i), t) ] + context, from: i + 1)
+							.map { Value.function(t, $0) }
+					}
 			},
 			ifSigma: { t, b -> Either<Error, Value> in
-				t.typecheck(context, against: .Type, from: i)
-					.map { t in Value.Sigma(Box(t)) { _ in b.typecheck([ (.Local(i), t) ] + context, from: i) } }
+				t.typecheck(context, from: i)
+					.flatMap { _ in
+						let t = t.evaluate()
+						return b.typecheck([ (.Local(i), t) ] + context, from: i + 1)
+							.map { Value.product(t, $0) }
+					}
 			})
 	}
 
@@ -111,26 +119,23 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	// MARK: Evaluation
 
-	public func evaluate(_ environment: Environment = []) -> Either<Error, Value> {
+	public func evaluate(_ environment: Environment = []) -> Value {
 		return expression.analysis(
-			ifType: const(Either.right(.Type)),
-			ifBound: { i -> Either<Error, Value> in
-				.right(environment[i])
+			ifType: const(.Type),
+			ifBound: { i -> Value in
+				environment[i]
 			},
-			ifFree: { i -> Either<Error, Value> in
-				.right(.free(i))
+			ifFree: { i -> Value in
+				.free(i)
 			},
-			ifApplication: { a, b -> Either<Error, Value> in
-				(a.evaluate(environment) &&& b.evaluate(environment))
-					.flatMap { $0.apply($1) }
+			ifApplication: { a, b -> Value in
+				a.evaluate(environment).apply(b.evaluate(environment))
 			},
-			ifPi: { type, body -> Either<Error, Value> in
-				type.evaluate(environment)
-					.map { type in Value.Pi(Box(type)) { body.evaluate([ $0 ] + environment) } }
+			ifPi: { type, body -> Value in
+				Value.pi(type.evaluate(environment)) { body.evaluate([ $0 ] + environment) }
 			},
-			ifSigma: { type, body -> Either<Error, Value> in
-				type.evaluate(environment)
-					.map { type in Value.Sigma(Box(type)) { body.evaluate([ $0 ] + environment) } }
+			ifSigma: { type, body -> Value in
+				Value.sigma(type.evaluate(environment)) { body.evaluate([ $0 ] + environment) }
 			})
 	}
 
