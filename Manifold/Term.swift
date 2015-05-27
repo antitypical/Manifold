@@ -84,11 +84,11 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 		return expression.analysis(
 			ifType: const(Either.right(.Type)),
 			ifBound: { i -> Either<Error, Value> in
-				lookup(context, .Local(i)).map(Either.right)
+				context[.Local(i)].map(Either.right)
 					?? Either.left("unexpectedly free bound variable \(i)")
 			},
 			ifFree: { i -> Either<Error, Value> in
-				lookup(context, i)
+				context[i]
 					.map(Either.right)
 					?? Either.left("unexpected free variable \(i)")
 			},
