@@ -138,7 +138,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 				environment.local[i]
 			},
 			ifFree: { i -> Value in
-				.free(i)
+				environment.global[i] ?? .free(i)
 			},
 			ifApplication: { a, b -> Value in
 				a.evaluate(environment).apply(b.evaluate(environment))
