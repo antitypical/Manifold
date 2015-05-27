@@ -16,7 +16,7 @@ public enum Neutral: DebugPrintable {
 				$0.analysis(
 					ifGlobal: const(Term.free($0)),
 					ifLocal: const(Term.free($0)),
-					ifQuote: Term.bound)
+					ifQuote: { Term.bound(n - $0 - 1) })
 			},
 			ifApplication: { Term.application($0.quote(n), $1.quote(n)) })
 	}
