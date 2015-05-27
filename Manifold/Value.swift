@@ -38,6 +38,10 @@ public enum Value: DebugPrintable {
 		return .Neutral(Box(value))
 	}
 
+	public static var type: Value {
+		return .Type
+	}
+
 
 	// MARK: Destructors
 
