@@ -6,7 +6,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testHigherOrderConstruction() {
-		let expected = Term(.Pi(Box(.type), Box(Term(.Pi(Box(Term(.Bound(0))), Box(Term(.Bound(1))))))))
+		let expected = Term(.Pi(Box(.type), Box(Term(.Pi(Box(Term(.Bound(0))), Box(Term(.Bound(0))))))))
 		assert(identity, ==, expected)
 	}
 
@@ -14,12 +14,12 @@ final class TermTests: XCTestCase {
 //		assert(identity.typecheck().right?.quote, ==, Value.pi(.Type, const(.pi(.Type, const(.Type)))).quote)
 	}
 
-	func testFunctionTypesArePrintedWithAnArrow() {
-//		assert(identity.typecheck().right?.quote.description, ==, "(Type) → (Type) → Type")
+	func testPiTypeDescription() {
+		assert(identity.typecheck().right?.quote.description, ==, "Π : Type . Π : a . a")
 	}
 
-	func testProductTypesArePrintedWithAnX() {
-		assert(Value.sigma(.Type, const(.Type)).quote.typecheck().right?.quote.description, ==, "(Type ✕ Type)")
+	func testSigmaTypeDescription() {
+		assert(Value.sigma(.Type, const(.Type)).quote.typecheck().right?.quote.description, ==, "Σ Type . Type")
 	}
 
 	func testTypeOfTypeIsType() {
