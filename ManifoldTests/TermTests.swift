@@ -2,11 +2,11 @@
 
 final class TermTests: XCTestCase {
 	func testTrivialHigherOrderConstruction() {
-		assert(Value.pi(.Type, id).quote, ==, Term(.Pi(0, Box(.type), Box(Term(.Bound(0))))))
+		assert(Value.pi(.Type, id).quote, ==, Term(.Pi(Box(.type), Box(Term(.Bound(0))))))
 	}
 
 	func testHigherOrderConstruction() {
-		let expected = Term(.Pi(0, Box(.type), Box(Term(.Pi(1, Box(Term(.Bound(0))), Box(Term(.Bound(1))))))))
+		let expected = Term(.Pi(Box(.type), Box(Term(.Pi(Box(Term(.Bound(0))), Box(Term(.Bound(1))))))))
 		assert(identity, ==, expected)
 	}
 
@@ -27,7 +27,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testTypeOfAbstractionIsAbstractionType() {
-		assert(Value.pi(.Type, id).quote.typecheck().right?.quote, ==, Term(.Pi(0, Box(.type), Box(.type))))
+		assert(Value.pi(.Type, id).quote.typecheck().right?.quote, ==, Term(.Pi(Box(.type), Box(.type))))
 	}
 
 
