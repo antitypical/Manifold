@@ -131,11 +131,11 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	// MARK: Evaluation
 
-	public func evaluate(_ environment: Environment = []) -> Value {
+	public func evaluate(_ environment: Environment = Environment()) -> Value {
 		return expression.analysis(
 			ifType: const(.Type),
 			ifBound: { i -> Value in
-				environment[i]
+				environment.local[i]
 			},
 			ifFree: { i -> Value in
 				.free(i)
@@ -144,10 +144,10 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 				a.evaluate(environment).apply(b.evaluate(environment))
 			},
 			ifPi: { type, body -> Value in
-				Value.pi(type.evaluate(environment)) { body.evaluate([ $0 ] + environment) }
+				Value.pi(type.evaluate(environment)) { body.evaluate(environment.byPrepending($0)) }
 			},
 			ifSigma: { type, body -> Value in
-				Value.sigma(type.evaluate(environment)) { body.evaluate([ $0 ] + environment) }
+				Value.sigma(type.evaluate(environment)) { body.evaluate(environment.byPrepending($0)) }
 			})
 	}
 
