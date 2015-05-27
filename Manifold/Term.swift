@@ -118,7 +118,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 				.right(environment[i])
 			},
 			ifFree: { i -> Either<Error, Value> in
-				.right(.parameter(i))
+				.right(.free(i))
 			},
 			ifApplication: { a, b -> Either<Error, Value> in
 				(a.evaluate(environment) &&& b.evaluate(environment))

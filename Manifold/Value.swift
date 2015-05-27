@@ -26,8 +26,8 @@ public enum Value: DebugPrintable {
 		return .neutral(.application(f, v))
 	}
 
-	public static func parameter(name: Name) -> Value {
-		return .neutral(.Parameter(name))
+	public static func free(name: Name) -> Value {
+		return .neutral(.Free(name))
 	}
 
 	public static func neutral(value: Manifold.Neutral) -> Value {
@@ -83,12 +83,12 @@ public enum Value: DebugPrintable {
 		return analysis(
 			ifType: const(.type),
 			ifPi: { type, f in
-				f(.parameter(.Quote(n))).either(
+				f(.free(.Quote(n))).either(
 					ifLeft: { x in assert(false, "\(x) in \(self)") ; return Term.type },
 					ifRight: { Term(Checkable.Pi(Box(type.quote(n)), Box($0.quote(n + 1)))) })
 			},
 			ifSigma: { type, f in
-				f(.parameter(.Quote(n))).either(
+				f(.free(.Quote(n))).either(
 					ifLeft: { x in assert(false, "\(x) in \(self)") ; return Term.type },
 					ifRight: { Term(Checkable.Sigma(Box(type.quote(n)), Box($0.quote(n + 1)))) })
 			},

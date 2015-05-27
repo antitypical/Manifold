@@ -12,7 +12,7 @@ public enum Neutral: DebugPrintable {
 
 	public func quote(n: Int) -> Term {
 		return analysis(
-			ifParameter: {
+			ifFree: {
 				$0.analysis(
 					ifGlobal: const(Term.free($0)),
 					ifLocal: const(Term.free($0)),
@@ -24,10 +24,10 @@ public enum Neutral: DebugPrintable {
 
 	// MARK: Analyses
 
-	public func analysis<T>(@noescape #ifParameter: Name -> T, @noescape ifApplication: (Neutral, Value) -> T) -> T {
+	public func analysis<T>(@noescape #ifFree: Name -> T, @noescape ifApplication: (Neutral, Value) -> T) -> T {
 		switch self {
-		case let .Parameter(n):
-			return ifParameter(n)
+		case let .Free(n):
+			return ifFree(n)
 		case let .Application(n, v):
 			return ifApplication(n.value, v)
 		}
@@ -38,14 +38,14 @@ public enum Neutral: DebugPrintable {
 
 	public var debugDescription: String {
 		return analysis(
-			ifParameter: toDebugString,
+			ifFree: toDebugString,
 			ifApplication: { "\(toDebugString($0))(\(toDebugString($1)))" })
 	}
 
 
 	// MARK: Cases
 
-	case Parameter(Name)
+	case Free(Name)
 	case Application(Box<Neutral>, Value)
 }
 
