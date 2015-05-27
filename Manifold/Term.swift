@@ -62,6 +62,18 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	public let expression: Checkable<Term>
 
 
+	// MARK: Substitution
+
+	public func substitute(i: Int, _ term: Term) -> Term {
+		return expression.analysis(
+			ifBound: { i == $0 ? term : self },
+			ifApplication: { Term.application($0.substitute(i, term), $1.substitute(i, term)) },
+			ifPi: { Term(.Pi(Box($0.substitute(i, term)), Box($1.substitute(i + 1, term)))) },
+			ifSigma: { Term(.Sigma(Box($0.substitute(i, term)), Box($1.substitute(i + 1, term)))) },
+			otherwise: const(self))
+	}
+
+
 	// MARK: Type-checking
 
 	public func typecheck() -> Either<Error, Value> {
