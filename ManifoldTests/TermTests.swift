@@ -11,7 +11,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testTypechecking() {
-//		assert(identity.typecheck().right?.quote, ==, Value.pi(.Type, const(.pi(.Type, const(.Type)))).quote)
+		assert(identity.typecheck().right?.quote, ==, Value.pi(.Type, const(.pi(.free(0), const(.free(0))))).quote)
 	}
 
 	func testPiTypeDescription() {
