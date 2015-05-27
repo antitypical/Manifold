@@ -1,3 +1,3 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public typealias Environment = [ Name: Value ]
+public typealias Environment = [Value]

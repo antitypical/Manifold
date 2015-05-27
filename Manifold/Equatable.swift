@@ -19,10 +19,10 @@ public func == <Recur: Equatable> (left: Checkable<Recur>, right: Checkable<Recu
 		return false
 	case let (.Application(t1, t2), .Application(u1, u2)):
 		return t1.value == u1.value && t2.value == u2.value
-	case let (.Pi(i, t, a), .Pi(j, u, b)):
-		return i == j && t.value == u.value && a.value == b.value
-	case let (.Sigma(i, t, a), .Sigma(j, u, b)):
-		return i == j && t.value == u.value && a.value == b.value
+	case let (.Pi(t, a), .Pi(u, b)):
+		return t.value == u.value && a.value == b.value
+	case let (.Sigma(t, a), .Sigma(u, b)):
+		return t.value == u.value && a.value == b.value
 	default:
 		return false
 	}
