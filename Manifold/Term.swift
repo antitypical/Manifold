@@ -86,7 +86,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public func typecheck(context: Context, from i: Int) -> Either<Error, Value> {
 		return expression.analysis(
-			ifType: const(Either.right(.type)),
+			ifType: { .right(.type($0 + 1)) },
 			ifBound: { i -> Either<Error, Value> in
 				context[.Local(i)].map(Either.right)
 					?? Either.left("unexpectedly free bound variable \(i)")
