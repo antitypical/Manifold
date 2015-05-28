@@ -160,7 +160,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	private static func toDebugString(expression: Checkable<String>) -> String {
 		return expression.analysis(
-			ifType: const("Type"),
+			ifType: { "Type\($0)" },
 			ifBound: { "Bound(\($0))" },
 			ifFree: { "Free(\($0))" },
 			ifApplication: { "\($0)(\($1))" },
