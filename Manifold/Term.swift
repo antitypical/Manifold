@@ -137,7 +137,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public func evaluate(_ environment: Environment = Environment()) -> Value {
 		return expression.analysis(
-			ifType: const(.type),
+			ifType: Value.type,
 			ifBound: { i -> Value in
 				environment.local[i]
 			},
