@@ -1,23 +1,26 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Name: Hashable, DebugPrintable, Printable {
+public enum Name: Hashable, IntegerLiteralConvertible, DebugPrintable, Printable, StringLiteralConvertible {
 	// MARK: Destructors
 
-	public var value: Int {
-		return analysis(ifLocal: id, ifQuote: id)
+	public var global: String? {
+		return analysis(ifGlobal: unit, ifLocal: const(nil), ifQuote: const(nil))
 	}
 
-	public static func value(name: Name) -> Int {
-		return name.value
+	public var value: Int? {
+		return analysis(ifGlobal: const(nil), ifLocal: unit, ifQuote: unit)
 	}
 
 
 	// MARK: Analysis
 
 	public func analysis<T>(
-		@noescape #ifLocal: Int -> T,
+		@noescape #ifGlobal: String -> T,
+		@noescape ifLocal: Int -> T,
 		@noescape ifQuote: Int -> T) -> T {
 		switch self {
+		case let .Global(s):
+			return ifGlobal(s)
 		case let .Local(n):
 			return ifLocal(n)
 		case let .Quote(n):
@@ -30,6 +33,7 @@ public enum Name: Hashable, DebugPrintable, Printable {
 
 	public var debugDescription: String {
 		return analysis(
+			ifGlobal: { "Global(\($0))" },
 			ifLocal: { "Local(\($0))" },
 			ifQuote: { "Quote(\($0))" })
 	}
@@ -38,19 +42,45 @@ public enum Name: Hashable, DebugPrintable, Printable {
 	// MARK: Hashable
 
 	public var hashValue: Int {
-		return value
+		return analysis(ifGlobal: { $0.hashValue }, ifLocal: id, ifQuote: id)
+	}
+
+
+	// MARK: IntegerLiteralConvertible
+
+	public init(integerLiteral value: IntegerLiteralType) {
+		self = Local(value)
 	}
 
 
 	// MARK: Printable
 
 	public var description: String {
-		return toString(value)
+		return analysis(
+			ifGlobal: id,
+			ifLocal: toString,
+			ifQuote: toString)
+	}
+
+
+	// MARK: StringLiteralConvertible
+
+	public init(stringLiteral value: String) {
+		self = Global(value)
+	}
+
+	public init(unicodeScalarLiteral value: String) {
+		self = Global(value)
+	}
+
+	public init(extendedGraphemeClusterLiteral value: String) {
+		self = Global(value)
 	}
 
 
 	// MARK: Cases
 
+	case Global(String)
 	case Local(Int)
 	case Quote(Int)
 }

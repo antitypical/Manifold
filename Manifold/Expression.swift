@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Expression<Recur> {
+public enum Checkable<Recur> {
 	// MARK: Analyses
 
 	public func analysis<T>(
@@ -8,8 +8,8 @@ public enum Expression<Recur> {
 		@noescape ifBound: Int -> T,
 		@noescape ifFree: Name -> T,
 		@noescape ifApplication: (Recur, Recur) -> T,
-		@noescape ifPi: (Int, Recur, Recur) -> T,
-		@noescape ifSigma: (Int, Recur, Recur) -> T) -> T {
+		@noescape ifPi: (Recur, Recur) -> T,
+		@noescape ifSigma: (Recur, Recur) -> T) -> T {
 		switch self {
 		case .Type:
 			return ifType()
@@ -19,10 +19,10 @@ public enum Expression<Recur> {
 			return ifFree(x)
 		case let .Application(a, b):
 			return ifApplication(a.value, b.value)
-		case let .Pi(i, a, b):
-			return ifPi(i, a.value, b.value)
-		case let .Sigma(i, a, b):
-			return ifSigma(i, a.value, b.value)
+		case let .Pi(a, b):
+			return ifPi(a.value, b.value)
+		case let .Sigma(a, b):
+			return ifSigma(a.value, b.value)
 		}
 	}
 
@@ -31,8 +31,8 @@ public enum Expression<Recur> {
 		ifBound: (Int -> T)? = nil,
 		ifFree: (Name -> T)? = nil,
 		ifApplication: ((Recur, Recur) -> T)? = nil,
-		ifPi: ((Int, Recur, Recur) -> T)? = nil,
-		ifSigma: ((Int, Recur, Recur) -> T)? = nil,
+		ifPi: ((Recur, Recur) -> T)? = nil,
+		ifSigma: ((Recur, Recur) -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifType: { ifType?() ?? otherwise() },
@@ -46,14 +46,14 @@ public enum Expression<Recur> {
 
 	// MARK: Functor
 
-	public func map<T>(@noescape transform: Recur -> T) -> Expression<T> {
+	public func map<T>(@noescape transform: Recur -> T) -> Checkable<T> {
 		return analysis(
 			ifType: { .Type },
 			ifBound: { .Bound($0) },
 			ifFree: { .Free($0) },
 			ifApplication: { .Application(Box(transform($0)), Box(transform($1))) },
-			ifPi: { .Pi($0, Box(transform($1)), Box(transform($2))) },
-			ifSigma: { .Sigma($0, Box(transform($1)), Box(transform($2))) })
+			ifPi: { .Pi(Box(transform($0)), Box(transform($1))) },
+			ifSigma: { .Sigma(Box(transform($0)), Box(transform($1))) })
 	}
 
 
@@ -63,8 +63,8 @@ public enum Expression<Recur> {
 	case Bound(Int)
 	case Free(Name)
 	case Application(Box<Recur>, Box<Recur>)
-	case Pi(Int, Box<Recur>, Box<Recur>) // (Πx:A)B where B can depend on x
-	case Sigma(Int, Box<Recur>, Box<Recur>) // (Σx:A)B where B can depend on x
+	case Pi(Box<Recur>, Box<Recur>) // (Πx:A)B where B can depend on x
+	case Sigma(Box<Recur>, Box<Recur>) // (Σx:A)B where B can depend on x
 }
 
 
