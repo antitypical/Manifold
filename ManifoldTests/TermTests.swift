@@ -2,7 +2,7 @@
 
 final class TermTests: XCTestCase {
 	func testTrivialHigherOrderConstruction() {
-		assert(Value.pi(.Type, id).quote, ==, Term(.Pi(Box(.type), Box(Term(.Bound(0))))))
+		assert(Value.pi(.type, id).quote, ==, Term(.Pi(Box(.type), Box(Term(.Bound(0))))))
 	}
 
 	func testHigherOrderConstruction() {
@@ -11,7 +11,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testTypechecking() {
-		assert(identity.typecheck().right?.quote, ==, Value.pi(.Type, const(.pi(.free(0), const(.free(0))))).quote)
+		assert(identity.typecheck().right?.quote, ==, Value.pi(.type, const(.pi(.free(0), const(.free(0))))).quote)
 	}
 
 	func testPiTypeDescription() {
@@ -19,7 +19,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testSigmaTypeDescription() {
-		assert(Value.sigma(.Type, const(.Type)).quote.typecheck().right?.quote.description, ==, "Σ Type . Type")
+		assert(Value.sigma(.type, const(.type)).quote.typecheck().right?.quote.description, ==, "Σ Type . Type")
 	}
 
 	func testTypeOfTypeIsType() {
@@ -27,16 +27,16 @@ final class TermTests: XCTestCase {
 	}
 
 	func testTypeOfAbstractionIsAbstractionType() {
-		assert(Value.pi(.Type, id).quote.typecheck().right?.quote, ==, Term(.Pi(Box(.type), Box(.type))))
+		assert(Value.pi(.type, id).quote.typecheck().right?.quote, ==, Term(.Pi(Box(.type), Box(.type))))
 	}
 
 
 	func testBoundVariablesEvaluateToTheValueBoundInTheEnvironment() {
-		assert(Term(.Bound(2)).evaluate(Environment([ .forall(id), .forall(id), .Type ])).quote, ==, Term.type)
+		assert(Term(.Bound(2)).evaluate(Environment([ .forall(id), .forall(id), .type ])).quote, ==, Term.type)
 	}
 
 	func testTrivialAbstractionEvaluatesToItself() {
-		let lambda = Value.pi(.Type, id).quote
+		let lambda = Value.pi(.type, id).quote
 		assert(lambda.evaluate().quote, ==, lambda)
 	}
 
@@ -49,7 +49,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testApplicationEvaluation() {
-		assert(Term.application(Value.pi(.Type, id).quote, .type).evaluate().quote, ==, .type)
+		assert(Term.application(Value.pi(.type, id).quote, .type).evaluate().quote, ==, .type)
 	}
 
 	func testEvaluation() {
@@ -65,8 +65,8 @@ final class TermTests: XCTestCase {
 }
 
 
-private let identity = Value.pi(.Type) { A in .pi(A, id) }.quote
-private let constant = Value.pi(.Type) { A in Value.pi(.Type) { B in Value.pi(A) { a in Value.pi(B) { b in a } } } }.quote
+private let identity = Value.pi(.type) { A in .pi(A, id) }.quote
+private let constant = Value.pi(.type) { A in Value.pi(.type) { B in Value.pi(A) { a in Value.pi(B) { b in a } } } }.quote
 
 
 import Assertions

@@ -9,7 +9,11 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	// MARK: Constructors
 
 	public static var type: Term {
-		return Term(.Type)
+		return Term(.Type(0))
+	}
+
+	public static func type(n: Int) -> Term {
+		return Term(.Type(n))
 	}
 
 
@@ -82,7 +86,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public func typecheck(context: Context, from i: Int) -> Either<Error, Value> {
 		return expression.analysis(
-			ifType: const(Either.right(.Type)),
+			ifType: { .right(.type($0 + 1)) },
 			ifBound: { i -> Either<Error, Value> in
 				context[.Local(i)].map(Either.right)
 					?? Either.left("unexpectedly free bound variable \(i)")
@@ -122,7 +126,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 		return typecheck(context, from: i)
 			.flatMap { t in
 				let (q, r) = (t.quote, against.quote)
-				return (q == r) || (r == .type && q == Value.function(.Type, .Type).quote)
+				return (q == r) || (r == .type && q == Value.function(.type, .type).quote)
 					? Either.right(t)
 					: Either.left("type mismatch: expected (\(toDebugString(self))) : (\(toDebugString(r))), actually (\(toDebugString(self))) : (\(toDebugString(q))) in environment \(context)")
 			}
@@ -133,7 +137,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public func evaluate(_ environment: Environment = Environment()) -> Value {
 		return expression.analysis(
-			ifType: const(.Type),
+			ifType: Value.type,
 			ifBound: { i -> Value in
 				environment.local[i]
 			},
@@ -160,7 +164,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	private static func toDebugString(expression: Checkable<String>) -> String {
 		return expression.analysis(
-			ifType: const("Type"),
+			ifType: { "Type\($0)" },
 			ifBound: { "Bound(\($0))" },
 			ifFree: { "Free(\($0))" },
 			ifApplication: { "\($0)(\($1))" },
@@ -180,7 +184,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public var hashValue: Int {
 		return expression.analysis(
-			ifType: { 2 },
+			ifType: { 2 ^ $0.hashValue },
 			ifBound: { 3 ^ $0.hashValue },
 			ifFree: { 5 ^ $0.hashValue },
 			ifApplication: { 7 ^ $0.hashValue ^ $1.hashValue },
@@ -200,7 +204,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	private static func toString(expression: Checkable<(Term, String)>) -> String {
 		let alphabetize: Int -> String = { index in Swift.toString(Term.alphabet[advance(Term.alphabet.startIndex, index)]) }
 		return expression.analysis(
-			ifType: const("Type"),
+			ifType: { $0 > 0 ? "Type\($0)" : "Type" },
 			ifBound: alphabetize,
 			ifFree: { $0.analysis(ifGlobal: id, ifLocal: alphabetize, ifQuote: alphabetize) },
 			ifApplication: { "\($0.1)(\($1.1))" },

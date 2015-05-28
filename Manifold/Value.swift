@@ -15,7 +15,7 @@ public enum Value: DebugPrintable {
 	}
 
 	public static func forall(f: Value -> Value) -> Value {
-		return .pi(.Type, f)
+		return .pi(.type, f)
 	}
 
 	public static func function(from: Value, _ to: Value) -> Value {
@@ -39,7 +39,11 @@ public enum Value: DebugPrintable {
 	}
 
 	public static var type: Value {
-		return .Type
+		return .Type(0)
+	}
+
+	public static func type(n: Int) -> Value {
+		return .Type(n)
 	}
 
 
@@ -77,7 +81,7 @@ public enum Value: DebugPrintable {
 			ifPi: { _, f in f(other) },
 			ifSigma: { _, f in f(other) },
 			ifNeutral: { .neutral(.application($0, other)) },
-			otherwise: { assert(false, "illegal application of \(self) to \(other)") ; return .Type })
+			otherwise: { assert(false, "illegal application of \(self) to \(other)") ; return .type })
 	}
 
 
@@ -105,13 +109,13 @@ public enum Value: DebugPrintable {
 	// MARK: Analyses
 
 	public func analysis<T>(
-		@noescape #ifType: () -> T,
+		@noescape #ifType: Int -> T,
 		@noescape ifPi: (Value, Value -> Value) -> T,
 		@noescape ifSigma: (Value, Value -> Value) -> T,
 		@noescape ifNeutral: Manifold.Neutral -> T) -> T {
 		switch self {
-		case .Type:
-			return ifType()
+		case let .Type(n):
+			return ifType(n)
 		case let .Pi(type, body):
 			return ifPi(type.value, body)
 		case let .Sigma(type, body):
@@ -122,13 +126,13 @@ public enum Value: DebugPrintable {
 	}
 
 	public func analysis<T>(
-		ifType: (() -> T)? = nil,
+		ifType: (Int -> T)? = nil,
 		ifPi: ((Value, Value -> Value) -> T)? = nil,
 		ifSigma: ((Value, Value -> Value) -> T)? = nil,
 		ifNeutral: (Manifold.Neutral -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
-			ifType: { ifType?() ?? otherwise() },
+			ifType: { ifType?($0) ?? otherwise() },
 			ifPi: { ifPi?($0) ?? otherwise() },
 			ifSigma: { ifSigma?($0) ?? otherwise() },
 			ifNeutral: { ifNeutral?($0) ?? otherwise() })
@@ -139,7 +143,7 @@ public enum Value: DebugPrintable {
 
 	public var debugDescription: String {
 		return analysis(
-			ifType: const("Type"),
+			ifType: { "Type\($0)" },
 			ifPi: { "(Π ? : \(toDebugString($0)) . \(toDebugString($1)))" },
 			ifSigma: { "(Σ ? : \(toDebugString($0)) . \(toDebugString($1)))" },
 			ifNeutral: toDebugString)
@@ -148,7 +152,7 @@ public enum Value: DebugPrintable {
 
 	// MARK: Cases
 
-	case Type
+	case Type(Int)
 	case Pi(Box<Value>, Value -> Value)
 	case Sigma(Box<Value>, Value -> Value)
 	case Neutral(Box<Manifold.Neutral>)
