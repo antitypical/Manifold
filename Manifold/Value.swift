@@ -42,6 +42,10 @@ public enum Value: DebugPrintable {
 		return .Type(0)
 	}
 
+	public static func type(n: Int) -> Value {
+		return .Type(n)
+	}
+
 
 	// MARK: Destructors
 
