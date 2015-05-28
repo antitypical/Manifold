@@ -12,6 +12,10 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 		return Term(.Type(0))
 	}
 
+	public static func type(n: Int) -> Term {
+		return Term(.Type(n))
+	}
+
 
 	public static func application(a: Term, _ b: Term) -> Term {
 		return Term(.Application(Box(a), Box(b)))
