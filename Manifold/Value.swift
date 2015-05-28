@@ -139,7 +139,7 @@ public enum Value: DebugPrintable {
 
 	public var debugDescription: String {
 		return analysis(
-			ifType: const("Type"),
+			ifType: { "Type\($0)" },
 			ifPi: { "(Π ? : \(toDebugString($0)) . \(toDebugString($1)))" },
 			ifSigma: { "(Σ ? : \(toDebugString($0)) . \(toDebugString($1)))" },
 			ifNeutral: toDebugString)
