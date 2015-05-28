@@ -2,11 +2,11 @@
 
 final class ValueTests: XCTestCase {
 	func testQuotation() {
-		assert(Value.pi(.Type, id).quote, ==, Value.pi(.Type, id).quote)
+		assert(Value.pi(.type, id).quote, ==, Value.pi(.type, id).quote)
 	}
 
 	func testNestedQuotation() {
-		assert(Value.pi(.Type) { Value.pi(.Type, const($0)) }.quote, ==, Term(.Pi(Box(.type), Box(Term(.Pi(Box(.type), Box(Term(.Bound(1)))))))))
+		assert(Value.pi(.type) { Value.pi(.type, const($0)) }.quote, ==, Term(.Pi(Box(.type), Box(Term(.Pi(Box(.type), Box(Term(.Bound(1)))))))))
 	}
 
 	func testQuotationMapsNestedBoundVariablesToBoundVariables() {

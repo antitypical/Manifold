@@ -82,7 +82,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public func typecheck(context: Context, from i: Int) -> Either<Error, Value> {
 		return expression.analysis(
-			ifType: const(Either.right(.Type)),
+			ifType: const(Either.right(.type)),
 			ifBound: { i -> Either<Error, Value> in
 				context[.Local(i)].map(Either.right)
 					?? Either.left("unexpectedly free bound variable \(i)")
@@ -122,7 +122,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 		return typecheck(context, from: i)
 			.flatMap { t in
 				let (q, r) = (t.quote, against.quote)
-				return (q == r) || (r == .type && q == Value.function(.Type, .Type).quote)
+				return (q == r) || (r == .type && q == Value.function(.type, .type).quote)
 					? Either.right(t)
 					: Either.left("type mismatch: expected (\(toDebugString(self))) : (\(toDebugString(r))), actually (\(toDebugString(self))) : (\(toDebugString(q))) in environment \(context)")
 			}
@@ -133,7 +133,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public func evaluate(_ environment: Environment = Environment()) -> Value {
 		return expression.analysis(
-			ifType: const(.Type),
+			ifType: const(.type),
 			ifBound: { i -> Value in
 				environment.local[i]
 			},
