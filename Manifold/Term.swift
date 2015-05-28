@@ -9,7 +9,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	// MARK: Constructors
 
 	public static var type: Term {
-		return Term(.Type)
+		return Term(.Type(0))
 	}
 
 
@@ -180,7 +180,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public var hashValue: Int {
 		return expression.analysis(
-			ifType: { 2 },
+			ifType: { 2 ^ $0.hashValue },
 			ifBound: { 3 ^ $0.hashValue },
 			ifFree: { 5 ^ $0.hashValue },
 			ifApplication: { 7 ^ $0.hashValue ^ $1.hashValue },
