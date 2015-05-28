@@ -200,7 +200,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	private static func toString(expression: Checkable<(Term, String)>) -> String {
 		let alphabetize: Int -> String = { index in Swift.toString(Term.alphabet[advance(Term.alphabet.startIndex, index)]) }
 		return expression.analysis(
-			ifType: const("Type"),
+			ifType: { $0 > 0 ? "Type\($0)" : "Type" },
 			ifBound: alphabetize,
 			ifFree: { $0.analysis(ifGlobal: id, ifLocal: alphabetize, ifQuote: alphabetize) },
 			ifApplication: { "\($0.1)(\($1.1))" },
