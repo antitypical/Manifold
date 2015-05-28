@@ -8,21 +8,21 @@ final class NaturalTests: XCTestCase {
 		assert(value?.quote, ==, type.quote)
 	}
 
-	func testReferencesToOneAreWellTyped() {
-		let value = One.typecheck(naturalEnvironment.global, from: 0).right
-		let type = Natural.evaluate(naturalEnvironment)
-		assert(value, !=, nil)
-		assert(type, !=, nil)
-		assert(value?.quote, ==, type.quote)
-	}
-
-	func testSuccessorOfZeroIsOne() {
-		let value = Term.application(Successor, Zero).evaluate(naturalEnvironment)
-		let one = One.evaluate(naturalEnvironment)
-		assert(value, !=, nil)
-		assert(one, !=, nil)
-		assert(value.quote, ==, one.quote)
-	}
+//	func testReferencesToOneAreWellTyped() {
+//		let value = One.typecheck(naturalEnvironment.global, from: 0).right
+//		let type = Natural.evaluate(naturalEnvironment)
+//		assert(value, !=, nil)
+//		assert(type, !=, nil)
+//		assert(value?.quote, ==, type.quote)
+//	}
+//
+//	func testSuccessorOfZeroIsOne() {
+//		let value = Term.application(Successor, Zero).evaluate(naturalEnvironment)
+//		let one = One.evaluate(naturalEnvironment)
+//		assert(value, !=, nil)
+//		assert(one, !=, nil)
+//		assert(value.quote, ==, one.quote)
+//	}
 }
 
 let Natural = Term.free("Natural")
