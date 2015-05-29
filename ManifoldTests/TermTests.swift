@@ -62,6 +62,13 @@ final class TermTests: XCTestCase {
 	func testGlobalsPrintTheirNames() {
 		assert(Term(.Free("Global")).description, ==, "Global")
 	}
+
+
+	func testThing() {
+		property["reflexivity"] = forAll { (term: Term) in
+			term == term
+		}
+	}
 }
 
 
