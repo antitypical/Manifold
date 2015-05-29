@@ -64,6 +64,31 @@ final class TermTests: XCTestCase {
 	}
 }
 
+
+extension Term: Arbitrary {
+	public static func arbitrary(n: Int) -> Gen<Term> {
+		return Gen.oneOf([
+			Gen.pure(Term.type),
+			Name.arbitrary().fmap(Term.free),
+			Term.arbitrary().bind { x in Term.arbitrary().fmap { y in Term.application(x, y) } },
+			Term.arbitrary().fmap { x in Term(.Pi(Box(.type), Box(x))) },
+		])
+	}
+
+	public static func arbitrary() -> Gen<Term> {
+		return arbitrary(0)
+	}
+
+	public static func shrink(term: Term) -> [Term] {
+		return term.expression.analysis(
+			ifType: { shrinkIntegral($0).map(Term.type) },
+			ifBound: { _ in shrinkNone(term) },
+			ifFree: { Name.shrink($0).map(Term.free) },
+			ifApplication: { x, y in Term.shrink(x).flatMap { x in Term.shrink(y).map { y in Term.application(x, y) } } },
+			otherwise: const([]))
+	}
+}
+
 extension Name: Arbitrary {
 	public static func arbitrary() -> Gen<Name> {
 		return Gen.oneOf([
