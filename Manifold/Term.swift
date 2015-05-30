@@ -41,25 +41,25 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public var bound: Int? {
 		return expression.analysis(
-			ifBound: unit,
+			ifBound: pure,
 			otherwise: const(nil))
 	}
 
 	public var application: (Term, Term)? {
 		return expression.analysis(
-			ifApplication: unit,
+			ifApplication: pure,
 			otherwise: const(nil))
 	}
 
 	public var pi: (Term, Term)? {
 		return expression.analysis(
-			ifPi: unit,
+			ifPi: pure,
 			otherwise: const(nil))
 	}
 
 	public var sigma: (Term, Term)? {
 		return expression.analysis(
-			ifSigma: unit,
+			ifSigma: pure,
 			otherwise: const(nil))
 	}
 
@@ -215,6 +215,11 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 				"Σ \($0.1) . \($1.1)"
 			})
 	}
+}
+
+
+private func pure<T>(x: T) -> T? {
+	return x
 }
 
 
