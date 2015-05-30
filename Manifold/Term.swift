@@ -86,6 +86,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public func typecheck(context: Context, from i: Int) -> Either<Error, Value> {
 		return expression.analysis(
+			ifUnit: const(.right(.Unit)),
 			ifType: { .right(.type($0 + 1)) },
 			ifBound: { i -> Either<Error, Value> in
 				context[.Local(i)].map(Either.right)
@@ -137,6 +138,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public func evaluate(_ environment: Environment = Environment()) -> Value {
 		return expression.analysis(
+			ifUnit: const(.Unit),
 			ifType: Value.type,
 			ifBound: { i -> Value in
 				environment.local[i]
@@ -164,6 +166,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	private static func toDebugString(expression: Checkable<String>) -> String {
 		return expression.analysis(
+			ifUnit: const("Unit"),
 			ifType: { "Type\($0)" },
 			ifBound: { "Bound(\($0))" },
 			ifFree: { "Free(\($0))" },
@@ -184,6 +187,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public var hashValue: Int {
 		return expression.analysis(
+			ifUnit: const(1),
 			ifType: { 2 ^ $0.hashValue },
 			ifBound: { 3 ^ $0.hashValue },
 			ifFree: { 5 ^ $0.hashValue },
@@ -204,6 +208,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	private static func toString(expression: Checkable<(Term, String)>) -> String {
 		let alphabetize: Int -> String = { index in Swift.toString(Term.alphabet[advance(Term.alphabet.startIndex, index)]) }
 		return expression.analysis(
+			ifUnit: const("Unit"),
 			ifType: { $0 > 0 ? "Type\($0)" : "Type" },
 			ifBound: alphabetize,
 			ifFree: { $0.analysis(ifGlobal: id, ifLocal: alphabetize, ifQuote: alphabetize) },

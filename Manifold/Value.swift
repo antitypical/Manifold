@@ -93,6 +93,7 @@ public enum Value: DebugPrintable {
 
 	func quote(n: Int) -> Term {
 		return analysis(
+			ifUnit: const(.unit),
 			ifType: const(.type),
 			ifPi: { type, f in
 				Term(Checkable.Pi(Box(type.quote(n)), Box(f(.free(.Quote(n))).quote(n + 1))))
@@ -109,11 +110,14 @@ public enum Value: DebugPrintable {
 	// MARK: Analyses
 
 	public func analysis<T>(
-		@noescape #ifType: Int -> T,
+		@noescape #ifUnit: () -> T,
+		@noescape ifType: Int -> T,
 		@noescape ifPi: (Value, Value -> Value) -> T,
 		@noescape ifSigma: (Value, Value -> Value) -> T,
 		@noescape ifNeutral: Manifold.Neutral -> T) -> T {
 		switch self {
+		case let .Unit:
+			return ifUnit()
 		case let .Type(n):
 			return ifType(n)
 		case let .Pi(type, body):
@@ -126,12 +130,14 @@ public enum Value: DebugPrintable {
 	}
 
 	public func analysis<T>(
+		ifUnit: (() -> T)? = nil,
 		ifType: (Int -> T)? = nil,
 		ifPi: ((Value, Value -> Value) -> T)? = nil,
 		ifSigma: ((Value, Value -> Value) -> T)? = nil,
 		ifNeutral: (Manifold.Neutral -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
+			ifUnit: {ifUnit?() ?? otherwise() },
 			ifType: { ifType?($0) ?? otherwise() },
 			ifPi: { ifPi?($0) ?? otherwise() },
 			ifSigma: { ifSigma?($0) ?? otherwise() },
@@ -143,6 +149,7 @@ public enum Value: DebugPrintable {
 
 	public var debugDescription: String {
 		return analysis(
+			ifUnit: const("Unit"),
 			ifType: { "Type\($0)" },
 			ifPi: { "(Π ? : \(toDebugString($0)) . \(toDebugString($1)))" },
 			ifSigma: { "(Σ ? : \(toDebugString($0)) . \(toDebugString($1)))" },
@@ -152,6 +159,7 @@ public enum Value: DebugPrintable {
 
 	// MARK: Cases
 
+	case Unit
 	case Type(Int)
 	case Pi(Box<Value>, Value -> Value)
 	case Sigma(Box<Value>, Value -> Value)

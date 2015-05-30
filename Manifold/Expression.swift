@@ -4,13 +4,16 @@ public enum Checkable<Recur> {
 	// MARK: Analyses
 
 	public func analysis<T>(
-		@noescape #ifType: Int -> T,
+		@noescape #ifUnit: () -> T,
+		@noescape ifType: Int -> T,
 		@noescape ifBound: Int -> T,
 		@noescape ifFree: Name -> T,
 		@noescape ifApplication: (Recur, Recur) -> T,
 		@noescape ifPi: (Recur, Recur) -> T,
 		@noescape ifSigma: (Recur, Recur) -> T) -> T {
 		switch self {
+		case .Unit:
+			return ifUnit()
 		case let .Type(n):
 			return ifType(n)
 		case let .Bound(x):
@@ -27,6 +30,7 @@ public enum Checkable<Recur> {
 	}
 
 	public func analysis<T>(
+		ifUnit: (() -> T)? = nil,
 		ifType: (Int -> T)? = nil,
 		ifBound: (Int -> T)? = nil,
 		ifFree: (Name -> T)? = nil,
@@ -35,6 +39,7 @@ public enum Checkable<Recur> {
 		ifSigma: ((Recur, Recur) -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
+			ifUnit: { ifUnit?() ?? otherwise() },
 			ifType: { ifType?($0) ?? otherwise() },
 			ifBound: { ifBound?($0) ?? otherwise() },
 			ifFree: { ifFree?($0) ?? otherwise() },
@@ -48,6 +53,7 @@ public enum Checkable<Recur> {
 
 	public func map<T>(@noescape transform: Recur -> T) -> Checkable<T> {
 		return analysis(
+			ifUnit: const(.Unit),
 			ifType: { .Type($0) },
 			ifBound: { .Bound($0) },
 			ifFree: { .Free($0) },
@@ -59,6 +65,7 @@ public enum Checkable<Recur> {
 
 	// MARK: Cases
 
+	case Unit
 	case Type(Int)
 	case Bound(Int)
 	case Free(Name)
@@ -69,3 +76,4 @@ public enum Checkable<Recur> {
 
 
 import Box
+import Prelude
