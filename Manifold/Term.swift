@@ -8,6 +8,11 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	// MARK: Constructors
 
+	public static var unit: Term {
+		return Term(.Unit)
+	}
+
+
 	public static var type: Term {
 		return Term(.Type(0))
 	}
@@ -32,6 +37,12 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 
 	// MARK: Destructors
+
+	public var isUnit: Bool {
+		return expression.analysis(
+			ifUnit: const(true),
+			otherwise: const(false))
+	}
 
 	public var isType: Bool {
 		return expression.analysis(
