@@ -3,7 +3,7 @@
 /// `Value` represents a form which cannot undergo further evaluation.
 ///
 /// This makes it sort of like a `Term` in normal form, i.e. already evaluated.
-public enum Value: DebugPrintable {
+public enum Value: DebugPrintable, StringLiteralConvertible {
 	// MARK: Constructors
 
 	public static func pi(value: Value, _ f: Value -> Value) -> Value {
@@ -147,6 +147,27 @@ public enum Value: DebugPrintable {
 			ifPi: { "(Π ? : \(toDebugString($0)) . \(toDebugString($1)))" },
 			ifSigma: { "(Σ ? : \(toDebugString($0)) . \(toDebugString($1)))" },
 			ifNeutral: toDebugString)
+	}
+
+
+	// MARK: ExtendedGraphemeClusterLiteralConvertible
+
+	public init(extendedGraphemeClusterLiteral value: String) {
+		self = .free(Name.Global(value))
+	}
+
+
+	// MARK: StringLiteralConvertible
+
+	public init(stringLiteral value: String) {
+		self = .free(Name.Global(value))
+	}
+
+
+	// MARK: UnicodeScalarLiteralConvertible
+
+	public init(unicodeScalarLiteral value: String) {
+		self = .free(Name.Global(value))
 	}
 
 
