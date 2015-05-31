@@ -30,6 +30,12 @@ public enum Value: DebugPrintable {
 		return foldr(values, Value.UnitTerm, Value.product)
 	}
 
+
+	public static func sum(a: Value, _ b: Value) -> Value {
+		return .sigma(a, const(b))
+	}
+
+
 	public static func application(f: Manifold.Neutral, _ v: Value) -> Value {
 		return .neutral(.application(f, v))
 	}
