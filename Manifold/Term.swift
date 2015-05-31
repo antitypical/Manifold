@@ -42,9 +42,15 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	// MARK: Destructors
 
-	public var isUnit: Bool {
+	public var isUnitTerm: Bool {
 		return expression.analysis(
 			ifUnitTerm: const(true),
+			otherwise: const(false))
+	}
+
+	public var isUnitType: Bool {
+		return expression.analysis(
+			ifUnitType: const(true),
 			otherwise: const(false))
 	}
 

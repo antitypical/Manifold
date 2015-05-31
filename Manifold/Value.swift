@@ -49,6 +49,18 @@ public enum Value: DebugPrintable {
 
 	// MARK: Destructors
 
+	public var isUnitTerm: Bool {
+		return analysis(
+			ifUnitTerm: const(true),
+			otherwise: const(false))
+	}
+
+	public var isUnitType: Bool {
+		return analysis(
+			ifUnitType: const(true),
+			otherwise: const(false))
+	}
+
 	public var isType: Bool {
 		return analysis(
 			ifType: const(true),
