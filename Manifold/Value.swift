@@ -137,7 +137,7 @@ public enum Value: DebugPrintable {
 		ifNeutral: (Manifold.Neutral -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
-			ifUnit: {ifUnit?() ?? otherwise() },
+			ifUnit: { ifUnit?() ?? otherwise() },
 			ifType: { ifType?($0) ?? otherwise() },
 			ifPi: { ifPi?($0) ?? otherwise() },
 			ifSigma: { ifSigma?($0) ?? otherwise() },
