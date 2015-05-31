@@ -97,7 +97,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public func typecheck(context: Context, from i: Int) -> Either<Error, Value> {
 		return expression.analysis(
-			ifUnitTerm: const(.right(.Unit)),
+			ifUnitTerm: const(.right(.UnitTerm)),
 			ifType: { .right(.type($0 + 1)) },
 			ifBound: { i -> Either<Error, Value> in
 				context[.Local(i)].map(Either.right)
@@ -149,7 +149,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public func evaluate(_ environment: Environment = Environment()) -> Value {
 		return expression.analysis(
-			ifUnitTerm: const(.Unit),
+			ifUnitTerm: const(.UnitTerm),
 			ifType: Value.type,
 			ifBound: { i -> Value in
 				environment.local[i]
