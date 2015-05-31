@@ -116,7 +116,7 @@ public enum Value: DebugPrintable {
 		@noescape ifSigma: (Value, Value -> Value) -> T,
 		@noescape ifNeutral: Manifold.Neutral -> T) -> T {
 		switch self {
-		case let .Unit:
+		case .Unit:
 			return ifUnit()
 		case let .Type(n):
 			return ifType(n)
