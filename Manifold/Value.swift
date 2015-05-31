@@ -22,6 +22,7 @@ public enum Value: DebugPrintable {
 		return .pi(from, const(to))
 	}
 
+
 	public static func product(a: Value, _ b: Value) -> Value {
 		return .sigma(a, const(b))
 	}
@@ -33,6 +34,11 @@ public enum Value: DebugPrintable {
 
 	public static func sum(a: Value, _ b: Value) -> Value {
 		return .sigma(a, const(b))
+	}
+
+	public static func sum(values: [Value]) -> Value {
+		let a = first(values), b = dropFirst(values)
+		return a.map { reduce(dropFirst(values), $0, Value.sum) } ?? Value.UnitTerm
 	}
 
 
