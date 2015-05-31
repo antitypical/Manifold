@@ -8,6 +8,15 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	// MARK: Constructors
 
+	public static var unitTerm: Term {
+		return Term(.UnitTerm)
+	}
+
+	public static var unitType: Term {
+		return Term(.UnitType)
+	}
+
+
 	public static var type: Term {
 		return Term(.Type(0))
 	}
@@ -33,6 +42,18 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	// MARK: Destructors
 
+	public var isUnitTerm: Bool {
+		return expression.analysis(
+			ifUnitTerm: const(true),
+			otherwise: const(false))
+	}
+
+	public var isUnitType: Bool {
+		return expression.analysis(
+			ifUnitType: const(true),
+			otherwise: const(false))
+	}
+
 	public var isType: Bool {
 		return expression.analysis(
 			ifType: const(true),
@@ -41,25 +62,25 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public var bound: Int? {
 		return expression.analysis(
-			ifBound: unit,
+			ifBound: pure,
 			otherwise: const(nil))
 	}
 
 	public var application: (Term, Term)? {
 		return expression.analysis(
-			ifApplication: unit,
+			ifApplication: pure,
 			otherwise: const(nil))
 	}
 
 	public var pi: (Term, Term)? {
 		return expression.analysis(
-			ifPi: unit,
+			ifPi: pure,
 			otherwise: const(nil))
 	}
 
 	public var sigma: (Term, Term)? {
 		return expression.analysis(
-			ifSigma: unit,
+			ifSigma: pure,
 			otherwise: const(nil))
 	}
 
@@ -86,6 +107,8 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public func typecheck(context: Context, from i: Int) -> Either<Error, Value> {
 		return expression.analysis(
+			ifUnitTerm: const(.right(.UnitType)),
+			ifUnitType: const(.right(.type)),
 			ifType: { .right(.type($0 + 1)) },
 			ifBound: { i -> Either<Error, Value> in
 				context[.Local(i)].map(Either.right)
@@ -137,6 +160,8 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public func evaluate(_ environment: Environment = Environment()) -> Value {
 		return expression.analysis(
+			ifUnitTerm: const(.UnitTerm),
+			ifUnitType: const(.UnitType),
 			ifType: Value.type,
 			ifBound: { i -> Value in
 				environment.local[i]
@@ -164,6 +189,8 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	private static func toDebugString(expression: Checkable<String>) -> String {
 		return expression.analysis(
+			ifUnitTerm: const("()"),
+			ifUnitType: const("Unit"),
 			ifType: { "Type\($0)" },
 			ifBound: { "Bound(\($0))" },
 			ifFree: { "Free(\($0))" },
@@ -184,6 +211,8 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public var hashValue: Int {
 		return expression.analysis(
+			ifUnitTerm: const(0),
+			ifUnitType: const(1),
 			ifType: { 2 ^ $0.hashValue },
 			ifBound: { 3 ^ $0.hashValue },
 			ifFree: { 5 ^ $0.hashValue },
@@ -204,6 +233,8 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	private static func toString(expression: Checkable<(Term, String)>) -> String {
 		let alphabetize: Int -> String = { index in Swift.toString(Term.alphabet[advance(Term.alphabet.startIndex, index)]) }
 		return expression.analysis(
+			ifUnitTerm: const("()"),
+			ifUnitType: const("Unit"),
 			ifType: { $0 > 0 ? "Type\($0)" : "Type" },
 			ifBound: alphabetize,
 			ifFree: { $0.analysis(ifGlobal: id, ifLocal: alphabetize, ifQuote: alphabetize) },
@@ -215,6 +246,11 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 				"Σ \($0.1) . \($1.1)"
 			})
 	}
+}
+
+
+private func pure<T>(x: T) -> T? {
+	return x
 }
 
 
