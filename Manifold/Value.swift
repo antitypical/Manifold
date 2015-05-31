@@ -26,8 +26,8 @@ public enum Value: DebugPrintable {
 		return .sigma(a, const(b))
 	}
 
-	public static func product(types: [Value]) -> Value {
-		return foldr(types, Value.UnitTerm, Value.product)
+	public static func product(values: [Value]) -> Value {
+		return foldr(values, Value.UnitTerm, Value.product)
 	}
 
 	public static func application(f: Manifold.Neutral, _ v: Value) -> Value {
