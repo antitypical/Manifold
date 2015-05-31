@@ -17,6 +17,10 @@ final class ValueTests: XCTestCase {
 	func testNullaryProductIsUnitTerm() {
 		assert(Value.product([]).quote, ==, Term.unitTerm)
 	}
+
+	func testUnaryProductEndsWithUnitTerm() {
+		assert(Value.product([ Value.type ]).quote, ==, Term(.Sigma(Box(.type), Box(.unitTerm))))
+	}
 }
 
 
