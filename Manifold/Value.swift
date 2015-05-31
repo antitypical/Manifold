@@ -26,6 +26,10 @@ public enum Value: DebugPrintable {
 		return .sigma(a, const(b))
 	}
 
+	public static func product(types: [Value]) -> Value {
+		return foldr(types, Value.UnitTerm, Value.product)
+	}
+
 	public static func application(f: Manifold.Neutral, _ v: Value) -> Value {
 		return .neutral(.application(f, v))
 	}
@@ -184,6 +188,16 @@ public enum Value: DebugPrintable {
 	case Pi(Box<Value>, Value -> Value)
 	case Sigma(Box<Value>, Value -> Value)
 	case Neutral(Box<Manifold.Neutral>)
+}
+
+
+private func foldr<S: SequenceType, T>(sequence: S, final: T, combine: (S.Generator.Element, T) -> T) -> T {
+	return foldr(sequence.generate(), final, combine)
+}
+
+private func foldr<G: GeneratorType, T>(var generator: G, final: T, combine: (G.Element, T) -> T) -> T {
+	let next = generator.next()
+	return next.map { combine($0, foldr(generator, final, combine)) } ?? final
 }
 
 
