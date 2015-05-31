@@ -8,7 +8,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	// MARK: Constructors
 
-	public static var unit: Term {
+	public static var unitTerm: Term {
 		return Term(.UnitTerm)
 	}
 

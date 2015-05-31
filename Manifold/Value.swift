@@ -93,7 +93,7 @@ public enum Value: DebugPrintable {
 
 	func quote(n: Int) -> Term {
 		return analysis(
-			ifUnitTerm: const(.unit),
+			ifUnitTerm: const(.unitTerm),
 			ifType: const(.type),
 			ifPi: { type, f in
 				Term(Checkable.Pi(Box(type.quote(n)), Box(f(.free(.Quote(n))).quote(n + 1))))
