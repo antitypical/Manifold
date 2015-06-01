@@ -44,6 +44,10 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 		return Term(.Constant(value, type))
 	}
 
+	public static func constant<T>(value: T) -> Term {
+		return Term(.Constant(value, Value.constant(T.self, .type)))
+	}
+
 
 	// MARK: Destructors
 
