@@ -65,7 +65,7 @@ final class TermTests: XCTestCase {
 
 
 	func testConstantTermsDestructSafely() {
-		assert(Term.constant(0, Value.constant(Int.self, .type)).constant(Int)?.0, ==, 0)
+		assert(Term.constant(0).constant(Int)?.0, ==, 0)
 	}
 }
 
