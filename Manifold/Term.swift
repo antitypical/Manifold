@@ -89,7 +89,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			otherwise: const(nil))
 	}
 
-	public func constant<T>() -> (T, Value)? {
+	public func constant<T>(_: T.Type) -> (T, Value)? {
 		if let value: (Any, Value) = expression.analysis(
 			ifConstant: pure,
 			otherwise: const(nil)) {
