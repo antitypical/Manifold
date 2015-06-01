@@ -62,6 +62,11 @@ final class TermTests: XCTestCase {
 	func testGlobalsPrintTheirNames() {
 		assert(Term(.Free("Global")).description, ==, "Global")
 	}
+
+
+	func testConstantTermsDestructSafely() {
+		assert(Term.constant(0, Value.constant(Int.self, .type)).constant(Int)?.0, ==, 0)
+	}
 }
 
 
