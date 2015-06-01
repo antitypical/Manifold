@@ -74,6 +74,10 @@ public enum Value: DebugPrintable {
 		return .constant(value, .constant(T.self, .type))
 	}
 
+	public static func constant<T>(type: T.Type) -> Value {
+		return .constant(T.self, .type)
+	}
+
 
 	// MARK: Destructors
 
