@@ -90,9 +90,12 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	}
 
 	public func constant<T>() -> (T, Value)? {
-		return expression.analysis(
+		if let value: (Any, Value) = expression.analysis(
 			ifConstant: pure,
-			otherwise: const(nil)) as? (T, Value)
+			otherwise: const(nil)) {
+			return (value.0 as? T).map { ($0, value.1) }
+		}
+		return nil
 	}
 
 	public let expression: Checkable<Term>
