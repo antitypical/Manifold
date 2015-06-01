@@ -186,7 +186,7 @@ public enum Value: DebugPrintable {
 		ifPi: ((Value, Value -> Value) -> T)? = nil,
 		ifSigma: ((Value, Value -> Value) -> T)? = nil,
 		ifNeutral: (Manifold.Neutral -> T)? = nil,
-		ifConstant: (Any -> T)? = nil,
+		ifConstant: ((Any, Value) -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifUnitTerm: { ifUnitTerm?() ?? otherwise() },
