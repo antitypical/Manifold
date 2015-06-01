@@ -89,6 +89,12 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			otherwise: const(nil))
 	}
 
+	public func toConstant<T>() -> (T, Value)? {
+		return expression.analysis(
+			ifConstant: pure,
+			otherwise: const(nil)) as? (T, Value)
+	}
+
 	public let expression: Checkable<Term>
 
 
