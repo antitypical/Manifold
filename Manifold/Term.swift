@@ -40,6 +40,11 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	}
 
 
+	public static func constant(value: Any, _ type: Value) -> Term {
+		return Term(.Constant(value, type))
+	}
+
+
 	// MARK: Destructors
 
 	public var isUnitTerm: Bool {
@@ -142,7 +147,8 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 						return b.substitute(0, .free(.Local(i))).typecheck([ .Local(i): t ] + context, from: i + 1)
 							.map { Value.product(t, $0) }
 					}
-			})
+			},
+			ifConstant: { .right($1) })
 	}
 
 	public func typecheck(context: Context, against: Value, from i: Int) -> Either<Error, Value> {
@@ -177,7 +183,8 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			},
 			ifSigma: { type, body -> Value in
 				Value.sigma(type.evaluate(environment)) { body.evaluate(environment.byPrepending($0)) }
-			})
+			},
+			ifConstant: Value.constant)
 	}
 
 
@@ -196,7 +203,8 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			ifFree: { "Free(\($0))" },
 			ifApplication: { "\($0)(\($1))" },
 			ifPi: { "Π \($0) . \($1)" },
-			ifSigma: { "Σ \($0) . \($1)" })
+			ifSigma: { "Σ \($0) . \($1)" },
+			ifConstant: { "\(Swift.toDebugString($0)) : \(Swift.toDebugString($1.quote))" })
 	}
 
 
@@ -218,7 +226,8 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			ifFree: { 5 ^ $0.hashValue },
 			ifApplication: { 7 ^ $0.hashValue ^ $1.hashValue },
 			ifPi: { 11 ^ $0.hashValue ^ $1.hashValue },
-			ifSigma: { 13 ^ $0.hashValue ^ $1.hashValue })
+			ifSigma: { 13 ^ $0.hashValue ^ $1.hashValue },
+			ifConstant: { 17 ^ toString($0).hashValue ^ $1.quote.hashValue })
 	}
 
 
@@ -244,6 +253,9 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			},
 			ifSigma: {
 				"Σ \($0.1) . \($1.1)"
+			},
+			ifConstant: {
+				"\($0) : \($1.quote)"
 			})
 	}
 }

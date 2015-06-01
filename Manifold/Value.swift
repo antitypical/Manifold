@@ -32,13 +32,16 @@ public enum Value: DebugPrintable {
 	}
 
 
-	public static func sum(a: Value, _ b: Value) -> Value {
-		return .sigma(a, const(b))
-	}
-
 	public static func sum(values: [Value]) -> Value {
-		let a = first(values), b = dropFirst(values)
-		return a.map { reduce(dropFirst(values), $0, Value.sum) } ?? Value.UnitTerm
+		switch (first(values), dropFirst(values)) {
+		case (.None, _):
+			return Value.UnitTerm
+		case let (.Some(value), rest) where rest.isEmpty:
+			return value
+		default:
+			// fixme: make some value that can be switched on as the type
+			return Value.sigma(.UnitTerm) { _ in .UnitTerm }
+		}
 	}
 
 
@@ -60,6 +63,11 @@ public enum Value: DebugPrintable {
 
 	public static func type(n: Int) -> Value {
 		return .Type(n)
+	}
+
+
+	public static func constant(value: Any, _ type: Value) -> Value {
+		return .Constant(value, Box(type))
 	}
 
 
@@ -132,6 +140,9 @@ public enum Value: DebugPrintable {
 			},
 			ifNeutral: {
 				$0.quote(n)
+			},
+			ifConstant: {
+				Term.constant($0)
 			})
 	}
 
@@ -144,7 +155,8 @@ public enum Value: DebugPrintable {
 		@noescape ifType: Int -> T,
 		@noescape ifPi: (Value, Value -> Value) -> T,
 		@noescape ifSigma: (Value, Value -> Value) -> T,
-		@noescape ifNeutral: Manifold.Neutral -> T) -> T {
+		@noescape ifNeutral: Manifold.Neutral -> T,
+		@noescape ifConstant: (Any, Value) -> T) -> T {
 		switch self {
 		case .UnitTerm:
 			return ifUnitTerm()
@@ -158,6 +170,8 @@ public enum Value: DebugPrintable {
 			return ifSigma(type.value, body)
 		case let .Neutral(n):
 			return ifNeutral(n.value)
+		case let .Constant(c, t):
+			return ifConstant(c, t.value)
 		}
 	}
 
@@ -168,6 +182,7 @@ public enum Value: DebugPrintable {
 		ifPi: ((Value, Value -> Value) -> T)? = nil,
 		ifSigma: ((Value, Value -> Value) -> T)? = nil,
 		ifNeutral: (Manifold.Neutral -> T)? = nil,
+		ifConstant: (Any -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifUnitTerm: { ifUnitTerm?() ?? otherwise() },
@@ -175,7 +190,8 @@ public enum Value: DebugPrintable {
 			ifType: { ifType?($0) ?? otherwise() },
 			ifPi: { ifPi?($0) ?? otherwise() },
 			ifSigma: { ifSigma?($0) ?? otherwise() },
-			ifNeutral: { ifNeutral?($0) ?? otherwise() })
+			ifNeutral: { ifNeutral?($0) ?? otherwise() },
+			ifConstant: { ifConstant?($0) ?? otherwise() })
 	}
 
 
@@ -188,7 +204,8 @@ public enum Value: DebugPrintable {
 			ifType: { "Type\($0)" },
 			ifPi: { "(Π ? : \(toDebugString($0)) . \(toDebugString($1)))" },
 			ifSigma: { "(Σ ? : \(toDebugString($0)) . \(toDebugString($1)))" },
-			ifNeutral: toDebugString)
+			ifNeutral: toDebugString,
+			ifConstant: { "\(toDebugString($0)) : \(toDebugString($1))" })
 	}
 
 
@@ -200,6 +217,7 @@ public enum Value: DebugPrintable {
 	case Pi(Box<Value>, Value -> Value)
 	case Sigma(Box<Value>, Value -> Value)
 	case Neutral(Box<Manifold.Neutral>)
+	case Constant(Any, Box<Value>)
 }
 
 

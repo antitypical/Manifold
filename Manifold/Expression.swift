@@ -11,7 +11,8 @@ public enum Checkable<Recur> {
 		@noescape ifFree: Name -> T,
 		@noescape ifApplication: (Recur, Recur) -> T,
 		@noescape ifPi: (Recur, Recur) -> T,
-		@noescape ifSigma: (Recur, Recur) -> T) -> T {
+		@noescape ifSigma: (Recur, Recur) -> T,
+		@noescape ifConstant: (Any, Value) -> T) -> T {
 		switch self {
 		case .UnitTerm:
 			return ifUnitTerm()
@@ -29,6 +30,8 @@ public enum Checkable<Recur> {
 			return ifPi(a.value, b.value)
 		case let .Sigma(a, b):
 			return ifSigma(a.value, b.value)
+		case let .Constant(c):
+			return ifConstant(c)
 		}
 	}
 
@@ -41,6 +44,7 @@ public enum Checkable<Recur> {
 		ifApplication: ((Recur, Recur) -> T)? = nil,
 		ifPi: ((Recur, Recur) -> T)? = nil,
 		ifSigma: ((Recur, Recur) -> T)? = nil,
+		ifConstant: (Any -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifUnitTerm: { ifUnitTerm?() ?? otherwise() },
@@ -50,7 +54,8 @@ public enum Checkable<Recur> {
 			ifFree: { ifFree?($0) ?? otherwise() },
 			ifApplication: { ifApplication?($0) ?? otherwise() },
 			ifPi: { ifPi?($0) ?? otherwise() },
-			ifSigma: { ifSigma?($0) ?? otherwise() })
+			ifSigma: { ifSigma?($0) ?? otherwise() },
+			ifConstant: { ifConstant?($0) ?? otherwise() })
 	}
 
 
@@ -65,7 +70,8 @@ public enum Checkable<Recur> {
 			ifFree: { .Free($0) },
 			ifApplication: { .Application(Box(transform($0)), Box(transform($1))) },
 			ifPi: { .Pi(Box(transform($0)), Box(transform($1))) },
-			ifSigma: { .Sigma(Box(transform($0)), Box(transform($1))) })
+			ifSigma: { .Sigma(Box(transform($0)), Box(transform($1))) },
+			ifConstant: { .Constant($0) })
 	}
 
 
@@ -79,6 +85,7 @@ public enum Checkable<Recur> {
 	case Application(Box<Recur>, Box<Recur>)
 	case Pi(Box<Recur>, Box<Recur>) // (Πx:A)B where B can depend on x
 	case Sigma(Box<Recur>, Box<Recur>) // (Σx:A)B where B can depend on x
+	case Constant(Any, Value) // a constant value and its type
 }
 
 
