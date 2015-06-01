@@ -44,7 +44,7 @@ public enum Checkable<Recur> {
 		ifApplication: ((Recur, Recur) -> T)? = nil,
 		ifPi: ((Recur, Recur) -> T)? = nil,
 		ifSigma: ((Recur, Recur) -> T)? = nil,
-		ifConstant: (Any -> T)? = nil,
+		ifConstant: ((Any, Value) -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifUnitTerm: { ifUnitTerm?() ?? otherwise() },
