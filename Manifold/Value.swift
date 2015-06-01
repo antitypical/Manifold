@@ -113,6 +113,15 @@ public enum Value: DebugPrintable {
 			otherwise: const(nil))
 	}
 
+	public func constant<T>(_: T.Type) -> (T, Value)? {
+		if let value: (Any, Value) = analysis(
+			ifConstant: unit,
+			otherwise: const(nil)) {
+				return (value.0 as? T).map { ($0, value.1) }
+		}
+		return nil
+	}
+
 
 	// MARK: Application
 
