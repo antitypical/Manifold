@@ -30,10 +30,6 @@ public enum Value: DebugPrintable {
 		return foldr(types, Value.UnitTerm, Value.product)
 	}
 
-	public static func application(f: Manifold.Neutral, _ v: Value) -> Value {
-		return .neutral(.application(f, v))
-	}
-
 	public static func free(name: Name) -> Value {
 		return .neutral(.Free(name))
 	}
