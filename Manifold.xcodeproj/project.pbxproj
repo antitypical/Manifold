@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		D45E2DC71B0AE55C004C64DA /* Boolean.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45E2DC61B0AE55C004C64DA /* Boolean.swift */; };
-		D46395AB1B143A7400AA1B65 /* Neutral.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46395AA1B143A7400AA1B65 /* Neutral.swift */; };
 		D46395AD1B15438600AA1B65 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46395AC1B15438600AA1B65 /* Context.swift */; };
 		D46974251AFE4EB5005D3AA3 /* ValueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46974241AFE4EB5005D3AA3 /* ValueTests.swift */; };
 		D46C90521B07B3A200975BFD /* Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46C90511B07B3A200975BFD /* Description.swift */; };
@@ -47,7 +46,6 @@
 
 /* Begin PBXFileReference section */
 		D45E2DC61B0AE55C004C64DA /* Boolean.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Boolean.swift; sourceTree = "<group>"; };
-		D46395AA1B143A7400AA1B65 /* Neutral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Neutral.swift; sourceTree = "<group>"; };
 		D46395AC1B15438600AA1B65 /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
 		D46974241AFE4EB5005D3AA3 /* ValueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueTests.swift; sourceTree = "<group>"; };
 		D46C90511B07B3A200975BFD /* Description.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Description.swift; sourceTree = "<group>"; };
@@ -128,7 +126,6 @@
 				D4DE7E721AF66E25004D0CB9 /* Term.swift */,
 				D4B56CB01AFDA26A00D7BD6F /* Expression.swift */,
 				D4B56CB21AFDA50B00D7BD6F /* Value.swift */,
-				D46395AA1B143A7400AA1B65 /* Neutral.swift */,
 				D4EDEF561AFEDEC5001B9A1D /* Name.swift */,
 				D4EE119B1B02FE8C002D9D9A /* Environment.swift */,
 				D46395AC1B15438600AA1B65 /* Context.swift */,
@@ -288,7 +285,6 @@
 				D45E2DC71B0AE55C004C64DA /* Boolean.swift in Sources */,
 				D4EDEF571AFEDEC5001B9A1D /* Name.swift in Sources */,
 				D4EE119C1B02FE8C002D9D9A /* Environment.swift in Sources */,
-				D46395AB1B143A7400AA1B65 /* Neutral.swift in Sources */,
 				D46C90521B07B3A200975BFD /* Description.swift in Sources */,
 				D4A31B2A1AA366EC00B3FC68 /* Algebra.swift in Sources */,
 				D4B56CB31AFDA50B00D7BD6F /* Value.swift in Sources */,
