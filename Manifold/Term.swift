@@ -53,6 +53,10 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 		return Term(.Pi(Box(type), Box(body)))
 	}
 
+	public static func sigma(type: Term, _ body: Term) -> Term {
+		return Term(.Sigma(Box(type), Box(body)))
+	}
+
 
 	// MARK: Destructors
 
