@@ -6,8 +6,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testHigherOrderConstruction() {
-		let expected = Term(.Pi(Box(.type), Box(Term(.Pi(Box(Term(.Bound(0))), Box(Term(.Bound(0))))))))
-		assert(identity, ==, expected)
+		assert(identity, ==, Term.pi(.type, .pi(.bound(0), .bound(0))))
 	}
 
 	func testTypechecking() {
@@ -27,7 +26,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testTypeOfAbstractionIsAbstractionType() {
-		assert(Value.pi(.type, id).quote.typecheck().right?.quote, ==, Term(.Pi(Box(.type), Box(.type))))
+		assert(Value.pi(.type, id).quote.typecheck().right?.quote, ==, Term.pi(.type, .type))
 	}
 
 
@@ -67,8 +66,11 @@ final class TermTests: XCTestCase {
 	func testConstantTermsDestructSafely() {
 		assert(Term.constant(0).constant(Int)?.0, ==, 0)
 	}
-}
 
+	func testConstantFunctionConstruction() {
+		assert(constant, ==, Term.pi(.type, .pi(.type, .pi(.bound(1), .pi(.bound(1), .bound(1))))))
+	}
+}
 
 private let identity = Value.pi(.type) { A in .pi(A, id) }.quote
 private let constant = Value.pi(.type) { A in Value.pi(.type) { B in Value.pi(A) { a in Value.pi(B) { b in a } } } }.quote
