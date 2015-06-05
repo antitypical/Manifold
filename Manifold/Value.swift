@@ -30,20 +30,16 @@ public enum Value: DebugPrintable {
 		return foldr(types, Value.UnitTerm, Value.product)
 	}
 
-	public static func free(name: Name) -> Value {
-		return .neutral(.Free(name))
-	}
-
-	public static func neutral(value: Manifold.Neutral) -> Value {
-		return .Neutral(Box(value))
-	}
-
 	public static var type: Value {
 		return .Type(0)
 	}
 
 	public static func type(n: Int) -> Value {
 		return .Type(n)
+	}
+
+	public static func free(name: Name) -> Value {
+		return .Free(name)
 	}
 
 
@@ -86,7 +82,6 @@ public enum Value: DebugPrintable {
 		return analysis(
 			ifPi: { _, f in f(other) },
 			ifSigma: { _, f in f(other) },
-			ifNeutral: { .neutral(.application($0, other)) },
 			otherwise: { assert(false, "illegal application of \(self) to \(other)") ; return .type })
 	}
 
@@ -108,8 +103,11 @@ public enum Value: DebugPrintable {
 			ifSigma: { type, f in
 				Term(Checkable.Sigma(Box(type.quote(n)), Box(f(.free(.Quote(n))).quote(n + 1))))
 			},
-			ifNeutral: {
-				$0.quote(n)
+			ifFree: { name -> Term in
+				name.analysis(
+					ifGlobal: const(Term.free(name)),
+					ifLocal: const(Term.free(name)),
+					ifQuote: { Term.bound(n - $0 - 1) })
 			})
 	}
 
@@ -122,7 +120,7 @@ public enum Value: DebugPrintable {
 		@noescape ifType: Int -> T,
 		@noescape ifPi: (Value, Value -> Value) -> T,
 		@noescape ifSigma: (Value, Value -> Value) -> T,
-		@noescape ifNeutral: Manifold.Neutral -> T) -> T {
+		@noescape ifFree: Name -> T) -> T {
 		switch self {
 		case .UnitTerm:
 			return ifUnitTerm()
@@ -134,8 +132,8 @@ public enum Value: DebugPrintable {
 			return ifPi(type.value, body)
 		case let .Sigma(type, body):
 			return ifSigma(type.value, body)
-		case let .Neutral(n):
-			return ifNeutral(n.value)
+		case let .Free(n):
+			return ifFree(n)
 		}
 	}
 
@@ -145,7 +143,7 @@ public enum Value: DebugPrintable {
 		ifType: (Int -> T)? = nil,
 		ifPi: ((Value, Value -> Value) -> T)? = nil,
 		ifSigma: ((Value, Value -> Value) -> T)? = nil,
-		ifNeutral: (Manifold.Neutral -> T)? = nil,
+		ifFree: (Name -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifUnitTerm: { ifUnitTerm?() ?? otherwise() },
@@ -153,7 +151,7 @@ public enum Value: DebugPrintable {
 			ifType: { ifType?($0) ?? otherwise() },
 			ifPi: { ifPi?($0) ?? otherwise() },
 			ifSigma: { ifSigma?($0) ?? otherwise() },
-			ifNeutral: { ifNeutral?($0) ?? otherwise() })
+			ifFree: { ifFree?($0) ?? otherwise() })
 	}
 
 
@@ -166,7 +164,7 @@ public enum Value: DebugPrintable {
 			ifType: { "Type\($0)" },
 			ifPi: { "(Π ? : \(toDebugString($0)) . \(toDebugString($1)))" },
 			ifSigma: { "(Σ ? : \(toDebugString($0)) . \(toDebugString($1)))" },
-			ifNeutral: toDebugString)
+			ifFree: { ".Free(\(toDebugString($0)))" })
 	}
 
 
@@ -177,7 +175,7 @@ public enum Value: DebugPrintable {
 	case Type(Int)
 	case Pi(Box<Value>, Value -> Value)
 	case Sigma(Box<Value>, Value -> Value)
-	case Neutral(Box<Manifold.Neutral>)
+	case Free(Name)
 }
 
 
