@@ -49,6 +49,11 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	}
 
 
+	public static func pi(type: Term, _ body: Term) -> Term {
+		return Term(.Pi(Box(type), Box(body)))
+	}
+
+
 	// MARK: Destructors
 
 	public var isUnitTerm: Bool {
