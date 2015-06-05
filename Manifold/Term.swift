@@ -40,7 +40,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	}
 
 
-	static func bound(i: Int) -> Term {
+	public static func bound(i: Int) -> Term {
 		return Term(.Bound(i))
 	}
 
