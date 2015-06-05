@@ -120,8 +120,8 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 		return expression.analysis(
 			ifBound: { i == $0 ? term : self },
 			ifApplication: { Term.application($0.substitute(i, term), $1.substitute(i, term)) },
-			ifPi: { Term(.Pi(Box($0.substitute(i, term)), Box($1.substitute(i + 1, term)))) },
-			ifSigma: { Term(.Sigma(Box($0.substitute(i, term)), Box($1.substitute(i + 1, term)))) },
+			ifPi: { Term.pi($0.substitute(i, term), $1.substitute(i + 1, term)) },
+			ifSigma: { Term.sigma($0.substitute(i, term), $1.substitute(i + 1, term)) },
 			otherwise: const(self))
 	}
 

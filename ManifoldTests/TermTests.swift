@@ -2,7 +2,7 @@
 
 final class TermTests: XCTestCase {
 	func testTrivialHigherOrderConstruction() {
-		assert(Value.pi(.type, id).quote, ==, Term(.Pi(Box(.type), Box(Term(.Bound(0))))))
+		assert(Value.pi(.type, id).quote, ==, Term.pi(.type, Term.bound(0)))
 	}
 
 	func testHigherOrderConstruction() {
@@ -31,7 +31,7 @@ final class TermTests: XCTestCase {
 
 
 	func testBoundVariablesEvaluateToTheValueBoundInTheEnvironment() {
-		assert(Term(.Bound(2)).evaluate(Environment([ .forall(id), .forall(id), .type ])).quote, ==, Term.type)
+		assert(Term.bound(2).evaluate(Environment([ .forall(id), .forall(id), .type ])).quote, ==, Term.type)
 	}
 
 	func testTrivialAbstractionEvaluatesToItself() {
@@ -59,7 +59,7 @@ final class TermTests: XCTestCase {
 
 
 	func testGlobalsPrintTheirNames() {
-		assert(Term(.Free("Global")).description, ==, "Global")
+		assert(Term.free("Global").description, ==, "Global")
 	}
 
 
