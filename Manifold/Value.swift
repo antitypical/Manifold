@@ -120,7 +120,7 @@ public enum Value: DebugPrintable {
 		return analysis(
 			ifUnitValue: const(.unitTerm),
 			ifUnitType: const(.unitType),
-			ifType: const(.type),
+			ifType: Term.type,
 			ifPi: { type, f in
 				Term(Checkable.Pi(Box(type.quote(n)), Box(f(.free(.Quote(n))).quote(n + 1))))
 			},
