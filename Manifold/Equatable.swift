@@ -23,6 +23,8 @@ public func == <Recur: Equatable> (left: Checkable<Recur>, right: Checkable<Recu
 		return t1.value == u1.value && t2.value == u2.value
 	case let (.Pi(t, a), .Pi(u, b)):
 		return t.value == u.value && a.value == b.value
+	case let (.Projection(p, f), .Projection(q, g)):
+		return p.value == q.value && f == g
 	case let (.Sigma(t, a), .Sigma(u, b)):
 		return t.value == u.value && a.value == b.value
 	default:
