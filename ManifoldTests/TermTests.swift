@@ -90,7 +90,7 @@ extension Term: Arbitrary {
 		return Gen.oneOf([
 			Gen.pure(Term.unitTerm),
 			Gen.pure(Term.unitType),
-			Gen.pure(Term.type),
+			Int.arbitrary().fmap(Term.type),
 			Name.arbitrary().fmap(Term.free),
 			Gen.pure(()).bind { _ in
 				Term.arbitrary().bind { x in Term.arbitrary().fmap { y in Term.application(x, y) } }
