@@ -106,6 +106,7 @@ public enum Value: DebugPrintable {
 	public func project(second: Bool) -> Value {
 		return analysis(
 			ifSigma: { a, f in second ? f(a) : a },
+			ifNeutral: { .neutral(.projection($0, second)) },
 			otherwise: { assert(false, "illegal projection: \(self).\(second ? 1 : 0)") ; return .UnitValue })
 	}
 
