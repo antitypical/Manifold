@@ -53,7 +53,7 @@ public enum Value: DebugPrintable {
 
 	// MARK: Destructors
 
-	public var isUnitTerm: Bool {
+	public var isUnitValue: Bool {
 		return analysis(
 			ifUnitValue: const(true),
 			otherwise: const(false))
