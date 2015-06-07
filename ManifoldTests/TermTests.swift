@@ -107,7 +107,6 @@ extension Term: Arbitrary {
 
 	public static func shrink(term: Term) -> [Term] {
 		return term.expression.analysis(
-			ifType: { shrinkIntegral($0).map(Term.type) },
 			ifBound: { _ in shrinkNone(term) },
 			ifFree: { Name.shrink($0).map(Term.free) },
 			ifApplication: { x, y in Term.shrink(x).flatMap { x in Term.shrink(y).map { y in Term.application(x, y) } } },
