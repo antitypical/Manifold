@@ -31,6 +31,11 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	}
 
 
+	public static func projection(a: Term, _ b: Bool) -> Term {
+		return Term(.Projection(Box(a), b))
+	}
+
+
 	static func bound(i: Int) -> Term {
 		return Term(.Bound(i))
 	}
