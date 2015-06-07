@@ -141,8 +141,13 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 							.map { Value.function(t, $0) }
 					}
 			},
-			ifProjection: { _ in
-				.left("unimplemented")
+			ifProjection: { a, b -> Either<Error, Value> in
+				a.typecheck(context, from: i)
+					.flatMap { t in
+						t.analysis(
+							ifSigma: { v, f in Either.right(f(v)) },
+							otherwise: const(Either.left("illegal projection of \(a) : \(t) field \(b ? 1 : 0)")))
+					}
 			},
 			ifSigma: { t, b -> Either<Error, Value> in
 				t.typecheck(context, from: i)
