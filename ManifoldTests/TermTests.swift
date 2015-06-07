@@ -112,22 +112,6 @@ extension Term: Arbitrary {
 	}
 }
 
-extension Name: Arbitrary {
-	public static func arbitrary() -> Gen<Name> {
-		return Gen.oneOf([
-			String.arbitrary().fmap(Name.global),
-			Int.arbitrary().fmap(Name.local),
-		])
-	}
-
-	public static func shrink(name: Name) -> [Name] {
-		return name.analysis(
-			ifGlobal: { String.shrink($0).map(Name.global) },
-			ifLocal: { Int.shrink($0).map(Name.local) },
-			ifQuote: const(shrinkNone(name)))
-	}
-}
-
 
 private let identity = Value.pi(.type) { A in .pi(A, id) }.quote
 private let constant = Value.pi(.type) { A in Value.pi(.type) { B in Value.pi(A) { a in Value.pi(B) { b in a } } } }.quote
