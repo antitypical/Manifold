@@ -64,7 +64,7 @@ final class TermTests: XCTestCase {
 	}
 
 
-	func testProjectionTypeIsTypeOfProjectedField() {
+	func testProjectionTypechecksToTypeOfProjectedField() {
 		let product = Term.product(.type(1), .type(2))
 		assert(Term.projection(product, true).typecheck().right?.quote, ==, Term.type(3))
 		assert(Term.projection(product, false).typecheck().right?.quote, ==, Term.type(2))
