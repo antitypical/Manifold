@@ -101,6 +101,15 @@ public enum Value: DebugPrintable {
 	}
 
 
+	// MARK: Projection
+
+	public func project(second: Bool) -> Value {
+		return analysis(
+			ifSigma: { a, f in second ? f(a) : a },
+			otherwise: { assert(false, "illegal projection: \(self).\(second ? 1 : 0)") ; return .type })
+	}
+
+
 	// MARK: Quotation
 
 	public var quote: Term {
