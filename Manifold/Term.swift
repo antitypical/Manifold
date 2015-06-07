@@ -26,6 +26,10 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	}
 
 
+	public static func product(a: Term, _ b: Term) -> Term {
+		return Term(.Sigma(Box(a), Box(b)))
+	}
+
 	public static func application(a: Term, _ b: Term) -> Term {
 		return Term(.Application(Box(a), Box(b)))
 	}
