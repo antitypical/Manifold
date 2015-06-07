@@ -19,11 +19,11 @@ final class TermTests: XCTestCase {
 	}
 
 	func testSigmaTypeDescription() {
-		assert(Value.sigma(.type, const(.type)).quote.typecheck().right?.quote.description, ==, "Σ Type . Type")
+		assert(Value.sigma(.type, const(.type)).quote.typecheck().right?.quote.description, ==, "Σ Type1 . Type1")
 	}
 
-	func testTypeOfTypeIsType() {
-		assert(Term.type.typecheck().right?.quote, ==, Term.type)
+	func testTypeOfType0IsType1() {
+		assert(Term.type.typecheck().right?.quote, ==, Term.type(1))
 	}
 
 	func testTypeOfAbstractionIsAbstractionType() {
@@ -61,6 +61,19 @@ final class TermTests: XCTestCase {
 
 	func testGlobalsPrintTheirNames() {
 		assert(Term(.Free("Global")).description, ==, "Global")
+	}
+
+
+	func testProjectionTypechecksToTypeOfProjectedField() {
+		let product = Term.product(.type(1), .type(2))
+		assert(Term.projection(product, false).typecheck().right?.quote, ==, Term.type(2))
+		assert(Term.projection(product, true).typecheck().right?.quote, ==, Term.type(3))
+	}
+
+	func testProjectionEvaluatesToProjectedField() {
+		let product = Term.product(.type(1), .type(2))
+		assert(Term.projection(product, false).evaluate().quote, ==, Term.type(1))
+		assert(Term.projection(product, true).evaluate().quote, ==, Term.type(2))
 	}
 
 

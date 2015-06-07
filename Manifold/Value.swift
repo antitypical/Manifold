@@ -26,6 +26,10 @@ public enum Value: DebugPrintable {
 		return .sigma(a, const(b))
 	}
 
+	public static func product(types: [Value]) -> Value {
+		return foldr(types, Value.UnitValue, Value.product)
+	}
+
 	public static func application(f: Manifold.Neutral, _ v: Value) -> Value {
 		return .neutral(.application(f, v))
 	}
@@ -48,6 +52,18 @@ public enum Value: DebugPrintable {
 
 
 	// MARK: Destructors
+
+	public var isUnitValue: Bool {
+		return analysis(
+			ifUnitValue: const(true),
+			otherwise: const(false))
+	}
+
+	public var isUnitType: Bool {
+		return analysis(
+			ifUnitType: const(true),
+			otherwise: const(false))
+	}
 
 	public var isType: Bool {
 		return analysis(
@@ -79,9 +95,18 @@ public enum Value: DebugPrintable {
 	public func apply(other: Value) -> Value {
 		return analysis(
 			ifPi: { _, f in f(other) },
-			ifSigma: { _, f in f(other) },
 			ifNeutral: { .neutral(.application($0, other)) },
-			otherwise: { assert(false, "illegal application of \(self) to \(other)") ; return .type })
+			otherwise: { assert(false, "illegal application of \(self) to \(other)") ; return .UnitValue })
+	}
+
+
+	// MARK: Projection
+
+	public func project(second: Bool) -> Value {
+		return analysis(
+			ifSigma: { a, f in second ? f(a) : a },
+			ifNeutral: { .neutral(.projection($0, second)) },
+			otherwise: { assert(false, "illegal projection: \(self).\(second ? 1 : 0)") ; return .UnitValue })
 	}
 
 
@@ -93,7 +118,9 @@ public enum Value: DebugPrintable {
 
 	func quote(n: Int) -> Term {
 		return analysis(
-			ifType: const(.type),
+			ifUnitValue: const(.unitTerm),
+			ifUnitType: const(.unitType),
+			ifType: Term.type,
 			ifPi: { type, f in
 				Term(Checkable.Pi(Box(type.quote(n)), Box(f(.free(.Quote(n))).quote(n + 1))))
 			},
@@ -109,11 +136,17 @@ public enum Value: DebugPrintable {
 	// MARK: Analyses
 
 	public func analysis<T>(
-		@noescape #ifType: Int -> T,
+		@noescape #ifUnitValue: () -> T,
+		@noescape ifUnitType: () -> T,
+		@noescape ifType: Int -> T,
 		@noescape ifPi: (Value, Value -> Value) -> T,
 		@noescape ifSigma: (Value, Value -> Value) -> T,
 		@noescape ifNeutral: Manifold.Neutral -> T) -> T {
 		switch self {
+		case .UnitValue:
+			return ifUnitValue()
+		case .UnitType:
+			return ifUnitType()
 		case let .Type(n):
 			return ifType(n)
 		case let .Pi(type, body):
@@ -126,12 +159,16 @@ public enum Value: DebugPrintable {
 	}
 
 	public func analysis<T>(
+		ifUnitValue: (() -> T)? = nil,
+		ifUnitType: (() -> T)? = nil,
 		ifType: (Int -> T)? = nil,
 		ifPi: ((Value, Value -> Value) -> T)? = nil,
 		ifSigma: ((Value, Value -> Value) -> T)? = nil,
 		ifNeutral: (Manifold.Neutral -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
+			ifUnitValue: { ifUnitValue?() ?? otherwise() },
+			ifUnitType: { ifUnitType?() ?? otherwise() },
 			ifType: { ifType?($0) ?? otherwise() },
 			ifPi: { ifPi?($0) ?? otherwise() },
 			ifSigma: { ifSigma?($0) ?? otherwise() },
@@ -143,6 +180,8 @@ public enum Value: DebugPrintable {
 
 	public var debugDescription: String {
 		return analysis(
+			ifUnitValue: const("()"),
+			ifUnitType: const("Unit"),
 			ifType: { "Type\($0)" },
 			ifPi: { "(Π ? : \(toDebugString($0)) . \(toDebugString($1)))" },
 			ifSigma: { "(Σ ? : \(toDebugString($0)) . \(toDebugString($1)))" },
@@ -152,10 +191,22 @@ public enum Value: DebugPrintable {
 
 	// MARK: Cases
 
+	case UnitType
+	case UnitValue
 	case Type(Int)
 	case Pi(Box<Value>, Value -> Value)
 	case Sigma(Box<Value>, Value -> Value)
 	case Neutral(Box<Manifold.Neutral>)
+}
+
+
+private func foldr<S: SequenceType, T>(sequence: S, final: T, combine: (S.Generator.Element, T) -> T) -> T {
+	return foldr(sequence.generate(), final, combine)
+}
+
+private func foldr<G: GeneratorType, T>(var generator: G, final: T, combine: (G.Element, T) -> T) -> T {
+	let next = generator.next()
+	return next.map { combine($0, foldr(generator, final, combine)) } ?? final
 }
 
 

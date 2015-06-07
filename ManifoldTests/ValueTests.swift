@@ -12,6 +12,19 @@ final class ValueTests: XCTestCase {
 	func testQuotationMapsNestedBoundVariablesToBoundVariables() {
 		assert(Value.pi(.type) { _ in Value.pi(.type, id) }.quote, ==, Term(.Pi(Box(.type), Box(Term(.Pi(Box(.type), Box(Term(.Bound(0)))))))))
 	}
+
+
+	func testNullaryProductIsUnitTerm() {
+		assert(Value.product([]).quote, ==, Term.unitTerm)
+	}
+
+	func testUnaryProductEndsWithUnitTerm() {
+		assert(Value.product([ Value.type ]).quote, ==, Term(.Sigma(Box(.type), Box(.unitTerm))))
+	}
+
+	func testTernaryProductAssociatesToTheRight() {
+		assert(Value.product([ Value.type, Value.type, Value.type ]).quote, ==, Term(.Sigma(Box(.type), Box(Term(.Sigma(Box(.type), Box(Term(.Sigma(Box(.type), Box(.unitTerm))))))))))
+	}
 }
 
 
