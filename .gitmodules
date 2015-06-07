@@ -12,4 +12,4 @@
 	url = https://github.com/antitypical/Assertions.git
 [submodule "External/SwiftCheck"]
 	path = External/SwiftCheck
-	url = https://github.com/typelift/SwiftCheck.git
+	url = https://github.com/robrix/SwiftCheck.git
