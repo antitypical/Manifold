@@ -22,8 +22,8 @@ final class TermTests: XCTestCase {
 		assert(Value.sigma(.type, const(.type)).quote.typecheck().right?.quote.description, ==, "Σ Type . Type")
 	}
 
-	func testTypeOfTypeIsType() {
-		assert(Term.type.typecheck().right?.quote, ==, Term.type)
+	func testTypeOfType0IsType1() {
+		assert(Term.type.typecheck().right?.quote, ==, Term.type(1))
 	}
 
 	func testTypeOfAbstractionIsAbstractionType() {
