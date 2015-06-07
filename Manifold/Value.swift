@@ -95,9 +95,18 @@ public enum Value: DebugPrintable {
 	public func apply(other: Value) -> Value {
 		return analysis(
 			ifPi: { _, f in f(other) },
-			ifSigma: { _, f in f(other) },
 			ifNeutral: { .neutral(.application($0, other)) },
-			otherwise: { assert(false, "illegal application of \(self) to \(other)") ; return .type })
+			otherwise: { assert(false, "illegal application of \(self) to \(other)") ; return .UnitValue })
+	}
+
+
+	// MARK: Projection
+
+	public func project(second: Bool) -> Value {
+		return analysis(
+			ifSigma: { a, f in second ? f(a) : a },
+			ifNeutral: { .neutral(.projection($0, second)) },
+			otherwise: { assert(false, "illegal projection: \(self).\(second ? 1 : 0)") ; return .UnitValue })
 	}
 
 
