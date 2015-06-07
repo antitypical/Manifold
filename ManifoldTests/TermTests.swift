@@ -19,7 +19,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testSigmaTypeDescription() {
-		assert(Value.sigma(.type, const(.type)).quote.typecheck().right?.quote.description, ==, "Σ Type . Type")
+		assert(Value.sigma(.type, const(.type)).quote.typecheck().right?.quote.description, ==, "Σ Type1 . Type1")
 	}
 
 	func testTypeOfType0IsType1() {
