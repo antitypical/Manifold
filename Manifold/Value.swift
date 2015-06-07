@@ -55,7 +55,7 @@ public enum Value: DebugPrintable {
 
 	public var isUnitTerm: Bool {
 		return analysis(
-			ifUnitTerm: const(true),
+			ifUnitValue: const(true),
 			otherwise: const(false))
 	}
 
@@ -109,7 +109,7 @@ public enum Value: DebugPrintable {
 
 	func quote(n: Int) -> Term {
 		return analysis(
-			ifUnitTerm: const(.unitTerm),
+			ifUnitValue: const(.unitTerm),
 			ifUnitType: const(.unitType),
 			ifType: const(.type),
 			ifPi: { type, f in
@@ -127,7 +127,7 @@ public enum Value: DebugPrintable {
 	// MARK: Analyses
 
 	public func analysis<T>(
-		@noescape #ifUnitTerm: () -> T,
+		@noescape #ifUnitValue: () -> T,
 		@noescape ifUnitType: () -> T,
 		@noescape ifType: Int -> T,
 		@noescape ifPi: (Value, Value -> Value) -> T,
@@ -135,7 +135,7 @@ public enum Value: DebugPrintable {
 		@noescape ifNeutral: Manifold.Neutral -> T) -> T {
 		switch self {
 		case .UnitValue:
-			return ifUnitTerm()
+			return ifUnitValue()
 		case .UnitType:
 			return ifUnitType()
 		case let .Type(n):
@@ -150,7 +150,7 @@ public enum Value: DebugPrintable {
 	}
 
 	public func analysis<T>(
-		ifUnitTerm: (() -> T)? = nil,
+		ifUnitValue: (() -> T)? = nil,
 		ifUnitType: (() -> T)? = nil,
 		ifType: (Int -> T)? = nil,
 		ifPi: ((Value, Value -> Value) -> T)? = nil,
@@ -158,7 +158,7 @@ public enum Value: DebugPrintable {
 		ifNeutral: (Manifold.Neutral -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
-			ifUnitTerm: { ifUnitTerm?() ?? otherwise() },
+			ifUnitValue: { ifUnitValue?() ?? otherwise() },
 			ifUnitType: { ifUnitType?() ?? otherwise() },
 			ifType: { ifType?($0) ?? otherwise() },
 			ifPi: { ifPi?($0) ?? otherwise() },
@@ -171,7 +171,7 @@ public enum Value: DebugPrintable {
 
 	public var debugDescription: String {
 		return analysis(
-			ifUnitTerm: const("()"),
+			ifUnitValue: const("()"),
 			ifUnitType: const("Unit"),
 			ifType: { "Type\($0)" },
 			ifPi: { "(Π ? : \(toDebugString($0)) . \(toDebugString($1)))" },
