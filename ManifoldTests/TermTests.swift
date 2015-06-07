@@ -88,6 +88,8 @@ final class TermTests: XCTestCase {
 extension Term: Arbitrary {
 	public static func arbitrary(n: Int) -> Gen<Term> {
 		return Gen.oneOf([
+			Gen.pure(Term.unitTerm),
+			Gen.pure(Term.unitType),
 			Gen.pure(Term.type),
 			Name.arbitrary().fmap(Term.free),
 			Term.arbitrary().bind { x in Term.arbitrary().fmap { y in Term.application(x, y) } },
