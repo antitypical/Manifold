@@ -95,7 +95,6 @@ public enum Value: DebugPrintable {
 	public func apply(other: Value) -> Value {
 		return analysis(
 			ifPi: { _, f in f(other) },
-			ifSigma: { _, f in f(other) },
 			ifNeutral: { .neutral(.application($0, other)) },
 			otherwise: { assert(false, "illegal application of \(self) to \(other)") ; return .UnitValue })
 	}
