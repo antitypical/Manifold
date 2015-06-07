@@ -7,6 +7,10 @@ public enum Neutral: DebugPrintable {
 		return .Application(Box(f), v)
 	}
 
+	public static func projection(a: Neutral, _ b: Bool) -> Neutral {
+		return .Projection(Box(a), b)
+	}
+
 
 	// MARK: Quotation
 
