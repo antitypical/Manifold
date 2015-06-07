@@ -27,7 +27,7 @@ public enum Value: DebugPrintable {
 	}
 
 	public static func product(types: [Value]) -> Value {
-		return foldr(types, Value.UnitTerm, Value.product)
+		return foldr(types, Value.UnitValue, Value.product)
 	}
 
 	public static func application(f: Manifold.Neutral, _ v: Value) -> Value {
@@ -134,7 +134,7 @@ public enum Value: DebugPrintable {
 		@noescape ifSigma: (Value, Value -> Value) -> T,
 		@noescape ifNeutral: Manifold.Neutral -> T) -> T {
 		switch self {
-		case .UnitTerm:
+		case .UnitValue:
 			return ifUnitTerm()
 		case .UnitType:
 			return ifUnitType()
@@ -183,7 +183,7 @@ public enum Value: DebugPrintable {
 	// MARK: Cases
 
 	case UnitType
-	case UnitTerm
+	case UnitValue
 	case Type(Int)
 	case Pi(Box<Value>, Value -> Value)
 	case Sigma(Box<Value>, Value -> Value)
