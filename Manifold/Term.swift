@@ -184,8 +184,8 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			ifPi: { type, body -> Value in
 				Value.pi(type.evaluate(environment)) { body.evaluate(environment.byPrepending($0)) }
 			},
-			ifProjection: { _ in
-				.UnitTerm
+			ifProjection: { a, b -> Value in
+				a.evaluate(environment).sigma.map { b ? $0.1($0.0) : $0.0 }!
 			},
 			ifSigma: { type, body -> Value in
 				Value.sigma(type.evaluate(environment)) { body.evaluate(environment.byPrepending($0)) }
