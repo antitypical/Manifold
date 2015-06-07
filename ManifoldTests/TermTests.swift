@@ -92,8 +92,12 @@ extension Term: Arbitrary {
 			Gen.pure(Term.unitType),
 			Gen.pure(Term.type),
 			Name.arbitrary().fmap(Term.free),
-			Term.arbitrary().bind { x in Term.arbitrary().fmap { y in Term.application(x, y) } },
-			Term.arbitrary().fmap { x in Term(.Pi(Box(.type), Box(x))) },
+			Gen.pure(()).bind { _ in
+				Term.arbitrary().bind { x in Term.arbitrary().fmap { y in Term.application(x, y) } }
+			},
+			Gen.pure(()).bind { _ in
+				Term.arbitrary().fmap { x in Term(.Pi(Box(.type), Box(x))) }
+			},
 		])
 	}
 
