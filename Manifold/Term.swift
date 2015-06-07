@@ -137,9 +137,8 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			},
 			ifSigma: { t, b -> Either<Error, Value> in
 				t.typecheck(context, from: i)
-					.flatMap { _ in
-						let t = t.evaluate()
-						return b.substitute(0, .free(.Local(i))).typecheck([ .Local(i): t ] + context, from: i + 1)
+					.flatMap { t in
+						b.substitute(0, .free(.Local(i))).typecheck([ .Local(i): t ] + context, from: i + 1)
 							.map { Value.product(t, $0) }
 					}
 			})
