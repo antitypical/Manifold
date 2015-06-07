@@ -97,7 +97,7 @@ public enum Value: DebugPrintable {
 			ifPi: { _, f in f(other) },
 			ifSigma: { _, f in f(other) },
 			ifNeutral: { .neutral(.application($0, other)) },
-			otherwise: { assert(false, "illegal application of \(self) to \(other)") ; return .type })
+			otherwise: { assert(false, "illegal application of \(self) to \(other)") ; return .UnitTerm })
 	}
 
 
@@ -106,7 +106,7 @@ public enum Value: DebugPrintable {
 	public func project(second: Bool) -> Value {
 		return analysis(
 			ifSigma: { a, f in second ? f(a) : a },
-			otherwise: { assert(false, "illegal projection: \(self).\(second ? 1 : 0)") ; return .type })
+			otherwise: { assert(false, "illegal projection: \(self).\(second ? 1 : 0)") ; return .UnitTerm })
 	}
 
 
