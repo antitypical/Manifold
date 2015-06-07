@@ -108,7 +108,7 @@ extension Term: Arbitrary {
 		return term.expression.analysis(
 			ifBound: { _ in shrinkNone(term) },
 			ifApplication: { x, y in Term.shrink(x).flatMap { x in Term.shrink(y).map { y in Term.application(x, y) } } },
-			otherwise: const([]))
+			otherwise: const(shrinkNone(term)))
 	}
 }
 
