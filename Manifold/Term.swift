@@ -169,7 +169,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public func evaluate(_ environment: Environment = Environment()) -> Value {
 		return expression.analysis(
-			ifUnitTerm: const(.UnitTerm),
+			ifUnitTerm: const(.UnitValue),
 			ifUnitType: const(.UnitType),
 			ifType: Value.type,
 			ifBound: { i -> Value in
