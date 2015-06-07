@@ -18,18 +18,24 @@ public enum Neutral: DebugPrintable {
 					ifLocal: const(Term.free($0)),
 					ifQuote: { Term.bound(n - $0 - 1) })
 			},
-			ifApplication: { Term.application($0.quote(n), $1.quote(n)) })
+			ifApplication: { Term.application($0.quote(n), $1.quote(n)) },
+			ifProjection: { Term.projection($0.quote(n), $1) })
 	}
 
 
 	// MARK: Analyses
 
-	public func analysis<T>(@noescape #ifFree: Name -> T, @noescape ifApplication: (Neutral, Value) -> T) -> T {
+	public func analysis<T>(
+		@noescape #ifFree: Name -> T,
+		@noescape ifApplication: (Neutral, Value) -> T,
+		@noescape ifProjection: (Neutral, Bool) -> T) -> T {
 		switch self {
 		case let .Free(n):
 			return ifFree(n)
 		case let .Application(n, v):
 			return ifApplication(n.value, v)
+		case let .Projection(n, v):
+			return ifProjection(n.value, v)
 		}
 	}
 
@@ -39,7 +45,8 @@ public enum Neutral: DebugPrintable {
 	public var debugDescription: String {
 		return analysis(
 			ifFree: toDebugString,
-			ifApplication: { "\(toDebugString($0))(\(toDebugString($1)))" })
+			ifApplication: { "\(toDebugString($0))(\(toDebugString($1)))" },
+			ifProjection: { "\(toDebugString($0)).\($1 ? 1 : 0)" })
 	}
 
 
@@ -47,6 +54,7 @@ public enum Neutral: DebugPrintable {
 
 	case Free(Name)
 	case Application(Box<Neutral>, Value)
+	case Projection(Box<Neutral>, Bool)
 }
 
 
