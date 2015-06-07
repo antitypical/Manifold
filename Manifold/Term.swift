@@ -135,6 +135,9 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 							.map { Value.function(t, $0) }
 					}
 			},
+			ifProjection: { _ in
+				.left("unimplemented")
+			},
 			ifSigma: { t, b -> Either<Error, Value> in
 				t.typecheck(context, from: i)
 					.flatMap { _ in
@@ -175,6 +178,9 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			ifPi: { type, body -> Value in
 				Value.pi(type.evaluate(environment)) { body.evaluate(environment.byPrepending($0)) }
 			},
+			ifProjection: { _ in
+				.UnitTerm
+			},
 			ifSigma: { type, body -> Value in
 				Value.sigma(type.evaluate(environment)) { body.evaluate(environment.byPrepending($0)) }
 			})
@@ -196,6 +202,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			ifFree: { "Free(\($0))" },
 			ifApplication: { "\($0)(\($1))" },
 			ifPi: { "Π \($0) . \($1)" },
+			ifProjection: { "\($0).\($1 ? 1 : 0)" },
 			ifSigma: { "Σ \($0) . \($1)" })
 	}
 
@@ -218,7 +225,8 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			ifFree: { 5 ^ $0.hashValue },
 			ifApplication: { 7 ^ $0.hashValue ^ $1.hashValue },
 			ifPi: { 11 ^ $0.hashValue ^ $1.hashValue },
-			ifSigma: { 13 ^ $0.hashValue ^ $1.hashValue })
+			ifProjection: { 13 ^ $0.hashValue ^ $1.hashValue },
+			ifSigma: { 17 ^ $0.hashValue ^ $1.hashValue })
 	}
 
 
@@ -241,6 +249,9 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			ifApplication: { "\($0.1)(\($1.1))" },
 			ifPi: {
 				"Π : \($0.1) . \($1.1)"
+			},
+			ifProjection: {
+				"\($0.1).\($1 ? 1 : 0)"
 			},
 			ifSigma: {
 				"Σ \($0.1) . \($1.1)"
