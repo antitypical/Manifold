@@ -77,7 +77,7 @@ final class TermTests: XCTestCase {
 	}
 
 
-	func testThing() {
+	func testReflexivity() {
 		property["reflexivity"] = forAll { (term: Term) in
 			term == term
 		}
