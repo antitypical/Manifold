@@ -65,13 +65,13 @@ final class TermTests: XCTestCase {
 
 
 	func testProjectionTypechecksToTypeOfProjectedField() {
-		let product = Term.product(.type(1), .type(2))
+		let product = Term.sigma(.type(1), .type(2))
 		assert(Term.projection(product, false).typecheck().right?.quote, ==, Term.type(2))
 		assert(Term.projection(product, true).typecheck().right?.quote, ==, Term.type(3))
 	}
 
 	func testProjectionEvaluatesToProjectedField() {
-		let product = Term.product(.type(1), .type(2))
+		let product = Term.sigma(.type(1), .type(2))
 		assert(Term.projection(product, false).evaluate().quote, ==, Term.type(1))
 		assert(Term.projection(product, true).evaluate().quote, ==, Term.type(2))
 	}
