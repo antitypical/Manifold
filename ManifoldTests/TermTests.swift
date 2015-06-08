@@ -87,7 +87,7 @@ final class TermTests: XCTestCase {
 
 extension Term: Arbitrary {
 	public static func arbitrary(n: Int) -> Gen<Term> {
-		let topLevel = [
+		let topLevel: [Gen<Term>] = [
 			Gen.pure(Term.unitTerm),
 			Gen.pure(Term.unitType),
 			Bool.arbitrary().fmap { $0 ? Term.type : Term.type(1) },
