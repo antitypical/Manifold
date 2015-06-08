@@ -76,6 +76,11 @@ final class TermTests: XCTestCase {
 	}
 
 
+	func testConstantFunctionConstruction() {
+		assert(constant, ==, Term.pi(.type, .pi(.type, .pi(.bound(1), .pi(.bound(1), .bound(1))))))
+	}
+
+
 	func testReflexivity() {
 		property["reflexivity"] = forAll { (term: Term) in
 			term == term
@@ -111,10 +116,6 @@ extension Term: Arbitrary {
 		return term.expression.analysis(
 			ifApplication: { x, y in Term.shrink(x).flatMap { x in Term.shrink(y).map { y in Term.application(x, y) } } },
 			otherwise: const(shrinkNone(term)))
-	}
-
-	func testConstantFunctionConstruction() {
-		assert(constant, ==, Term.pi(.type, .pi(.type, .pi(.bound(1), .pi(.bound(1), .bound(1))))))
 	}
 }
 
