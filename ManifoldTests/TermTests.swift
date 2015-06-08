@@ -105,7 +105,7 @@ extension Term: Arbitrary {
 	}
 
 	public static func arbitrary() -> Gen<Term> {
-		return arbitrary(0)
+		return arbitrary(-1)
 	}
 
 	public static func shrink(term: Term) -> [Term] {
