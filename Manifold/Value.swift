@@ -27,7 +27,7 @@ public enum Value: DebugPrintable {
 	}
 
 	public static func product(types: [Value]) -> Value {
-		return foldr(types, Value.UnitTerm, Value.product)
+		return foldr(types, Value.UnitValue, Value.product)
 	}
 
 	public static var type: Value {
@@ -45,9 +45,9 @@ public enum Value: DebugPrintable {
 
 	// MARK: Destructors
 
-	public var isUnitTerm: Bool {
+	public var isUnitValue: Bool {
 		return analysis(
-			ifUnitTerm: const(true),
+			ifUnitValue: const(true),
 			otherwise: const(false))
 	}
 
@@ -81,8 +81,16 @@ public enum Value: DebugPrintable {
 	public func apply(other: Value) -> Value {
 		return analysis(
 			ifPi: { _, f in f(other) },
-			ifSigma: { _, f in f(other) },
-			otherwise: { assert(false, "illegal application of \(self) to \(other)") ; return .type })
+			otherwise: { assert(false, "illegal application of \(self) to \(other)") ; return .UnitValue })
+	}
+
+
+	// MARK: Projection
+
+	public func project(second: Bool) -> Value {
+		return analysis(
+			ifSigma: { a, f in second ? f(a) : a },
+			otherwise: { assert(false, "illegal projection: \(self).\(second ? 1 : 0)") ; return .UnitValue })
 	}
 
 
@@ -94,9 +102,9 @@ public enum Value: DebugPrintable {
 
 	func quote(n: Int) -> Term {
 		return analysis(
-			ifUnitTerm: const(.unitTerm),
+			ifUnitValue: const(.unitTerm),
 			ifUnitType: const(.unitType),
-			ifType: const(.type),
+			ifType: Term.type,
 			ifPi: { type, f in
 				Term(Checkable.Pi(Box(type.quote(n)), Box(f(.free(.Quote(n))).quote(n + 1))))
 			},
@@ -115,15 +123,15 @@ public enum Value: DebugPrintable {
 	// MARK: Analyses
 
 	public func analysis<T>(
-		@noescape #ifUnitTerm: () -> T,
+		@noescape #ifUnitValue: () -> T,
 		@noescape ifUnitType: () -> T,
 		@noescape ifType: Int -> T,
 		@noescape ifPi: (Value, Value -> Value) -> T,
 		@noescape ifSigma: (Value, Value -> Value) -> T,
 		@noescape ifFree: Name -> T) -> T {
 		switch self {
-		case .UnitTerm:
-			return ifUnitTerm()
+		case .UnitValue:
+			return ifUnitValue()
 		case .UnitType:
 			return ifUnitType()
 		case let .Type(n):
@@ -138,7 +146,7 @@ public enum Value: DebugPrintable {
 	}
 
 	public func analysis<T>(
-		ifUnitTerm: (() -> T)? = nil,
+		ifUnitValue: (() -> T)? = nil,
 		ifUnitType: (() -> T)? = nil,
 		ifType: (Int -> T)? = nil,
 		ifPi: ((Value, Value -> Value) -> T)? = nil,
@@ -146,7 +154,7 @@ public enum Value: DebugPrintable {
 		ifFree: (Name -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
-			ifUnitTerm: { ifUnitTerm?() ?? otherwise() },
+			ifUnitValue: { ifUnitValue?() ?? otherwise() },
 			ifUnitType: { ifUnitType?() ?? otherwise() },
 			ifType: { ifType?($0) ?? otherwise() },
 			ifPi: { ifPi?($0) ?? otherwise() },
@@ -159,7 +167,7 @@ public enum Value: DebugPrintable {
 
 	public var debugDescription: String {
 		return analysis(
-			ifUnitTerm: const("()"),
+			ifUnitValue: const("()"),
 			ifUnitType: const("Unit"),
 			ifType: { "Type\($0)" },
 			ifPi: { "(Π ? : \(toDebugString($0)) . \(toDebugString($1)))" },
@@ -171,7 +179,7 @@ public enum Value: DebugPrintable {
 	// MARK: Cases
 
 	case UnitType
-	case UnitTerm
+	case UnitValue
 	case Type(Int)
 	case Pi(Box<Value>, Value -> Value)
 	case Sigma(Box<Value>, Value -> Value)

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		D45E2DC71B0AE55C004C64DA /* Boolean.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45E2DC61B0AE55C004C64DA /* Boolean.swift */; };
 		D46395AD1B15438600AA1B65 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46395AC1B15438600AA1B65 /* Context.swift */; };
+		D46395AF1B17E24C00AA1B65 /* SwiftCheck.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D46395AE1B17E24C00AA1B65 /* SwiftCheck.framework */; };
 		D46974251AFE4EB5005D3AA3 /* ValueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46974241AFE4EB5005D3AA3 /* ValueTests.swift */; };
 		D46C90521B07B3A200975BFD /* Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46C90511B07B3A200975BFD /* Description.swift */; };
 		D4809FBD1AF6BD400084B8FE /* TermTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4809FBC1AF6BD400084B8FE /* TermTests.swift */; };
@@ -47,6 +48,7 @@
 /* Begin PBXFileReference section */
 		D45E2DC61B0AE55C004C64DA /* Boolean.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Boolean.swift; sourceTree = "<group>"; };
 		D46395AC1B15438600AA1B65 /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
+		D46395AE1B17E24C00AA1B65 /* SwiftCheck.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SwiftCheck.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D46974241AFE4EB5005D3AA3 /* ValueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueTests.swift; sourceTree = "<group>"; };
 		D46C90511B07B3A200975BFD /* Description.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Description.swift; sourceTree = "<group>"; };
 		D4809FBC1AF6BD400084B8FE /* TermTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TermTests.swift; sourceTree = "<group>"; };
@@ -87,6 +89,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D46395AF1B17E24C00AA1B65 /* SwiftCheck.framework in Frameworks */,
 				D4B4AA551A902A6F0089A5F2 /* Assertions.framework in Frameworks */,
 				D4F9F86C1A84970900B7071E /* Prelude.framework in Frameworks */,
 				D4F9F8661A84959600B7071E /* Box.framework in Frameworks */,
@@ -165,6 +168,7 @@
 			isa = PBXGroup;
 			children = (
 				D4B4AA541A902A6F0089A5F2 /* Assertions.framework */,
+				D46395AE1B17E24C00AA1B65 /* SwiftCheck.framework */,
 				D4B3FC011A83515800DA2AC3 /* Info.plist */,
 			);
 			name = "Supporting Files";

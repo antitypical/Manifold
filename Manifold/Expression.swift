@@ -11,6 +11,7 @@ public enum Checkable<Recur> {
 		@noescape ifFree: Name -> T,
 		@noescape ifApplication: (Recur, Recur) -> T,
 		@noescape ifPi: (Recur, Recur) -> T,
+		@noescape ifProjection: (Recur, Bool) -> T,
 		@noescape ifSigma: (Recur, Recur) -> T) -> T {
 		switch self {
 		case .UnitTerm:
@@ -27,6 +28,8 @@ public enum Checkable<Recur> {
 			return ifApplication(a.value, b.value)
 		case let .Pi(a, b):
 			return ifPi(a.value, b.value)
+		case let .Projection(a, b):
+			return ifProjection(a.value, b)
 		case let .Sigma(a, b):
 			return ifSigma(a.value, b.value)
 		}
@@ -40,6 +43,7 @@ public enum Checkable<Recur> {
 		ifFree: (Name -> T)? = nil,
 		ifApplication: ((Recur, Recur) -> T)? = nil,
 		ifPi: ((Recur, Recur) -> T)? = nil,
+		ifProjection: ((Recur, Bool) -> T)? = nil,
 		ifSigma: ((Recur, Recur) -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
@@ -50,6 +54,7 @@ public enum Checkable<Recur> {
 			ifFree: { ifFree?($0) ?? otherwise() },
 			ifApplication: { ifApplication?($0) ?? otherwise() },
 			ifPi: { ifPi?($0) ?? otherwise() },
+			ifProjection: { ifProjection?($0) ?? otherwise() },
 			ifSigma: { ifSigma?($0) ?? otherwise() })
 	}
 
@@ -65,6 +70,7 @@ public enum Checkable<Recur> {
 			ifFree: { .Free($0) },
 			ifApplication: { .Application(Box(transform($0)), Box(transform($1))) },
 			ifPi: { .Pi(Box(transform($0)), Box(transform($1))) },
+			ifProjection: { .Projection(Box(transform($0)), $1) },
 			ifSigma: { .Sigma(Box(transform($0)), Box(transform($1))) })
 	}
 
@@ -78,6 +84,7 @@ public enum Checkable<Recur> {
 	case Free(Name)
 	case Application(Box<Recur>, Box<Recur>)
 	case Pi(Box<Recur>, Box<Recur>) // (Πx:A)B where B can depend on x
+	case Projection(Box<Recur>, Bool)
 	case Sigma(Box<Recur>, Box<Recur>) // (Σx:A)B where B can depend on x
 }
 
