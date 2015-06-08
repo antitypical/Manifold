@@ -87,7 +87,7 @@ final class TermTests: XCTestCase {
 
 extension Term: Arbitrary {
 	public static func arbitrary(n: Int) -> Gen<Term> {
-		return Gen.oneOf([
+		let topLevel = [
 			Gen.pure(Term.unitTerm),
 			Gen.pure(Term.unitType),
 			Bool.arbitrary().fmap { $0 ? Term.type : Term.type(1) },
@@ -97,7 +97,11 @@ extension Term: Arbitrary {
 			Gen.pure(()).bind { _ in
 				Term.arbitrary(n + 1).fmap { x in Term(.Pi(Box(.type), Box(x))) }
 			},
-		])
+		]
+		let inBinder = [
+			Int.arbitrary().suchThat { $0 <= n }.fmap { Term(.Bound($0)) }
+		]
+		return Gen.oneOf(topLevel + (n >= 0 ? inBinder : []))
 	}
 
 	public static func arbitrary() -> Gen<Term> {
