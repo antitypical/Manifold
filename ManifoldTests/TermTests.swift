@@ -95,7 +95,7 @@ extension Term: Arbitrary {
 				Term.arbitrary().bind { x in Term.arbitrary().fmap { y in Term.application(x, y) } }
 			},
 			Gen.pure(()).bind { _ in
-				Term.arbitrary().fmap { x in Term(.Pi(Box(.type), Box(x))) }
+				Term.arbitrary(n + 1).fmap { x in Term(.Pi(Box(.type), Box(x))) }
 			},
 		])
 	}
