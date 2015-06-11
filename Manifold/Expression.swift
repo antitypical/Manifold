@@ -4,7 +4,7 @@ public enum Checkable<Recur> {
 	// MARK: Analyses
 
 	public func analysis<T>(
-		@noescape #ifUnitTerm: () -> T,
+		@noescape ifUnitTerm ifUnitTerm: () -> T,
 		@noescape ifUnitType: () -> T,
 		@noescape ifType: Int -> T,
 		@noescape ifBound: Int -> T,
@@ -36,7 +36,7 @@ public enum Checkable<Recur> {
 	}
 
 	public func analysis<T>(
-		ifUnitTerm: (() -> T)? = nil,
+		ifUnitTerm ifUnitTerm: (() -> T)? = nil,
 		ifUnitType: (() -> T)? = nil,
 		ifType: (Int -> T)? = nil,
 		ifBound: (Int -> T)? = nil,

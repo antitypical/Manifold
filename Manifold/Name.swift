@@ -26,7 +26,7 @@ public enum Name: Hashable, IntegerLiteralConvertible, DebugPrintable, Printable
 	// MARK: Analysis
 
 	public func analysis<T>(
-		@noescape #ifGlobal: String -> T,
+		@noescape ifGlobal ifGlobal: String -> T,
 		@noescape ifLocal: Int -> T,
 		@noescape ifQuote: Int -> T) -> T {
 		switch self {

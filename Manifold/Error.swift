@@ -17,7 +17,7 @@ public enum Error: Equatable, Printable, StringInterpolationConvertible, StringL
 	}
 
 
-	public func analysis<T>(#ifLeaf: String -> T, ifBranch: [Error] -> T) -> T {
+	public func analysis<T>(ifLeaf ifLeaf: String -> T, ifBranch: [Error] -> T) -> T {
 		switch self {
 		case let Leaf(string):
 			return ifLeaf(string)

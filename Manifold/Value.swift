@@ -136,7 +136,7 @@ public enum Value: DebugPrintable {
 	// MARK: Analyses
 
 	public func analysis<T>(
-		@noescape #ifUnitValue: () -> T,
+		@noescape ifUnitValue ifUnitValue: () -> T,
 		@noescape ifUnitType: () -> T,
 		@noescape ifType: Int -> T,
 		@noescape ifPi: (Value, Value -> Value) -> T,
@@ -159,7 +159,7 @@ public enum Value: DebugPrintable {
 	}
 
 	public func analysis<T>(
-		ifUnitValue: (() -> T)? = nil,
+		ifUnitValue ifUnitValue: (() -> T)? = nil,
 		ifUnitType: (() -> T)? = nil,
 		ifType: (Int -> T)? = nil,
 		ifPi: ((Value, Value -> Value) -> T)? = nil,
@@ -200,11 +200,11 @@ public enum Value: DebugPrintable {
 }
 
 
-private func foldr<S: SequenceType, T>(sequence: S, final: T, combine: (S.Generator.Element, T) -> T) -> T {
+private func foldr<S: SequenceType, T>(sequence: S, _ final: T, _ combine: (S.Generator.Element, T) -> T) -> T {
 	return foldr(sequence.generate(), final, combine)
 }
 
-private func foldr<G: GeneratorType, T>(var generator: G, final: T, combine: (G.Element, T) -> T) -> T {
+private func foldr<G: GeneratorType, T>(var generator: G, _ final: T, _ combine: (G.Element, T) -> T) -> T {
 	let next = generator.next()
 	return next.map { combine($0, foldr(generator, final, combine)) } ?? final
 }

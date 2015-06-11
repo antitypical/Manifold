@@ -175,7 +175,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	// MARK: Evaluation
 
-	public func evaluate(_ environment: Environment = Environment()) -> Value {
+	public func evaluate(environment: Environment = Environment()) -> Value {
 		return expression.analysis(
 			ifUnitTerm: const(.UnitValue),
 			ifUnitType: const(.UnitType),

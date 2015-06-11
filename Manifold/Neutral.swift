@@ -30,7 +30,7 @@ public enum Neutral: DebugPrintable {
 	// MARK: Analyses
 
 	public func analysis<T>(
-		@noescape #ifFree: Name -> T,
+		@noescape ifFree ifFree: Name -> T,
 		@noescape ifApplication: (Neutral, Value) -> T,
 		@noescape ifProjection: (Neutral, Bool) -> T) -> T {
 		switch self {
