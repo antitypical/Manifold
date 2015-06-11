@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Error: Equatable, Printable, StringInterpolationConvertible, StringLiteralConvertible {
+public enum Error: Equatable, CustomStringConvertible, StringInterpolationConvertible, StringLiteralConvertible {
 	public init(reason: String) {
 		self = Leaf(reason)
 	}
@@ -17,7 +17,7 @@ public enum Error: Equatable, Printable, StringInterpolationConvertible, StringL
 	}
 
 
-	public func analysis<T>(#ifLeaf: String -> T, ifBranch: [Error] -> T) -> T {
+	public func analysis<T>(ifLeaf ifLeaf: String -> T, ifBranch: [Error] -> T) -> T {
 		switch self {
 		case let Leaf(string):
 			return ifLeaf(string)
@@ -39,14 +39,14 @@ public enum Error: Equatable, Printable, StringInterpolationConvertible, StringL
 	public var description: String {
 		return analysis(
 			ifLeaf: id,
-			ifBranch: { "\n".join(lazy($0).map(toString)) })
+			ifBranch: { "\n".join(lazy($0).map { String($0) }) })
 	}
 
 
 	// MARK: StringInterpolationConvertible
 
 	public init(stringInterpolation strings: Error...) {
-		self = Error(reason: reduce(strings, "") {
+		self = Error(reason: strings.reduce("") {
 			$0 + $1.analysis(
 				ifLeaf: id,
 				ifBranch: const(""))
@@ -54,7 +54,7 @@ public enum Error: Equatable, Printable, StringInterpolationConvertible, StringL
 	}
 
 	public init<T>(stringInterpolationSegment expr: T) {
-		self = Error(reason: toString(expr))
+		self = Error(reason: String(expr))
 	}
 
 	

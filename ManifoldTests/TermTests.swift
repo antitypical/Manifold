@@ -79,44 +79,6 @@ final class TermTests: XCTestCase {
 	func testConstantFunctionConstruction() {
 		assert(constant, ==, Term.pi(.type, .pi(.type, .pi(.bound(1), .pi(.bound(1), .bound(1))))))
 	}
-
-
-	func testReflexivity() {
-		property["reflexivity"] = forAll { (term: Term) in
-			term == term
-		}
-	}
-}
-
-
-extension Term: Arbitrary {
-	public static func arbitrary(n: Int) -> Gen<Term> {
-		let topLevel: [Gen<Term>] = [
-			Gen.pure(Term.unitTerm),
-			Gen.pure(Term.unitType),
-			Bool.arbitrary().fmap { $0 ? Term.type : Term.type(1) },
-			Gen.pure(()).bind { _ in
-				Term.arbitrary().bind { x in Term.arbitrary().fmap { y in Term.application(x, y) } }
-			},
-			Gen.pure(()).bind { _ in
-				Term.arbitrary(n + 1).fmap { x in Term(.Pi(Box(.type), Box(x))) }
-			},
-		]
-		let inBinder = [
-			Int.arbitrary().suchThat { $0 <= n }.fmap { Term(.Bound($0)) }
-		]
-		return Gen.oneOf(topLevel + (n >= 0 ? inBinder : []))
-	}
-
-	public static func arbitrary() -> Gen<Term> {
-		return arbitrary(-1)
-	}
-
-	public static func shrink(term: Term) -> [Term] {
-		return term.expression.analysis(
-			ifApplication: { x, y in Term.shrink(x).flatMap { x in Term.shrink(y).map { y in Term.application(x, y) } } },
-			otherwise: const(shrinkNone(term)))
-	}
 }
 
 private let identity = Value.pi(.type) { A in .pi(A, id) }.quote
@@ -128,5 +90,4 @@ import Box
 import Either
 import Manifold
 import Prelude
-import SwiftCheck
 import XCTest
