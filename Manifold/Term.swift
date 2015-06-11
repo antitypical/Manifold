@@ -168,7 +168,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 				let (q, r) = (t.quote, against.quote)
 				return (q == r) || (r == .type && q == Value.function(.type, .type).quote)
 					? Either.right(t)
-					: Either.left("type mismatch: expected (\(toDebugString(self))) : (\(toDebugString(r))), actually (\(toDebugString(self))) : (\(toDebugString(q))) in environment \(context)")
+					: Either.left("type mismatch: expected (\(String(reflecting: self))) : (\(String(reflecting: r))), actually (\(String(reflecting: self))) : (\(String(reflecting: q))) in environment \(context)")
 			}
 	}
 
@@ -253,7 +253,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	private static let alphabet = "abcdefghijklmnopqrstuvwxyz"
 
 	private static func toString(expression: Checkable<(Term, String)>) -> String {
-		let alphabetize: Int -> String = { index in Swift.toString(Term.alphabet[advance(Term.alphabet.startIndex, index)]) }
+		let alphabetize: Int -> String = { index in Swift.String(Term.alphabet[advance(Term.alphabet.startIndex, index)]) }
 		return expression.analysis(
 			ifUnitTerm: const("()"),
 			ifUnitType: const("Unit"),

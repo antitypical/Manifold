@@ -39,7 +39,7 @@ public enum Error: Equatable, Printable, StringInterpolationConvertible, StringL
 	public var description: String {
 		return analysis(
 			ifLeaf: id,
-			ifBranch: { "\n".join(lazy($0).map(toString)) })
+			ifBranch: { "\n".join(lazy($0).map { String($0) }) })
 	}
 
 
@@ -54,7 +54,7 @@ public enum Error: Equatable, Printable, StringInterpolationConvertible, StringL
 	}
 
 	public init<T>(stringInterpolationSegment expr: T) {
-		self = Error(reason: toString(expr))
+		self = Error(reason: String(expr))
 	}
 
 	

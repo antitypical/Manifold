@@ -183,9 +183,9 @@ public enum Value: DebugPrintable {
 			ifUnitValue: const("()"),
 			ifUnitType: const("Unit"),
 			ifType: { "Type\($0)" },
-			ifPi: { "(Π ? : \(toDebugString($0)) . \(toDebugString($1)))" },
-			ifSigma: { "(Σ ? : \(toDebugString($0)) . \(toDebugString($1)))" },
-			ifNeutral: toDebugString)
+			ifPi: { "(Π ? : \(String(reflecting: $0)) . \(String(reflecting: $1)))" },
+			ifSigma: { "(Σ ? : \(String(reflecting: $0)) . \(String(reflecting: $1)))" },
+			ifNeutral: { String(reflecting: $0) })
 	}
 
 

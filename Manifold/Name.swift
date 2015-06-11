@@ -69,8 +69,8 @@ public enum Name: Hashable, IntegerLiteralConvertible, DebugPrintable, Printable
 	public var description: String {
 		return analysis(
 			ifGlobal: id,
-			ifLocal: toString,
-			ifQuote: toString)
+			ifLocal: { String($0) },
+			ifQuote: { String($0) })
 	}
 
 

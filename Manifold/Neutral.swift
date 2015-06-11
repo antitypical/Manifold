@@ -48,9 +48,9 @@ public enum Neutral: DebugPrintable {
 
 	public var debugDescription: String {
 		return analysis(
-			ifFree: toDebugString,
-			ifApplication: { "\(toDebugString($0))(\(toDebugString($1)))" },
-			ifProjection: { "\(toDebugString($0)).\($1 ? 1 : 0)" })
+			ifFree: { String(reflecting: $0) },
+			ifApplication: { "\(String(reflecting: $0))(\(String(reflecting: $1)))" },
+			ifProjection: { "\(String(reflecting: $0)).\($1 ? 1 : 0)" })
 	}
 
 
