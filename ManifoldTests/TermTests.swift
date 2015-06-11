@@ -86,7 +86,6 @@ private let constant = Value.pi(.type) { A in Value.pi(.type) { B in Value.pi(A)
 
 
 import Assertions
-import Box
 import Either
 import Manifold
 import Prelude
