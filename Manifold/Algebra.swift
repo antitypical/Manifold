@@ -26,9 +26,8 @@ public func ana<T, Fix: FixpointType where Fix.Recur == Checkable<Fix>>(f: T -> 
 }
 
 
-public func apo<T, Fix: FixpointType where Fix.Recur == Checkable<Fix>>(f: T -> Checkable<Either<Fix, T>>)(_ seed: T) -> Fix {
-	let fanin: Either<Fix, T> -> Fix = { $0.either(ifLeft: id, ifRight: apo(f)) }
-	return seed |> (`in` <<< (map <| fanin) <<< f)
+public func apo<T>(f: T -> Checkable<Either<Term, T>>)(_ seed: T) -> Term {
+	return seed |> (`in` <<< (map { $0.either(ifLeft: id, ifRight: apo(f)) }) <<< f)
 }
 
 
