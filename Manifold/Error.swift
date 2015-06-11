@@ -46,7 +46,7 @@ public enum Error: Equatable, CustomStringConvertible, StringInterpolationConver
 	// MARK: StringInterpolationConvertible
 
 	public init(stringInterpolation strings: Error...) {
-		self = Error(reason: reduce(strings, "") {
+		self = Error(reason: strings.reduce("") {
 			$0 + $1.analysis(
 				ifLeaf: id,
 				ifBranch: const(""))

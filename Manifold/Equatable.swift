@@ -36,8 +36,8 @@ public func == <Recur: Equatable> (left: Checkable<Recur>, right: Checkable<Recu
 // MARK: Error
 
 public func == (left: Error, right: Error) -> Bool {
-	return reduce(lazy(zip(left.errors, right.errors))
-		.map(==), true) { $0 && $1 }
+	return lazy(zip(left.errors, right.errors))
+		.map(==).reduce(true) { $0 && $1 }
 }
 
 
