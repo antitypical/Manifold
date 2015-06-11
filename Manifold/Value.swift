@@ -106,10 +106,10 @@ public enum Value: CustomDebugStringConvertible {
 			ifUnitType: const(.unitType),
 			ifType: Term.type,
 			ifPi: { type, f in
-				Term(Checkable.Pi(Box(type.quote(n)), Box(f(.free(.Quote(n))).quote(n + 1))))
+				Term.pi(type.quote(n), f(.free(.Quote(n))).quote(n + 1))
 			},
 			ifSigma: { type, f in
-				Term(Checkable.Sigma(Box(type.quote(n)), Box(f(.free(.Quote(n))).quote(n + 1))))
+				Term.sigma(type.quote(n), f(.free(.Quote(n))).quote(n + 1))
 			},
 			ifFree: { name -> Term in
 				name.analysis(
