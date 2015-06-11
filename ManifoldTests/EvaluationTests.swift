@@ -17,6 +17,11 @@ final class EvaluationTests: XCTestCase {
 		let identity = Term.pi(.unitType, .bound(0))
 		assert(Term.application(identity, Term.unitTerm).evaluate().quote, ==, Term.unitTerm)
 	}
+
+	func testSimpleAbstractionEvaluatesToItself() {
+		let identity = Term.pi(.unitType, .bound(0))
+		assert(identity.evaluate().quote, ==, identity)
+	}
 }
 
 import Assertions
