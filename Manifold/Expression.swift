@@ -25,13 +25,13 @@ public enum Checkable<Recur> {
 		case let .Free(x):
 			return ifFree(x)
 		case let .Application(a, b):
-			return ifApplication(a.value, b.value)
+			return ifApplication(a, b)
 		case let .Pi(a, b):
-			return ifPi(a.value, b.value)
+			return ifPi(a, b)
 		case let .Projection(a, b):
-			return ifProjection(a.value, b)
+			return ifProjection(a, b)
 		case let .Sigma(a, b):
-			return ifSigma(a.value, b.value)
+			return ifSigma(a, b)
 		}
 	}
 
@@ -68,10 +68,10 @@ public enum Checkable<Recur> {
 			ifType: { .Type($0) },
 			ifBound: { .Bound($0) },
 			ifFree: { .Free($0) },
-			ifApplication: { .Application(Box(transform($0)), Box(transform($1))) },
-			ifPi: { .Pi(Box(transform($0)), Box(transform($1))) },
-			ifProjection: { .Projection(Box(transform($0)), $1) },
-			ifSigma: { .Sigma(Box(transform($0)), Box(transform($1))) })
+			ifApplication: { .Application(transform($0), transform($1)) },
+			ifPi: { .Pi(transform($0), transform($1)) },
+			ifProjection: { .Projection(transform($0), $1) },
+			ifSigma: { .Sigma(transform($0), transform($1)) })
 	}
 
 
@@ -82,12 +82,11 @@ public enum Checkable<Recur> {
 	case Type(Int)
 	case Bound(Int)
 	case Free(Name)
-	case Application(Box<Recur>, Box<Recur>)
-	case Pi(Box<Recur>, Box<Recur>) // (Πx:A)B where B can depend on x
-	case Projection(Box<Recur>, Bool)
-	case Sigma(Box<Recur>, Box<Recur>) // (Σx:A)B where B can depend on x
+	case Application(Recur, Recur)
+	case Pi(Recur, Recur) // (Πx:A)B where B can depend on x
+	case Projection(Recur, Bool)
+	case Sigma(Recur, Recur) // (Σx:A)B where B can depend on x
 }
 
 
-import Box
 import Prelude

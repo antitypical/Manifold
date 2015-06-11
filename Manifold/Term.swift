@@ -2,7 +2,7 @@
 
 public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, CustomStringConvertible {
 	public init(_ expression: Checkable<Term>) {
-		self.expression = expression
+		self._expression = Box(expression)
 	}
 
 
@@ -27,12 +27,12 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 
 
 	public static func application(a: Term, _ b: Term) -> Term {
-		return Term(.Application(Box(a), Box(b)))
+		return Term(.Application(a, b))
 	}
 
 
 	public static func projection(a: Term, _ b: Bool) -> Term {
-		return Term(.Projection(Box(a), b))
+		return Term(.Projection(a, b))
 	}
 
 
@@ -46,11 +46,11 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 
 
 	public static func pi(type: Term, _ body: Term) -> Term {
-		return Term(.Pi(Box(type), Box(body)))
+		return Term(.Pi(type, body))
 	}
 
 	public static func sigma(type: Term, _ body: Term) -> Term {
-		return Term(.Sigma(Box(type), Box(body)))
+		return Term(.Sigma(type, body))
 	}
 
 
@@ -98,7 +98,10 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 			otherwise: const(nil))
 	}
 
-	public let expression: Checkable<Term>
+	private var _expression: Box<Checkable<Term>>
+	public var expression: Checkable<Term> {
+		return _expression.value
+	}
 
 
 	// MARK: Substitution
