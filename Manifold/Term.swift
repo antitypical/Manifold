@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
+public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, CustomStringConvertible {
 	public init(_ expression: Checkable<Term>) {
 		self.expression = expression
 	}

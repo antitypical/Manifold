@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Name: Hashable, IntegerLiteralConvertible, DebugPrintable, Printable, StringLiteralConvertible {
+public enum Name: Hashable, IntegerLiteralConvertible, CustomDebugStringConvertible, CustomStringConvertible, StringLiteralConvertible {
 	// MARK: Constructors
 
 	public static func global(name: String) -> Name {
