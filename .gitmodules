@@ -10,6 +10,3 @@
 [submodule "External/Assertions"]
 	path = External/Assertions
 	url = https://github.com/antitypical/Assertions.git
-[submodule "External/SwiftCheck"]
-	path = External/SwiftCheck
-	url = https://github.com/robrix/SwiftCheck.git

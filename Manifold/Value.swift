@@ -3,7 +3,7 @@
 /// `Value` represents a form which cannot undergo further evaluation.
 ///
 /// This makes it sort of like a `Term` in normal form, i.e. already evaluated.
-public enum Value: DebugPrintable {
+public enum Value: CustomDebugStringConvertible {
 	// MARK: Constructors
 
 	public static func pi(value: Value, _ f: Value -> Value) -> Value {
@@ -136,7 +136,7 @@ public enum Value: DebugPrintable {
 	// MARK: Analyses
 
 	public func analysis<T>(
-		@noescape #ifUnitValue: () -> T,
+		@noescape ifUnitValue ifUnitValue: () -> T,
 		@noescape ifUnitType: () -> T,
 		@noescape ifType: Int -> T,
 		@noescape ifPi: (Value, Value -> Value) -> T,
@@ -159,7 +159,7 @@ public enum Value: DebugPrintable {
 	}
 
 	public func analysis<T>(
-		ifUnitValue: (() -> T)? = nil,
+		ifUnitValue ifUnitValue: (() -> T)? = nil,
 		ifUnitType: (() -> T)? = nil,
 		ifType: (Int -> T)? = nil,
 		ifPi: ((Value, Value -> Value) -> T)? = nil,
@@ -183,9 +183,9 @@ public enum Value: DebugPrintable {
 			ifUnitValue: const("()"),
 			ifUnitType: const("Unit"),
 			ifType: { "Type\($0)" },
-			ifPi: { "(Π ? : \(toDebugString($0)) . \(toDebugString($1)))" },
-			ifSigma: { "(Σ ? : \(toDebugString($0)) . \(toDebugString($1)))" },
-			ifNeutral: toDebugString)
+			ifPi: { "(Π ? : \(String(reflecting: $0)) . \(String(reflecting: $1)))" },
+			ifSigma: { "(Σ ? : \(String(reflecting: $0)) . \(String(reflecting: $1)))" },
+			ifNeutral: { String(reflecting: $0) })
 	}
 
 
@@ -200,11 +200,11 @@ public enum Value: DebugPrintable {
 }
 
 
-private func foldr<S: SequenceType, T>(sequence: S, final: T, combine: (S.Generator.Element, T) -> T) -> T {
+private func foldr<S: SequenceType, T>(sequence: S, _ final: T, _ combine: (S.Generator.Element, T) -> T) -> T {
 	return foldr(sequence.generate(), final, combine)
 }
 
-private func foldr<G: GeneratorType, T>(var generator: G, final: T, combine: (G.Element, T) -> T) -> T {
+private func foldr<G: GeneratorType, T>(var generator: G, _ final: T, _ combine: (G.Element, T) -> T) -> T {
 	let next = generator.next()
 	return next.map { combine($0, foldr(generator, final, combine)) } ?? final
 }

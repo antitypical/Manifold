@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Name: Hashable, IntegerLiteralConvertible, DebugPrintable, Printable, StringLiteralConvertible {
+public enum Name: Hashable, IntegerLiteralConvertible, CustomDebugStringConvertible, CustomStringConvertible, StringLiteralConvertible {
 	// MARK: Constructors
 
 	public static func global(name: String) -> Name {
@@ -26,7 +26,7 @@ public enum Name: Hashable, IntegerLiteralConvertible, DebugPrintable, Printable
 	// MARK: Analysis
 
 	public func analysis<T>(
-		@noescape #ifGlobal: String -> T,
+		@noescape ifGlobal ifGlobal: String -> T,
 		@noescape ifLocal: Int -> T,
 		@noescape ifQuote: Int -> T) -> T {
 		switch self {
@@ -69,8 +69,8 @@ public enum Name: Hashable, IntegerLiteralConvertible, DebugPrintable, Printable
 	public var description: String {
 		return analysis(
 			ifGlobal: id,
-			ifLocal: toString,
-			ifQuote: toString)
+			ifLocal: { String($0) },
+			ifQuote: { String($0) })
 	}
 
 

@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Neutral: DebugPrintable {
+public enum Neutral: CustomDebugStringConvertible {
 	// MARK: Constructors
 
 	public static func application(f: Neutral, _ v: Value) -> Neutral {
@@ -30,7 +30,7 @@ public enum Neutral: DebugPrintable {
 	// MARK: Analyses
 
 	public func analysis<T>(
-		@noescape #ifFree: Name -> T,
+		@noescape ifFree ifFree: Name -> T,
 		@noescape ifApplication: (Neutral, Value) -> T,
 		@noescape ifProjection: (Neutral, Bool) -> T) -> T {
 		switch self {
@@ -48,9 +48,9 @@ public enum Neutral: DebugPrintable {
 
 	public var debugDescription: String {
 		return analysis(
-			ifFree: toDebugString,
-			ifApplication: { "\(toDebugString($0))(\(toDebugString($1)))" },
-			ifProjection: { "\(toDebugString($0)).\($1 ? 1 : 0)" })
+			ifFree: { String(reflecting: $0) },
+			ifApplication: { "\(String(reflecting: $0))(\(String(reflecting: $1)))" },
+			ifProjection: { "\(String(reflecting: $0)).\($1 ? 1 : 0)" })
 	}
 
 
