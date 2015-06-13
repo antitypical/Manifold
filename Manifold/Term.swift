@@ -179,7 +179,17 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 			},
 			ifBooleanType: const(.right(.type)),
 			ifBooleanTerm: const(.right(.BooleanType)),
-			ifIf: const(.left("typechecking conditions is unimplemented")))
+			ifIf: { condition, then, otherwise -> Either<Error, Value> in
+				condition.typecheck(context, against: .BooleanType, from: i)
+					.flatMap { _ in
+						(then.typecheck(context, from: i) &&& otherwise.typecheck(context, from: i))
+							.flatMap {
+								$0.quote == $1.quote
+									? .right($0)
+									: .left("if branches \(then) : \($0.quote) and \(otherwise) : \($1.quote) must have the same type")
+							}
+					}
+			})
 	}
 
 	public func typecheck(context: Context, against: Value, from i: Int) -> Either<Error, Value> {
