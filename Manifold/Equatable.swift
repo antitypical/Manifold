@@ -60,5 +60,5 @@ public func == (left: Term, right: Term) -> Bool {
 // MARK: Value
 
 public func == (left: Value, right: Value) -> Bool {
-	return left.quote == right.quote
+	return false
 }

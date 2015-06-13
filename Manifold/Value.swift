@@ -98,34 +98,6 @@ public enum Value: CustomDebugStringConvertible {
 	}
 
 
-	// MARK: Quotation
-
-	public var quote: Term {
-		return quote(0)
-	}
-
-	func quote(n: Int) -> Term {
-		return analysis(
-			ifUnitValue: const(.unitTerm),
-			ifUnitType: const(.unitType),
-			ifType: Term.type,
-			ifPi: { type, f in
-				Term.pi(type.quote(n), f(.free(.Quote(n))).quote(n + 1))
-			},
-			ifSigma: { type, f in
-				Term.sigma(type.quote(n), f(.free(.Quote(n))).quote(n + 1))
-			},
-			ifFree: { name -> Term in
-				name.analysis(
-					ifGlobal: const(Term.free(name)),
-					ifLocal: const(Term.free(name)),
-					ifQuote: { Term.bound(n - $0 - 1) })
-			},
-			ifBooleanType: const(.booleanType),
-			ifBooleanValue: Term.boolean)
-	}
-
-
 	// MARK: Analyses
 
 	public func analysis<T>(
@@ -182,7 +154,7 @@ public enum Value: CustomDebugStringConvertible {
 	// MARK: DebugPrintable
 
 	public var debugDescription: String {
-		return String(reflecting: quote)
+		return "Value"
 	}
 
 
