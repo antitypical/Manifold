@@ -183,10 +183,10 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 			},
 			ifBooleanType: const(.right(.type)),
 			ifBooleanTerm: const(.right(.BooleanType)),
-			ifIf: { condition, then, otherwise -> Either<Error, Value> in
+			ifIf: { condition, then, `else` -> Either<Error, Value> in
 				condition.typecheck(context, against: .BooleanType, from: i)
 					.flatMap { _ in
-						(then.typecheck(context, from: i) &&& otherwise.typecheck(context, from: i))
+						(then.typecheck(context, from: i) &&& `else`.typecheck(context, from: i))
 							.map { a, b in
 								a.quote == b.quote
 									? a
