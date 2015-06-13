@@ -30,24 +30,16 @@ public enum Value: CustomDebugStringConvertible {
 		return foldr(types, Value.UnitValue, Value.product)
 	}
 
-	public static func application(f: Manifold.Neutral, _ v: Value) -> Value {
-		return .neutral(.application(f, v))
-	}
-
-	public static func free(name: Name) -> Value {
-		return .neutral(.Free(name))
-	}
-
-	public static func neutral(value: Manifold.Neutral) -> Value {
-		return .Neutral(Box(value))
-	}
-
 	public static var type: Value {
 		return .Type(0)
 	}
 
 	public static func type(n: Int) -> Value {
 		return .Type(n)
+	}
+
+	public static func free(name: Name) -> Value {
+		return .Free(name)
 	}
 
 
@@ -83,19 +75,12 @@ public enum Value: CustomDebugStringConvertible {
 			otherwise: const(nil))
 	}
 
-	public var neutral: Manifold.Neutral? {
-		return analysis(
-			ifNeutral: unit,
-			otherwise: const(nil))
-	}
-
 
 	// MARK: Application
 
 	public func apply(other: Value) -> Value {
 		return analysis(
 			ifPi: { _, f in f(other) },
-			ifNeutral: { .neutral(.application($0, other)) },
 			otherwise: { assert(false, "illegal application of \(self) to \(other)") ; return .UnitValue })
 	}
 
@@ -105,7 +90,6 @@ public enum Value: CustomDebugStringConvertible {
 	public func project(second: Bool) -> Value {
 		return analysis(
 			ifSigma: { a, f in second ? f(a) : a },
-			ifNeutral: { .neutral(.projection($0, second)) },
 			otherwise: { assert(false, "illegal projection: \(self).\(second ? 1 : 0)") ; return .UnitValue })
 	}
 
@@ -122,13 +106,16 @@ public enum Value: CustomDebugStringConvertible {
 			ifUnitType: const(.unitType),
 			ifType: Term.type,
 			ifPi: { type, f in
-				Term(Checkable.Pi(Box(type.quote(n)), Box(f(.free(.Quote(n))).quote(n + 1))))
+				Term.pi(type.quote(n), f(.free(.Quote(n))).quote(n + 1))
 			},
 			ifSigma: { type, f in
-				Term(Checkable.Sigma(Box(type.quote(n)), Box(f(.free(.Quote(n))).quote(n + 1))))
+				Term.sigma(type.quote(n), f(.free(.Quote(n))).quote(n + 1))
 			},
-			ifNeutral: {
-				$0.quote(n)
+			ifFree: { name -> Term in
+				name.analysis(
+					ifGlobal: const(Term.free(name)),
+					ifLocal: const(Term.free(name)),
+					ifQuote: { Term.bound(n - $0 - 1) })
 			})
 	}
 
@@ -141,7 +128,7 @@ public enum Value: CustomDebugStringConvertible {
 		@noescape ifType: Int -> T,
 		@noescape ifPi: (Value, Value -> Value) -> T,
 		@noescape ifSigma: (Value, Value -> Value) -> T,
-		@noescape ifNeutral: Manifold.Neutral -> T) -> T {
+		@noescape ifFree: Name -> T) -> T {
 		switch self {
 		case .UnitValue:
 			return ifUnitValue()
@@ -153,8 +140,8 @@ public enum Value: CustomDebugStringConvertible {
 			return ifPi(type.value, body)
 		case let .Sigma(type, body):
 			return ifSigma(type.value, body)
-		case let .Neutral(n):
-			return ifNeutral(n.value)
+		case let .Free(n):
+			return ifFree(n)
 		}
 	}
 
@@ -164,7 +151,7 @@ public enum Value: CustomDebugStringConvertible {
 		ifType: (Int -> T)? = nil,
 		ifPi: ((Value, Value -> Value) -> T)? = nil,
 		ifSigma: ((Value, Value -> Value) -> T)? = nil,
-		ifNeutral: (Manifold.Neutral -> T)? = nil,
+		ifFree: (Name -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifUnitValue: { ifUnitValue?() ?? otherwise() },
@@ -172,7 +159,7 @@ public enum Value: CustomDebugStringConvertible {
 			ifType: { ifType?($0) ?? otherwise() },
 			ifPi: { ifPi?($0) ?? otherwise() },
 			ifSigma: { ifSigma?($0) ?? otherwise() },
-			ifNeutral: { ifNeutral?($0) ?? otherwise() })
+			ifFree: { ifFree?($0) ?? otherwise() })
 	}
 
 
@@ -185,7 +172,7 @@ public enum Value: CustomDebugStringConvertible {
 			ifType: { "Type\($0)" },
 			ifPi: { "(Π ? : \(String(reflecting: $0)) . \(String(reflecting: $1)))" },
 			ifSigma: { "(Σ ? : \(String(reflecting: $0)) . \(String(reflecting: $1)))" },
-			ifNeutral: { String(reflecting: $0) })
+			ifFree: { ".Free(\(String(reflecting: $0)))" })
 	}
 
 
@@ -196,7 +183,7 @@ public enum Value: CustomDebugStringConvertible {
 	case Type(Int)
 	case Pi(Box<Value>, Value -> Value)
 	case Sigma(Box<Value>, Value -> Value)
-	case Neutral(Box<Manifold.Neutral>)
+	case Free(Name)
 }
 
 

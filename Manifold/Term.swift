@@ -2,7 +2,7 @@
 
 public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, CustomStringConvertible {
 	public init(_ expression: Checkable<Term>) {
-		self.expression = expression
+		self._expression = Box(expression)
 	}
 
 
@@ -26,26 +26,31 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 	}
 
 
-	public static func product(a: Term, _ b: Term) -> Term {
-		return Term(.Sigma(Box(a), Box(b)))
-	}
-
 	public static func application(a: Term, _ b: Term) -> Term {
-		return Term(.Application(Box(a), Box(b)))
+		return Term(.Application(a, b))
 	}
 
 
 	public static func projection(a: Term, _ b: Bool) -> Term {
-		return Term(.Projection(Box(a), b))
+		return Term(.Projection(a, b))
 	}
 
 
-	static func bound(i: Int) -> Term {
+	public static func bound(i: Int) -> Term {
 		return Term(.Bound(i))
 	}
 
 	public static func free(name: Name) -> Term {
 		return Term(.Free(name))
+	}
+
+
+	public static func pi(type: Term, _ body: Term) -> Term {
+		return Term(.Pi(type, body))
+	}
+
+	public static func sigma(type: Term, _ body: Term) -> Term {
+		return Term(.Sigma(type, body))
 	}
 
 
@@ -93,7 +98,10 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 			otherwise: const(nil))
 	}
 
-	public let expression: Checkable<Term>
+	private var _expression: Box<Checkable<Term>>
+	public var expression: Checkable<Term> {
+		return _expression.value
+	}
 
 
 	// MARK: Substitution
@@ -102,9 +110,9 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 		return expression.analysis(
 			ifBound: { i == $0 ? term : self },
 			ifApplication: { Term.application($0.substitute(i, term), $1.substitute(i, term)) },
-			ifPi: { Term(.Pi(Box($0.substitute(i, term)), Box($1.substitute(i + 1, term)))) },
+			ifPi: { Term.pi($0.substitute(i, term), $1.substitute(i + 1, term)) },
 			ifProjection: { Term.projection($0.substitute(i, term), $1) },
-			ifSigma: { Term(.Sigma(Box($0.substitute(i, term)), Box($1.substitute(i + 1, term)))) },
+			ifSigma: { Term.sigma($0.substitute(i, term), $1.substitute(i + 1, term)) },
 			otherwise: const(self))
 	}
 

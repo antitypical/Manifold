@@ -6,11 +6,11 @@ final class ValueTests: XCTestCase {
 	}
 
 	func testNestedQuotation() {
-		assert(Value.pi(.type) { Value.pi(.type, const($0)) }.quote, ==, Term(.Pi(Box(.type), Box(Term(.Pi(Box(.type), Box(Term(.Bound(1)))))))))
+		assert(Value.pi(.type) { Value.pi(.type, const($0)) }.quote, ==, Term.pi(.type, .pi(.type, .bound(1))))
 	}
 
 	func testQuotationMapsNestedBoundVariablesToBoundVariables() {
-		assert(Value.pi(.type) { _ in Value.pi(.type, id) }.quote, ==, Term(.Pi(Box(.type), Box(Term(.Pi(Box(.type), Box(Term(.Bound(0)))))))))
+		assert(Value.pi(.type) { _ in Value.pi(.type, id) }.quote, ==, Term.pi(.type, .pi(.type, .bound(0))))
 	}
 
 
@@ -19,18 +19,16 @@ final class ValueTests: XCTestCase {
 	}
 
 	func testUnaryProductEndsWithUnitTerm() {
-		assert(Value.product([ Value.type ]).quote, ==, Term(.Sigma(Box(.type), Box(.unitTerm))))
+		assert(Value.product([ Value.type ]).quote, ==, Term.sigma(.type, .unitTerm))
 	}
 
 	func testTernaryProductAssociatesToTheRight() {
-		assert(Value.product([ Value.type, Value.type, Value.type ]).quote, ==, Term(.Sigma(Box(.type), Box(Term(.Sigma(Box(.type), Box(Term(.Sigma(Box(.type), Box(.unitTerm))))))))))
+		assert(Value.product([ Value.type, Value.type, Value.type ]).quote, ==, Term.sigma(.type, .sigma(.type, .sigma(.type, .unitTerm))))
 	}
 }
 
 
 import Assertions
-import Box
-import Either
 import Manifold
 import Prelude
 import XCTest

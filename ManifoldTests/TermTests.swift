@@ -2,12 +2,11 @@
 
 final class TermTests: XCTestCase {
 	func testTrivialHigherOrderConstruction() {
-		assert(Value.pi(.type, id).quote, ==, Term(.Pi(Box(.type), Box(Term(.Bound(0))))))
+		assert(Value.pi(.type, id).quote, ==, Term.pi(.type, Term.bound(0)))
 	}
 
 	func testHigherOrderConstruction() {
-		let expected = Term(.Pi(Box(.type), Box(Term(.Pi(Box(Term(.Bound(0))), Box(Term(.Bound(0))))))))
-		assert(identity, ==, expected)
+		assert(identity, ==, Term.pi(.type, .pi(.bound(0), .bound(0))))
 	}
 
 	func testTypechecking() {
@@ -27,12 +26,12 @@ final class TermTests: XCTestCase {
 	}
 
 	func testTypeOfAbstractionIsAbstractionType() {
-		assert(Value.pi(.type, id).quote.typecheck().right?.quote, ==, Term(.Pi(Box(.type), Box(.type))))
+		assert(Value.pi(.type, id).quote.typecheck().right?.quote, ==, Term.pi(.type, .type))
 	}
 
 
 	func testBoundVariablesEvaluateToTheValueBoundInTheEnvironment() {
-		assert(Term(.Bound(2)).evaluate(Environment([ .forall(id), .forall(id), .type ])).quote, ==, Term.type)
+		assert(Term.bound(2).evaluate(Environment([ .forall(id), .forall(id), .type ])).quote, ==, Term.type)
 	}
 
 	func testTrivialAbstractionEvaluatesToItself() {
@@ -60,31 +59,33 @@ final class TermTests: XCTestCase {
 
 
 	func testGlobalsPrintTheirNames() {
-		assert(Term(.Free("Global")).description, ==, "Global")
+		assert(Term.free("Global").description, ==, "Global")
 	}
 
 
 	func testProjectionTypechecksToTypeOfProjectedField() {
-		let product = Term.product(.type(1), .type(2))
+		let product = Term.sigma(.type(1), .type(2))
 		assert(Term.projection(product, false).typecheck().right?.quote, ==, Term.type(2))
 		assert(Term.projection(product, true).typecheck().right?.quote, ==, Term.type(3))
 	}
 
 	func testProjectionEvaluatesToProjectedField() {
-		let product = Term.product(.type(1), .type(2))
+		let product = Term.sigma(.type(1), .type(2))
 		assert(Term.projection(product, false).evaluate().quote, ==, Term.type(1))
 		assert(Term.projection(product, true).evaluate().quote, ==, Term.type(2))
 	}
-}
 
+
+	func testConstantFunctionConstruction() {
+		assert(constant, ==, Term.pi(.type, .pi(.type, .pi(.bound(1), .pi(.bound(1), .bound(1))))))
+	}
+}
 
 private let identity = Value.pi(.type) { A in .pi(A, id) }.quote
 private let constant = Value.pi(.type) { A in Value.pi(.type) { B in Value.pi(A) { a in Value.pi(B) { b in a } } } }.quote
 
 
 import Assertions
-import Box
-import Either
 import Manifold
 import Prelude
 import XCTest

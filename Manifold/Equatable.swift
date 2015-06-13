@@ -20,13 +20,13 @@ public func == <Recur: Equatable> (left: Checkable<Recur>, right: Checkable<Recu
 		}
 		return false
 	case let (.Application(t1, t2), .Application(u1, u2)):
-		return t1.value == u1.value && t2.value == u2.value
+		return t1 == u1 && t2 == u2
 	case let (.Pi(t, a), .Pi(u, b)):
-		return t.value == u.value && a.value == b.value
+		return t == u && a == b
 	case let (.Projection(p, f), .Projection(q, g)):
-		return p.value == q.value && f == g
+		return p == q && f == g
 	case let (.Sigma(t, a), .Sigma(u, b)):
-		return t.value == u.value && a.value == b.value
+		return t == u && a == b
 	default:
 		return false
 	}
