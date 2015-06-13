@@ -187,10 +187,10 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 				condition.typecheck(context, against: .BooleanType, from: i)
 					.flatMap { _ in
 						(then.typecheck(context, from: i) &&& otherwise.typecheck(context, from: i))
-							.flatMap {
-								$0.quote == $1.quote
-									? .right($0)
-									: .left("if branches \(then) : \($0.quote) and \(otherwise) : \($1.quote) must have the same type")
+							.map { a, b in
+								a.quote == b.quote
+									? a
+									: Value.sigma(.BooleanType) { Term.`if`(.bound(0), then: .bound(1), `else`: .bound(2)).evaluate(Environment([$0, a, b])) }
 							}
 					}
 			})
