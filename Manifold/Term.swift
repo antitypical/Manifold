@@ -187,7 +187,7 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 				let (q, r) = (t.quote, against.quote)
 				return (t == against) || (against == .type && t == Value.function(.type, .type))
 					? Either.right(t)
-					: Either.left("type mismatch: expected (\(String(reflecting: self))) : (\(String(reflecting: r))), actually (\(String(reflecting: self))) : (\(String(reflecting: q))) in environment \(context)")
+					: Either.left("type mismatch: expected (\(String(reflecting: self))) : (\(String(reflecting: against))), actually (\(String(reflecting: self))) : (\(String(reflecting: t))) in environment \(context)")
 			}
 	}
 
