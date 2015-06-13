@@ -79,6 +79,12 @@ public enum Value: CustomDebugStringConvertible {
 			otherwise: const(nil))
 	}
 
+	public var boolean: Bool? {
+		return analysis(
+			ifBooleanValue: unit,
+			otherwise: const(nil	))
+	}
+
 
 	// MARK: Application
 
