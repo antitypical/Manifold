@@ -62,6 +62,10 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 		return Term(.BooleanTerm(b))
 	}
 
+	public static func `if`(condition: Term, then: Term, `else`: Term) -> Term {
+		return Term(.If(condition, then, `else`))
+	}
+
 
 	// MARK: Destructors
 
