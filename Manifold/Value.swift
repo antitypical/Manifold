@@ -182,15 +182,7 @@ public enum Value: CustomDebugStringConvertible {
 	// MARK: DebugPrintable
 
 	public var debugDescription: String {
-		return analysis(
-			ifUnitValue: const("()"),
-			ifUnitType: const("Unit"),
-			ifType: { "Type\($0)" },
-			ifPi: { "(Π ? : \(String(reflecting: $0)) . \(String(reflecting: $1)))" },
-			ifSigma: { "(Σ ? : \(String(reflecting: $0)) . \(String(reflecting: $1)))" },
-			ifFree: { ".Free(\(String(reflecting: $0)))" },
-			ifBooleanType: const("Boolean"),
-			ifBooleanValue: { String(reflecting: $0) })
+		return String(reflecting: quote)
 	}
 
 
