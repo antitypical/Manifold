@@ -185,7 +185,7 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 		return typecheck(context, from: i)
 			.flatMap { t in
 				let (q, r) = (t.quote, against.quote)
-				return (q == r) || (r == .type && q == Value.function(.type, .type).quote)
+				return (t == against) || (r == .type && q == Value.function(.type, .type).quote)
 					? Either.right(t)
 					: Either.left("type mismatch: expected (\(String(reflecting: self))) : (\(String(reflecting: r))), actually (\(String(reflecting: self))) : (\(String(reflecting: q))) in environment \(context)")
 			}
