@@ -42,6 +42,10 @@ public enum Value: CustomDebugStringConvertible {
 		return .Free(name)
 	}
 
+	public static func boolean(b: Bool) -> Value {
+		return .BooleanValue(b)
+	}
+
 
 	// MARK: Destructors
 
@@ -116,7 +120,9 @@ public enum Value: CustomDebugStringConvertible {
 					ifGlobal: const(Term.free(name)),
 					ifLocal: const(Term.free(name)),
 					ifQuote: { Term.bound(n - $0 - 1) })
-			})
+			},
+			ifBooleanType: const(.booleanType),
+			ifBooleanValue: Term.boolean)
 	}
 
 
@@ -128,7 +134,9 @@ public enum Value: CustomDebugStringConvertible {
 		@noescape ifType: Int -> T,
 		@noescape ifPi: (Value, Value -> Value) -> T,
 		@noescape ifSigma: (Value, Value -> Value) -> T,
-		@noescape ifFree: Name -> T) -> T {
+		@noescape ifFree: Name -> T,
+		@noescape ifBooleanType: () -> T,
+		@noescape ifBooleanValue: Bool -> T) -> T {
 		switch self {
 		case .UnitValue:
 			return ifUnitValue()
@@ -142,6 +150,10 @@ public enum Value: CustomDebugStringConvertible {
 			return ifSigma(type.value, body)
 		case let .Free(n):
 			return ifFree(n)
+		case .BooleanType:
+			return ifBooleanType()
+		case let .BooleanValue(b):
+			return ifBooleanValue(b)
 		}
 	}
 
@@ -152,6 +164,8 @@ public enum Value: CustomDebugStringConvertible {
 		ifPi: ((Value, Value -> Value) -> T)? = nil,
 		ifSigma: ((Value, Value -> Value) -> T)? = nil,
 		ifFree: (Name -> T)? = nil,
+		ifBooleanType: (() -> T)? = nil,
+		ifBooleanValue: (Bool -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifUnitValue: { ifUnitValue?() ?? otherwise() },
@@ -159,7 +173,9 @@ public enum Value: CustomDebugStringConvertible {
 			ifType: { ifType?($0) ?? otherwise() },
 			ifPi: { ifPi?($0) ?? otherwise() },
 			ifSigma: { ifSigma?($0) ?? otherwise() },
-			ifFree: { ifFree?($0) ?? otherwise() })
+			ifFree: { ifFree?($0) ?? otherwise() },
+			ifBooleanType: { ifBooleanType?() ?? otherwise() },
+			ifBooleanValue: { ifBooleanValue?($0) ?? otherwise() })
 	}
 
 
@@ -172,7 +188,9 @@ public enum Value: CustomDebugStringConvertible {
 			ifType: { "Type\($0)" },
 			ifPi: { "(Π ? : \(String(reflecting: $0)) . \(String(reflecting: $1)))" },
 			ifSigma: { "(Σ ? : \(String(reflecting: $0)) . \(String(reflecting: $1)))" },
-			ifFree: { ".Free(\(String(reflecting: $0)))" })
+			ifFree: { ".Free(\(String(reflecting: $0)))" },
+			ifBooleanType: const("Boolean"),
+			ifBooleanValue: { String(reflecting: $0) })
 	}
 
 
@@ -184,6 +202,8 @@ public enum Value: CustomDebugStringConvertible {
 	case Pi(Box<Value>, Value -> Value)
 	case Sigma(Box<Value>, Value -> Value)
 	case Free(Name)
+	case BooleanType
+	case BooleanValue(Bool)
 }
 
 
