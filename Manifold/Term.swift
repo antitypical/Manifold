@@ -184,7 +184,7 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 	public func typecheck(context: Context, against: Value, from i: Int) -> Either<Error, Value> {
 		return typecheck(context, from: i)
 			.flatMap { t in
-				return (t == against) || (against == .type && t == Value.function(.type, .type))
+				(t == against) || (against == .type && t == Value.function(.type, .type))
 					? Either.right(t)
 					: Either.left("type mismatch: expected (\(String(reflecting: self))) : (\(String(reflecting: against))), actually (\(String(reflecting: self))) : (\(String(reflecting: t))) in environment \(context)")
 			}
