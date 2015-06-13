@@ -29,7 +29,6 @@ final class ValueTests: XCTestCase {
 
 
 import Assertions
-import Box
 import Either
 import Manifold
 import Prelude
