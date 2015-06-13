@@ -116,7 +116,8 @@ public enum Value: CustomDebugStringConvertible {
 					ifGlobal: const(Term.free(name)),
 					ifLocal: const(Term.free(name)),
 					ifQuote: { Term.bound(n - $0 - 1) })
-			})
+			},
+			ifBooleanType: const(.booleanType))
 	}
 
 
@@ -128,7 +129,8 @@ public enum Value: CustomDebugStringConvertible {
 		@noescape ifType: Int -> T,
 		@noescape ifPi: (Value, Value -> Value) -> T,
 		@noescape ifSigma: (Value, Value -> Value) -> T,
-		@noescape ifFree: Name -> T) -> T {
+		@noescape ifFree: Name -> T,
+		@noescape ifBooleanType: () -> T) -> T {
 		switch self {
 		case .UnitValue:
 			return ifUnitValue()
@@ -142,6 +144,8 @@ public enum Value: CustomDebugStringConvertible {
 			return ifSigma(type.value, body)
 		case let .Free(n):
 			return ifFree(n)
+		case .BooleanType:
+			return ifBooleanType()
 		}
 	}
 
@@ -152,6 +156,7 @@ public enum Value: CustomDebugStringConvertible {
 		ifPi: ((Value, Value -> Value) -> T)? = nil,
 		ifSigma: ((Value, Value -> Value) -> T)? = nil,
 		ifFree: (Name -> T)? = nil,
+		ifBooleanType: (() -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifUnitValue: { ifUnitValue?() ?? otherwise() },
@@ -159,7 +164,8 @@ public enum Value: CustomDebugStringConvertible {
 			ifType: { ifType?($0) ?? otherwise() },
 			ifPi: { ifPi?($0) ?? otherwise() },
 			ifSigma: { ifSigma?($0) ?? otherwise() },
-			ifFree: { ifFree?($0) ?? otherwise() })
+			ifFree: { ifFree?($0) ?? otherwise() },
+			ifBooleanType: { ifBooleanType?($0) ?? otherwise() })
 	}
 
 
@@ -172,7 +178,8 @@ public enum Value: CustomDebugStringConvertible {
 			ifType: { "Type\($0)" },
 			ifPi: { "(Π ? : \(String(reflecting: $0)) . \(String(reflecting: $1)))" },
 			ifSigma: { "(Σ ? : \(String(reflecting: $0)) . \(String(reflecting: $1)))" },
-			ifFree: { ".Free(\(String(reflecting: $0)))" })
+			ifFree: { ".Free(\(String(reflecting: $0)))" },
+			ifBooleanType: const("Boolean"))
 	}
 
 
@@ -184,6 +191,7 @@ public enum Value: CustomDebugStringConvertible {
 	case Pi(Box<Value>, Value -> Value)
 	case Sigma(Box<Value>, Value -> Value)
 	case Free(Name)
+	case BooleanType
 }
 
 
