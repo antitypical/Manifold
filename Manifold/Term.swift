@@ -178,7 +178,8 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 					}
 			},
 			ifBooleanType: const(.right(.type)),
-			ifBooleanTerm: const(.right(.BooleanType)))
+			ifBooleanTerm: const(.right(.BooleanType)),
+			ifIf: const(.left("typechecking conditions is unimplemented")))
 	}
 
 	public func typecheck(context: Context, against: Value, from i: Int) -> Either<Error, Value> {
@@ -218,7 +219,8 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 				Value.sigma(type.evaluate(environment)) { body.evaluate(environment.byPrepending($0)) }
 			},
 			ifBooleanType: const(.BooleanType),
-			ifBooleanTerm: Value.boolean)
+			ifBooleanTerm: Value.boolean,
+			ifIf: { $0.evaluate(environment).boolean! ? $1.evaluate(environment) : $2.evaluate(environment) })
 	}
 
 
@@ -240,7 +242,8 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 			ifProjection: { "\($0).\($1 ? 1 : 0)" },
 			ifSigma: { "Σ \($0) . \($1)" },
 			ifBooleanType: const("Boolean"),
-			ifBooleanTerm: { String(reflecting: $0) })
+			ifBooleanTerm: { String(reflecting: $0) },
+			ifIf: { "if \($0) then \($1) else \($2)" })
 	}
 
 
@@ -265,7 +268,8 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 			ifProjection: { 13 ^ $0.hashValue ^ $1.hashValue },
 			ifSigma: { 17 ^ $0.hashValue ^ $1.hashValue },
 			ifBooleanType: const(19),
-			ifBooleanTerm: { 23 ^ $0.hashValue })
+			ifBooleanTerm: { 23 ^ $0.hashValue },
+			ifIf: { 29 ^ $0.hashValue ^ $1.hashValue ^ $2.hashValue })
 	}
 
 
@@ -296,7 +300,8 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 				"Σ \($0.1) . \($1.1)"
 			},
 			ifBooleanType: const("Boolean"),
-			ifBooleanTerm: { String($0) })
+			ifBooleanTerm: { String($0) },
+			ifIf: { "if \($0) then \($1) else \($2)" })
 	}
 }
 
