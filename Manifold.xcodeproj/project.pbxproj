@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D45E2DC71B0AE55C004C64DA /* Boolean.swift in Sources */ = {isa = PBXBuildFile; fileRef = D45E2DC61B0AE55C004C64DA /* Boolean.swift */; };
 		D46395AD1B15438600AA1B65 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46395AC1B15438600AA1B65 /* Context.swift */; };
 		D46974251AFE4EB5005D3AA3 /* ValueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46974241AFE4EB5005D3AA3 /* ValueTests.swift */; };
 		D4809FBD1AF6BD400084B8FE /* TermTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4809FBC1AF6BD400084B8FE /* TermTests.swift */; };
@@ -46,7 +45,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		D45E2DC61B0AE55C004C64DA /* Boolean.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Boolean.swift; sourceTree = "<group>"; };
 		D46395AC1B15438600AA1B65 /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
 		D46395AE1B17E24C00AA1B65 /* SwiftCheck.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SwiftCheck.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D46974241AFE4EB5005D3AA3 /* ValueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ValueTests.swift; sourceTree = "<group>"; };
@@ -134,7 +132,6 @@
 				D4EE119B1B02FE8C002D9D9A /* Environment.swift */,
 				D46395AC1B15438600AA1B65 /* Context.swift */,
 				D4EE119F1B030048002D9D9A /* Natural.swift */,
-				D45E2DC61B0AE55C004C64DA /* Boolean.swift */,
 				D4B3FBEE1A83515800DA2AC3 /* Supporting Files */,
 			);
 			path = Manifold;
@@ -289,7 +286,6 @@
 				D4B56CB11AFDA26A00D7BD6F /* Expression.swift in Sources */,
 				D46395AD1B15438600AA1B65 /* Context.swift in Sources */,
 				D4B4AA571A90320F0089A5F2 /* Dictionary.swift in Sources */,
-				D45E2DC71B0AE55C004C64DA /* Boolean.swift in Sources */,
 				D4EDEF571AFEDEC5001B9A1D /* Name.swift in Sources */,
 				D4EE119C1B02FE8C002D9D9A /* Environment.swift in Sources */,
 				D4A31B2A1AA366EC00B3FC68 /* Algebra.swift in Sources */,
