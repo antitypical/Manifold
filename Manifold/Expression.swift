@@ -13,7 +13,8 @@ public enum Checkable<Recur> {
 		@noescape ifPi: (Recur, Recur) -> T,
 		@noescape ifProjection: (Recur, Bool) -> T,
 		@noescape ifSigma: (Recur, Recur) -> T,
-		@noescape ifBooleanType: () -> T) -> T {
+		@noescape ifBooleanType: () -> T,
+		@noescape ifBooleanTerm: Bool -> T) -> T {
 		switch self {
 		case .UnitTerm:
 			return ifUnitTerm()
@@ -35,6 +36,8 @@ public enum Checkable<Recur> {
 			return ifSigma(a, b)
 		case .BooleanType:
 			return ifBooleanType()
+		case let .BooleanTerm(b):
+			return ifBooleanTerm(b)
 		}
 	}
 
@@ -49,6 +52,7 @@ public enum Checkable<Recur> {
 		ifProjection: ((Recur, Bool) -> T)? = nil,
 		ifSigma: ((Recur, Recur) -> T)? = nil,
 		ifBooleanType: (() -> T)? = nil,
+		ifBooleanTerm: (Bool -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifUnitTerm: { ifUnitTerm?() ?? otherwise() },
@@ -60,7 +64,8 @@ public enum Checkable<Recur> {
 			ifPi: { ifPi?($0) ?? otherwise() },
 			ifProjection: { ifProjection?($0) ?? otherwise() },
 			ifSigma: { ifSigma?($0) ?? otherwise() },
-			ifBooleanType: { ifBooleanType?($0) ?? otherwise() })
+			ifBooleanType: { ifBooleanType?() ?? otherwise() },
+			ifBooleanTerm: { ifBooleanTerm?($0) ?? otherwise() })
 	}
 
 
@@ -77,7 +82,8 @@ public enum Checkable<Recur> {
 			ifPi: { .Pi(transform($0), transform($1)) },
 			ifProjection: { .Projection(transform($0), $1) },
 			ifSigma: { .Sigma(transform($0), transform($1)) },
-			ifBooleanType: const(.BooleanType))
+			ifBooleanType: const(.BooleanType),
+			ifBooleanTerm: { .BooleanTerm($0) })
 	}
 
 
@@ -93,6 +99,7 @@ public enum Checkable<Recur> {
 	case Projection(Recur, Bool)
 	case Sigma(Recur, Recur) // (Σx:A)B where B can depend on x
 	case BooleanType
+	case BooleanTerm(Bool)
 }
 
 
