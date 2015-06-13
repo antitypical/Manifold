@@ -113,6 +113,18 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 	}
 
 
+	// MARK: Normalization
+
+	public var isNormalForm: Bool {
+		return expression.analysis(
+			ifBound: const(false),
+			ifFree: const(false),
+			ifApplication: const(false),
+			ifProjection: const(false),
+			otherwise: const(true))
+	}
+
+
 	// MARK: Substitution
 
 	public func substitute(i: Int, _ term: Term) -> Term {
