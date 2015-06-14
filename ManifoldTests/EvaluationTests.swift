@@ -29,9 +29,9 @@ final class EvaluationTests: XCTestCase {
 	}
 
 	func testProjectionEvaluatesToProjectedField() {
-		let product = Term.sigma(.type(1), .type(2))
-		assert(Term.projection(product, false).evaluate(), ==, Term.type(1))
-		assert(Term.projection(product, true).evaluate(), ==, Term.type(2))
+		let product = Term.sigma(.unitTerm, .boolean(false))
+		assert(Term.projection(product, false).evaluate(), ==, Term.unitTerm)
+		assert(Term.projection(product, true).evaluate(), ==, Term.boolean(false))
 	}
 }
 
