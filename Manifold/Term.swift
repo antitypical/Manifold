@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, CustomStringConvertible {
+public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, FixpointType, Hashable, IntegerLiteralConvertible, CustomStringConvertible {
 	public init(_ expression: Checkable<Term>) {
 		self._expression = Box(expression)
 	}
@@ -254,6 +254,13 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 	}
 
 
+	// MARK: BooleanLiteralConvertible
+
+	public init(booleanLiteral value: Bool) {
+		self = Term.boolean(value)
+	}
+
+
 	// MARK: DebugPrintable
 
 	public var debugDescription: String {
@@ -303,6 +310,13 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 	}
 
 
+	// MARK: IntegerLiteralConvertible
+
+	public init(integerLiteral value: Int) {
+		self = Term.bound(value)
+	}
+
+
 	// MARK: Printable
 
 	public var description: String {
@@ -318,7 +332,7 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 			ifUnitType: const("Unit"),
 			ifType: { $0 > 0 ? "Type\($0)" : "Type" },
 			ifBound: alphabetize,
-			ifFree: { $0.analysis(ifGlobal: id, ifLocal: alphabetize, ifQuote: alphabetize) },
+			ifFree: { $0.analysis(ifGlobal: id, ifLocal: alphabetize) },
 			ifApplication: { "\($0.1)(\($1.1))" },
 			ifPi: {
 				"Π : \($0.1) . \($1.1)"

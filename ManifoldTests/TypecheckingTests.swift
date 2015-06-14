@@ -14,17 +14,17 @@ final class TypecheckingTests: XCTestCase {
 	}
 
 	func testApplicationOfIdentityAbstractionToUnitTermTypechecksToUnitType() {
-		let identity = Term.pi(.unitType, .bound(0))
+		let identity = Term.pi(.unitType, 0)
 		assert(Term.application(identity, Term.unit).typecheck().right, ==, Term.unitType)
 	}
 
 	func testSimpleAbstractionTypechecksToAbstractionType() {
-		let identity = Term.pi(.unitType, .bound(0))
+		let identity = Term.pi(.unitType, 0)
 		assert(identity.typecheck().right, ==, Term.pi(.unitType, .unitType))
 	}
 
 	func testProjectionTypechecksToTypeOfProjectedField() {
-		let product = Term.sigma(.unit, .boolean(false))
+		let product = Term.sigma(.unit, false)
 		assert(Term.projection(product, false).typecheck().right, ==, Term.unitType)
 		assert(Term.projection(product, true).typecheck().right, ==, Term.booleanType)
 	}

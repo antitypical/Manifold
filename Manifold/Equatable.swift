@@ -46,8 +46,6 @@ public func == (left: Name, right: Name) -> Bool {
 		return x == y
 	case let (.Local(x), .Local(y)):
 		return x == y
-	case let (.Quote(x), .Quote(y)):
-		return x == y
 	default:
 		return false
 	}
