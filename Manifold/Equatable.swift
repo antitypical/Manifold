@@ -4,7 +4,7 @@
 
 public func == <Recur: Equatable> (left: Checkable<Recur>, right: Checkable<Recur>) -> Bool {
 	switch (left, right) {
-	case (.UnitTerm, .UnitTerm), (.UnitType, .UnitType), (.BooleanType, .BooleanType):
+	case (.Unit, .Unit), (.UnitType, .UnitType), (.BooleanType, .BooleanType):
 		return true
 	case let (.Type(i), .Type(j)):
 		return i == j

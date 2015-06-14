@@ -8,8 +8,8 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 
 	// MARK: Constructors
 
-	public static var unitTerm: Term {
-		return Term(.UnitTerm)
+	public static var unit: Term {
+		return Term(.Unit)
 	}
 
 	public static var unitType: Term {
@@ -67,7 +67,7 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 
 	public var isUnitTerm: Bool {
 		return expression.analysis(
-			ifUnitTerm: const(true),
+			ifUnit: const(true),
 			otherwise: const(false))
 	}
 
@@ -146,7 +146,7 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 
 	public func typecheck(context: Context, from i: Int) -> Either<Error, Term> {
 		return expression.analysis(
-			ifUnitTerm: const(.right(.unitType)),
+			ifUnit: const(.right(.unitType)),
 			ifUnitType: const(.right(.type)),
 			ifType: { .right(.type($0 + 1)) },
 			ifBound: { i -> Either<Error, Term> in
@@ -211,7 +211,7 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 
 	public func evaluate(environment: Environment = Environment()) -> Term {
 		return expression.analysis(
-			ifUnitTerm: const(self),
+			ifUnit: const(self),
 			ifUnitType: const(self),
 			ifType: const(self),
 			ifBound: { i -> Term in
@@ -241,7 +241,7 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 
 	private static func toDebugString(expression: Checkable<String>) -> String {
 		return expression.analysis(
-			ifUnitTerm: const("()"),
+			ifUnit: const("()"),
 			ifUnitType: const("Unit"),
 			ifType: { "Type\($0)" },
 			ifBound: { "Bound(\($0))" },
@@ -266,7 +266,7 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 
 	public var hashValue: Int {
 		return expression.analysis(
-			ifUnitTerm: const(0),
+			ifUnit: const(0),
 			ifUnitType: const(1),
 			ifType: { 2 ^ $0.hashValue },
 			ifBound: { 3 ^ $0.hashValue },
@@ -291,7 +291,7 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 	private static func toString(expression: Checkable<(Term, String)>) -> String {
 		let alphabetize: Int -> String = { index in Swift.String(Term.alphabet[advance(Term.alphabet.startIndex, index)]) }
 		return expression.analysis(
-			ifUnitTerm: const("()"),
+			ifUnit: const("()"),
 			ifUnitType: const("Unit"),
 			ifType: { $0 > 0 ? "Type\($0)" : "Type" },
 			ifBound: alphabetize,

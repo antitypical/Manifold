@@ -2,7 +2,7 @@
 
 final class TypecheckingTests: XCTestCase {
 	func testUnitTermTypechecksToUnitType() {
-		assert(Term.unitTerm.typecheck().right, ==, Term.unitType)
+		assert(Term.unit.typecheck().right, ==, Term.unitType)
 	}
 
 	func testUnitTypeTypechecksToType() {
@@ -15,7 +15,7 @@ final class TypecheckingTests: XCTestCase {
 
 	func testApplicationOfIdentityAbstractionToUnitTermTypechecksToUnitType() {
 		let identity = Term.pi(.unitType, .bound(0))
-		assert(Term.application(identity, Term.unitTerm).typecheck().right, ==, Term.unitType)
+		assert(Term.application(identity, Term.unit).typecheck().right, ==, Term.unitType)
 	}
 
 	func testSimpleAbstractionTypechecksToAbstractionType() {
@@ -24,7 +24,7 @@ final class TypecheckingTests: XCTestCase {
 	}
 
 	func testProjectionTypechecksToTypeOfProjectedField() {
-		let product = Term.sigma(.unitTerm, .boolean(false))
+		let product = Term.sigma(.unit, .boolean(false))
 		assert(Term.projection(product, false).typecheck().right, ==, Term.unitType)
 		assert(Term.projection(product, true).typecheck().right, ==, Term.booleanType)
 	}

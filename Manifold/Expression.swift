@@ -4,7 +4,7 @@ public enum Checkable<Recur> {
 	// MARK: Analyses
 
 	public func analysis<T>(
-		@noescape ifUnitTerm ifUnitTerm: () -> T,
+		@noescape ifUnit ifUnit: () -> T,
 		@noescape ifUnitType: () -> T,
 		@noescape ifType: Int -> T,
 		@noescape ifBound: Int -> T,
@@ -16,8 +16,8 @@ public enum Checkable<Recur> {
 		@noescape ifBooleanType: () -> T,
 		@noescape ifBooleanTerm: Bool -> T) -> T {
 		switch self {
-		case .UnitTerm:
-			return ifUnitTerm()
+		case .Unit:
+			return ifUnit()
 		case .UnitType:
 			return ifUnitType()
 		case let .Type(n):
@@ -42,7 +42,7 @@ public enum Checkable<Recur> {
 	}
 
 	public func analysis<T>(
-		ifUnitTerm ifUnitTerm: (() -> T)? = nil,
+		ifUnit ifUnit: (() -> T)? = nil,
 		ifUnitType: (() -> T)? = nil,
 		ifType: (Int -> T)? = nil,
 		ifBound: (Int -> T)? = nil,
@@ -55,7 +55,7 @@ public enum Checkable<Recur> {
 		ifBooleanTerm: (Bool -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
-			ifUnitTerm: { ifUnitTerm?() ?? otherwise() },
+			ifUnit: { ifUnit?() ?? otherwise() },
 			ifUnitType: { ifUnitType?() ?? otherwise() },
 			ifType: { ifType?($0) ?? otherwise() },
 			ifBound: { ifBound?($0) ?? otherwise() },
@@ -73,7 +73,7 @@ public enum Checkable<Recur> {
 
 	public func map<T>(@noescape transform: Recur -> T) -> Checkable<T> {
 		return analysis(
-			ifUnitTerm: const(.UnitTerm),
+			ifUnit: const(.Unit),
 			ifUnitType: const(.UnitType),
 			ifType: { .Type($0) },
 			ifBound: { .Bound($0) },
@@ -89,7 +89,7 @@ public enum Checkable<Recur> {
 
 	// MARK: Cases
 
-	case UnitTerm
+	case Unit
 	case UnitType
 	case Type(Int)
 	case Bound(Int)

@@ -2,7 +2,7 @@
 
 final class EvaluationTests: XCTestCase {
 	func testUnitTermEvaluatesToItself() {
-		assert(Term.unitTerm.evaluate(), ==, Term.unitTerm)
+		assert(Term.unit.evaluate(), ==, Term.unit)
 	}
 
 	func testUnitTypeEvaluatesToItself() {
@@ -15,7 +15,7 @@ final class EvaluationTests: XCTestCase {
 
 	func testApplicationOfIdentityAbstractionToUnitTermEvaluatesToUnitTerm() {
 		let identity = Term.pi(.unitType, .bound(0))
-		assert(Term.application(identity, Term.unitTerm).evaluate(), ==, Term.unitTerm)
+		assert(Term.application(identity, Term.unit).evaluate(), ==, Term.unit)
 	}
 
 	func testSimpleAbstractionEvaluatesToItself() {
@@ -29,8 +29,8 @@ final class EvaluationTests: XCTestCase {
 	}
 
 	func testProjectionEvaluatesToProjectedField() {
-		let product = Term.sigma(.unitTerm, .boolean(false))
-		assert(Term.projection(product, false).evaluate(), ==, Term.unitTerm)
+		let product = Term.sigma(.unit, .boolean(false))
+		assert(Term.projection(product, false).evaluate(), ==, Term.unit)
 		assert(Term.projection(product, true).evaluate(), ==, Term.boolean(false))
 	}
 }
