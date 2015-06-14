@@ -58,6 +58,10 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		return sigma(booleanType, `if`(0, then: a, `else`: b))
 	}
 
+	public static func sum(terms: [Term]) -> Term {
+		return terms.foldr(unit, combine: sum)
+	}
+
 
 	public static var booleanType: Term {
 		return Term(.BooleanType)
