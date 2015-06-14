@@ -10,7 +10,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testSigmaTypeDescription() {
-		assert(Term.sigma(.type, .type).typecheck().right?.description, ==, "Σ Type1 . Type1")
+		assert(Term.sigma(.unit, .unit).typecheck().right?.description, ==, "Σ Unit . Unit")
 	}
 
 	func testGlobalsPrintTheirNames() {

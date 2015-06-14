@@ -187,7 +187,7 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 			},
 			ifSigma: { a, b -> Either<Error, Term> in
 				a.typecheck(context, from: i)
-					.flatMap { _ in
+					.flatMap { a in
 						let t = a.evaluate()
 						return b.substitute(0, .free(.Local(i))).typecheck([ .Local(i): t ] + context, from: i + 1)
 							.map { Term.sigma(t, $0) }
