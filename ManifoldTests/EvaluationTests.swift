@@ -14,17 +14,17 @@ final class EvaluationTests: XCTestCase {
 	}
 
 	func testApplicationOfIdentityAbstractionToUnitTermEvaluatesToUnitTerm() {
-		let identity = Term.pi(.unitType, .bound(0))
+		let identity = Term.pi(.unitType, 0)
 		assert(Term.application(identity, Term.unit).evaluate(), ==, Term.unit)
 	}
 
 	func testSimpleAbstractionEvaluatesToItself() {
-		let identity = Term.pi(.unitType, .bound(0))
+		let identity = Term.pi(.unitType, 0)
 		assert(identity.evaluate(), ==, identity)
 	}
 
 	func testAbstractionsBodiesAreNotNormalized() {
-		let identity = Term.pi(.unitType, .application(.pi(.unitType, .bound(0)), .bound(0)))
+		let identity = Term.pi(.unitType, .application(.pi(.unitType, 0), 0))
 		assert(identity.evaluate(), ==, identity)
 	}
 
