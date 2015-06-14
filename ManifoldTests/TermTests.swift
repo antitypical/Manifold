@@ -21,6 +21,10 @@ final class TermTests: XCTestCase {
 	func testUnarySumsAreTheIdentityConstructor() {
 		assert(Term.sum([ .booleanType ]), ==, .booleanType)
 	}
+
+	func testNArySumsAreSigmas() {
+		assert(Term.sum([ .booleanType, .booleanType ]), ==, Term.sigma(.booleanType, .`if`(0, then: .booleanType, `else`:.booleanType)))
+	}
 }
 
 private let identity = Term.pi(.type, .pi(0, 0))
