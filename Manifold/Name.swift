@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Name: Hashable, IntegerLiteralConvertible, CustomDebugStringConvertible, CustomStringConvertible, StringLiteralConvertible {
+public enum Name: Hashable, CustomDebugStringConvertible, CustomStringConvertible, StringLiteralConvertible {
 	// MARK: Constructors
 
 	public static func global(name: String) -> Name {
@@ -50,13 +50,6 @@ public enum Name: Hashable, IntegerLiteralConvertible, CustomDebugStringConverti
 
 	public var hashValue: Int {
 		return analysis(ifGlobal: { $0.hashValue }, ifLocal: id)
-	}
-
-
-	// MARK: IntegerLiteralConvertible
-
-	public init(integerLiteral value: IntegerLiteralType) {
-		self = Local(value)
 	}
 
 
