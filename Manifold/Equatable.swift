@@ -20,7 +20,7 @@ public func == <Recur: Equatable> (left: Checkable<Recur>, right: Checkable<Recu
 		return p == q && f == g
 	case let (.Sigma(t, a), .Sigma(u, b)):
 		return t == u && a == b
-	case let (.BooleanTerm(a), .BooleanTerm(b)):
+	case let (.Boolean(a), .Boolean(b)):
 		return a == b
 	default:
 		return false

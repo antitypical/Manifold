@@ -59,7 +59,7 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 	}
 
 	public static func boolean(b: Bool) -> Term {
-		return Term(.BooleanTerm(b))
+		return Term(.Boolean(b))
 	}
 
 
@@ -194,7 +194,7 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 					}
 			},
 			ifBooleanType: const(.right(.type)),
-			ifBooleanTerm: const(.right(.booleanType)))
+			ifBoolean: const(.right(.booleanType)))
 	}
 
 	public func typecheck(context: Context, against: Term, from i: Int) -> Either<Error, Term> {
@@ -229,7 +229,7 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 			},
 			ifSigma: const(self),
 			ifBooleanType: const(self),
-			ifBooleanTerm: const(self))
+			ifBoolean: const(self))
 	}
 
 
@@ -251,7 +251,7 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 			ifProjection: { "\($0).\($1 ? 1 : 0)" },
 			ifSigma: { "Σ \($0) . \($1)" },
 			ifBooleanType: const("Boolean"),
-			ifBooleanTerm: { String(reflecting: $0) })
+			ifBoolean: { String(reflecting: $0) })
 	}
 
 
@@ -276,7 +276,7 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 			ifProjection: { 13 ^ $0.hashValue ^ $1.hashValue },
 			ifSigma: { 17 ^ $0.hashValue ^ $1.hashValue },
 			ifBooleanType: const(19),
-			ifBooleanTerm: { 23 ^ $0.hashValue })
+			ifBoolean: { 23 ^ $0.hashValue })
 	}
 
 
@@ -307,7 +307,7 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 				"Σ \($0.1) . \($1.1)"
 			},
 			ifBooleanType: const("Boolean"),
-			ifBooleanTerm: { String($0) })
+			ifBoolean: { String($0) })
 	}
 }
 
