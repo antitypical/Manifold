@@ -12,6 +12,11 @@ final class TermTests: XCTestCase {
 	func testGlobalsPrintTheirNames() {
 		assert(Term.free("Global").description, ==, "Global")
 	}
+
+
+	func testNullarySumsAreUnitType() {
+		assert(Term.sum([]), ==, .unitType)
+	}
 }
 
 private let identity = Term.pi(.type, .pi(0, 0))
