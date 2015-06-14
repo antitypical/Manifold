@@ -23,9 +23,9 @@ final class EvaluationTests: XCTestCase {
 		assert(identity.evaluate(), ==, identity)
 	}
 
-	func testAbstractionsNormalizeByEvaluation() {
+	func testAbstractionsBodiesAreNotNormalized() {
 		let identity = Term.pi(.unitType, .application(.pi(.unitType, .bound(0)), .bound(0)))
-		assert(identity.evaluate(), ==, Term.pi(.unitType, .bound(0)))
+		assert(identity.evaluate(), ==, identity)
 	}
 }
 
