@@ -22,6 +22,8 @@ public func == <Recur: Equatable> (left: Checkable<Recur>, right: Checkable<Recu
 		return t == u && a == b
 	case let (.Boolean(a), .Boolean(b)):
 		return a == b
+	case let (.If(a1, b1, c1), .If(a2, b2, c2)):
+		return a1 == a2 && b1 == b2 && c1 == c2
 	default:
 		return false
 	}

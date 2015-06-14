@@ -28,6 +28,14 @@ final class TypecheckingTests: XCTestCase {
 		assert(Term.projection(product, false).typecheck().right, ==, Term.unitType)
 		assert(Term.projection(product, true).typecheck().right, ==, Term.booleanType)
 	}
+
+	func testIfWithEqualBranchTypesTypechecksToBranchType() {
+		assert(Term.`if`(.boolean(true), then: .unit, `else`: .unit).typecheck().right, ==, Term.unitType)
+	}
+
+	func testIfWithDisjointBranchTypesTypechecksToSumOfBranchTypes() {
+		assert(Term.`if`(.boolean(true), then: .unit, `else`: .boolean(true)).typecheck().right, ==, Term.sigma(.booleanType, Term.`if`(.bound(0), then: .unitType, `else`: .booleanType)))
+	}
 }
 
 import Assertions

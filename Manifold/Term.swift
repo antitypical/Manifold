@@ -62,6 +62,10 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 		return Term(.Boolean(b))
 	}
 
+	public static func `if`(condition: Term, then: Term, `else`: Term) -> Term {
+		return Term(.If(condition, then, `else`))
+	}
+
 
 	// MARK: Destructors
 
@@ -107,6 +111,10 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 			otherwise: const(nil))
 	}
 
+	public var boolean: Bool? {
+		return expression.analysis(ifBoolean: pure, otherwise: const(nil))
+	}
+
 	private var _expression: Box<Checkable<Term>>
 	public var expression: Checkable<Term> {
 		return _expression.value
@@ -121,6 +129,7 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 			ifFree: const(false),
 			ifApplication: const(false),
 			ifProjection: const(false),
+			ifIf: const(false),
 			otherwise: const(true))
 	}
 
@@ -194,7 +203,18 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 					}
 			},
 			ifBooleanType: const(.right(.type)),
-			ifBoolean: const(.right(.booleanType)))
+			ifBoolean: const(.right(.booleanType)),
+			ifIf: { condition, then, `else` -> Either<Error, Term> in
+				condition.typecheck(context, against: .booleanType, from: i)
+					.flatMap { _ in
+						(then.typecheck(context, from: i) &&& `else`.typecheck(context, from: i))
+							.map { a, b in
+								a == b
+									? a
+									: Term.sigma(.booleanType, Term.`if`(.bound(0), then: a, `else`: b))
+							}
+					}
+			})
 	}
 
 	public func typecheck(context: Context, against: Term, from i: Int) -> Either<Error, Term> {
@@ -229,7 +249,8 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 			},
 			ifSigma: const(self),
 			ifBooleanType: const(self),
-			ifBoolean: const(self))
+			ifBoolean: const(self),
+			ifIf: { $0.evaluate(environment).boolean! ? $1.evaluate(environment) : $2.evaluate(environment) })
 	}
 
 
@@ -251,7 +272,8 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 			ifProjection: { "\($0).\($1 ? 1 : 0)" },
 			ifSigma: { "Σ \($0) . \($1)" },
 			ifBooleanType: const("Boolean"),
-			ifBoolean: { String(reflecting: $0) })
+			ifBoolean: { String(reflecting: $0) },
+			ifIf: { "if \($0) then \($1) else \($2)" })
 	}
 
 
@@ -276,7 +298,8 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 			ifProjection: { 13 ^ $0.hashValue ^ $1.hashValue },
 			ifSigma: { 17 ^ $0.hashValue ^ $1.hashValue },
 			ifBooleanType: const(19),
-			ifBoolean: { 23 ^ $0.hashValue })
+			ifBoolean: { 23 ^ $0.hashValue },
+			ifIf: { 29 ^ $0.hashValue ^ $1.hashValue ^ $2.hashValue })
 	}
 
 
@@ -307,7 +330,8 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 				"Σ \($0.1) . \($1.1)"
 			},
 			ifBooleanType: const("Boolean"),
-			ifBoolean: { String($0) })
+			ifBoolean: { String($0) },
+			ifIf: { "if \($0) then \($1) else \($2)" })
 	}
 }
 
