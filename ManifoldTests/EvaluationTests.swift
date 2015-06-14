@@ -33,6 +33,11 @@ final class EvaluationTests: XCTestCase {
 		assert(Term.projection(product, false).evaluate(), ==, Term.unit)
 		assert(Term.projection(product, true).evaluate(), ==, Term.boolean(false))
 	}
+
+	func testIfEvaluatesToCorrectBranch() {
+		assert(Term.`if`(.boolean(true), then: .boolean(true), `else`: .boolean(false)).evaluate(), ==, Term.boolean(true))
+		assert(Term.`if`(.boolean(false), then: .boolean(true), `else`: .boolean(false)).evaluate(), ==, Term.boolean(false))
+	}
 }
 
 import Assertions
