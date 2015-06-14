@@ -129,6 +129,7 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 			ifFree: const(false),
 			ifApplication: const(false),
 			ifProjection: const(false),
+			ifIf: const(false),
 			otherwise: const(true))
 	}
 
