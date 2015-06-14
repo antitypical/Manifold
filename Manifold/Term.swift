@@ -1,15 +1,15 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
+public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, FixpointType, Hashable, IntegerLiteralConvertible, CustomStringConvertible {
 	public init(_ expression: Checkable<Term>) {
-		self.expression = expression
+		self._expression = Box(expression)
 	}
 
 
 	// MARK: Constructors
 
-	public static var unitTerm: Term {
-		return Term(.UnitTerm)
+	public static var unit: Term {
+		return Term(.Unit)
 	}
 
 	public static var unitType: Term {
@@ -27,7 +27,12 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 
 	public static func application(a: Term, _ b: Term) -> Term {
-		return Term(.Application(Box(a), Box(b)))
+		return Term(.Application(a, b))
+	}
+
+
+	public static func projection(a: Term, _ b: Bool) -> Term {
+		return Term(.Projection(a, b))
 	}
 
 
@@ -40,21 +45,25 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	}
 
 
-	public static func constant(value: Any, _ type: Value) -> Term {
-		return Term(.Constant(value, type))
-	}
-
-	public static func constant<T>(value: T) -> Term {
-		return Term(.Constant(value, Value.constant(T.self, .type)))
-	}
-
-
 	public static func pi(type: Term, _ body: Term) -> Term {
-		return Term(.Pi(Box(type), Box(body)))
+		return Term(.Pi(type, body))
 	}
 
 	public static func sigma(type: Term, _ body: Term) -> Term {
-		return Term(.Sigma(Box(type), Box(body)))
+		return Term(.Sigma(type, body))
+	}
+
+
+	public static var booleanType: Term {
+		return Term(.BooleanType)
+	}
+
+	public static func boolean(b: Bool) -> Term {
+		return Term(.Boolean(b))
+	}
+
+	public static func `if`(condition: Term, then: Term, `else`: Term) -> Term {
+		return Term(.If(condition, then, `else`))
 	}
 
 
@@ -62,7 +71,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public var isUnitTerm: Bool {
 		return expression.analysis(
-			ifUnitTerm: const(true),
+			ifUnit: const(true),
 			otherwise: const(false))
 	}
 
@@ -102,16 +111,27 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			otherwise: const(nil))
 	}
 
-	public func constant<T>(_: T.Type) -> (T, Value)? {
-		if let value: (Any, Value) = expression.analysis(
-			ifConstant: pure,
-			otherwise: const(nil)) {
-			return (value.0 as? T).map { ($0, value.1) }
-		}
-		return nil
+	public var boolean: Bool? {
+		return expression.analysis(ifBoolean: pure, otherwise: const(nil))
 	}
 
-	public let expression: Checkable<Term>
+	private var _expression: Box<Checkable<Term>>
+	public var expression: Checkable<Term> {
+		return _expression.value
+	}
+
+
+	// MARK: Normalization
+
+	public var isNormalForm: Bool {
+		return expression.analysis(
+			ifBound: const(false),
+			ifFree: const(false),
+			ifApplication: const(false),
+			ifProjection: const(false),
+			ifIf: const(false),
+			otherwise: const(true))
+	}
 
 
 	// MARK: Substitution
@@ -121,6 +141,7 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 			ifBound: { i == $0 ? term : self },
 			ifApplication: { Term.application($0.substitute(i, term), $1.substitute(i, term)) },
 			ifPi: { Term.pi($0.substitute(i, term), $1.substitute(i + 1, term)) },
+			ifProjection: { Term.projection($0.substitute(i, term), $1) },
 			ifSigma: { Term.sigma($0.substitute(i, term), $1.substitute(i + 1, term)) },
 			otherwise: const(self))
 	}
@@ -128,85 +149,115 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	// MARK: Type-checking
 
-	public func typecheck() -> Either<Error, Value> {
+	public func typecheck() -> Either<Error, Term> {
 		return typecheck([:], from: 0)
 	}
 
-	public func typecheck(context: Context, from i: Int) -> Either<Error, Value> {
+	public func typecheck(context: Context, from i: Int) -> Either<Error, Term> {
 		return expression.analysis(
-			ifUnitTerm: const(.right(.UnitType)),
+			ifUnit: const(.right(.unitType)),
 			ifUnitType: const(.right(.type)),
 			ifType: { .right(.type($0 + 1)) },
-			ifBound: { i -> Either<Error, Value> in
+			ifBound: { i -> Either<Error, Term> in
 				context[.Local(i)].map(Either.right)
 					?? Either.left("unexpectedly free bound variable \(i)")
 			},
-			ifFree: { i -> Either<Error, Value> in
+			ifFree: { i -> Either<Error, Term> in
 				context[i]
 					.map(Either.right)
 					?? Either.left("unexpected free variable \(i)")
 			},
-			ifApplication: { a, b -> Either<Error, Value> in
+			ifApplication: { a, b -> Either<Error, Term> in
 				a.typecheck(context, from: i)
 					.flatMap { t in
-						t.analysis(
-							ifPi: { v, f in b.typecheck(context, against: v, from: i).map(f) },
+						t.expression.analysis(
+							ifPi: { v, f in
+								b.typecheck(context, against: v, from: i)
+									.map { f.substitute(i, $0) }
+							},
 							otherwise: const(Either.left("illegal application of \(a) : \(t) to \(b)")))
-					}
+				}
 			},
-			ifPi: { t, b -> Either<Error, Value> in
+			ifPi: { t, b -> Either<Error, Term> in
 				t.typecheck(context, from: i)
 					.flatMap { _ in
 						let t = t.evaluate()
 						return b.substitute(0, .free(.Local(i))).typecheck([ .Local(i): t ] + context, from: i + 1)
-							.map { Value.function(t, $0) }
+							.map { Term.pi(t, $0) }
 					}
 			},
-			ifSigma: { t, b -> Either<Error, Value> in
-				t.typecheck(context, from: i)
-					.flatMap { _ in
-						let t = t.evaluate()
+			ifProjection: { a, b -> Either<Error, Term> in
+				a.typecheck(context, from: i)
+					.flatMap { t in
+						t.expression.analysis(
+							ifSigma: { v, f in Either.right(b ? f.substitute(i, v) : v) },
+							otherwise: const(Either.left("illegal projection of \(a) : \(t) field \(b ? 1 : 0)")))
+					}
+			},
+			ifSigma: { a, b -> Either<Error, Term> in
+				a.typecheck(context, from: i)
+					.flatMap { a in
+						let t = a.evaluate()
 						return b.substitute(0, .free(.Local(i))).typecheck([ .Local(i): t ] + context, from: i + 1)
-							.map { Value.product(t, $0) }
+							.map { Term.sigma(t, $0) }
 					}
 			},
-			ifConstant: { .right($1) })
+			ifBooleanType: const(.right(.type)),
+			ifBoolean: const(.right(.booleanType)),
+			ifIf: { condition, then, `else` -> Either<Error, Term> in
+				condition.typecheck(context, against: .booleanType, from: i)
+					.flatMap { _ in
+						(then.typecheck(context, from: i) &&& `else`.typecheck(context, from: i))
+							.map { a, b in
+								a == b
+									? a
+									: Term.sigma(.booleanType, Term.`if`(.bound(0), then: a, `else`: b))
+							}
+					}
+			})
 	}
 
-	public func typecheck(context: Context, against: Value, from i: Int) -> Either<Error, Value> {
+	public func typecheck(context: Context, against: Term, from i: Int) -> Either<Error, Term> {
 		return typecheck(context, from: i)
 			.flatMap { t in
-				let (q, r) = (t.quote, against.quote)
-				return (q == r) || (r == .type && q == Value.function(.type, .type).quote)
+				(t == against) || (against == .type && t == Term.pi(.type, .type))
 					? Either.right(t)
-					: Either.left("type mismatch: expected (\(toDebugString(self))) : (\(toDebugString(r))), actually (\(toDebugString(self))) : (\(toDebugString(q))) in environment \(context)")
+					: Either.left("type mismatch: expected (\(String(reflecting: self))) : (\(String(reflecting: against))), actually (\(String(reflecting: self))) : (\(String(reflecting: t))) in environment \(context)")
 			}
 	}
 
 
 	// MARK: Evaluation
 
-	public func evaluate(_ environment: Environment = Environment()) -> Value {
+	public func evaluate(environment: Environment = Environment()) -> Term {
 		return expression.analysis(
-			ifUnitTerm: const(.UnitTerm),
-			ifUnitType: const(.UnitType),
-			ifType: Value.type,
-			ifBound: { i -> Value in
+			ifUnit: const(self),
+			ifUnitType: const(self),
+			ifType: const(self),
+			ifBound: { i -> Term in
 				environment.local[i]
 			},
-			ifFree: { i -> Value in
+			ifFree: { i -> Term in
 				environment.global[i] ?? .free(i)
 			},
-			ifApplication: { a, b -> Value in
-				a.evaluate(environment).apply(b.evaluate(environment))
+			ifApplication: { a, b -> Term in
+				a.evaluate(environment).pi.map { $1.substitute(0, b.evaluate(environment)) }!
 			},
-			ifPi: { type, body -> Value in
-				Value.pi(type.evaluate(environment)) { body.evaluate(environment.byPrepending($0)) }
+			ifPi: const(self),
+			ifProjection: { a, b -> Term in
+				a.evaluate(environment).sigma.map { b ? $1 : $0 }!
 			},
-			ifSigma: { type, body -> Value in
-				Value.sigma(type.evaluate(environment)) { body.evaluate(environment.byPrepending($0)) }
-			},
-			ifConstant: Value.constant)
+			ifSigma: const(self),
+			ifBooleanType: const(self),
+			ifBoolean: const(self),
+			ifIf: { $0.evaluate(environment).boolean! ? $1.evaluate(environment) : $2.evaluate(environment) })
+	}
+
+
+	// MARK: BooleanLiteralConvertible
+
+	public init(booleanLiteral value: Bool) {
+		self = Term.boolean(value)
 	}
 
 
@@ -218,15 +269,18 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	private static func toDebugString(expression: Checkable<String>) -> String {
 		return expression.analysis(
-			ifUnitTerm: const("()"),
+			ifUnit: const("()"),
 			ifUnitType: const("Unit"),
 			ifType: { "Type\($0)" },
 			ifBound: { "Bound(\($0))" },
 			ifFree: { "Free(\($0))" },
 			ifApplication: { "\($0)(\($1))" },
 			ifPi: { "Π \($0) . \($1)" },
+			ifProjection: { "\($0).\($1 ? 1 : 0)" },
 			ifSigma: { "Σ \($0) . \($1)" },
-			ifConstant: { "\(Swift.toDebugString($0)) : \(Swift.toDebugString($1.quote))" })
+			ifBooleanType: const("Boolean"),
+			ifBoolean: { String(reflecting: $0) },
+			ifIf: { "if \($0) then \($1) else \($2)" })
 	}
 
 
@@ -241,15 +295,25 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 
 	public var hashValue: Int {
 		return expression.analysis(
-			ifUnitTerm: const(0),
+			ifUnit: const(0),
 			ifUnitType: const(1),
 			ifType: { 2 ^ $0.hashValue },
 			ifBound: { 3 ^ $0.hashValue },
 			ifFree: { 5 ^ $0.hashValue },
 			ifApplication: { 7 ^ $0.hashValue ^ $1.hashValue },
 			ifPi: { 11 ^ $0.hashValue ^ $1.hashValue },
-			ifSigma: { 13 ^ $0.hashValue ^ $1.hashValue },
-			ifConstant: { 17 ^ toString($0).hashValue ^ $1.quote.hashValue })
+			ifProjection: { 13 ^ $0.hashValue ^ $1.hashValue },
+			ifSigma: { 17 ^ $0.hashValue ^ $1.hashValue },
+			ifBooleanType: const(19),
+			ifBoolean: { 23 ^ $0.hashValue },
+			ifIf: { 29 ^ $0.hashValue ^ $1.hashValue ^ $2.hashValue })
+	}
+
+
+	// MARK: IntegerLiteralConvertible
+
+	public init(integerLiteral value: Int) {
+		self = Term.bound(value)
 	}
 
 
@@ -262,23 +326,26 @@ public struct Term: DebugPrintable, FixpointType, Hashable, Printable {
 	private static let alphabet = "abcdefghijklmnopqrstuvwxyz"
 
 	private static func toString(expression: Checkable<(Term, String)>) -> String {
-		let alphabetize: Int -> String = { index in Swift.toString(Term.alphabet[advance(Term.alphabet.startIndex, index)]) }
+		let alphabetize: Int -> String = { index in Swift.String(Term.alphabet[advance(Term.alphabet.startIndex, index)]) }
 		return expression.analysis(
-			ifUnitTerm: const("()"),
+			ifUnit: const("()"),
 			ifUnitType: const("Unit"),
 			ifType: { $0 > 0 ? "Type\($0)" : "Type" },
 			ifBound: alphabetize,
-			ifFree: { $0.analysis(ifGlobal: id, ifLocal: alphabetize, ifQuote: alphabetize) },
+			ifFree: { $0.analysis(ifGlobal: id, ifLocal: alphabetize) },
 			ifApplication: { "\($0.1)(\($1.1))" },
 			ifPi: {
 				"Π : \($0.1) . \($1.1)"
 			},
+			ifProjection: {
+				"\($0.1).\($1 ? 1 : 0)"
+			},
 			ifSigma: {
 				"Σ \($0.1) . \($1.1)"
 			},
-			ifConstant: {
-				"\($0) : \($1.quote)"
-			})
+			ifBooleanType: const("Boolean"),
+			ifBoolean: { String($0) },
+			ifIf: { "if \($0) then \($1) else \($2)" })
 	}
 }
 

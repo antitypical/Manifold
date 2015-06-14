@@ -4,27 +4,26 @@
 
 public func == <Recur: Equatable> (left: Checkable<Recur>, right: Checkable<Recur>) -> Bool {
 	switch (left, right) {
-	case (.UnitTerm, .UnitTerm):
+	case (.Unit, .Unit), (.UnitType, .UnitType), (.BooleanType, .BooleanType):
 		return true
 	case let (.Type(i), .Type(j)):
 		return i == j
 	case let (.Bound(m), .Bound(n)):
 		return m == n
-	case let (.Free(m), _):
-		// Workaround for rdar://20969594
-		switch right {
-		case let .Free(n):
-			return m == n
-		default:
-			break
-		}
-		return false
+	case let (.Free(m), .Free(n)):
+		return m == n
 	case let (.Application(t1, t2), .Application(u1, u2)):
-		return t1.value == u1.value && t2.value == u2.value
+		return t1 == u1 && t2 == u2
 	case let (.Pi(t, a), .Pi(u, b)):
-		return t.value == u.value && a.value == b.value
+		return t == u && a == b
+	case let (.Projection(p, f), .Projection(q, g)):
+		return p == q && f == g
 	case let (.Sigma(t, a), .Sigma(u, b)):
-		return t.value == u.value && a.value == b.value
+		return t == u && a == b
+	case let (.Boolean(a), .Boolean(b)):
+		return a == b
+	case let (.If(a1, b1, c1), .If(a2, b2, c2)):
+		return a1 == a2 && b1 == b2 && c1 == c2
 	default:
 		return false
 	}
@@ -34,8 +33,8 @@ public func == <Recur: Equatable> (left: Checkable<Recur>, right: Checkable<Recu
 // MARK: Error
 
 public func == (left: Error, right: Error) -> Bool {
-	return reduce(lazy(zip(left.errors, right.errors))
-		.map(==), true) { $0 && $1 }
+	return lazy(zip(left.errors, right.errors))
+		.map(==).reduce(true) { $0 && $1 }
 }
 
 
@@ -46,8 +45,6 @@ public func == (left: Name, right: Name) -> Bool {
 	case let (.Global(x), .Global(y)):
 		return x == y
 	case let (.Local(x), .Local(y)):
-		return x == y
-	case let (.Quote(x), .Quote(y)):
 		return x == y
 	default:
 		return false
