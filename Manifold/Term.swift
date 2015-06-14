@@ -302,7 +302,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifUnitType: const("Unit"),
 			ifType: { $0 > 0 ? "Type\($0)" : "Type" },
 			ifBound: alphabetize,
-			ifFree: { $0.analysis(ifGlobal: id, ifLocal: alphabetize, ifQuote: alphabetize) },
+			ifFree: { $0.analysis(ifGlobal: id, ifLocal: alphabetize) },
 			ifApplication: { "\($0.1)(\($1.1))" },
 			ifPi: {
 				"Π : \($0.1) . \($1.1)"

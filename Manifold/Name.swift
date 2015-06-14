@@ -15,11 +15,11 @@ public enum Name: Hashable, IntegerLiteralConvertible, CustomDebugStringConverti
 	// MARK: Destructors
 
 	public var global: String? {
-		return analysis(ifGlobal: unit, ifLocal: const(nil), ifQuote: const(nil))
+		return analysis(ifGlobal: unit, ifLocal: const(nil))
 	}
 
 	public var value: Int? {
-		return analysis(ifGlobal: const(nil), ifLocal: unit, ifQuote: unit)
+		return analysis(ifGlobal: const(nil), ifLocal: unit)
 	}
 
 
@@ -27,15 +27,12 @@ public enum Name: Hashable, IntegerLiteralConvertible, CustomDebugStringConverti
 
 	public func analysis<T>(
 		@noescape ifGlobal ifGlobal: String -> T,
-		@noescape ifLocal: Int -> T,
-		@noescape ifQuote: Int -> T) -> T {
+		@noescape ifLocal: Int -> T) -> T {
 		switch self {
 		case let .Global(s):
 			return ifGlobal(s)
 		case let .Local(n):
 			return ifLocal(n)
-		case let .Quote(n):
-			return ifQuote(n)
 		}
 	}
 
@@ -45,15 +42,14 @@ public enum Name: Hashable, IntegerLiteralConvertible, CustomDebugStringConverti
 	public var debugDescription: String {
 		return analysis(
 			ifGlobal: { "Global(\($0))" },
-			ifLocal: { "Local(\($0))" },
-			ifQuote: { "Quote(\($0))" })
+			ifLocal: { "Local(\($0))" })
 	}
 
 
 	// MARK: Hashable
 
 	public var hashValue: Int {
-		return analysis(ifGlobal: { $0.hashValue }, ifLocal: id, ifQuote: id)
+		return analysis(ifGlobal: { $0.hashValue }, ifLocal: id)
 	}
 
 
@@ -69,8 +65,7 @@ public enum Name: Hashable, IntegerLiteralConvertible, CustomDebugStringConverti
 	public var description: String {
 		return analysis(
 			ifGlobal: id,
-			ifLocal: { String($0) },
-			ifQuote: { String($0) })
+			ifLocal: { String($0) })
 	}
 
 
@@ -93,7 +88,6 @@ public enum Name: Hashable, IntegerLiteralConvertible, CustomDebugStringConverti
 
 	case Global(String)
 	case Local(Int)
-	case Quote(Int)
 }
 
 
