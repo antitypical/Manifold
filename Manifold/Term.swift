@@ -140,63 +140,67 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 
 	// MARK: Type-checking
 
-	public func typecheck() -> Either<Error, Value> {
+	public func typecheck() -> Either<Error, Term> {
 		return typecheck([:], from: 0)
 	}
 
-	public func typecheck(context: Context, from i: Int) -> Either<Error, Value> {
+	public func typecheck(context: Context, from i: Int) -> Either<Error, Term> {
 		return expression.analysis(
-			ifUnitTerm: const(.right(.UnitType)),
+			ifUnitTerm: const(.right(.unitType)),
 			ifUnitType: const(.right(.type)),
 			ifType: { .right(.type($0 + 1)) },
-			ifBound: { i -> Either<Error, Value> in
+			ifBound: { i -> Either<Error, Term> in
 				context[.Local(i)].map(Either.right)
 					?? Either.left("unexpectedly free bound variable \(i)")
 			},
-			ifFree: { i -> Either<Error, Value> in
+			ifFree: { i -> Either<Error, Term> in
 				context[i]
 					.map(Either.right)
 					?? Either.left("unexpected free variable \(i)")
 			},
-			ifApplication: { a, b -> Either<Error, Value> in
+			ifApplication: { a, b -> Either<Error, Term> in
 				a.typecheck(context, from: i)
 					.flatMap { t in
-						t.analysis(
-							ifPi: { v, f in b.typecheck(context, against: v, from: i).map(f) },
+						t.expression.analysis(
+							ifPi: { v, f in
+								b.typecheck(context, against: v, from: i)
+									.map { f.substitute(i, $0) }
+							},
 							otherwise: const(Either.left("illegal application of \(a) : \(t) to \(b)")))
-					}
+				}
 			},
-			ifPi: { t, b -> Either<Error, Value> in
+			ifPi: { t, b -> Either<Error, Term> in
 				t.typecheck(context, from: i)
 					.flatMap { _ in
 						let t = t.evaluate()
 						return b.substitute(0, .free(.Local(i))).typecheck([ .Local(i): t ] + context, from: i + 1)
-							.map { Value.function(t, $0) }
+							.map { Term.pi(t, $0) }
 					}
 			},
-			ifProjection: { a, b -> Either<Error, Value> in
+			ifProjection: { a, b -> Either<Error, Term> in
 				a.typecheck(context, from: i)
 					.flatMap { t in
-						t.analysis(
-							ifSigma: { v, f in Either.right(b ? f(v) : v) },
+						t.expression.analysis(
+							ifSigma: { v, f in Either.right(b ? f.substitute(i, v) : v) },
 							otherwise: const(Either.left("illegal projection of \(a) : \(t) field \(b ? 1 : 0)")))
 					}
 			},
-			ifSigma: { t, b -> Either<Error, Value> in
+			ifSigma: { t, b -> Either<Error, Term> in
 				t.typecheck(context, from: i)
-					.flatMap { t in
-						b.substitute(0, .free(.Local(i))).typecheck([ .Local(i): t ] + context, from: i + 1)
-							.map { Value.product(t, $0) }
+					.flatMap { _ in
+						let t = t.evaluate()
+						return b.substitute(0, .free(.Local(i))).typecheck([ .Local(i): t ] + context, from: i + 1)
+							.map { Term.sigma(t, $0) }
 					}
 			},
 			ifBooleanType: const(.right(.type)),
-			ifBooleanTerm: const(.right(.BooleanType)))
+			ifBooleanTerm: const(.right(.booleanType)))
 	}
 
-	public func typecheck(context: Context, against: Value, from i: Int) -> Either<Error, Value> {
+	public func typecheck(context: Context, against: Term, from i: Int) -> Either<Error, Term> {
 		return typecheck(context, from: i)
 			.flatMap { t in
-				(t == against) || (against == .type && t == Value.function(.type, .type))
+				(t == against) || (against == .type && t == Term.pi(.type, .type))
 					? Either.right(t)
 					: Either.left("type mismatch: expected (\(String(reflecting: self))) : (\(String(reflecting: against))), actually (\(String(reflecting: self))) : (\(String(reflecting: t))) in environment \(context)")
 			}
@@ -205,31 +209,27 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 
 	// MARK: Evaluation
 
-	public func evaluate(environment: Environment = Environment()) -> Value {
+	public func evaluate(environment: Environment = Environment()) -> Term {
 		return expression.analysis(
-			ifUnitTerm: const(.UnitValue),
-			ifUnitType: const(.UnitType),
-			ifType: Value.type,
-			ifBound: { i -> Value in
+			ifUnitTerm: const(self),
+			ifUnitType: const(self),
+			ifType: const(self),
+			ifBound: { i -> Term in
 				environment.local[i]
 			},
-			ifFree: { i -> Value in
+			ifFree: { i -> Term in
 				environment.global[i] ?? .free(i)
 			},
-			ifApplication: { a, b -> Value in
-				a.evaluate(environment).apply(b.evaluate(environment))
+			ifApplication: { a, b -> Term in
+				a.evaluate(environment).substitute(0, b.evaluate(environment))
 			},
-			ifPi: { type, body -> Value in
-				Value.pi(type.evaluate(environment)) { body.evaluate(environment.byPrepending($0)) }
+			ifPi: const(self),
+			ifProjection: { a, b -> Term in
+				a.evaluate(environment).sigma.map { b ? $1 : $0 }!
 			},
-			ifProjection: { a, b -> Value in
-				a.evaluate(environment).project(b)
-			},
-			ifSigma: { type, body -> Value in
-				Value.sigma(type.evaluate(environment)) { body.evaluate(environment.byPrepending($0)) }
-			},
-			ifBooleanType: const(.BooleanType),
-			ifBooleanTerm: Value.boolean)
+			ifSigma: const(self),
+			ifBooleanType: const(self),
+			ifBooleanTerm: const(self))
 	}
 
 

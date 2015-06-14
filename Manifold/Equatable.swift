@@ -55,10 +55,3 @@ public func == (left: Name, right: Name) -> Bool {
 public func == (left: Term, right: Term) -> Bool {
 	return left.expression == right.expression
 }
-
-
-// MARK: Value
-
-public func == (left: Value, right: Value) -> Bool {
-	return false
-}
