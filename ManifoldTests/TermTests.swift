@@ -1,10 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 final class TermTests: XCTestCase {
-	func testTypechecking() {
-		assert(identity.typecheck().right, ==, Term.pi(.type, .pi(.free(0), .free(0))))
-	}
-
 	func testPiTypeDescription() {
 		assert(identity.typecheck().right?.description, ==, "Π : Type . Π : a . a")
 	}
