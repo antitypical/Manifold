@@ -221,7 +221,7 @@ public struct Term: CustomDebugStringConvertible, FixpointType, Hashable, Custom
 				environment.global[i] ?? .free(i)
 			},
 			ifApplication: { a, b -> Term in
-				a.evaluate(environment).substitute(0, b.evaluate(environment))
+				a.evaluate(environment).pi.map { $1.substitute(0, b.evaluate(environment)) }!
 			},
 			ifPi: const(self),
 			ifProjection: { a, b -> Term in
