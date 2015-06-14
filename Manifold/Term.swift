@@ -59,7 +59,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	}
 
 	public static func sum(terms: [Term]) -> Term {
-		return terms.foldr(unitType, combine: sum)
+		return terms.first.map { dropFirst(terms).reduce($0, combine: sum) } ?? unitType
 	}
 
 
