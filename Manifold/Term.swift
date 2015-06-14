@@ -54,6 +54,15 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	}
 
 
+	public static func sum(a: Term, _ b: Term) -> Term {
+		return sigma(booleanType, `if`(0, then: a, `else`: b))
+	}
+
+	public static func sum(terms: [Term]) -> Term {
+		return terms.first.map { dropFirst(terms).reduce($0, combine: sum) } ?? unitType
+	}
+
+
 	public static var booleanType: Term {
 		return Term(.BooleanType)
 	}
