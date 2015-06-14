@@ -27,6 +27,12 @@ final class EvaluationTests: XCTestCase {
 		let identity = Term.pi(.unitType, .application(.pi(.unitType, .bound(0)), .bound(0)))
 		assert(identity.evaluate(), ==, identity)
 	}
+
+	func testProjectionEvaluatesToProjectedField() {
+		let product = Term.sigma(.type(1), .type(2))
+		assert(Term.projection(product, false).evaluate(), ==, Term.type(1))
+		assert(Term.projection(product, true).evaluate(), ==, Term.type(2))
+	}
 }
 
 import Assertions

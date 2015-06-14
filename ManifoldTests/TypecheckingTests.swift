@@ -22,6 +22,12 @@ final class TypecheckingTests: XCTestCase {
 		let identity = Term.pi(.unitType, .bound(0))
 		assert(identity.typecheck().right, ==, Term.pi(.unitType, .unitType))
 	}
+
+	func testProjectionTypechecksToTypeOfProjectedField() {
+		let product = Term.sigma(.type(1), .type(2))
+		assert(Term.projection(product, false).typecheck().right, ==, Term.type(2))
+		assert(Term.projection(product, true).typecheck().right, ==, Term.type(3))
+	}
 }
 
 import Assertions
