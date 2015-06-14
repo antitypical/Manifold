@@ -24,7 +24,7 @@ final class TypecheckingTests: XCTestCase {
 	}
 
 	func testProjectionTypechecksToTypeOfProjectedField() {
-		let product = Term.sigma(.unit, .boolean(false))
+		let product = Term.sigma(.unit, false)
 		assert(Term.projection(product, false).typecheck().right, ==, Term.unitType)
 		assert(Term.projection(product, true).typecheck().right, ==, Term.booleanType)
 	}
