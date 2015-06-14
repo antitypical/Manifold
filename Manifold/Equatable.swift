@@ -4,21 +4,14 @@
 
 public func == <Recur: Equatable> (left: Checkable<Recur>, right: Checkable<Recur>) -> Bool {
 	switch (left, right) {
-	case (.UnitTerm, .UnitTerm), (.UnitType, .UnitType):
+	case (.Unit, .Unit), (.UnitType, .UnitType), (.BooleanType, .BooleanType):
 		return true
 	case let (.Type(i), .Type(j)):
 		return i == j
 	case let (.Bound(m), .Bound(n)):
 		return m == n
-	case let (.Free(m), _):
-		// Workaround for rdar://20969594
-		switch right {
-		case let .Free(n):
-			return m == n
-		default:
-			break
-		}
-		return false
+	case let (.Free(m), .Free(n)):
+		return m == n
 	case let (.Application(t1, t2), .Application(u1, u2)):
 		return t1 == u1 && t2 == u2
 	case let (.Pi(t, a), .Pi(u, b)):
@@ -27,6 +20,8 @@ public func == <Recur: Equatable> (left: Checkable<Recur>, right: Checkable<Recu
 		return p == q && f == g
 	case let (.Sigma(t, a), .Sigma(u, b)):
 		return t == u && a == b
+	case let (.Boolean(a), .Boolean(b)):
+		return a == b
 	default:
 		return false
 	}

@@ -2,30 +2,36 @@
 
 final class EvaluationTests: XCTestCase {
 	func testUnitTermEvaluatesToItself() {
-		assert(Term.unitTerm.evaluate().quote, ==, Term.unitTerm)
+		assert(Term.unit.evaluate(), ==, Term.unit)
 	}
 
 	func testUnitTypeEvaluatesToItself() {
-		assert(Term.unitType.evaluate().quote, ==, Term.unitType)
+		assert(Term.unitType.evaluate(), ==, Term.unitType)
 	}
 
 	func testTypeEvaluatesToItself() {
-		assert(Term.type.evaluate().quote, ==, Term.type)
+		assert(Term.type.evaluate(), ==, Term.type)
 	}
 
 	func testApplicationOfIdentityAbstractionToUnitTermEvaluatesToUnitTerm() {
 		let identity = Term.pi(.unitType, .bound(0))
-		assert(Term.application(identity, Term.unitTerm).evaluate().quote, ==, Term.unitTerm)
+		assert(Term.application(identity, Term.unit).evaluate(), ==, Term.unit)
 	}
 
 	func testSimpleAbstractionEvaluatesToItself() {
 		let identity = Term.pi(.unitType, .bound(0))
-		assert(identity.evaluate().quote, ==, identity)
+		assert(identity.evaluate(), ==, identity)
 	}
 
-	func testAbstractionsNormalizeByEvaluation() {
+	func testAbstractionsBodiesAreNotNormalized() {
 		let identity = Term.pi(.unitType, .application(.pi(.unitType, .bound(0)), .bound(0)))
-		assert(identity.evaluate().quote, ==, Term.pi(.unitType, .bound(0)))
+		assert(identity.evaluate(), ==, identity)
+	}
+
+	func testProjectionEvaluatesToProjectedField() {
+		let product = Term.sigma(.unit, .boolean(false))
+		assert(Term.projection(product, false).evaluate(), ==, Term.unit)
+		assert(Term.projection(product, true).evaluate(), ==, Term.boolean(false))
 	}
 }
 

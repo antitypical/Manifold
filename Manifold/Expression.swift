@@ -4,7 +4,7 @@ public enum Checkable<Recur> {
 	// MARK: Analyses
 
 	public func analysis<T>(
-		@noescape ifUnitTerm ifUnitTerm: () -> T,
+		@noescape ifUnit ifUnit: () -> T,
 		@noescape ifUnitType: () -> T,
 		@noescape ifType: Int -> T,
 		@noescape ifBound: Int -> T,
@@ -14,11 +14,11 @@ public enum Checkable<Recur> {
 		@noescape ifProjection: (Recur, Bool) -> T,
 		@noescape ifSigma: (Recur, Recur) -> T,
 		@noescape ifBooleanType: () -> T,
-		@noescape ifBooleanTerm: Bool -> T,
+		@noescape ifBoolean: Bool -> T,
 		@noescape ifIf: (Recur, Recur, Recur) -> T) -> T {
 		switch self {
-		case .UnitTerm:
-			return ifUnitTerm()
+		case .Unit:
+			return ifUnit()
 		case .UnitType:
 			return ifUnitType()
 		case let .Type(n):
@@ -37,15 +37,15 @@ public enum Checkable<Recur> {
 			return ifSigma(a, b)
 		case .BooleanType:
 			return ifBooleanType()
-		case let .BooleanTerm(b):
-			return ifBooleanTerm(b)
+		case let .Boolean(b):
+			return ifBoolean(b)
 		case let .If(a, b, c):
 			return ifIf(a, b, c)
 		}
 	}
 
 	public func analysis<T>(
-		ifUnitTerm ifUnitTerm: (() -> T)? = nil,
+		ifUnit ifUnit: (() -> T)? = nil,
 		ifUnitType: (() -> T)? = nil,
 		ifType: (Int -> T)? = nil,
 		ifBound: (Int -> T)? = nil,
@@ -55,11 +55,11 @@ public enum Checkable<Recur> {
 		ifProjection: ((Recur, Bool) -> T)? = nil,
 		ifSigma: ((Recur, Recur) -> T)? = nil,
 		ifBooleanType: (() -> T)? = nil,
-		ifBooleanTerm: (Bool -> T)? = nil,
+		ifBoolean: (Bool -> T)? = nil,
 		ifIf: ((Recur, Recur, Recur) -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
-			ifUnitTerm: { ifUnitTerm?() ?? otherwise() },
+			ifUnit: { ifUnit?() ?? otherwise() },
 			ifUnitType: { ifUnitType?() ?? otherwise() },
 			ifType: { ifType?($0) ?? otherwise() },
 			ifBound: { ifBound?($0) ?? otherwise() },
@@ -69,7 +69,7 @@ public enum Checkable<Recur> {
 			ifProjection: { ifProjection?($0) ?? otherwise() },
 			ifSigma: { ifSigma?($0) ?? otherwise() },
 			ifBooleanType: { ifBooleanType?() ?? otherwise() },
-			ifBooleanTerm: { ifBooleanTerm?($0) ?? otherwise() },
+			ifBoolean: { ifBoolean?($0) ?? otherwise() },
 			ifIf: { ifIf?($0) ?? otherwise() })
 	}
 
@@ -78,7 +78,7 @@ public enum Checkable<Recur> {
 
 	public func map<T>(@noescape transform: Recur -> T) -> Checkable<T> {
 		return analysis(
-			ifUnitTerm: const(.UnitTerm),
+			ifUnit: const(.Unit),
 			ifUnitType: const(.UnitType),
 			ifType: { .Type($0) },
 			ifBound: { .Bound($0) },
@@ -88,14 +88,14 @@ public enum Checkable<Recur> {
 			ifProjection: { .Projection(transform($0), $1) },
 			ifSigma: { .Sigma(transform($0), transform($1)) },
 			ifBooleanType: const(.BooleanType),
-			ifBooleanTerm: { .BooleanTerm($0) },
+			ifBoolean: { .Boolean($0) },
 			ifIf: { .If(transform($0), transform($1), transform($2)) })
 	}
 
 
 	// MARK: Cases
 
-	case UnitTerm
+	case Unit
 	case UnitType
 	case Type(Int)
 	case Bound(Int)
@@ -105,7 +105,7 @@ public enum Checkable<Recur> {
 	case Projection(Recur, Bool)
 	case Sigma(Recur, Recur) // (Σx:A)B where B can depend on x
 	case BooleanType
-	case BooleanTerm(Bool)
+	case Boolean(Bool)
 	case If(Recur, Recur, Recur)
 }
 
