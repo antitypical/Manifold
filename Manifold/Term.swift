@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, FixpointType, Hashable, CustomStringConvertible {
+public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, FixpointType, Hashable, IntegerLiteralConvertible, CustomStringConvertible {
 	public init(_ expression: Checkable<Term>) {
 		self._expression = Box(expression)
 	}
@@ -284,6 +284,13 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifSigma: { 17 ^ $0.hashValue ^ $1.hashValue },
 			ifBooleanType: const(19),
 			ifBoolean: { 23 ^ $0.hashValue })
+	}
+
+
+	// MARK: IntegerLiteralConvertible
+
+	public init(integerLiteral value: Int) {
+		self = Term.bound(value)
 	}
 
 
