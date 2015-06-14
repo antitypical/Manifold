@@ -354,6 +354,19 @@ private func pure<T>(x: T) -> T? {
 	return x
 }
 
+extension SequenceType {
+	private func foldr<Result>(initial: Result, combine: (Self.Generator.Element, Result) -> Result) -> Result {
+		var generator = generate()
+		return generator.foldr(initial, combine: combine)
+	}
+}
+
+extension GeneratorType {
+	private mutating func foldr<Result>(initial: Result, combine: (Self.Element, Result) -> Result) -> Result {
+		return next().map { combine($0, foldr(initial, combine: combine)) } ?? initial
+	}
+}
+
 
 import Box
 import Either
