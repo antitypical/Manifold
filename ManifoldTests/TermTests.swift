@@ -17,6 +17,10 @@ final class TermTests: XCTestCase {
 	func testNullarySumsAreUnitType() {
 		assert(Term.sum([]), ==, .unitType)
 	}
+
+	func testUnarySumsAreTheIdentityConstructor() {
+		assert(Term.sum([ .booleanType ]), ==, .booleanType)
+	}
 }
 
 private let identity = Term.pi(.type, .pi(0, 0))
