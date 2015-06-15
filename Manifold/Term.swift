@@ -238,28 +238,28 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 	// MARK: Evaluation
 
-	public func evaluate(environment: Environment = Environment()) -> Term {
+	public func evaluate(locals: [Term] = [], _ globals: [Name: Term] = [:]) -> Term {
 		return expression.analysis(
 			ifUnit: const(self),
 			ifUnitType: const(self),
 			ifType: const(self),
 			ifBound: { i -> Term in
-				environment.local[i]
+				locals[i]
 			},
 			ifFree: { i -> Term in
-				environment.global[i] ?? .free(i)
+				globals[i] ?? .free(i)
 			},
 			ifApplication: { a, b -> Term in
-				a.evaluate(environment).pi.map { $1.substitute(0, b.evaluate(environment)) }!
+				a.evaluate(locals, globals).pi.map { $1.substitute(0, b.evaluate(locals, globals)) }!
 			},
 			ifPi: const(self),
 			ifProjection: { a, b -> Term in
-				a.evaluate(environment).sigma.map { b ? $1 : $0 }!
+				a.evaluate(locals, globals).sigma.map { b ? $1 : $0 }!
 			},
 			ifSigma: const(self),
 			ifBooleanType: const(self),
 			ifBoolean: const(self),
-			ifIf: { $0.evaluate(environment).boolean! ? $1.evaluate(environment) : $2.evaluate(environment) })
+			ifIf: { $0.evaluate(locals, globals).boolean! ? $1.evaluate(locals, globals) : $2.evaluate(locals, globals) })
 	}
 
 
