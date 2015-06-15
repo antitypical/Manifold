@@ -162,7 +162,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		return typecheck([:], from: 0)
 	}
 
-	public func typecheck(context: Context, from i: Int) -> Either<Error, Term> {
+	public func typecheck(context: [Name: Term], from i: Int) -> Either<Error, Term> {
 		return expression.analysis(
 			ifUnit: const(.right(.unitType)),
 			ifUnitType: const(.right(.type)),
@@ -226,7 +226,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			})
 	}
 
-	public func typecheck(context: Context, against: Term, from i: Int) -> Either<Error, Term> {
+	public func typecheck(context: [Name: Term], against: Term, from i: Int) -> Either<Error, Term> {
 		return typecheck(context, from: i)
 			.flatMap { t in
 				(t == against) || (against == .type && t == Term.pi(.type, .type))
