@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D46395AD1B15438600AA1B65 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46395AC1B15438600AA1B65 /* Context.swift */; };
 		D4809FBD1AF6BD400084B8FE /* TermTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4809FBC1AF6BD400084B8FE /* TermTests.swift */; };
 		D4809FBF1AF6CD720084B8FE /* Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4809FBE1AF6CD720084B8FE /* Equatable.swift */; };
 		D484903A1B29352600F249F7 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D48490391B29352600F249F7 /* CoreFoundation.framework */; };
@@ -41,7 +40,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		D46395AC1B15438600AA1B65 /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
 		D46395AE1B17E24C00AA1B65 /* SwiftCheck.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SwiftCheck.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4809FBC1AF6BD400084B8FE /* TermTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TermTests.swift; sourceTree = "<group>"; };
 		D4809FBE1AF6CD720084B8FE /* Equatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Equatable.swift; sourceTree = "<group>"; };
@@ -120,7 +118,6 @@
 				D4DE7E721AF66E25004D0CB9 /* Term.swift */,
 				D4B56CB01AFDA26A00D7BD6F /* Expression.swift */,
 				D4EDEF561AFEDEC5001B9A1D /* Name.swift */,
-				D46395AC1B15438600AA1B65 /* Context.swift */,
 				D4B3FBEE1A83515800DA2AC3 /* Supporting Files */,
 			);
 			path = Manifold;
@@ -271,7 +268,6 @@
 			files = (
 				D4809FBF1AF6CD720084B8FE /* Equatable.swift in Sources */,
 				D4B56CB11AFDA26A00D7BD6F /* Expression.swift in Sources */,
-				D46395AD1B15438600AA1B65 /* Context.swift in Sources */,
 				D4B4AA571A90320F0089A5F2 /* Dictionary.swift in Sources */,
 				D4EDEF571AFEDEC5001B9A1D /* Name.swift in Sources */,
 				D4A31B2A1AA366EC00B3FC68 /* Algebra.swift in Sources */,
