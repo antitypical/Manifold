@@ -14,9 +14,13 @@ public func cata<T, Fix: FixpointType where Fix.Recur == Checkable<Fix>>(f: Chec
 	return term |> (out >>> (map <| cata(f)) >>> f)
 }
 
-public func zeppo<T, Fix: FixpointType where Fix.Recur == Checkable<Fix>>(f: Checkable<([Fix], T)> -> T)(_ parents: [Fix])(_ term: Fix) -> T {
-	let fanout = { (parents, zeppo(f)(parents + [$0])($0)) }
-	return term |> (out >>> (map <| fanout) >>> f)
+public func zeppo<T, Fix: FixpointType where Fix.Recur == Checkable<Fix>>(f: ([Fix], Checkable<T>) -> T)(_ parents: [Fix])(_ term: Fix) -> T {
+	return zeppo(curry(f))(parents)(term)
+}
+
+public func zeppo<T, Fix: FixpointType where Fix.Recur == Checkable<Fix>>(f: [Fix] -> Checkable<T> -> T)(_ parents: [Fix])(_ term: Fix) -> T {
+	let fanout = { zeppo(f)(parents + [$0])($0) }
+	return term |> (out >>> (map <| fanout) >>> (parents |> f))
 }
 
 public func para<T, Fix: FixpointType where Fix.Recur == Checkable<Fix>>(f: Checkable<(Fix, T)> -> T)(_ term: Fix) -> T {
