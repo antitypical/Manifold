@@ -79,45 +79,31 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	// MARK: Destructors
 
 	public var isUnitTerm: Bool {
-		return expression.analysis(
-			ifUnit: const(true),
-			otherwise: const(false))
+		return expression.analysis(ifUnit: const(true), otherwise: const(false))
 	}
 
 	public var isUnitType: Bool {
-		return expression.analysis(
-			ifUnitType: const(true),
-			otherwise: const(false))
+		return expression.analysis(ifUnitType: const(true), otherwise: const(false))
 	}
 
 	public var isType: Bool {
-		return expression.analysis(
-			ifType: const(true),
-			otherwise: const(false))
+		return expression.analysis(ifType: const(true), otherwise: const(false))
 	}
 
 	public var bound: Int? {
-		return expression.analysis(
-			ifBound: Prelude.unit,
-			otherwise: const(nil))
+		return expression.analysis(ifBound: Prelude.unit, otherwise: const(nil))
 	}
 
 	public var application: (Term, Term)? {
-		return expression.analysis(
-			ifApplication: Prelude.unit,
-			otherwise: const(nil))
+		return expression.analysis(ifApplication: Prelude.unit, otherwise: const(nil))
 	}
 
 	public var pi: (Term, Term)? {
-		return expression.analysis(
-			ifPi: Prelude.unit,
-			otherwise: const(nil))
+		return expression.analysis(ifPi: Prelude.unit, otherwise: const(nil))
 	}
 
 	public var sigma: (Term, Term)? {
-		return expression.analysis(
-			ifSigma: Prelude.unit,
-			otherwise: const(nil))
+		return expression.analysis(ifSigma: Prelude.unit, otherwise: const(nil))
 	}
 
 	public var boolean: Bool? {
