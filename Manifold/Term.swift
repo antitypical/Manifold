@@ -98,30 +98,30 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 	public var bound: Int? {
 		return expression.analysis(
-			ifBound: pure,
+			ifBound: Prelude.unit,
 			otherwise: const(nil))
 	}
 
 	public var application: (Term, Term)? {
 		return expression.analysis(
-			ifApplication: pure,
+			ifApplication: Prelude.unit,
 			otherwise: const(nil))
 	}
 
 	public var pi: (Term, Term)? {
 		return expression.analysis(
-			ifPi: pure,
+			ifPi: Prelude.unit,
 			otherwise: const(nil))
 	}
 
 	public var sigma: (Term, Term)? {
 		return expression.analysis(
-			ifSigma: pure,
+			ifSigma: Prelude.unit,
 			otherwise: const(nil))
 	}
 
 	public var boolean: Bool? {
-		return expression.analysis(ifBoolean: pure, otherwise: const(nil))
+		return expression.analysis(ifBoolean: Prelude.unit, otherwise: const(nil))
 	}
 
 	private var _expression: Box<Checkable<Term>>
@@ -356,11 +356,6 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifBoolean: { String($0) },
 			ifIf: { "if \($0) then \($1) else \($2)" })
 	}
-}
-
-
-private func pure<T>(x: T) -> T? {
-	return x
 }
 
 
