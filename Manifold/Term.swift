@@ -154,7 +154,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	private func substitute(i: Int, _ term: Term) -> Term {
 		return mapBoundVariables { depth, variable in
 			variable == i
-				? term.shift(0, by: depth)
+				? term.shift(i, by: depth)
 				: Term.bound(variable)
 		}
 	}
