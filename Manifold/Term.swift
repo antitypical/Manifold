@@ -131,7 +131,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 	// MARK: Bound variables
 
-	private func map(transform: (Int, Int) -> Term) -> Term {
+	private func mapBoundVariables(transform: (Int, Int) -> Term) -> Term {
 		return zeppo { parents, expression in
 			expression.analysis(
 				ifBound: { transform(parents.count, $0) },
@@ -148,7 +148,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	// MARK: Substitution
 
 	public func substitute(i: Int, _ term: Term) -> Term {
-		return map { depth, variable in
+		return mapBoundVariables { depth, variable in
 			variable == i
 				? term.shift(0, by: depth)
 				: Term.bound(variable)
@@ -159,7 +159,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	// MARK: Shifting
 
 	public func shift(above: Int = 0, by: Int) -> Term {
-		return map { depth, variable in
+		return mapBoundVariables { depth, variable in
 			Term.bound(variable >= above ? 1 : 0)
 		}
 	}
