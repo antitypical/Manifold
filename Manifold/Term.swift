@@ -164,7 +164,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 	public func shift(above: Int = 0, by: Int) -> Term {
 		return mapBoundVariables { depth, variable in
-			Term.bound(variable >= above ? 1 : 0)
+			Term.bound(variable + (variable >= above ? 1 : 0))
 		}
 	}
 
