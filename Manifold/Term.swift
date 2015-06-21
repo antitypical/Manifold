@@ -186,7 +186,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 				a.typecheck(locals, globals)
 					.flatMap { t in
 						t.expression.analysis(
-							ifPi: { v, f in b.typecheck(locals, globals, against: v).map { f.substitute(0, $0) } },
+							ifPi: { v, f in b.typecheck(locals, globals, against: v).map { f.substitute($0) } },
 							otherwise: const(Either.left("illegal application of \(a) : \(t) to \(b)")))
 				}
 			},
@@ -201,7 +201,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 				a.typecheck(locals, globals)
 					.flatMap { t in
 						t.expression.analysis(
-							ifSigma: { v, f in Either.right(b ? f.substitute(0, v) : v) },
+							ifSigma: { v, f in Either.right(b ? f.substitute(v) : v) },
 							otherwise: const(Either.left("illegal projection of \(a) : \(t) field \(b ? 1 : 0)")))
 					}
 			},
@@ -252,7 +252,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 				globals[i] ?? .free(i)
 			},
 			ifApplication: { a, b -> Term in
-				a.evaluate(locals, globals).pi.map { $1.substitute(0, b.evaluate(locals, globals)) }!
+				a.evaluate(locals, globals).pi.map { $1.substitute(b.evaluate(locals, globals)) }!
 			},
 			ifPi: const(self),
 			ifProjection: { a, b -> Term in
