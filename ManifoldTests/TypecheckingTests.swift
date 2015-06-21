@@ -23,6 +23,11 @@ final class TypecheckingTests: XCTestCase {
 		assert(identity.typecheck().right, ==, Term.pi(.unitType, .unitType))
 	}
 
+	func testAbstractedAbstractionTypechecks() {
+		let identity = Term.pi(.type, .pi(0, 0))
+		assert(identity.typecheck().right, ==, Term.pi(.type, .pi(0, 1)))
+	}
+
 	func testProjectionTypechecksToTypeOfProjectedField() {
 		let product = Term.sigma(.unit, false)
 		assert(Term.projection(product, false).typecheck().right, ==, Term.unitType)
