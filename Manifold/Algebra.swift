@@ -14,6 +14,11 @@ public func cata<T, Fix: FixpointType where Fix.Recur == Checkable<Fix>>(f: Chec
 	return term |> (out >>> (map <| cata(f)) >>> f)
 }
 
+public func para<T, Fix: FixpointType where Fix.Recur == Checkable<Fix>>(f: Checkable<(Fix, T)> -> T)(_ term: Fix) -> T {
+	let fanout = { ($0, para(f)($0)) }
+	return term |> (out >>> (map <| fanout) >>> f)
+}
+
 /// A morphism which provides a given node’s ancestors as context during mapping.
 ///
 /// Named in honour of Zeppo Marx; the youngest of the Marx brothers, he left showbusiness to become an engineer. Likewise, this is the youngest of the morphisms presented herein, and while it was once an entertaining whimsy, it’s now buckling down to get some more serious work done.
@@ -22,11 +27,6 @@ public func cata<T, Fix: FixpointType where Fix.Recur == Checkable<Fix>>(f: Chec
 public func zeppo<T, Fix: FixpointType where Fix.Recur == Checkable<Fix>>(parents: [Fix] = [], _ f: ([Fix], Checkable<T>) -> T)(_ term: Fix) -> T {
 	let fanout = { zeppo(parents + [$0], f)($0) }
 	return term |> (out >>> (map <| fanout) >>> (f <| parents))
-}
-
-public func para<T, Fix: FixpointType where Fix.Recur == Checkable<Fix>>(f: Checkable<(Fix, T)> -> T)(_ term: Fix) -> T {
-	let fanout = { ($0, para(f)($0)) }
-	return term |> (out >>> (map <| fanout) >>> f)
 }
 
 
