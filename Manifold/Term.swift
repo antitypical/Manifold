@@ -161,14 +161,9 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	// MARK: Shifting
 
 	public func shift(above: Int = 0, by: Int) -> Term {
-		return expression.analysis(
-			ifBound: { Term.bound($0 + ($0 < above ? 0 : 1)) },
-			ifApplication: { Term.application($0.shift(above, by: by), $1.shift(above, by: by)) },
-			ifPi: { Term.pi($0.shift(above, by: by), $1.shift(above + 1, by: by)) },
-			ifProjection: { Term.projection($0.shift(above, by: by), $1) },
-			ifSigma: { Term.sigma($0.shift(above, by: by), $1.shift(above + 1, by: by)) },
-			ifIf: { Term.`if`($0.shift(above, by: by), then: $1.shift(above, by: by), `else`: $2.shift(above, by: by)) },
-			otherwise: const(self))
+		return map { depth, variable in
+			Term.bound(variable >= above ? 1 : 0)
+		}
 	}
 
 
