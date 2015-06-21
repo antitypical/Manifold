@@ -129,6 +129,22 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	}
 
 
+	// MARK: Bound variables
+
+	private func map(transform: (Int, Int) -> Term) -> Term {
+		return zeppo { parents, expression in
+			expression.analysis(
+				ifBound: { transform(parents.count, $0) },
+				ifApplication: { Term.application($0, $1) },
+				ifPi: { Term.pi($0, $1) },
+				ifProjection: { Term.projection($0, $1) },
+				ifSigma: { Term.sigma($0, $1) },
+				ifIf: { Term.`if`($0, then: $1, `else`: $2) },
+				otherwise: const(Term(expression)))
+		} (self)
+	}
+
+
 	// MARK: Substitution
 
 	public func substitute(i: Int, _ term: Term) -> Term {
