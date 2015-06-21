@@ -148,13 +148,11 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	// MARK: Substitution
 
 	public func substitute(i: Int, _ term: Term) -> Term {
-		return expression.analysis(
-			ifBound: { i == $0 ? term : self },
-			ifApplication: { Term.application($0.substitute(i, term), $1.substitute(i, term)) },
-			ifPi: { Term.pi($0.substitute(i, term), $1.substitute(i + 1, term)) },
-			ifProjection: { Term.projection($0.substitute(i, term), $1) },
-			ifSigma: { Term.sigma($0.substitute(i, term), $1.substitute(i + 1, term)) },
-			otherwise: const(self))
+		return map { depth, variable in
+			variable == i
+				? term.shift(0, by: depth)
+				: Term.bound(variable)
+		}
 	}
 
 
