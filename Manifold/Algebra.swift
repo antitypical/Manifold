@@ -31,21 +31,17 @@ public func zeppo<T, Fix: FixpointType where Fix.Recur == Checkable<Fix>>(parent
 
 
 public func ana<T, Fix: FixpointType where Fix.Recur == Checkable<Fix>>(f: T -> Checkable<T>)(_ seed: T) -> Fix {
-	return seed |> (`in` <<< (map <| ana(f)) <<< f)
+	return seed |> (Fix.init <<< (map <| ana(f)) <<< f)
 }
 
 
 public func apo<T>(f: T -> Checkable<Either<Term, T>>)(_ seed: T) -> Term {
-	return seed |> (`in` <<< (map { $0.either(ifLeft: id, ifRight: apo(f)) }) <<< f)
+	return seed |> (Term.init <<< (map { $0.either(ifLeft: id, ifRight: apo(f)) }) <<< f)
 }
 
 
 private func map<T, U>(f: T -> U)(_ c: Checkable<T>) -> Checkable<U> {
 	return Checkable.map(c)(f)
-}
-
-private func `in`<Fix: FixpointType>(v: Fix.Recur) -> Fix {
-	return Fix(v)
 }
 
 private func out<Fix: FixpointType>(v: Fix) -> Fix.Recur {

@@ -91,23 +91,23 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	}
 
 	public var bound: Int? {
-		return expression.analysis(ifBound: Prelude.unit, otherwise: const(nil))
+		return expression.analysis(ifBound: Optional.Some, otherwise: const(nil))
 	}
 
 	public var application: (Term, Term)? {
-		return expression.analysis(ifApplication: Prelude.unit, otherwise: const(nil))
+		return expression.analysis(ifApplication: Optional.Some, otherwise: const(nil))
 	}
 
 	public var pi: (Term, Term)? {
-		return expression.analysis(ifPi: Prelude.unit, otherwise: const(nil))
+		return expression.analysis(ifPi: Optional.Some, otherwise: const(nil))
 	}
 
 	public var sigma: (Term, Term)? {
-		return expression.analysis(ifSigma: Prelude.unit, otherwise: const(nil))
+		return expression.analysis(ifSigma: Optional.Some, otherwise: const(nil))
 	}
 
 	public var boolean: Bool? {
-		return expression.analysis(ifBoolean: Prelude.unit, otherwise: const(nil))
+		return expression.analysis(ifBoolean: Optional.Some, otherwise: const(nil))
 	}
 
 	private var _expression: Box<Checkable<Term>>
