@@ -15,11 +15,11 @@ public enum Name: Hashable, CustomDebugStringConvertible, CustomStringConvertibl
 	// MARK: Destructors
 
 	public var global: String? {
-		return analysis(ifGlobal: unit, ifLocal: const(nil))
+		return analysis(ifGlobal: Optional.Some, ifLocal: const(nil))
 	}
 
 	public var value: Int? {
-		return analysis(ifGlobal: const(nil), ifLocal: unit)
+		return analysis(ifGlobal: const(nil), ifLocal: Optional.Some)
 	}
 
 

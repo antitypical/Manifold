@@ -83,7 +83,7 @@ public func + (left: Error, right: Error) -> Error {
 public func &&& <T, U> (a: Either<Error, T>, b: Either<Error, U>) -> Either<Error, (T, U)> {
 	let right = (a.right &&& b.right).map(Either<Error, (T, U)>.right)
 	let lefts = (a.left &&& b.left).map(+).map(Either<Error, (T, U)>.left)
-	let left = (a.left.map(Either<Error, (T, U)>.left) ||| b.left.map(Either<Error, (T, U)>.left))?.either(ifLeft: unit, ifRight: unit)
+	let left = (a.left.map(Either<Error, (T, U)>.left) ||| b.left.map(Either<Error, (T, U)>.left))?.either(ifLeft: Optional.Some, ifRight: Optional.Some)
 	return (right ?? lefts ?? left)!
 }
 
