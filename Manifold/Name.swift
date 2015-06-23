@@ -1,17 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public enum Name: Hashable, CustomDebugStringConvertible, CustomStringConvertible, StringLiteralConvertible {
-	// MARK: Constructors
-
-	public static func global(name: String) -> Name {
-		return .Global(name)
-	}
-
-	public static func local(index: Int) -> Name {
-		return .Local(index)
-	}
-
-
 	// MARK: Destructors
 
 	public var global: String? {
