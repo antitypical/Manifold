@@ -10,3 +10,6 @@
 [submodule "External/Assertions"]
 	path = External/Assertions
 	url = https://github.com/antitypical/Assertions.git
+[submodule "External/Memo"]
+	path = External/Memo
+	url = https://github.com/robrix/Memo.git
