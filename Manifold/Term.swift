@@ -2,7 +2,7 @@
 
 public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, FixpointType, Hashable, IntegerLiteralConvertible, CustomStringConvertible {
 	public init(_ expression: Checkable<Term>) {
-		self._expression = Box(expression)
+		self._expression = Memo(evaluated: expression)
 	}
 
 
@@ -110,7 +110,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		return expression.analysis(ifBoolean: Optional.Some, otherwise: const(nil))
 	}
 
-	private var _expression: Box<Checkable<Term>>
+	private var _expression: Memo<Checkable<Term>>
 	public var expression: Checkable<Term> {
 		return _expression.value
 	}
@@ -361,6 +361,6 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 }
 
 
-import Box
 import Either
+import Memo
 import Prelude
