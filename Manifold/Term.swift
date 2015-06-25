@@ -131,6 +131,18 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 	// MARK: Bound variables
 
+	private var maxBoundVariable: Int {
+		return cata {
+			$0.analysis(
+				ifApplication: max,
+				ifPi: { max($0, $1) + 1 },
+				ifProjection: { $0.0 },
+				ifSigma: { max($0, $1) + 1 },
+				ifIf: { max($0, $1, $2) },
+				otherwise: const(-1))
+		} (self)
+	}
+
 	private func mapBoundVariables(transform: (Int, Int) -> Term) -> Term {
 		return zeppo { parents, expression in
 			expression.analysis(
