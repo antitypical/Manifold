@@ -86,7 +86,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 	// MARK: Higher-order construction
 
-	public static func function(type: Term, _ f: Term -> Term) -> Term {
+	public static func pi(type: Term, _ f: Term -> Term) -> Term {
 		var n = 0
 		let body = f(Term { .Bound(n) })
 		n = body.maxBoundVariable + 1

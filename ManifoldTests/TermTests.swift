@@ -32,7 +32,7 @@ final class TermTests: XCTestCase {
 	}
 }
 
-private let identity = Term.function(.type) { Term.function($0, id) }
+private let identity = Term.pi(.type) { Term.pi($0, id) }
 private let constant = Term.pi(.type, .pi(.type, .pi(1, .pi(1, 1))))
 
 
