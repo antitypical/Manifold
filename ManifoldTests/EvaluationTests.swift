@@ -14,12 +14,12 @@ final class EvaluationTests: XCTestCase {
 	}
 
 	func testApplicationOfIdentityAbstractionToUnitTermEvaluatesToUnitTerm() {
-		let identity = Term.pi(.unitType, id)
+		let identity = Term.lambda(.unitType, id)
 		assert(Term.application(identity, Term.unit).evaluate(), ==, Term.unit)
 	}
 
 	func testSimpleAbstractionEvaluatesToItself() {
-		let identity = Term.pi(.unitType, id)
+		let identity = Term.lambda(.unitType, id)
 		assert(identity.evaluate(), ==, identity)
 	}
 

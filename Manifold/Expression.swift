@@ -10,7 +10,7 @@ public enum Expression<Recur> {
 		@noescape ifBound: Int -> T,
 		@noescape ifFree: Name -> T,
 		@noescape ifApplication: (Recur, Recur) -> T,
-		@noescape ifPi: (Int, Recur, Recur) -> T,
+		@noescape ifLambda: (Int, Recur, Recur) -> T,
 		@noescape ifProjection: (Recur, Bool) -> T,
 		@noescape ifSigma: (Int, Recur, Recur) -> T,
 		@noescape ifBooleanType: () -> T,
@@ -29,8 +29,8 @@ public enum Expression<Recur> {
 			return ifFree(x)
 		case let .Application(a, b):
 			return ifApplication(a, b)
-		case let .Pi(i, a, b):
-			return ifPi(i, a, b)
+		case let .Lambda(i, a, b):
+			return ifLambda(i, a, b)
 		case let .Projection(a, b):
 			return ifProjection(a, b)
 		case let .Sigma(i, a, b):
@@ -51,7 +51,7 @@ public enum Expression<Recur> {
 		ifBound: (Int -> T)? = nil,
 		ifFree: (Name -> T)? = nil,
 		ifApplication: ((Recur, Recur) -> T)? = nil,
-		ifPi: ((Int, Recur, Recur) -> T)? = nil,
+		ifLambda: ((Int, Recur, Recur) -> T)? = nil,
 		ifProjection: ((Recur, Bool) -> T)? = nil,
 		ifSigma: ((Int, Recur, Recur) -> T)? = nil,
 		ifBooleanType: (() -> T)? = nil,
@@ -65,7 +65,7 @@ public enum Expression<Recur> {
 			ifBound: { ifBound?($0) ?? otherwise() },
 			ifFree: { ifFree?($0) ?? otherwise() },
 			ifApplication: { ifApplication?($0) ?? otherwise() },
-			ifPi: { ifPi?($0) ?? otherwise() },
+			ifLambda: { ifLambda?($0) ?? otherwise() },
 			ifProjection: { ifProjection?($0) ?? otherwise() },
 			ifSigma: { ifSigma?($0) ?? otherwise() },
 			ifBooleanType: { ifBooleanType?() ?? otherwise() },
@@ -84,7 +84,7 @@ public enum Expression<Recur> {
 			ifBound: { .Bound($0) },
 			ifFree: { .Free($0) },
 			ifApplication: { .Application(transform($0), transform($1)) },
-			ifPi: { .Pi($0, transform($1), transform($2)) },
+			ifLambda: { .Lambda($0, transform($1), transform($2)) },
 			ifProjection: { .Projection(transform($0), $1) },
 			ifSigma: { .Sigma($0, transform($1), transform($2)) },
 			ifBooleanType: const(.BooleanType),
@@ -101,7 +101,7 @@ public enum Expression<Recur> {
 	case Bound(Int)
 	case Free(Name)
 	case Application(Recur, Recur)
-	case Pi(Int, Recur, Recur) // (Πx:A)B where B can depend on x
+	case Lambda(Int, Recur, Recur) // (Πx:A)B where B can depend on x
 	case Projection(Recur, Bool)
 	case Sigma(Int, Recur, Recur) // (Σx:A)B where B can depend on x
 	case BooleanType

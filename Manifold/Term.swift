@@ -49,8 +49,8 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	}
 
 
-	public static func pi(variable: Int, _ type: Term, _ body: Term) -> Term {
-		return Term(.Pi(variable, type, body))
+	public static func lambda(variable: Int, _ type: Term, _ body: Term) -> Term {
+		return Term(.Lambda(variable, type, body))
 	}
 
 	public static func sigma(variable: Int, _ type: Term, _ body: Term) -> Term {
@@ -82,11 +82,11 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 	// MARK: Higher-order construction
 
-	public static func pi(type: Term, _ f: Term -> Term) -> Term {
+	public static func lambda(type: Term, _ f: Term -> Term) -> Term {
 		var n = 0
 		let body = f(Term { .Bound(n) })
 		n = body.maxBoundVariable + 1
-		return Term { .Pi(n, type, body) }
+		return Term { .Lambda(n, type, body) }
 	}
 
 	public static func sigma(type: Term, _ f: Term -> Term) -> Term {
@@ -119,8 +119,8 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		return expression.analysis(ifApplication: Optional.Some, otherwise: const(nil))
 	}
 
-	public var pi: (Int, Term, Term)? {
-		return expression.analysis(ifPi: Optional.Some, otherwise: const(nil))
+	public var lambda: (Int, Term, Term)? {
+		return expression.analysis(ifLambda: Optional.Some, otherwise: const(nil))
 	}
 
 	public var sigma: (Int, Term, Term)? {
@@ -156,7 +156,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		return cata {
 			$0.analysis(
 				ifApplication: max,
-				ifPi: { max($0.0, $0.1) },
+				ifLambda: { max($0.0, $0.1) },
 				ifProjection: { $0.0 },
 				ifSigma: { max($0.0, $0.1) },
 				ifIf: { max($0, $1, $2) },
@@ -172,7 +172,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			$0.analysis(
 				ifBound: { $0 == i ? term : Term.bound($0) },
 				ifApplication: Term.application,
-				ifPi: Term.pi,
+				ifLambda: Term.lambda,
 				ifProjection: Term.projection,
 				ifSigma: Term.sigma,
 				ifIf: Term.`if`,
@@ -199,14 +199,14 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			return a.typecheck(locals, globals)
 				.flatMap { t in
 					t.expression.analysis(
-						ifPi: { i, v, f in b.typecheck(locals, globals, against: v).map { f.substitute(i, $0) } },
+						ifLambda: { i, v, f in b.typecheck(locals, globals, against: v).map { f.substitute(i, $0) } },
 						otherwise: const(Either.left("illegal application of \(a) : \(t) to \(b)")))
 				}
-		case let .Pi(i, t, b):
+		case let .Lambda(i, t, b):
 			return t.typecheck(locals, globals)
 				.flatMap { _ in
 					b.typecheck(locals + [ i: t ], globals)
-						.map { Term.pi(t, const($0)) }
+						.map { Term.lambda(t, const($0)) }
 				}
 		case let .Projection(a, b):
 			return a.typecheck(locals, globals)
@@ -240,7 +240,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	public func typecheck(locals: [Int: Term], _ globals: [Name: Term], against: Term) -> Either<Error, Term> {
 		return typecheck(locals, globals)
 			.flatMap { t in
-				(t == against) || (against == .type && t == Term.pi(.type, const(.type)))
+				(t == against) || (against == .type && t == Term.lambda(.type, const(.type)))
 					? Either.right(t)
 					: Either.left("type mismatch: expected (\(String(reflecting: self))) : (\(String(reflecting: against))), actually (\(String(reflecting: self))) : (\(String(reflecting: t))) in local environment \(locals) global environment \(globals)")
 			}
@@ -256,7 +256,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		case let .Free(i):
 			return globals[i] ?? .free(i)
 		case let .Application(a, b):
-			return a.evaluate(locals, globals).pi.map { $2.substitute($0, b.evaluate(locals, globals)) }!
+			return a.evaluate(locals, globals).lambda.map { $2.substitute($0, b.evaluate(locals, globals)) }!
 		case let .Projection(a, b):
 			return a.evaluate(locals, globals).sigma.map { b ? $2 : $1 }!
 		case let .If(condition, then, `else`):
@@ -290,7 +290,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifBound: { "Bound(\($0))" },
 			ifFree: { "Free(\($0))" },
 			ifApplication: { "\($0)(\($1))" },
-			ifPi: { "Π \($0) : \($1) . \($2)" },
+			ifLambda: { "Π \($0) : \($1) . \($2)" },
 			ifProjection: { "\($0).\($1 ? 1 : 0)" },
 			ifSigma: { "Σ \($0) : \($1) . \($2)" },
 			ifBooleanType: const("Boolean"),
@@ -316,7 +316,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifBound: { 3 ^ $0.hashValue },
 			ifFree: { 5 ^ $0.hashValue },
 			ifApplication: { 7 ^ $0.hashValue ^ $1.hashValue },
-			ifPi: { 11 ^ $0 ^ $1.hashValue ^ $2.hashValue },
+			ifLambda: { 11 ^ $0 ^ $1.hashValue ^ $2.hashValue },
 			ifProjection: { 13 ^ $0.hashValue ^ $1.hashValue },
 			ifSigma: { 17 ^ $0 ^ $1.hashValue ^ $2.hashValue },
 			ifBooleanType: const(19),
@@ -349,7 +349,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifBound: alphabetize,
 			ifFree: { $0.analysis(ifGlobal: id, ifLocal: alphabetize) },
 			ifApplication: { "\($0.1)(\($1.1))" },
-			ifPi: {
+			ifLambda: {
 				"Π \(alphabetize($0)) : \($1.1) . \($2.1)"
 			},
 			ifProjection: {
