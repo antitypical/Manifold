@@ -10,9 +10,9 @@ public enum Expression<Recur> {
 		@noescape ifBound: Int -> T,
 		@noescape ifFree: Name -> T,
 		@noescape ifApplication: (Recur, Recur) -> T,
-		@noescape ifPi: (Recur, Recur) -> T,
+		@noescape ifPi: (Int, Recur, Recur) -> T,
 		@noescape ifProjection: (Recur, Bool) -> T,
-		@noescape ifSigma: (Recur, Recur) -> T,
+		@noescape ifSigma: (Int, Recur, Recur) -> T,
 		@noescape ifBooleanType: () -> T,
 		@noescape ifBoolean: Bool -> T,
 		@noescape ifIf: (Recur, Recur, Recur) -> T) -> T {
@@ -29,12 +29,12 @@ public enum Expression<Recur> {
 			return ifFree(x)
 		case let .Application(a, b):
 			return ifApplication(a, b)
-		case let .Pi(_, a, b):
-			return ifPi(a, b)
+		case let .Pi(i, a, b):
+			return ifPi(i, a, b)
 		case let .Projection(a, b):
 			return ifProjection(a, b)
-		case let .Sigma(_, a, b):
-			return ifSigma(a, b)
+		case let .Sigma(i, a, b):
+			return ifSigma(i, a, b)
 		case .BooleanType:
 			return ifBooleanType()
 		case let .Boolean(b):
@@ -65,9 +65,9 @@ public enum Expression<Recur> {
 			ifBound: { ifBound?($0) ?? otherwise() },
 			ifFree: { ifFree?($0) ?? otherwise() },
 			ifApplication: { ifApplication?($0) ?? otherwise() },
-			ifPi: { ifPi?($0) ?? otherwise() },
+			ifPi: { ifPi?($1, $2) ?? otherwise() },
 			ifProjection: { ifProjection?($0) ?? otherwise() },
-			ifSigma: { ifSigma?($0) ?? otherwise() },
+			ifSigma: { ifSigma?($1, $2) ?? otherwise() },
 			ifBooleanType: { ifBooleanType?() ?? otherwise() },
 			ifBoolean: { ifBoolean?($0) ?? otherwise() },
 			ifIf: { ifIf?($0) ?? otherwise() })
@@ -84,9 +84,9 @@ public enum Expression<Recur> {
 			ifBound: { .Bound($0) },
 			ifFree: { .Free($0) },
 			ifApplication: { .Application(transform($0), transform($1)) },
-			ifPi: { .Pi(-1, transform($0), transform($1)) },
+			ifPi: { .Pi($0, transform($1), transform($2)) },
 			ifProjection: { .Projection(transform($0), $1) },
-			ifSigma: { .Sigma(-1, transform($0), transform($1)) },
+			ifSigma: { .Sigma($0, transform($1), transform($2)) },
 			ifBooleanType: const(.BooleanType),
 			ifBoolean: { .Boolean($0) },
 			ifIf: { .If(transform($0), transform($1), transform($2)) })

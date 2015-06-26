@@ -220,7 +220,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 							otherwise: const(Either.left("illegal application of \(a) : \(t) to \(b)")))
 				}
 			},
-			ifPi: { t, b -> Either<Error, Term> in
+			ifPi: { _, t, b -> Either<Error, Term> in
 				t.typecheck(locals, globals)
 					.flatMap { _ in
 						b.typecheck([ t.shift(by: 1) ] + locals, globals)
@@ -235,7 +235,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 							otherwise: const(Either.left("illegal projection of \(a) : \(t) field \(b ? 1 : 0)")))
 					}
 			},
-			ifSigma: { a, b -> Either<Error, Term> in
+			ifSigma: { _, a, b -> Either<Error, Term> in
 				a.typecheck(locals, globals)
 					.flatMap { a in
 						let t = a.evaluate()
@@ -316,9 +316,9 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifBound: { "Bound(\($0))" },
 			ifFree: { "Free(\($0))" },
 			ifApplication: { "\($0)(\($1))" },
-			ifPi: { "Π \($0) . \($1)" },
+			ifPi: { "Π \($0) : \($1) . \($2)" },
 			ifProjection: { "\($0).\($1 ? 1 : 0)" },
-			ifSigma: { "Σ \($0) . \($1)" },
+			ifSigma: { "Σ \($0) : \($1) . \($2)" },
 			ifBooleanType: const("Boolean"),
 			ifBoolean: { String(reflecting: $0) },
 			ifIf: { "if \($0) then \($1) else \($2)" })
@@ -342,9 +342,9 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifBound: { 3 ^ $0.hashValue },
 			ifFree: { 5 ^ $0.hashValue },
 			ifApplication: { 7 ^ $0.hashValue ^ $1.hashValue },
-			ifPi: { 11 ^ $0.hashValue ^ $1.hashValue },
+			ifPi: { 11 ^ $0 ^ $1.hashValue ^ $2.hashValue },
 			ifProjection: { 13 ^ $0.hashValue ^ $1.hashValue },
-			ifSigma: { 17 ^ $0.hashValue ^ $1.hashValue },
+			ifSigma: { 17 ^ $0 ^ $1.hashValue ^ $2.hashValue },
 			ifBooleanType: const(19),
 			ifBoolean: { 23 ^ $0.hashValue },
 			ifIf: { 29 ^ $0.hashValue ^ $1.hashValue ^ $2.hashValue })
@@ -376,13 +376,13 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifFree: { $0.analysis(ifGlobal: id, ifLocal: alphabetize) },
 			ifApplication: { "\($0.1)(\($1.1))" },
 			ifPi: {
-				"Π : \($0.1) . \($1.1)"
+				"Π \($0) : \($1.1) . \($2.1)"
 			},
 			ifProjection: {
 				"\($0.1).\($1 ? 1 : 0)"
 			},
 			ifSigma: {
-				"Σ \($0.1) . \($1.1)"
+				"Σ \($0) : \($1.1) . \($2.1)"
 			},
 			ifBooleanType: const("Boolean"),
 			ifBoolean: { String($0) },
