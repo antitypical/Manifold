@@ -116,11 +116,11 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		return expression.analysis(ifApplication: Optional.Some, otherwise: const(nil))
 	}
 
-	public var pi: (Term, Term)? {
+	public var pi: (Int, Term, Term)? {
 		return expression.analysis(ifPi: Optional.Some, otherwise: const(nil))
 	}
 
-	public var sigma: (Term, Term)? {
+	public var sigma: (Int, Term, Term)? {
 		return expression.analysis(ifSigma: Optional.Some, otherwise: const(nil))
 	}
 
@@ -153,9 +153,9 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		return cata {
 			$0.analysis(
 				ifApplication: max,
-				ifPi: { max($0, $1) + 1 },
+				ifPi: { $0.0 },
 				ifProjection: { $0.0 },
-				ifSigma: { max($0, $1) + 1 },
+				ifSigma: { $0.0 },
 				ifIf: { max($0, $1, $2) },
 				otherwise: const(-1))
 		} (self)
@@ -166,9 +166,9 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			expression.analysis(
 				ifBound: { transform(parents.count, $0) },
 				ifApplication: { Term.application($0, $1) },
-				ifPi: { Term.pi($0, $1) },
+				ifPi: { Term.pi($1, $2) },
 				ifProjection: { Term.projection($0, $1) },
-				ifSigma: { Term.sigma($0, $1) },
+				ifSigma: { Term.sigma($1, $2) },
 				ifIf: { Term.`if`($0, then: $1, `else`: $2) },
 				otherwise: const(Term(expression)))
 		} (self)
@@ -216,7 +216,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 				a.typecheck(locals, globals)
 					.flatMap { t in
 						t.expression.analysis(
-							ifPi: { v, f in b.typecheck(locals, globals, against: v).map { f.substitute($0) } },
+							ifPi: { _, v, f in b.typecheck(locals, globals, against: v).map { f.substitute($0) } },
 							otherwise: const(Either.left("illegal application of \(a) : \(t) to \(b)")))
 				}
 			},
@@ -231,7 +231,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 				a.typecheck(locals, globals)
 					.flatMap { t in
 						t.expression.analysis(
-							ifSigma: { v, f in Either.right(b ? f.substitute(v) : v) },
+							ifSigma: { _, v, f in Either.right(b ? f.substitute(v) : v) },
 							otherwise: const(Either.left("illegal projection of \(a) : \(t) field \(b ? 1 : 0)")))
 					}
 			},
@@ -282,11 +282,11 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 				globals[i] ?? .free(i)
 			},
 			ifApplication: { a, b -> Term in
-				a.evaluate(locals, globals).pi.map { $1.substitute(b.evaluate(locals, globals)) }!
+				a.evaluate(locals, globals).pi.map { $2.substitute(b.evaluate(locals, globals)) }!
 			},
 			ifPi: const(self),
 			ifProjection: { a, b -> Term in
-				a.evaluate(locals, globals).sigma.map { b ? $1 : $0 }!
+				a.evaluate(locals, globals).sigma.map { b ? $2 : $1 }!
 			},
 			ifSigma: const(self),
 			ifBooleanType: const(self),
