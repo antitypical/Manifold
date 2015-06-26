@@ -190,10 +190,6 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 	// MARK: Substitution
 
-	public func substitute(term: Term) -> Term {
-		return substitute(0, term)
-	}
-
 	private func substitute(i: Int, _ term: Term) -> Term {
 		return mapBoundVariables { depth, variable in
 			variable == i
@@ -221,7 +217,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			return a.typecheck(locals, globals)
 				.flatMap { t in
 					t.expression.analysis(
-						ifPi: { i, v, f in b.typecheck(locals, globals, against: v).map { f.substitute($0) } },
+						ifPi: { i, v, f in b.typecheck(locals, globals, against: v).map { f.substitute(i, $0) } },
 						otherwise: const(Either.left("illegal application of \(a) : \(t) to \(b)")))
 				}
 		case let .Pi(i, t, b):
@@ -234,7 +230,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			return a.typecheck(locals, globals)
 				.flatMap { t in
 					t.expression.analysis(
-						ifSigma: { i, v, f in Either.right(b ? f.substitute(v) : v) },
+						ifSigma: { i, v, f in Either.right(b ? f.substitute(i, v) : v) },
 						otherwise: const(Either.left("illegal projection of \(a) : \(t) field \(b ? 1 : 0)")))
 				}
 		case let .Sigma(i, a, b):
