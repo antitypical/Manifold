@@ -5,6 +5,10 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		self._expression = Memo(evaluated: expression)
 	}
 
+	private init(_ expression: Memo<Checkable<Term>>) {
+		_expression = expression
+	}
+
 
 	// MARK: Constructors
 
