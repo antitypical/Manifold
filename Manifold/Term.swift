@@ -191,23 +191,14 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	// MARK: Substitution
 
 	public func substitute(term: Term) -> Term {
-		return substitute(0, term.shift(by: 1)).shift(by: -1)
+		return substitute(0, term)
 	}
 
 	private func substitute(i: Int, _ term: Term) -> Term {
 		return mapBoundVariables { depth, variable in
 			variable == i
-				? term.shift(i, by: depth)
+				? term
 				: Term.bound(variable)
-		}
-	}
-
-
-	// MARK: Shifting
-
-	public func shift(above: Int = 0, by: Int) -> Term {
-		return mapBoundVariables { depth, variable in
-			Term.bound(variable + (variable >= above ? 1 : 0))
 		}
 	}
 
@@ -287,7 +278,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		case let .Free(i):
 			return globals[i] ?? .free(i)
 		case let .Application(a, b):
-			return a.evaluate(locals, globals).pi.map { $2.substitute(b.evaluate(locals, globals)) }!
+			return a.evaluate(locals, globals).pi.map { $2.substitute($0, b.evaluate(locals, globals)) }!
 		case let .Projection(a, b):
 			return a.evaluate(locals, globals).sigma.map { b ? $2 : $1 }!
 		case let .If(condition, then, `else`):
