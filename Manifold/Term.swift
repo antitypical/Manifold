@@ -53,17 +53,17 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	}
 
 
-	public static func pi(type: Term, _ body: Term) -> Term {
-		return Term(.Pi(-1, type, body))
+	public static func pi(variable: Int, _ type: Term, _ body: Term) -> Term {
+		return Term(.Pi(variable, type, body))
 	}
 
-	public static func sigma(type: Term, _ body: Term) -> Term {
-		return Term(.Sigma(-1, type, body))
+	public static func sigma(variable: Int, _ type: Term, _ body: Term) -> Term {
+		return Term(.Sigma(variable, type, body))
 	}
 
 
 	public static func sum(a: Term, _ b: Term) -> Term {
-		return sigma(booleanType, `if`(0, then: a, `else`: b))
+		return sigma(booleanType) { c in `if`(c, then: a, `else`: b) }
 	}
 
 	public static func sum(terms: [Term]) -> Term {
@@ -223,31 +223,31 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 				a.typecheck(locals, globals)
 					.flatMap { t in
 						t.expression.analysis(
-							ifPi: { _, v, f in b.typecheck(locals, globals, against: v).map { f.substitute($0) } },
+							ifPi: { i, v, f in b.typecheck(locals, globals, against: v).map { f.substitute($0) } },
 							otherwise: const(Either.left("illegal application of \(a) : \(t) to \(b)")))
 				}
 			},
 			ifPi: { _, t, b -> Either<Error, Term> in
 				t.typecheck(locals, globals)
 					.flatMap { _ in
-						b.typecheck([ t.shift(by: 1) ] + locals, globals)
-							.map(curry(Term.pi)(t))
+						b.typecheck(locals + [ t ], globals)
+							.map { Term.pi(t, const($0)) }
 					}
 			},
 			ifProjection: { a, b -> Either<Error, Term> in
 				a.typecheck(locals, globals)
 					.flatMap { t in
 						t.expression.analysis(
-							ifSigma: { _, v, f in Either.right(b ? f.substitute(v) : v) },
+							ifSigma: { i, v, f in Either.right(b ? f.substitute(v) : v) },
 							otherwise: const(Either.left("illegal projection of \(a) : \(t) field \(b ? 1 : 0)")))
 					}
 			},
-			ifSigma: { _, a, b -> Either<Error, Term> in
+			ifSigma: { i, a, b -> Either<Error, Term> in
 				a.typecheck(locals, globals)
 					.flatMap { a in
 						let t = a.evaluate()
-						return b.typecheck([ t ] + locals, globals)
-							.map { Term.sigma(t, $0) }
+						return b.typecheck(locals + [ t ], globals)
+							.map { Term.sigma(t, const($0)) }
 					}
 			},
 			ifBooleanType: const(.right(.type)),
@@ -259,7 +259,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 							.map { a, b in
 								a == b
 									? a
-									: Term.sigma(.booleanType, Term.`if`(.bound(0), then: a, `else`: b))
+									: Term.sigma(.booleanType) { Term.`if`($0, then: a, `else`: b) }
 							}
 					}
 			})
@@ -268,7 +268,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	public func typecheck(locals: [Term], _ globals: [Name: Term], against: Term) -> Either<Error, Term> {
 		return typecheck(locals, globals)
 			.flatMap { t in
-				(t == against) || (against == .type && t == Term.pi(.type, .type))
+				(t == against) || (against == .type && t == Term.pi(.type, const(.type)))
 					? Either.right(t)
 					: Either.left("type mismatch: expected (\(String(reflecting: self))) : (\(String(reflecting: against))), actually (\(String(reflecting: self))) : (\(String(reflecting: t))) in local environment \(locals) global environment \(globals)")
 			}
