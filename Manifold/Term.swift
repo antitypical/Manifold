@@ -57,8 +57,18 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		return Term(.Pi(variable, type, body))
 	}
 
+	/// Constructs a non-dependent function type.
+	public static func function(parameter: Term, _ `return`: Term) -> Term {
+		return Term.pi(parameter, const(`return`))
+	}
+
 	public static func sigma(variable: Int, _ type: Term, _ body: Term) -> Term {
 		return Term(.Sigma(variable, type, body))
+	}
+
+	/// Constructs the non-dependent product of a and b.
+	public static func product(a: Term, _ b: Term) -> Term {
+		return Term.sigma(a, const(b))
 	}
 
 
