@@ -53,18 +53,8 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		return Term(.Pi(variable, type, body))
 	}
 
-	/// Constructs a non-dependent function type.
-	public static func function(parameter: Term, _ `return`: Term) -> Term {
-		return Term.pi(parameter, const(`return`))
-	}
-
 	public static func sigma(variable: Int, _ type: Term, _ body: Term) -> Term {
 		return Term(.Sigma(variable, type, body))
-	}
-
-	/// Constructs the non-dependent product of a and b.
-	public static func product(a: Term, _ b: Term) -> Term {
-		return Term.sigma(a, const(b))
 	}
 
 
@@ -250,7 +240,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	public func typecheck(locals: [Int: Term], _ globals: [Name: Term], against: Term) -> Either<Error, Term> {
 		return typecheck(locals, globals)
 			.flatMap { t in
-				(t == against) || (against == .type && t == Term.function(.type, .type))
+				(t == against) || (against == .type && t == Term.pi(.type, const(.type)))
 					? Either.right(t)
 					: Either.left("type mismatch: expected (\(String(reflecting: self))) : (\(String(reflecting: against))), actually (\(String(reflecting: self))) : (\(String(reflecting: t))) in local environment \(locals) global environment \(globals)")
 			}
