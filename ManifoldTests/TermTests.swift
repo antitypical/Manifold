@@ -2,8 +2,8 @@
 
 final class TermTests: XCTestCase {
 	func testPiTypeDescription() {
-		assert(identity.description, ==, "Π b : Type . Π a : b . b")
-		assert(identity.typecheck().right?.description, ==, "Π b : Type . Π a : b . a")
+		assert(identity.description, ==, "Π b : Type . Π a : b . a")
+		assert(identity.typecheck().right?.description, ==, "Π b : Type . Π a : b . b")
 	}
 
 	func testSigmaTypeDescription() {
