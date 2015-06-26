@@ -278,7 +278,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	public func typecheck(locals: [Term], _ globals: [Name: Term], against: Term) -> Either<Error, Term> {
 		return typecheck(locals, globals)
 			.flatMap { t in
-				(t == against) || (against == .type && t == Term.pi(.type, const(.type)))
+				(t == against) || (against == .type && t == Term.function(.type, .type))
 					? Either.right(t)
 					: Either.left("type mismatch: expected (\(String(reflecting: self))) : (\(String(reflecting: against))), actually (\(String(reflecting: self))) : (\(String(reflecting: t))) in local environment \(locals) global environment \(globals)")
 			}
