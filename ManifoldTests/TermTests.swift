@@ -1,9 +1,9 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 final class TermTests: XCTestCase {
-	func testPiTypeDescription() {
-		assert(identity.description, ==, "Π b : Type . Π a : b . a")
-		assert(identity.typecheck().right?.description, ==, "Π b : Type . Π a : b . b")
+	func testLambdaTypeDescription() {
+		assert(identity.description, ==, "λ b : Type . λ a : b . a")
+		assert(identity.typecheck().right?.description, ==, "λ b : Type . λ a : b . b")
 	}
 
 	func testSigmaTypeDescription() {
@@ -28,13 +28,13 @@ final class TermTests: XCTestCase {
 	}
 
 	func testHigherOrderConstruction() {
-		assert(identity, ==, Term.pi(1, .type, Term.pi(0, 1, 0)))
-		assert(constant, ==, Term.pi(3, .type, .pi(2, .type, .pi(1, 3, .pi(0, 2, 1)))))
+		assert(identity, ==, Term.lambda(1, .type, Term.lambda(0, 1, 0)))
+		assert(constant, ==, Term.lambda(3, .type, .lambda(2, .type, .lambda(1, 3, .lambda(0, 2, 1)))))
 	}
 }
 
-let identity = Term.pi(.type) { Term.pi($0, id) }
-let constant = Term.pi(.type) { A in Term.pi(.type) { B in Term.pi(A) { a in Term.pi(B, const(a)) } } }
+let identity = Term.lambda(.type) { Term.lambda($0, id) }
+let constant = Term.lambda(.type) { A in Term.lambda(.type) { B in Term.lambda(A) { a in Term.lambda(B, const(a)) } } }
 
 
 import Assertions

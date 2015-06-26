@@ -14,7 +14,7 @@ public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Re
 		return m == n
 	case let (.Application(t1, t2), .Application(u1, u2)):
 		return t1 == u1 && t2 == u2
-	case let (.Pi(i, t, a), .Pi(j, u, b)):
+	case let (.Lambda(i, t, a), .Lambda(j, u, b)):
 		return i == j && t == u && a == b
 	case let (.Projection(p, f), .Projection(q, g)):
 		return p == q && f == g
