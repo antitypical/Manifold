@@ -215,60 +215,57 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	// MARK: Type-checking
 
 	public func typecheck(locals: [Int: Term] = [:], _ globals: [Name: Term] = [:]) -> Either<Error, Term> {
-		return expression.analysis(
-			ifUnit: const(.right(.unitType)),
-			ifUnitType: const(.right(.type)),
-			ifType: { .right(.type($0 + 1)) },
-			ifBound: { i -> Either<Error, Term> in
-				locals[i].map(Either.right) ?? Either.left("unexpected bound variable \(i)")
-			},
-			ifFree: { i -> Either<Error, Term> in
-				globals[i].map(Either.right) ?? Either.left("unexpected free variable \(i)")
-			},
-			ifApplication: { a, b -> Either<Error, Term> in
-				a.typecheck(locals, globals)
-					.flatMap { t in
-						t.expression.analysis(
-							ifPi: { i, v, f in b.typecheck(locals, globals, against: v).map { f.substitute($0) } },
-							otherwise: const(Either.left("illegal application of \(a) : \(t) to \(b)")))
+		switch expression {
+		case .Unit:
+			return .right(.unitType)
+		case .UnitType, .BooleanType:
+			return .right(.type)
+		case let .Type(n):
+			return .right(.type(n + 1))
+		case let .Bound(i):
+			return locals[i].map(Either.right) ?? Either.left("unexpected bound variable \(i)")
+		case let .Free(i):
+			return globals[i].map(Either.right) ?? Either.left("unexpected free variable \(i)")
+		case let .Application(a, b):
+			return a.typecheck(locals, globals)
+				.flatMap { t in
+					t.expression.analysis(
+						ifPi: { i, v, f in b.typecheck(locals, globals, against: v).map { f.substitute($0) } },
+						otherwise: const(Either.left("illegal application of \(a) : \(t) to \(b)")))
 				}
-			},
-			ifPi: { i, t, b -> Either<Error, Term> in
-				t.typecheck(locals, globals)
-					.flatMap { _ in
-						b.typecheck(locals + [ i: t ], globals)
-							.map { Term.pi(t, const($0)) }
-					}
-			},
-			ifProjection: { a, b -> Either<Error, Term> in
-				a.typecheck(locals, globals)
-					.flatMap { t in
-						t.expression.analysis(
-							ifSigma: { i, v, f in Either.right(b ? f.substitute(v) : v) },
-							otherwise: const(Either.left("illegal projection of \(a) : \(t) field \(b ? 1 : 0)")))
-					}
-			},
-			ifSigma: { i, a, b -> Either<Error, Term> in
-				a.typecheck(locals, globals)
-					.flatMap { a in
-						let t = a.evaluate()
-						return b.typecheck(locals + [ i: t ], globals)
-							.map { Term.sigma(t, const($0)) }
-					}
-			},
-			ifBooleanType: const(.right(.type)),
-			ifBoolean: const(.right(.booleanType)),
-			ifIf: { condition, then, `else` -> Either<Error, Term> in
-				condition.typecheck(locals, globals, against: .booleanType)
-					.flatMap { _ in
-						(then.typecheck(locals, globals) &&& `else`.typecheck(locals, globals))
-							.map { a, b in
-								a == b
-									? a
-									: Term.sigma(.booleanType) { Term.`if`($0, then: a, `else`: b) }
-							}
-					}
-			})
+		case let .Pi(i, t, b):
+			return t.typecheck(locals, globals)
+				.flatMap { _ in
+					b.typecheck(locals + [ i: t ], globals)
+						.map { Term.pi(t, const($0)) }
+				}
+		case let .Projection(a, b):
+			return a.typecheck(locals, globals)
+				.flatMap { t in
+					t.expression.analysis(
+						ifSigma: { i, v, f in Either.right(b ? f.substitute(v) : v) },
+						otherwise: const(Either.left("illegal projection of \(a) : \(t) field \(b ? 1 : 0)")))
+				}
+		case let .Sigma(i, a, b):
+			return a.typecheck(locals, globals)
+				.flatMap { a in
+					let t = a.evaluate()
+					return b.typecheck(locals + [ i: t ], globals)
+						.map { Term.sigma(t, const($0)) }
+				}
+		case .Boolean:
+			return .right(.booleanType)
+		case let .If(condition, then, `else`):
+			return condition.typecheck(locals, globals, against: .booleanType)
+				.flatMap { _ in
+					(then.typecheck(locals, globals) &&& `else`.typecheck(locals, globals))
+						.map { a, b in
+							a == b
+								? a
+								: Term.sigma(.booleanType) { Term.`if`($0, then: a, `else`: b) }
+						}
+				}
+		}
 	}
 
 	public func typecheck(locals: [Int: Term], _ globals: [Name: Term], against: Term) -> Either<Error, Term> {
