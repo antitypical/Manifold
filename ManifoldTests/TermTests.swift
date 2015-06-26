@@ -26,12 +26,17 @@ final class TermTests: XCTestCase {
 	func testNArySumsAreSigmas() {
 		assert(Term.sum([ .booleanType, .booleanType ]), ==, Term.sigma(.booleanType, .`if`(0, then: .booleanType, `else`:.booleanType)))
 	}
+
+	func testHigherOrderConstruction() {
+		assert(identity, ==, Term.pi(.type, Term.pi(0, 0)))
+	}
 }
 
-private let identity = Term.pi(.type, .pi(0, 0))
+private let identity = Term.function(.type) { Term.function($0, id) }
 private let constant = Term.pi(.type, .pi(.type, .pi(1, .pi(1, 1))))
 
 
 import Assertions
 import Manifold
+import Prelude
 import XCTest
