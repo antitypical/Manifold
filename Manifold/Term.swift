@@ -174,28 +174,20 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		} (self)
 	}
 
-	private func mapBoundVariables(transform: (Int, Int) -> Term) -> Term {
-		return zeppo { parents, expression in
-			expression.analysis(
-				ifBound: { transform(parents.count, $0) },
+
+	// MARK: Substitution
+
+	private func substitute(i: Int, _ term: Term) -> Term {
+		return cata {
+			$0.analysis(
+				ifBound: { $0 == i ? term : Term.bound($0) },
 				ifApplication: Term.application,
 				ifPi: Term.pi,
 				ifProjection: Term.projection,
 				ifSigma: Term.sigma,
 				ifIf: Term.`if`,
-				otherwise: const(Term(expression)))
+				otherwise: const(Term($0)))
 		} (self)
-	}
-
-
-	// MARK: Substitution
-
-	private func substitute(i: Int, _ term: Term) -> Term {
-		return mapBoundVariables { depth, variable in
-			variable == i
-				? term
-				: Term.bound(variable)
-		}
 	}
 
 
