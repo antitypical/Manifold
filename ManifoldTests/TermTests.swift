@@ -2,12 +2,12 @@
 
 final class TermTests: XCTestCase {
 	func testPiTypeDescription() {
-		assert(identity.description, ==, "Π 1 : Type . Π 0 : a . a")
-		assert(identity.typecheck().right?.description, ==, "Π 1 : Type . Π 0 : a . b")
+		assert(identity.description, ==, "Π b : Type . Π a : b . b")
+		assert(identity.typecheck().right?.description, ==, "Π b : Type . Π a : b . a")
 	}
 
 	func testSigmaTypeDescription() {
-		assert(Term.product(.unit, .unit).typecheck().right?.description, ==, "Σ 0 : Unit . Unit")
+		assert(Term.product(.unit, .unit).typecheck().right?.description, ==, "Σ a : Unit . Unit")
 	}
 
 	func testGlobalsPrintTheirNames() {
@@ -28,7 +28,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testHigherOrderConstruction() {
-		assert(identity, ==, Term.pi(1, .type, Term.pi(0, 0, 0)))
+		assert(identity, ==, Term.pi(1, .type, Term.pi(0, 1, 0)))
 	}
 }
 
