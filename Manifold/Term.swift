@@ -2,7 +2,11 @@
 
 public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, FixpointType, Hashable, IntegerLiteralConvertible, CustomStringConvertible {
 	public init(_ expression: Checkable<Term>) {
-		self._expression = Memo(evaluated: expression)
+		self.init(Memo(evaluated: expression))
+	}
+
+	public init(_ expression: () -> Checkable<Term>) {
+		self.init(Memo(expression))
 	}
 
 	private init(_ expression: Memo<Checkable<Term>>) {
