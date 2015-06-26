@@ -170,9 +170,9 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		return cata {
 			$0.analysis(
 				ifApplication: max,
-				ifPi: { $0.0 },
+				ifPi: { max($0.0, $0.1) },
 				ifProjection: { $0.0 },
-				ifSigma: { $0.0 },
+				ifSigma: { max($0.0, $0.1) },
 				ifIf: { max($0, $1, $2) },
 				otherwise: const(-1))
 		} (self)
