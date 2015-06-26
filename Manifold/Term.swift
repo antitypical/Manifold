@@ -2,14 +2,10 @@
 
 public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, FixpointType, Hashable, IntegerLiteralConvertible, CustomStringConvertible {
 	public init(_ expression: Expression<Term>) {
-		self.init(Memo(evaluated: expression))
+		self.init { expression }
 	}
 
 	public init(_ expression: () -> Expression<Term>) {
-		self.init(Memo(expression))
-	}
-
-	private init(_ expression: Memo<Expression<Term>>) {
 		_expression = expression
 	}
 
@@ -145,9 +141,9 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		return expression.analysis(ifBoolean: Optional.Some, otherwise: const(nil))
 	}
 
-	private var _expression: Memo<Expression<Term>>
+	private var _expression: () -> Expression<Term>
 	public var expression: Expression<Term> {
-		return _expression.value
+		return _expression()
 	}
 
 
@@ -409,5 +405,4 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 
 import Either
-import Memo
 import Prelude
