@@ -2,12 +2,12 @@
 
 final class TermTests: XCTestCase {
 	func testPiTypeDescription() {
-		assert(identity.description, ==, "Π : Type . Π : a . a")
-		assert(identity.typecheck().right?.description, ==, "Π : Type . Π : a . b")
+		assert(identity.description, ==, "Π 1 : Type . Π 0 : a . a")
+		assert(identity.typecheck().right?.description, ==, "Π 1 : Type . Π 0 : a . b")
 	}
 
 	func testSigmaTypeDescription() {
-		assert(Term.sigma(.unit, .unit).typecheck().right?.description, ==, "Σ Unit . Unit")
+		assert(Term.sigma(.unit, .unit).typecheck().right?.description, ==, "Σ 0 : Unit . Unit")
 	}
 
 	func testGlobalsPrintTheirNames() {
