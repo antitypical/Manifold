@@ -29,11 +29,12 @@ final class TermTests: XCTestCase {
 
 	func testHigherOrderConstruction() {
 		assert(identity, ==, Term.pi(1, .type, Term.pi(0, 1, 0)))
+		assert(constant, ==, Term.pi(3, .type, .pi(2, .type, .pi(1, 3, .pi(0, 2, 1)))))
 	}
 }
 
 let identity = Term.pi(.type) { Term.pi($0, id) }
-let constant = Term.pi(3, .type, .pi(2, .type, .pi(1, 3, .pi(0, 2, 1))))
+let constant = Term.pi(.type) { A in Term.pi(.type) { B in Term.pi(A) { a in Term.pi(B, const(a)) } } }
 
 
 import Assertions
