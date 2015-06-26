@@ -54,11 +54,11 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 
 	public static func pi(type: Term, _ body: Term) -> Term {
-		return Term(.Pi(type, body))
+		return Term(.Pi(-1, type, body))
 	}
 
 	public static func sigma(type: Term, _ body: Term) -> Term {
-		return Term(.Sigma(type, body))
+		return Term(.Sigma(-1, type, body))
 	}
 
 
@@ -90,7 +90,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		var n = 0
 		let body = f(Term { .Bound(n) })
 		n = body.maxBoundVariable + 1
-		return Term { .Pi(type, body) }
+		return Term { .Pi(-1, type, body) }
 	}
 
 

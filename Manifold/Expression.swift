@@ -29,11 +29,11 @@ public enum Expression<Recur> {
 			return ifFree(x)
 		case let .Application(a, b):
 			return ifApplication(a, b)
-		case let .Pi(a, b):
+		case let .Pi(_, a, b):
 			return ifPi(a, b)
 		case let .Projection(a, b):
 			return ifProjection(a, b)
-		case let .Sigma(a, b):
+		case let .Sigma(_, a, b):
 			return ifSigma(a, b)
 		case .BooleanType:
 			return ifBooleanType()
@@ -84,9 +84,9 @@ public enum Expression<Recur> {
 			ifBound: { .Bound($0) },
 			ifFree: { .Free($0) },
 			ifApplication: { .Application(transform($0), transform($1)) },
-			ifPi: { .Pi(transform($0), transform($1)) },
+			ifPi: { .Pi(-1, transform($0), transform($1)) },
 			ifProjection: { .Projection(transform($0), $1) },
-			ifSigma: { .Sigma(transform($0), transform($1)) },
+			ifSigma: { .Sigma(-1, transform($0), transform($1)) },
 			ifBooleanType: const(.BooleanType),
 			ifBoolean: { .Boolean($0) },
 			ifIf: { .If(transform($0), transform($1), transform($2)) })
@@ -101,9 +101,9 @@ public enum Expression<Recur> {
 	case Bound(Int)
 	case Free(Name)
 	case Application(Recur, Recur)
-	case Pi(Recur, Recur) // (Πx:A)B where B can depend on x
+	case Pi(Int, Recur, Recur) // (Πx:A)B where B can depend on x
 	case Projection(Recur, Bool)
-	case Sigma(Recur, Recur) // (Σx:A)B where B can depend on x
+	case Sigma(Int, Recur, Recur) // (Σx:A)B where B can depend on x
 	case BooleanType
 	case Boolean(Bool)
 	case If(Recur, Recur, Recur)

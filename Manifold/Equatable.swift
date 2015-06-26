@@ -14,12 +14,12 @@ public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Re
 		return m == n
 	case let (.Application(t1, t2), .Application(u1, u2)):
 		return t1 == u1 && t2 == u2
-	case let (.Pi(t, a), .Pi(u, b)):
-		return t == u && a == b
+	case let (.Pi(i, t, a), .Pi(j, u, b)):
+		return i == j && t == u && a == b
 	case let (.Projection(p, f), .Projection(q, g)):
 		return p == q && f == g
-	case let (.Sigma(t, a), .Sigma(u, b)):
-		return t == u && a == b
+	case let (.Sigma(i, t, a), .Sigma(j, u, b)):
+		return i == j && t == u && a == b
 	case let (.Boolean(a), .Boolean(b)):
 		return a == b
 	case let (.If(a1, b1, c1), .If(a2, b2, c2)):
