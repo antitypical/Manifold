@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Checkable<Recur> {
+public enum Expression<Recur> {
 	// MARK: Analyses
 
 	public func analysis<T>(
@@ -10,9 +10,9 @@ public enum Checkable<Recur> {
 		@noescape ifBound: Int -> T,
 		@noescape ifFree: Name -> T,
 		@noescape ifApplication: (Recur, Recur) -> T,
-		@noescape ifPi: (Recur, Recur) -> T,
+		@noescape ifPi: (Int, Recur, Recur) -> T,
 		@noescape ifProjection: (Recur, Bool) -> T,
-		@noescape ifSigma: (Recur, Recur) -> T,
+		@noescape ifSigma: (Int, Recur, Recur) -> T,
 		@noescape ifBooleanType: () -> T,
 		@noescape ifBoolean: Bool -> T,
 		@noescape ifIf: (Recur, Recur, Recur) -> T) -> T {
@@ -29,12 +29,12 @@ public enum Checkable<Recur> {
 			return ifFree(x)
 		case let .Application(a, b):
 			return ifApplication(a, b)
-		case let .Pi(a, b):
-			return ifPi(a, b)
+		case let .Pi(i, a, b):
+			return ifPi(i, a, b)
 		case let .Projection(a, b):
 			return ifProjection(a, b)
-		case let .Sigma(a, b):
-			return ifSigma(a, b)
+		case let .Sigma(i, a, b):
+			return ifSigma(i, a, b)
 		case .BooleanType:
 			return ifBooleanType()
 		case let .Boolean(b):
@@ -51,9 +51,9 @@ public enum Checkable<Recur> {
 		ifBound: (Int -> T)? = nil,
 		ifFree: (Name -> T)? = nil,
 		ifApplication: ((Recur, Recur) -> T)? = nil,
-		ifPi: ((Recur, Recur) -> T)? = nil,
+		ifPi: ((Int, Recur, Recur) -> T)? = nil,
 		ifProjection: ((Recur, Bool) -> T)? = nil,
-		ifSigma: ((Recur, Recur) -> T)? = nil,
+		ifSigma: ((Int, Recur, Recur) -> T)? = nil,
 		ifBooleanType: (() -> T)? = nil,
 		ifBoolean: (Bool -> T)? = nil,
 		ifIf: ((Recur, Recur, Recur) -> T)? = nil,
@@ -76,7 +76,7 @@ public enum Checkable<Recur> {
 
 	// MARK: Functor
 
-	public func map<T>(@noescape transform: Recur -> T) -> Checkable<T> {
+	public func map<T>(@noescape transform: Recur -> T) -> Expression<T> {
 		return analysis(
 			ifUnit: const(.Unit),
 			ifUnitType: const(.UnitType),
@@ -84,9 +84,9 @@ public enum Checkable<Recur> {
 			ifBound: { .Bound($0) },
 			ifFree: { .Free($0) },
 			ifApplication: { .Application(transform($0), transform($1)) },
-			ifPi: { .Pi(transform($0), transform($1)) },
+			ifPi: { .Pi($0, transform($1), transform($2)) },
 			ifProjection: { .Projection(transform($0), $1) },
-			ifSigma: { .Sigma(transform($0), transform($1)) },
+			ifSigma: { .Sigma($0, transform($1), transform($2)) },
 			ifBooleanType: const(.BooleanType),
 			ifBoolean: { .Boolean($0) },
 			ifIf: { .If(transform($0), transform($1), transform($2)) })
@@ -101,9 +101,9 @@ public enum Checkable<Recur> {
 	case Bound(Int)
 	case Free(Name)
 	case Application(Recur, Recur)
-	case Pi(Recur, Recur) // (Πx:A)B where B can depend on x
+	case Pi(Int, Recur, Recur) // (Πx:A)B where B can depend on x
 	case Projection(Recur, Bool)
-	case Sigma(Recur, Recur) // (Σx:A)B where B can depend on x
+	case Sigma(Int, Recur, Recur) // (Σx:A)B where B can depend on x
 	case BooleanType
 	case Boolean(Bool)
 	case If(Recur, Recur, Recur)
