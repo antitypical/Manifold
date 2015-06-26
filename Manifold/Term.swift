@@ -393,13 +393,13 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifFree: { $0.analysis(ifGlobal: id, ifLocal: alphabetize) },
 			ifApplication: { "\($0.1)(\($1.1))" },
 			ifPi: {
-				"Π \($0) : \($1.1) . \($2.1)"
+				"Π \(alphabetize($0)) : \($1.1) . \($2.1)"
 			},
 			ifProjection: {
 				"\($0.1).\($1 ? 1 : 0)"
 			},
 			ifSigma: {
-				"Σ \($0) : \($1.1) . \($2.1)"
+				"Σ \(alphabetize($0)) : \($1.1) . \($2.1)"
 			},
 			ifBooleanType: const("Boolean"),
 			ifBoolean: { String($0) },
