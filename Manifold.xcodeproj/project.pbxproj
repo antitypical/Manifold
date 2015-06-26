@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D42613441B3B93B500EF5623 /* Memo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D42613431B3B93B500EF5623 /* Memo.framework */; };
-		D42613451B3B941E00EF5623 /* Memo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D42613431B3B93B500EF5623 /* Memo.framework */; };
 		D4809FBD1AF6BD400084B8FE /* TermTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4809FBC1AF6BD400084B8FE /* TermTests.swift */; };
 		D4809FBF1AF6CD720084B8FE /* Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4809FBE1AF6CD720084B8FE /* Equatable.swift */; };
 		D484903A1B29352600F249F7 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D48490391B29352600F249F7 /* CoreFoundation.framework */; };
@@ -42,7 +40,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		D42613431B3B93B500EF5623 /* Memo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Memo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D46395AE1B17E24C00AA1B65 /* SwiftCheck.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SwiftCheck.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4809FBC1AF6BD400084B8FE /* TermTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TermTests.swift; sourceTree = "<group>"; };
 		D4809FBE1AF6CD720084B8FE /* Equatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Equatable.swift; sourceTree = "<group>"; };
@@ -73,7 +70,6 @@
 			files = (
 				D484903A1B29352600F249F7 /* CoreFoundation.framework in Frameworks */,
 				D4F9F86B1A8496F700B7071E /* Prelude.framework in Frameworks */,
-				D42613441B3B93B500EF5623 /* Memo.framework in Frameworks */,
 				D4F9F8651A84958000B7071E /* Either.framework in Frameworks */,
 				D4B3FC151A83527B00DA2AC3 /* Box.framework in Frameworks */,
 			);
@@ -87,7 +83,6 @@
 				D4F9F86C1A84970900B7071E /* Prelude.framework in Frameworks */,
 				D4F9F8661A84959600B7071E /* Box.framework in Frameworks */,
 				D4F9F8671A84959600B7071E /* Either.framework in Frameworks */,
-				D42613451B3B941E00EF5623 /* Memo.framework in Frameworks */,
 				D4B3FBFC1A83515800DA2AC3 /* Manifold.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -134,7 +129,6 @@
 				D4B3FC141A83527B00DA2AC3 /* Box.framework */,
 				D48490391B29352600F249F7 /* CoreFoundation.framework */,
 				D4F9F8641A84958000B7071E /* Either.framework */,
-				D42613431B3B93B500EF5623 /* Memo.framework */,
 				D4F9F86A1A8496F700B7071E /* Prelude.framework */,
 				D4B3FBEF1A83515800DA2AC3 /* Info.plist */,
 				D4B4AA561A90320F0089A5F2 /* Dictionary.swift */,
