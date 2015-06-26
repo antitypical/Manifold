@@ -93,6 +93,13 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		return Term { .Pi(-1, type, body) }
 	}
 
+	public static func sigma(type: Term, _ f: Term -> Term) -> Term {
+		var n = 0
+		let body = f(Term { .Bound(n) })
+		n = body.maxBoundVariable + 1
+		return Term { .Sigma(-1, type, body) }
+	}
+
 
 	// MARK: Destructors
 
