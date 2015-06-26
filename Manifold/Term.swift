@@ -214,13 +214,13 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 	// MARK: Type-checking
 
-	public func typecheck(locals: [Term] = [], _ globals: [Name: Term] = [:]) -> Either<Error, Term> {
+	public func typecheck(locals: [Int: Term] = [:], _ globals: [Name: Term] = [:]) -> Either<Error, Term> {
 		return expression.analysis(
 			ifUnit: const(.right(.unitType)),
 			ifUnitType: const(.right(.type)),
 			ifType: { .right(.type($0 + 1)) },
 			ifBound: { i -> Either<Error, Term> in
-				Either.right(locals[i])
+				locals[i].map(Either.right) ?? Either.left("unexpected bound variable \(i)")
 			},
 			ifFree: { i -> Either<Error, Term> in
 				globals[i].map(Either.right) ?? Either.left("unexpected free variable \(i)")
@@ -233,10 +233,10 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 							otherwise: const(Either.left("illegal application of \(a) : \(t) to \(b)")))
 				}
 			},
-			ifPi: { _, t, b -> Either<Error, Term> in
+			ifPi: { i, t, b -> Either<Error, Term> in
 				t.typecheck(locals, globals)
 					.flatMap { _ in
-						b.typecheck(locals + [ t ], globals)
+						b.typecheck(locals + [ i: t ], globals)
 							.map { Term.pi(t, const($0)) }
 					}
 			},
@@ -252,7 +252,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 				a.typecheck(locals, globals)
 					.flatMap { a in
 						let t = a.evaluate()
-						return b.typecheck(locals + [ t ], globals)
+						return b.typecheck(locals + [ i: t ], globals)
 							.map { Term.sigma(t, const($0)) }
 					}
 			},
@@ -271,7 +271,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			})
 	}
 
-	public func typecheck(locals: [Term], _ globals: [Name: Term], against: Term) -> Either<Error, Term> {
+	public func typecheck(locals: [Int: Term], _ globals: [Name: Term], against: Term) -> Either<Error, Term> {
 		return typecheck(locals, globals)
 			.flatMap { t in
 				(t == against) || (against == .type && t == Term.function(.type, .type))
@@ -283,13 +283,13 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 	// MARK: Evaluation
 
-	public func evaluate(locals: [Term] = [], _ globals: [Name: Term] = [:]) -> Term {
+	public func evaluate(locals: [Int: Term] = [:], _ globals: [Name: Term] = [:]) -> Term {
 		return expression.analysis(
 			ifUnit: const(self),
 			ifUnitType: const(self),
 			ifType: const(self),
 			ifBound: { i -> Term in
-				locals[i]
+				locals[i]!
 			},
 			ifFree: { i -> Term in
 				globals[i] ?? .free(i)
