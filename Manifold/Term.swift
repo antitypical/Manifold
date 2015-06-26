@@ -281,27 +281,22 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	// MARK: Evaluation
 
 	public func evaluate(locals: [Int: Term] = [:], _ globals: [Name: Term] = [:]) -> Term {
-		return expression.analysis(
-			ifUnit: const(self),
-			ifUnitType: const(self),
-			ifType: const(self),
-			ifBound: { i -> Term in
-				locals[i]!
-			},
-			ifFree: { i -> Term in
-				globals[i] ?? .free(i)
-			},
-			ifApplication: { a, b -> Term in
-				a.evaluate(locals, globals).pi.map { $2.substitute(b.evaluate(locals, globals)) }!
-			},
-			ifPi: const(self),
-			ifProjection: { a, b -> Term in
-				a.evaluate(locals, globals).sigma.map { b ? $2 : $1 }!
-			},
-			ifSigma: const(self),
-			ifBooleanType: const(self),
-			ifBoolean: const(self),
-			ifIf: { $0.evaluate(locals, globals).boolean! ? $1.evaluate(locals, globals) : $2.evaluate(locals, globals) })
+		switch expression {
+		case let .Bound(i):
+			return locals[i]!
+		case let .Free(i):
+			return globals[i] ?? .free(i)
+		case let .Application(a, b):
+			return a.evaluate(locals, globals).pi.map { $2.substitute(b.evaluate(locals, globals)) }!
+		case let .Projection(a, b):
+			return a.evaluate(locals, globals).sigma.map { b ? $2 : $1 }!
+		case let .If(condition, then, `else`):
+			return condition.evaluate(locals, globals).boolean!
+				? then.evaluate(locals, globals)
+				: `else`.evaluate(locals, globals)
+		default:
+			return self
+		}
 	}
 
 
