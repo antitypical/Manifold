@@ -165,11 +165,11 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		return zeppo { parents, expression in
 			expression.analysis(
 				ifBound: { transform(parents.count, $0) },
-				ifApplication: { Term.application($0, $1) },
-				ifPi: { Term.pi($1, $2) },
-				ifProjection: { Term.projection($0, $1) },
-				ifSigma: { Term.sigma($1, $2) },
-				ifIf: { Term.`if`($0, then: $1, `else`: $2) },
+				ifApplication: Term.application,
+				ifPi: Term.pi,
+				ifProjection: Term.projection,
+				ifSigma: Term.sigma,
+				ifIf: Term.`if`,
 				otherwise: const(Term(expression)))
 		} (self)
 	}
