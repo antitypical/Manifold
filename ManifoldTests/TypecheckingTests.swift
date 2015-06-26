@@ -14,22 +14,21 @@ final class TypecheckingTests: XCTestCase {
 	}
 
 	func testApplicationOfIdentityAbstractionToUnitTermTypechecksToUnitType() {
-		let identity = Term.pi(.unitType, 0)
+		let identity = Term.pi(.unitType, id)
 		assert(Term.application(identity, Term.unit).typecheck().right, ==, Term.unitType)
 	}
 
 	func testSimpleAbstractionTypechecksToAbstractionType() {
-		let identity = Term.pi(.unitType, 0)
-		assert(identity.typecheck().right, ==, Term.pi(.unitType, .unitType))
+		let identity = Term.pi(.unitType, id)
+		assert(identity.typecheck().right, ==, Term.function(.unitType, .unitType))
 	}
 
 	func testAbstractedAbstractionTypechecks() {
-		let identity = Term.pi(.type, .pi(0, 0))
-		assert(identity.typecheck().right, ==, Term.pi(.type, .pi(0, 1)))
+		assert(identity.typecheck().right, ==, Term.pi(1, .type, .pi(0, 1, 1)))
 	}
 
 	func testProjectionTypechecksToTypeOfProjectedField() {
-		let product = Term.sigma(.unit, false)
+		let product = Term.product(.unit, false)
 		assert(Term.projection(product, false).typecheck().right, ==, Term.unitType)
 		assert(Term.projection(product, true).typecheck().right, ==, Term.booleanType)
 	}
@@ -39,11 +38,12 @@ final class TypecheckingTests: XCTestCase {
 	}
 
 	func testIfWithDisjointBranchTypesTypechecksToSumOfBranchTypes() {
-		assert(Term.`if`(.boolean(true), then: .unit, `else`: .boolean(true)).typecheck().right, ==, Term.sigma(.booleanType, Term.`if`(.bound(0), then: .unitType, `else`: .booleanType)))
+		assert(Term.`if`(.boolean(true), then: .unit, `else`: .boolean(true)).typecheck().right, ==, Term.sigma(.booleanType) { Term.`if`($0, then: .unitType, `else`: .booleanType) })
 	}
 }
 
 import Assertions
 import Manifold
+import Prelude
 import XCTest
 

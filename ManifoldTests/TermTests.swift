@@ -7,7 +7,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testSigmaTypeDescription() {
-		assert(Term.sigma(.unit, .unit).typecheck().right?.description, ==, "Σ 0 : Unit . Unit")
+		assert(Term.product(.unit, .unit).typecheck().right?.description, ==, "Σ 0 : Unit . Unit")
 	}
 
 	func testGlobalsPrintTheirNames() {
@@ -24,16 +24,16 @@ final class TermTests: XCTestCase {
 	}
 
 	func testNArySumsAreSigmas() {
-		assert(Term.sum([ .booleanType, .booleanType ]), ==, Term.sigma(.booleanType, .`if`(0, then: .booleanType, `else`:.booleanType)))
+		assert(Term.sum([ .booleanType, .booleanType ]), ==, Term.sigma(0, .booleanType, .`if`(0, then: .booleanType, `else`:.booleanType)))
 	}
 
 	func testHigherOrderConstruction() {
-		assert(identity, ==, Term.pi(.type, Term.pi(0, 0)))
+		assert(identity, ==, Term.pi(1, .type, Term.pi(0, 0, 0)))
 	}
 }
 
-private let identity = Term.pi(.type) { Term.pi($0, id) }
-private let constant = Term.pi(.type, .pi(.type, .pi(1, .pi(1, 1))))
+let identity = Term.pi(.type) { Term.pi($0, id) }
+let constant = Term.pi(3, .type, .pi(2, .type, .pi(1, 3, .pi(0, 2, 1))))
 
 
 import Assertions
