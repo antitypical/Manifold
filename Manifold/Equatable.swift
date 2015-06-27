@@ -1,8 +1,8 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-// MARK: Checkable
+// MARK: Expression
 
-public func == <Recur: Equatable> (left: Checkable<Recur>, right: Checkable<Recur>) -> Bool {
+public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Recur>) -> Bool {
 	switch (left, right) {
 	case (.Unit, .Unit), (.UnitType, .UnitType), (.BooleanType, .BooleanType):
 		return true
@@ -14,12 +14,12 @@ public func == <Recur: Equatable> (left: Checkable<Recur>, right: Checkable<Recu
 		return m == n
 	case let (.Application(t1, t2), .Application(u1, u2)):
 		return t1 == u1 && t2 == u2
-	case let (.Pi(t, a), .Pi(u, b)):
-		return t == u && a == b
+	case let (.Lambda(i, t, a), .Lambda(j, u, b)):
+		return i == j && t == u && a == b
 	case let (.Projection(p, f), .Projection(q, g)):
 		return p == q && f == g
-	case let (.Sigma(t, a), .Sigma(u, b)):
-		return t == u && a == b
+	case let (.Sigma(i, t, a), .Sigma(j, u, b)):
+		return i == j && t == u && a == b
 	case let (.Boolean(a), .Boolean(b)):
 		return a == b
 	case let (.If(a1, b1, c1), .If(a2, b2, c2)):

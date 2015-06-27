@@ -14,22 +14,21 @@ final class EvaluationTests: XCTestCase {
 	}
 
 	func testApplicationOfIdentityAbstractionToUnitTermEvaluatesToUnitTerm() {
-		let identity = Term.pi(.unitType, 0)
+		let identity = Term.lambda(.unitType, id)
 		assert(Term.application(identity, Term.unit).evaluate(), ==, Term.unit)
 	}
 
 	func testSimpleAbstractionEvaluatesToItself() {
-		let identity = Term.pi(.unitType, 0)
+		let identity = Term.lambda(.unitType, id)
 		assert(identity.evaluate(), ==, identity)
 	}
 
 	func testAbstractionsBodiesAreNotNormalized() {
-		let identity = Term.pi(.unitType, .application(.pi(.unitType, 0), 0))
 		assert(identity.evaluate(), ==, identity)
 	}
 
 	func testProjectionEvaluatesToProjectedField() {
-		let product = Term.sigma(.unit, false)
+		let product = Term.sigma(.unit, const(false))
 		assert(Term.projection(product, false).evaluate(), ==, Term.unit)
 		assert(Term.projection(product, true).evaluate(), ==, false)
 	}
@@ -42,4 +41,5 @@ final class EvaluationTests: XCTestCase {
 
 import Assertions
 import Manifold
+import Prelude
 import XCTest
