@@ -40,14 +40,6 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	}
 
 
-	public static func variable(i: Int) -> Term {
-		return Term.variable(.Local(i))
-	}
-
-	public static func variable(name: String) -> Term {
-		return Term.variable(.Global(name))
-	}
-
 	public static func variable(name: Name) -> Term {
 		return Term(.Variable(name))
 	}
@@ -172,7 +164,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 				ifVariable: {
 					$0.analysis(
 						ifGlobal: const(Term(t)),
-						ifLocal: { $0 == i ? term : Term.variable($0) })
+						ifLocal: { $0 == i ? term : Term.variable(.Local($0)) })
 				},
 				ifApplication: Term.application,
 				ifLambda: Term.lambda,
