@@ -26,7 +26,7 @@ public enum Name: Hashable, CustomDebugStringConvertible, CustomStringConvertibl
 	}
 
 
-	// MARK: DebugPrintable
+	// MARK: CustomDebugStringConvertible
 
 	public var debugDescription: String {
 		return analysis(
@@ -49,7 +49,7 @@ public enum Name: Hashable, CustomDebugStringConvertible, CustomStringConvertibl
 	}
 
 
-	// MARK: Printable
+	// MARK: CustomStringConvertible
 
 	public var description: String {
 		return analysis(
