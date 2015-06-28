@@ -8,7 +8,7 @@ public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Re
 		return true
 	case let (.Type(i), .Type(j)):
 		return i == j
-	case let (.Free(m), .Free(n)):
+	case let (.Variable(m), .Variable(n)):
 		return m == n
 	case let (.Application(t1, t2), .Application(u1, u2)):
 		return t1 == u1 && t2 == u2

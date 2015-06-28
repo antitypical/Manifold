@@ -45,7 +45,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	}
 
 	public static func variable(name: Name) -> Term {
-		return Term(.Free(name))
+		return Term(.Variable(name))
 	}
 
 
@@ -84,14 +84,14 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 	public static func lambda(type: Term, _ f: Term -> Term) -> Term {
 		var n = 0
-		let body = f(Term { .Free(.Local(n)) })
+		let body = f(Term { .Variable(.Local(n)) })
 		n = body.maxBoundVariable + 1
 		return Term { .Lambda(n, type, body) }
 	}
 
 	public static func sigma(type: Term, _ f: Term -> Term) -> Term {
 		var n = 0
-		let body = f(Term { .Free(.Local(n)) })
+		let body = f(Term { .Variable(.Local(n)) })
 		n = body.maxBoundVariable + 1
 		return Term { .Sigma(n, type, body) }
 	}
@@ -137,7 +137,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 	public var isNormalForm: Bool {
 		return expression.analysis(
-			ifFree: const(false),
+			ifVariable: const(false),
 			ifApplication: const(false),
 			ifProjection: const(false),
 			ifIf: const(false),
@@ -165,7 +165,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	private func substitute(i: Int, _ term: Term) -> Term {
 		return cata { t in
 			t.analysis(
-				ifFree: {
+				ifVariable: {
 					$0.analysis(
 						ifGlobal: const(Term(t)),
 						ifLocal: { $0 == i ? term : Term.bound($0) })
@@ -190,7 +190,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			return .right(.type)
 		case let .Type(n):
 			return .right(.type(n + 1))
-		case let .Free(i):
+		case let .Variable(i):
 			return environment[i].map(Either.right) ?? Either.left("unexpectedly free variable \(i)")
 		case let .Application(a, b):
 			return a.typecheck(environment)
@@ -248,7 +248,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 	public func evaluate(environment: [Name: Term] = [:]) -> Term {
 		switch expression {
-		case let .Free(i):
+		case let .Variable(i):
 			return environment[i] ?? .variable(i)
 		case let .Application(a, b):
 			return a.evaluate(environment).lambda.map { $2.substitute($0, b.evaluate(environment)) }!
@@ -282,7 +282,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifUnit: const("()"),
 			ifUnitType: const("Unit"),
 			ifType: { "Type\($0)" },
-			ifFree: { "Free(\($0))" },
+			ifVariable: { "Variable(\($0))" },
 			ifApplication: { "\($0)(\($1))" },
 			ifLambda: { "λ \($0) : \($1) . \($2)" },
 			ifProjection: { "\($0).\($1 ? 1 : 0)" },
@@ -307,7 +307,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifUnit: const(1),
 			ifUnitType: const(2),
 			ifType: { 3 ^ $0.hashValue },
-			ifFree: { 5 ^ $0.hashValue },
+			ifVariable: { 5 ^ $0.hashValue },
 			ifApplication: { 7 ^ $0.hashValue ^ $1.hashValue },
 			ifLambda: { 11 ^ $0 ^ $1.hashValue ^ $2.hashValue },
 			ifProjection: { 13 ^ $0.hashValue ^ $1.hashValue },
@@ -339,7 +339,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifUnit: const("()"),
 			ifUnitType: const("Unit"),
 			ifType: { $0 > 0 ? "Type\($0)" : "Type" },
-			ifFree: { $0.analysis(ifGlobal: id, ifLocal: alphabetize) },
+			ifVariable: { $0.analysis(ifGlobal: id, ifLocal: alphabetize) },
 			ifApplication: { "\($0.1)(\($1.1))" },
 			ifLambda: {
 				"λ \(alphabetize($0)) : \($1.1) . \($2.1)"
