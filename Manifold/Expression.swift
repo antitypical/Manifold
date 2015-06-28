@@ -11,7 +11,7 @@ public enum Expression<Recur> {
 		@noescape ifApplication: (Recur, Recur) -> T,
 		@noescape ifLambda: (Int, Recur, Recur) -> T,
 		@noescape ifProjection: (Recur, Bool) -> T,
-		@noescape ifSigma: (Int, Recur, Recur) -> T,
+		@noescape ifProduct: (Int, Recur, Recur) -> T,
 		@noescape ifBooleanType: () -> T,
 		@noescape ifBoolean: Bool -> T,
 		@noescape ifIf: (Recur, Recur, Recur) -> T) -> T {
@@ -30,8 +30,8 @@ public enum Expression<Recur> {
 			return ifLambda(i, a, b)
 		case let .Projection(a, b):
 			return ifProjection(a, b)
-		case let .Sigma(i, a, b):
-			return ifSigma(i, a, b)
+		case let .Product(i, a, b):
+			return ifProduct(i, a, b)
 		case .BooleanType:
 			return ifBooleanType()
 		case let .Boolean(b):
@@ -49,7 +49,7 @@ public enum Expression<Recur> {
 		ifApplication: ((Recur, Recur) -> T)? = nil,
 		ifLambda: ((Int, Recur, Recur) -> T)? = nil,
 		ifProjection: ((Recur, Bool) -> T)? = nil,
-		ifSigma: ((Int, Recur, Recur) -> T)? = nil,
+		ifProduct: ((Int, Recur, Recur) -> T)? = nil,
 		ifBooleanType: (() -> T)? = nil,
 		ifBoolean: (Bool -> T)? = nil,
 		ifIf: ((Recur, Recur, Recur) -> T)? = nil,
@@ -62,7 +62,7 @@ public enum Expression<Recur> {
 			ifApplication: { ifApplication?($0) ?? otherwise() },
 			ifLambda: { ifLambda?($0) ?? otherwise() },
 			ifProjection: { ifProjection?($0) ?? otherwise() },
-			ifSigma: { ifSigma?($0) ?? otherwise() },
+			ifProduct: { ifProduct?($0) ?? otherwise() },
 			ifBooleanType: { ifBooleanType?() ?? otherwise() },
 			ifBoolean: { ifBoolean?($0) ?? otherwise() },
 			ifIf: { ifIf?($0) ?? otherwise() })
@@ -80,7 +80,7 @@ public enum Expression<Recur> {
 			ifApplication: { .Application(transform($0), transform($1)) },
 			ifLambda: { .Lambda($0, transform($1), transform($2)) },
 			ifProjection: { .Projection(transform($0), $1) },
-			ifSigma: { .Sigma($0, transform($1), transform($2)) },
+			ifProduct: { .Product($0, transform($1), transform($2)) },
 			ifBooleanType: const(.BooleanType),
 			ifBoolean: { .Boolean($0) },
 			ifIf: { .If(transform($0), transform($1), transform($2)) })
@@ -96,7 +96,7 @@ public enum Expression<Recur> {
 	case Application(Recur, Recur)
 	case Lambda(Int, Recur, Recur) // (Πx:A)B where B can depend on x
 	case Projection(Recur, Bool)
-	case Sigma(Int, Recur, Recur) // (Σx:A)B where B can depend on x
+	case Product(Int, Recur, Recur) // (x, y) : Σx:X.Y
 	case BooleanType
 	case Boolean(Bool)
 	case If(Recur, Recur, Recur)

@@ -49,13 +49,13 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		return Term(.Lambda(variable, type, body))
 	}
 
-	public static func sigma(variable: Int, _ type: Term, _ body: Term) -> Term {
-		return Term(.Sigma(variable, type, body))
+	public static func product(variable: Int, _ type: Term, _ body: Term) -> Term {
+		return Term(.Product(variable, type, body))
 	}
 
 
 	public static func sum(a: Term, _ b: Term) -> Term {
-		return sigma(booleanType) { c in `if`(c, then: a, `else`: b) }
+		return product(booleanType) { c in `if`(c, then: a, `else`: b) }
 	}
 
 	public static func sum(terms: [Term]) -> Term {
@@ -85,11 +85,11 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		return Term { .Lambda(n, type, body) }
 	}
 
-	public static func sigma(type: Term, _ f: Term -> Term) -> Term {
+	public static func product(type: Term, _ f: Term -> Term) -> Term {
 		var n = 0
 		let body = f(Term { .Variable(.Local(n)) })
 		n = body.maxBoundVariable + 1
-		return Term { .Sigma(n, type, body) }
+		return Term { .Product(n, type, body) }
 	}
 
 
@@ -115,8 +115,8 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		return expression.analysis(ifLambda: Optional.Some, otherwise: const(nil))
 	}
 
-	public var sigma: (Int, Term, Term)? {
-		return expression.analysis(ifSigma: Optional.Some, otherwise: const(nil))
+	public var product: (Int, Term, Term)? {
+		return expression.analysis(ifProduct: Optional.Some, otherwise: const(nil))
 	}
 
 	public var boolean: Bool? {
@@ -149,7 +149,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 				ifApplication: max,
 				ifLambda: { max($0.0, $0.1) },
 				ifProjection: { $0.0 },
-				ifSigma: { max($0.0, $0.1) },
+				ifProduct: { max($0.0, $0.1) },
 				ifIf: { max($0, $1, $2) },
 				otherwise: const(-1))
 		} (self)
@@ -169,7 +169,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 				ifApplication: Term.application,
 				ifLambda: Term.lambda,
 				ifProjection: Term.projection,
-				ifSigma: Term.sigma,
+				ifProduct: Term.product,
 				ifIf: Term.`if`,
 				otherwise: const(Term(t)))
 		} (self)
@@ -205,15 +205,15 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			return a.typecheck(environment)
 				.flatMap { t in
 					t.expression.analysis(
-						ifSigma: { i, v, f in Either.right(b ? f.substitute(i, v) : v) },
+						ifProduct: { i, v, f in Either.right(b ? f.substitute(i, v) : v) },
 						otherwise: const(Either.left("illegal projection of \(a) : \(t) field \(b ? 1 : 0)")))
 				}
-		case let .Sigma(i, a, b):
+		case let .Product(i, a, b):
 			return a.typecheck(environment)
 				.flatMap { a in
 					let t = a.evaluate()
 					return b.typecheck(environment + [ .Local(i): t ])
-						.map { Term.sigma(t, const($0)) }
+						.map { Term.product(t, const($0)) }
 				}
 		case .Boolean:
 			return .right(.booleanType)
@@ -224,7 +224,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 						.map { a, b in
 							a == b
 								? a
-								: Term.sigma(.booleanType) { Term.`if`($0, then: a, `else`: b) }
+								: Term.product(.booleanType) { Term.`if`($0, then: a, `else`: b) }
 						}
 				}
 		}
@@ -249,7 +249,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		case let .Application(a, b):
 			return a.evaluate(environment).lambda.map { $2.substitute($0, b.evaluate(environment)) }!
 		case let .Projection(a, b):
-			return a.evaluate(environment).sigma.map { b ? $2 : $1 }!
+			return a.evaluate(environment).product.map { b ? $2 : $1 }!
 		case let .If(condition, then, `else`):
 			return condition.evaluate(environment).boolean!
 				? then.evaluate(environment)
@@ -282,7 +282,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifApplication: { "\($0)(\($1))" },
 			ifLambda: { "λ \($0) : \($1) . \($2)" },
 			ifProjection: { "\($0).\($1 ? 1 : 0)" },
-			ifSigma: { "Σ \($0) : \($1) . \($2)" },
+			ifProduct: { "Σ \($0) : \($1) . \($2)" },
 			ifBooleanType: const("Boolean"),
 			ifBoolean: { String(reflecting: $0) },
 			ifIf: { "if \($0) then \($1) else \($2)" })
@@ -307,7 +307,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifApplication: { 7 ^ $0.hashValue ^ $1.hashValue },
 			ifLambda: { 11 ^ $0 ^ $1.hashValue ^ $2.hashValue },
 			ifProjection: { 13 ^ $0.hashValue ^ $1.hashValue },
-			ifSigma: { 17 ^ $0 ^ $1.hashValue ^ $2.hashValue },
+			ifProduct: { 17 ^ $0 ^ $1.hashValue ^ $2.hashValue },
 			ifBooleanType: const(19),
 			ifBoolean: { 23 ^ $0.hashValue },
 			ifIf: { 29 ^ $0.hashValue ^ $1.hashValue ^ $2.hashValue })
@@ -343,7 +343,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifProjection: {
 				"\($0.1).\($1 ? 1 : 0)"
 			},
-			ifSigma: {
+			ifProduct: {
 				"Σ \(alphabetize($0)) : \($1.1) . \($2.1)"
 			},
 			ifBooleanType: const("Boolean"),

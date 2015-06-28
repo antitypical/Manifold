@@ -6,8 +6,8 @@ final class TermTests: XCTestCase {
 		assert(identity.typecheck().right?.description, ==, "λ b : Type . λ a : b . b")
 	}
 
-	func testSigmaTypeDescription() {
-		assert(Term.sigma(.unit, const(.unit)).typecheck().right?.description, ==, "Σ a : Unit . Unit")
+	func testProductTypeDescription() {
+		assert(Term.product(.unit, const(.unit)).typecheck().right?.description, ==, "Σ a : Unit . Unit")
 	}
 
 	func testGlobalsPrintTheirNames() {
@@ -23,8 +23,8 @@ final class TermTests: XCTestCase {
 		assert(Term.sum([ .booleanType ]), ==, .booleanType)
 	}
 
-	func testNArySumsAreSigmas() {
-		assert(Term.sum([ .booleanType, .booleanType ]), ==, Term.sigma(0, .booleanType, .`if`(0, then: .booleanType, `else`:.booleanType)))
+	func testNArySumsAreProducts() {
+		assert(Term.sum([ .booleanType, .booleanType ]), ==, Term.product(0, .booleanType, .`if`(0, then: .booleanType, `else`:.booleanType)))
 	}
 
 	func testHigherOrderConstruction() {

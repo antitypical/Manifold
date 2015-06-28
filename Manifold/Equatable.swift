@@ -16,7 +16,7 @@ public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Re
 		return i == j && t == u && a == b
 	case let (.Projection(p, f), .Projection(q, g)):
 		return p == q && f == g
-	case let (.Sigma(i, t, a), .Sigma(j, u, b)):
+	case let (.Product(i, t, a), .Product(j, u, b)):
 		return i == j && t == u && a == b
 	case let (.Boolean(a), .Boolean(b)):
 		return a == b
