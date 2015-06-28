@@ -11,7 +11,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testGlobalsPrintTheirNames() {
-		assert(Term.free("Global").description, ==, "Global")
+		assert(Term.variable("Global").description, ==, "Global")
 	}
 
 
