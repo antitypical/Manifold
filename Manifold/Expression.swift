@@ -7,7 +7,6 @@ public enum Expression<Recur> {
 		@noescape ifUnit ifUnit: () -> T,
 		@noescape ifUnitType: () -> T,
 		@noescape ifType: Int -> T,
-		@noescape ifBound: Int -> T,
 		@noescape ifFree: Name -> T,
 		@noescape ifApplication: (Recur, Recur) -> T,
 		@noescape ifLambda: (Int, Recur, Recur) -> T,
@@ -23,8 +22,6 @@ public enum Expression<Recur> {
 			return ifUnitType()
 		case let .Type(n):
 			return ifType(n)
-		case let .Bound(x):
-			return ifBound(x)
 		case let .Free(x):
 			return ifFree(x)
 		case let .Application(a, b):
@@ -48,7 +45,6 @@ public enum Expression<Recur> {
 		ifUnit ifUnit: (() -> T)? = nil,
 		ifUnitType: (() -> T)? = nil,
 		ifType: (Int -> T)? = nil,
-		ifBound: (Int -> T)? = nil,
 		ifFree: (Name -> T)? = nil,
 		ifApplication: ((Recur, Recur) -> T)? = nil,
 		ifLambda: ((Int, Recur, Recur) -> T)? = nil,
@@ -62,7 +58,6 @@ public enum Expression<Recur> {
 			ifUnit: { ifUnit?() ?? otherwise() },
 			ifUnitType: { ifUnitType?() ?? otherwise() },
 			ifType: { ifType?($0) ?? otherwise() },
-			ifBound: { ifBound?($0) ?? otherwise() },
 			ifFree: { ifFree?($0) ?? otherwise() },
 			ifApplication: { ifApplication?($0) ?? otherwise() },
 			ifLambda: { ifLambda?($0) ?? otherwise() },
@@ -81,7 +76,6 @@ public enum Expression<Recur> {
 			ifUnit: const(.Unit),
 			ifUnitType: const(.UnitType),
 			ifType: { .Type($0) },
-			ifBound: { .Bound($0) },
 			ifFree: { .Free($0) },
 			ifApplication: { .Application(transform($0), transform($1)) },
 			ifLambda: { .Lambda($0, transform($1), transform($2)) },
@@ -98,7 +92,6 @@ public enum Expression<Recur> {
 	case Unit
 	case UnitType
 	case Type(Int)
-	case Bound(Int)
 	case Free(Name)
 	case Application(Recur, Recur)
 	case Lambda(Int, Recur, Recur) // (Πx:A)B where B can depend on x

@@ -41,7 +41,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 
 	public static func bound(i: Int) -> Term {
-		return Term(.Bound(i))
+		return Term.free(.Local(i))
 	}
 
 	public static func free(name: Name) -> Term {
@@ -84,14 +84,14 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 	public static func lambda(type: Term, _ f: Term -> Term) -> Term {
 		var n = 0
-		let body = f(Term { .Bound(n) })
+		let body = f(Term { .Free(.Local(n)) })
 		n = body.maxBoundVariable + 1
 		return Term { .Lambda(n, type, body) }
 	}
 
 	public static func sigma(type: Term, _ f: Term -> Term) -> Term {
 		var n = 0
-		let body = f(Term { .Bound(n) })
+		let body = f(Term { .Free(.Local(n)) })
 		n = body.maxBoundVariable + 1
 		return Term { .Sigma(n, type, body) }
 	}
@@ -109,10 +109,6 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 	public var isType: Bool {
 		return expression.analysis(ifType: const(true), otherwise: const(false))
-	}
-
-	public var bound: Int? {
-		return expression.analysis(ifBound: Optional.Some, otherwise: const(nil))
 	}
 
 	public var application: (Term, Term)? {
@@ -141,7 +137,6 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 	public var isNormalForm: Bool {
 		return expression.analysis(
-			ifBound: const(false),
 			ifFree: const(false),
 			ifApplication: const(false),
 			ifProjection: const(false),
@@ -168,15 +163,19 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	// MARK: Substitution
 
 	private func substitute(i: Int, _ term: Term) -> Term {
-		return cata {
-			$0.analysis(
-				ifBound: { $0 == i ? term : Term.bound($0) },
+		return cata { t in
+			t.analysis(
+				ifFree: {
+					$0.analysis(
+						ifGlobal: const(Term(t)),
+						ifLocal: { $0 == i ? term : Term.bound($0) })
+				},
 				ifApplication: Term.application,
 				ifLambda: Term.lambda,
 				ifProjection: Term.projection,
 				ifSigma: Term.sigma,
 				ifIf: Term.`if`,
-				otherwise: const(Term($0)))
+				otherwise: const(Term(t)))
 		} (self)
 	}
 
@@ -191,10 +190,8 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			return .right(.type)
 		case let .Type(n):
 			return .right(.type(n + 1))
-		case let .Bound(i):
-			return environment[.Local(i)].map(Either.right) ?? Either.left("unexpected bound variable \(i)")
 		case let .Free(i):
-			return environment[i].map(Either.right) ?? Either.left("unexpected free variable \(i)")
+			return environment[i].map(Either.right) ?? Either.left("unexpectedly free variable \(i)")
 		case let .Application(a, b):
 			return a.typecheck(environment)
 				.flatMap { t in
@@ -251,8 +248,6 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 	public func evaluate(environment: [Name: Term] = [:]) -> Term {
 		switch expression {
-		case let .Bound(i):
-			return environment[.Local(i)]!
 		case let .Free(i):
 			return environment[i] ?? .free(i)
 		case let .Application(a, b):
@@ -287,7 +282,6 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifUnit: const("()"),
 			ifUnitType: const("Unit"),
 			ifType: { "Type\($0)" },
-			ifBound: { "Bound(\($0))" },
 			ifFree: { "Free(\($0))" },
 			ifApplication: { "\($0)(\($1))" },
 			ifLambda: { "λ \($0) : \($1) . \($2)" },
@@ -310,10 +304,9 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 	public var hashValue: Int {
 		return expression.analysis(
-			ifUnit: const(0),
-			ifUnitType: const(1),
-			ifType: { 2 ^ $0.hashValue },
-			ifBound: { 3 ^ $0.hashValue },
+			ifUnit: const(1),
+			ifUnitType: const(2),
+			ifType: { 3 ^ $0.hashValue },
 			ifFree: { 5 ^ $0.hashValue },
 			ifApplication: { 7 ^ $0.hashValue ^ $1.hashValue },
 			ifLambda: { 11 ^ $0 ^ $1.hashValue ^ $2.hashValue },
@@ -328,7 +321,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	// MARK: IntegerLiteralConvertible
 
 	public init(integerLiteral value: Int) {
-		self = Term.bound(value)
+		self = Term.free(.Local(value))
 	}
 
 
@@ -346,7 +339,6 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifUnit: const("()"),
 			ifUnitType: const("Unit"),
 			ifType: { $0 > 0 ? "Type\($0)" : "Type" },
-			ifBound: alphabetize,
 			ifFree: { $0.analysis(ifGlobal: id, ifLocal: alphabetize) },
 			ifApplication: { "\($0.1)(\($1.1))" },
 			ifLambda: {

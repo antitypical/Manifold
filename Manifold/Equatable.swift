@@ -8,8 +8,6 @@ public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Re
 		return true
 	case let (.Type(i), .Type(j)):
 		return i == j
-	case let (.Bound(m), .Bound(n)):
-		return m == n
 	case let (.Free(m), .Free(n)):
 		return m == n
 	case let (.Application(t1, t2), .Application(u1, u2)):
