@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Name: Hashable, CustomDebugStringConvertible, CustomStringConvertible, StringLiteralConvertible {
+public enum Name: Hashable, CustomDebugStringConvertible, CustomStringConvertible, IntegerLiteralConvertible, StringLiteralConvertible {
 	// MARK: Destructors
 
 	public var global: String? {
@@ -39,6 +39,13 @@ public enum Name: Hashable, CustomDebugStringConvertible, CustomStringConvertibl
 
 	public var hashValue: Int {
 		return analysis(ifGlobal: { $0.hashValue }, ifLocal: id)
+	}
+
+
+	// MARK: IntegerLiteralConvertible
+
+	public init(integerLiteral value: Int) {
+		self = Local(value)
 	}
 
 
