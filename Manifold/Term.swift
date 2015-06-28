@@ -44,6 +44,10 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		return Term.variable(.Local(i))
 	}
 
+	public static func variable(name: String) -> Term {
+		return Term.variable(.Global(name))
+	}
+
 	public static func variable(name: Name) -> Term {
 		return Term(.Variable(name))
 	}
