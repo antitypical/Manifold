@@ -41,10 +41,10 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 
 	public static func bound(i: Int) -> Term {
-		return Term.free(.Local(i))
+		return Term.variable(.Local(i))
 	}
 
-	public static func free(name: Name) -> Term {
+	public static func variable(name: Name) -> Term {
 		return Term(.Free(name))
 	}
 
@@ -249,7 +249,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	public func evaluate(environment: [Name: Term] = [:]) -> Term {
 		switch expression {
 		case let .Free(i):
-			return environment[i] ?? .free(i)
+			return environment[i] ?? .variable(i)
 		case let .Application(a, b):
 			return a.evaluate(environment).lambda.map { $2.substitute($0, b.evaluate(environment)) }!
 		case let .Projection(a, b):
@@ -321,7 +321,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	// MARK: IntegerLiteralConvertible
 
 	public init(integerLiteral value: Int) {
-		self = Term.free(.Local(value))
+		self = Term.variable(.Local(value))
 	}
 
 
