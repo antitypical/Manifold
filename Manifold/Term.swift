@@ -249,20 +249,20 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 	// MARK: Evaluation
 
-	public func evaluate(locals: [Int: Term] = [:], _ globals: [Name: Term] = [:]) -> Term {
+	public func evaluate(environment: [Name: Term] = [:]) -> Term {
 		switch expression {
 		case let .Bound(i):
-			return locals[i]!
+			return environment[.Local(i)]!
 		case let .Free(i):
-			return globals[i] ?? .free(i)
+			return environment[i] ?? .free(i)
 		case let .Application(a, b):
-			return a.evaluate(locals, globals).lambda.map { $2.substitute($0, b.evaluate(locals, globals)) }!
+			return a.evaluate(environment).lambda.map { $2.substitute($0, b.evaluate(environment)) }!
 		case let .Projection(a, b):
-			return a.evaluate(locals, globals).sigma.map { b ? $2 : $1 }!
+			return a.evaluate(environment).sigma.map { b ? $2 : $1 }!
 		case let .If(condition, then, `else`):
-			return condition.evaluate(locals, globals).boolean!
-				? then.evaluate(locals, globals)
-				: `else`.evaluate(locals, globals)
+			return condition.evaluate(environment).boolean!
+				? then.evaluate(environment)
+				: `else`.evaluate(environment)
 		default:
 			return self
 		}
