@@ -183,7 +183,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 	// MARK: Type-checking
 
-	public func typecheck(locals: [Int: Term] = [:], _ globals: [Name: Term] = [:]) -> Either<Error, Term> {
+	public func typecheck(environment: [Name: Term] = [:]) -> Either<Error, Term> {
 		switch expression {
 		case .Unit:
 			return .right(.unitType)
@@ -192,42 +192,42 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		case let .Type(n):
 			return .right(.type(n + 1))
 		case let .Bound(i):
-			return locals[i].map(Either.right) ?? Either.left("unexpected bound variable \(i)")
+			return environment[.Local(i)].map(Either.right) ?? Either.left("unexpected bound variable \(i)")
 		case let .Free(i):
-			return globals[i].map(Either.right) ?? Either.left("unexpected free variable \(i)")
+			return environment[i].map(Either.right) ?? Either.left("unexpected free variable \(i)")
 		case let .Application(a, b):
-			return a.typecheck(locals, globals)
+			return a.typecheck(environment)
 				.flatMap { t in
 					t.expression.analysis(
-						ifLambda: { i, v, f in b.typecheck(locals, globals, against: v).map { f.substitute(i, $0) } },
+						ifLambda: { i, v, f in b.typecheck(environment, against: v).map { f.substitute(i, $0) } },
 						otherwise: const(Either.left("illegal application of \(a) : \(t) to \(b)")))
 				}
 		case let .Lambda(i, t, b):
-			return t.typecheck(locals, globals)
+			return t.typecheck(environment)
 				.flatMap { _ in
-					b.typecheck(locals + [ i: t ], globals)
+					b.typecheck(environment + [ .Local(i): t ])
 						.map { Term.lambda(t, const($0)) }
 				}
 		case let .Projection(a, b):
-			return a.typecheck(locals, globals)
+			return a.typecheck(environment)
 				.flatMap { t in
 					t.expression.analysis(
 						ifSigma: { i, v, f in Either.right(b ? f.substitute(i, v) : v) },
 						otherwise: const(Either.left("illegal projection of \(a) : \(t) field \(b ? 1 : 0)")))
 				}
 		case let .Sigma(i, a, b):
-			return a.typecheck(locals, globals)
+			return a.typecheck(environment)
 				.flatMap { a in
 					let t = a.evaluate()
-					return b.typecheck(locals + [ i: t ], globals)
+					return b.typecheck(environment + [ .Local(i): t ])
 						.map { Term.sigma(t, const($0)) }
 				}
 		case .Boolean:
 			return .right(.booleanType)
 		case let .If(condition, then, `else`):
-			return condition.typecheck(locals, globals, against: .booleanType)
+			return condition.typecheck(environment, against: .booleanType)
 				.flatMap { _ in
-					(then.typecheck(locals, globals) &&& `else`.typecheck(locals, globals))
+					(then.typecheck(environment) &&& `else`.typecheck(environment))
 						.map { a, b in
 							a == b
 								? a
@@ -237,12 +237,12 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		}
 	}
 
-	public func typecheck(locals: [Int: Term], _ globals: [Name: Term], against: Term) -> Either<Error, Term> {
-		return typecheck(locals, globals)
+	public func typecheck(environment: [Name: Term], against: Term) -> Either<Error, Term> {
+		return typecheck(environment)
 			.flatMap { t in
 				(t == against) || (against == .type && t == Term.lambda(.type, const(.type)))
 					? Either.right(t)
-					: Either.left("type mismatch: expected (\(String(reflecting: self))) : (\(String(reflecting: against))), actually (\(String(reflecting: self))) : (\(String(reflecting: t))) in local environment \(locals) global environment \(globals)")
+					: Either.left("type mismatch: expected (\(String(reflecting: self))) : (\(String(reflecting: against))), actually (\(String(reflecting: self))) : (\(String(reflecting: t))) in environment \(environment)")
 			}
 	}
 
