@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Name: Hashable, CustomDebugStringConvertible, CustomStringConvertible, StringLiteralConvertible {
+public enum Name: CustomDebugStringConvertible, CustomStringConvertible, Hashable, IntegerLiteralConvertible, StringLiteralConvertible {
 	// MARK: Destructors
 
 	public var global: String? {
@@ -26,12 +26,21 @@ public enum Name: Hashable, CustomDebugStringConvertible, CustomStringConvertibl
 	}
 
 
-	// MARK: DebugPrintable
+	// MARK: CustomDebugStringConvertible
 
 	public var debugDescription: String {
 		return analysis(
 			ifGlobal: { "Global(\($0))" },
 			ifLocal: { "Local(\($0))" })
+	}
+
+
+	// MARK: CustomStringConvertible
+
+	public var description: String {
+		return analysis(
+			ifGlobal: id,
+			ifLocal: { String($0) })
 	}
 
 
@@ -42,12 +51,10 @@ public enum Name: Hashable, CustomDebugStringConvertible, CustomStringConvertibl
 	}
 
 
-	// MARK: Printable
+	// MARK: IntegerLiteralConvertible
 
-	public var description: String {
-		return analysis(
-			ifGlobal: id,
-			ifLocal: { String($0) })
+	public init(integerLiteral value: Int) {
+		self = Local(value)
 	}
 
 
