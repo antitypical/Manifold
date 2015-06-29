@@ -11,7 +11,7 @@ public enum Inferable<Recur> {
 		@noescape ifApplication: (Recur, Checkable<Recur>) -> T,
 		@noescape ifLambda: (Int, Checkable<Recur>, Checkable<Recur>) -> T,
 		@noescape ifProjection: (Recur, Bool) -> T,
-		@noescape ifProduct: (Int, Checkable<Recur>, Checkable<Recur>) -> T,
+		@noescape ifProduct: (Checkable<Recur>, Checkable<Recur>) -> T,
 		@noescape ifBooleanType: () -> T,
 		@noescape ifBoolean: Bool -> T,
 		@noescape ifIf: (Recur, Recur, Recur) -> T,
@@ -31,8 +31,8 @@ public enum Inferable<Recur> {
 			return ifLambda(i, a, b)
 		case let .Projection(a, b):
 			return ifProjection(a, b)
-		case let .Product(i, a, b):
-			return ifProduct(i, a, b)
+		case let .Product(a, b):
+			return ifProduct(a, b)
 		case .BooleanType:
 			return ifBooleanType()
 		case let .Boolean(b):
@@ -52,7 +52,7 @@ public enum Inferable<Recur> {
 		ifApplication: ((Recur, Checkable<Recur>) -> T)? = nil,
 		ifLambda: ((Int, Checkable<Recur>, Checkable<Recur>) -> T)? = nil,
 		ifProjection: ((Recur, Bool) -> T)? = nil,
-		ifProduct: ((Int, Checkable<Recur>, Checkable<Recur>) -> T)? = nil,
+		ifProduct: ((Checkable<Recur>, Checkable<Recur>) -> T)? = nil,
 		ifBooleanType: (() -> T)? = nil,
 		ifBoolean: (Bool -> T)? = nil,
 		ifIf: ((Recur, Recur, Recur) -> T)? = nil,
@@ -85,7 +85,7 @@ public enum Inferable<Recur> {
 			ifApplication: { .Application(transform($0), $1.map(transform)) },
 			ifLambda: { .Lambda($0, $1.map(transform), $2.map(transform)) },
 			ifProjection: { .Projection(transform($0), $1) },
-			ifProduct: { .Product($0, $1.map(transform), $2.map(transform)) },
+			ifProduct: { .Product($0.map(transform), $1.map(transform)) },
 			ifBooleanType: const(.BooleanType),
 			ifBoolean: { .Boolean($0) },
 			ifIf: { .If(transform($0), transform($1), transform($2)) },
@@ -102,7 +102,7 @@ public enum Inferable<Recur> {
 	case Application(Recur, Checkable<Recur>)
 	case Lambda(Int, Checkable<Recur>, Checkable<Recur>) // (Πx:A)B where B can depend on x
 	case Projection(Recur, Bool)
-	case Product(Int, Checkable<Recur>, Checkable<Recur>) // (x, y) : Σx:X.Y
+	case Product(Checkable<Recur>, Checkable<Recur>)
 	case BooleanType
 	case Boolean(Bool)
 	case If(Recur, Recur, Recur)

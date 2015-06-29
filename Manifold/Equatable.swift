@@ -26,8 +26,8 @@ public func == <Recur: Equatable> (left: Inferable<Recur>, right: Inferable<Recu
 		return i == j && t == u && a == b
 	case let (.Projection(p, f), .Projection(q, g)):
 		return p == q && f == g
-	case let (.Product(i, t, a), .Product(j, u, b)):
-		return i == j && t == u && a == b
+	case let (.Product(t, a), .Product(u, b)):
+		return t == u && a == b
 	case let (.Boolean(a), .Boolean(b)):
 		return a == b
 	case let (.If(a1, b1, c1), .If(a2, b2, c2)):

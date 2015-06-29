@@ -57,17 +57,18 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		return Term(.Lambda(variable, type, body))
 	}
 
-	public static func product(variable: Int, _ type: Term, _ body: Term) -> Term {
-		return product(variable, .Inferable(type), .Inferable(body))
+
+	public static func product(a: Term, _ b: Term) -> Term {
+		return product(.Inferable(a), .Inferable(b))
 	}
 
-	public static func product(variable: Int, _ type: Checkable<Term>, _ body: Checkable<Term>) -> Term {
-		return Term(.Product(variable, type, body))
+	public static func product(a: Checkable<Term>, _ b: Checkable<Term>) -> Term {
+		return Term(.Product(a, b))
 	}
 
 
 	public static func sum(a: Term, _ b: Term) -> Term {
-		return product(booleanType) { c in `if`(c, then: a, `else`: b) }
+		return lambda(booleanType) { c in `if`(c, then: a, `else`: b) }
 	}
 
 	public static func sum(terms: [Term]) -> Term {
@@ -110,17 +111,6 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		return Term { .Lambda(n, type, .Inferable(body)) }
 	}
 
-	public static func product(type: Term, _ f: Term -> Term) -> Term {
-		return product(.Inferable(type), f)
-	}
-
-	public static func product(type: Checkable<Term>, _ f: Term -> Term) -> Term {
-		var n = 0
-		let body = f(Term { .Variable(.Local(n)) })
-		n = body.maxBoundVariable + 1
-		return Term { .Product(n, type, .Inferable(body)) }
-	}
-
 
 	// MARK: Destructors
 
@@ -144,7 +134,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		return expression.analysis(ifLambda: Optional.Some, otherwise: const(nil))
 	}
 
-	public var product: (Int, Checkable<Term>, Checkable<Term>)? {
+	public var product: (Checkable<Term>, Checkable<Term>)? {
 		return expression.analysis(ifProduct: Optional.Some, otherwise: const(nil))
 	}
 
@@ -175,10 +165,12 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	private var maxBoundVariable: Int {
 		return cata {
 			$0.analysis(
-				ifApplication: { max($0, $1.analysis(ifInferable: id)) },
+				ifApplication: {
+					max($0, $1.analysis(ifInferable: id))
+				},
 				ifLambda: { max($0.0, $0.1.analysis(ifInferable: id)) },
 				ifProjection: { $0.0 },
-				ifProduct: { max($0.0, $0.1.analysis(ifInferable: id)) },
+				ifProduct: { max($0.analysis(ifInferable: id), $1.analysis(ifInferable: id)) },
 				ifIf: { max($0, $1, $2) },
 				ifAnnotation: { max($0.analysis(ifInferable: id), $1.analysis(ifInferable: id)) },
 				otherwise: const(-1))
@@ -245,7 +237,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			return a.typecheck(environment)
 				.flatMap { t in
 					t.expression.analysis(
-						ifProduct: { i, v, f in
+						ifLambda: { i, v, f in
 							v.analysis(ifInferable: { v in
 								f.analysis(ifInferable: { f in
 									Either.right(b ? f.substitute(i, v) : v)
@@ -254,14 +246,14 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 						},
 						otherwise: const(Either.left("illegal projection of \(a) : \(t) field \(b ? 1 : 0)")))
 				}
-		case let .Product(i, a, b):
+		case let .Product(a, b):
 			return a.analysis(ifInferable: { a in
 				a.typecheck(environment)
 					.flatMap { a in
 						let t = a.evaluate()
 						return b.analysis(ifInferable: { b in
-							b.typecheck(environment + [ .Local(i): t ])
-								.map { Term.product(t, const($0)) }
+							b.typecheck(environment)
+								.map { Term.lambda(t, const($0)) }
 						})
 					}
 			})
@@ -274,7 +266,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 						.map { a, b in
 							a == b
 								? a
-								: Term.product(.booleanType) { Term.`if`($0, then: a, `else`: b) }
+								: Term.lambda(.booleanType) { Term.`if`($0, then: a, `else`: b) }
 						}
 				}
 		case let .Annotation(term, type):
@@ -305,7 +297,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		case let .Application(a, b):
 			return a.evaluate(environment).lambda.map { i, type, body in body.analysis(ifInferable: { $0.substitute(i, b.analysis(ifInferable: { $0.evaluate(environment) })) }) }!
 		case let .Projection(a, b):
-			return a.evaluate(environment).product.map { (b ? $2 : $1).analysis(ifInferable: id) }!
+			return a.evaluate(environment).product.map { (b ? $1 : $0).analysis(ifInferable: id) }!
 		case let .If(condition, then, `else`):
 			return condition.evaluate(environment).boolean!
 				? then.evaluate(environment)
@@ -340,7 +332,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifApplication: { "\($0)(\($1))" },
 			ifLambda: { "λ \($0) : \($1.analysis(ifInferable: id)) . \($2.analysis(ifInferable: id))" },
 			ifProjection: { "\($0).\($1 ? 1 : 0)" },
-			ifProduct: { "Σ \($0) : \($1) . \($2)" },
+			ifProduct: { "(\($0) × \($1))" },
 			ifBooleanType: const("Boolean"),
 			ifBoolean: { String(reflecting: $0) },
 			ifIf: { "if \($0) then \($1) else \($2)" },
@@ -370,7 +362,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 				ifApplication: { 7 ^ $0 ^ hash($1) },
 				ifLambda: { 11 ^ $0 ^ hash($1) ^ hash($2) },
 				ifProjection: { 13 ^ $0 ^ $1.hashValue },
-				ifProduct: { 17 ^ $0 ^ hash($1) ^ hash($2) },
+				ifProduct: { 17 ^ hash($0) ^ hash($1) },
 				ifBooleanType: { 19 },
 				ifBoolean: { 23 ^ $0.hashValue },
 				ifIf: { 29 ^ $0 ^ $1 ^ $2 },
@@ -409,7 +401,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 				"\($0.1).\($1 ? 1 : 0)"
 			},
 			ifProduct: {
-				"Σ \(alphabetize($0)) : \($1.analysis(ifInferable: { $0.1 })) . \($2.analysis(ifInferable: { $0.1 }))"
+				"(\($0.analysis(ifInferable: { $0.1 })) × \($1.analysis(ifInferable: { $0.1 })))"
 			},
 			ifBooleanType: const("Boolean"),
 			ifBoolean: { String($0) },
