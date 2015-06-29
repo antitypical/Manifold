@@ -28,7 +28,7 @@ final class TypecheckingTests: XCTestCase {
 	}
 
 	func testProjectionTypechecksToTypeOfProjectedField() {
-		let product = Term.product(.unit, const(false))
+		let product = Term.product(.unit, false)
 		assert(Term.projection(product, false).typecheck().right, ==, Term.unitType)
 		assert(Term.projection(product, true).typecheck().right, ==, Term.booleanType)
 	}
@@ -38,7 +38,7 @@ final class TypecheckingTests: XCTestCase {
 	}
 
 	func testIfWithDisjointBranchTypesTypechecksToSumOfBranchTypes() {
-		assert(Term.`if`(.boolean(true), then: .unit, `else`: .boolean(true)).typecheck().right, ==, Term.product(.booleanType) { Term.`if`($0, then: .unitType, `else`: .booleanType) })
+		assert(Term.`if`(.boolean(true), then: .unit, `else`: .boolean(true)).typecheck().right, ==, Term.lambda(.booleanType) { Term.`if`($0, then: .unitType, `else`: .booleanType) })
 	}
 }
 
