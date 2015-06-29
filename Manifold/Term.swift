@@ -151,6 +151,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 				ifProjection: { $0.0 },
 				ifSigma: { max($0.0, $0.1) },
 				ifIf: { max($0, $1, $2) },
+				ifAnnotation: { max($0.analysis(ifInferable: id), $1.analysis(ifInferable: id)) },
 				otherwise: const(-1))
 		} (self)
 	}
