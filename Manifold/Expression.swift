@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Expression<Recur> {
+public enum Inferable<Recur> {
 	// MARK: Analyses
 
 	public func analysis<T>(
@@ -71,7 +71,7 @@ public enum Expression<Recur> {
 
 	// MARK: Functor
 
-	public func map<T>(@noescape transform: Recur -> T) -> Expression<T> {
+	public func map<T>(@noescape transform: Recur -> T) -> Inferable<T> {
 		return analysis(
 			ifUnit: const(.Unit),
 			ifUnitType: const(.UnitType),

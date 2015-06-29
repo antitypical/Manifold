@@ -1,8 +1,8 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-// MARK: Expression
+// MARK: Inferable
 
-public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Recur>) -> Bool {
+public func == <Recur: Equatable> (left: Inferable<Recur>, right: Inferable<Recur>) -> Bool {
 	switch (left, right) {
 	case (.Unit, .Unit), (.UnitType, .UnitType), (.BooleanType, .BooleanType):
 		return true
