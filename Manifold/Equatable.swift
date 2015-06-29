@@ -1,15 +1,5 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-// MARK: Checkable
-
-public func == <Recur: Equatable> (left: Checkable<Recur>, right: Checkable<Recur>) -> Bool {
-	switch (left, right) {
-	case let (.Inferable(a), .Inferable(b)):
-		return a == b
-	}
-}
-
-
 // MARK: Inferable
 
 public func == <Recur: Equatable> (left: Inferable<Recur>, right: Inferable<Recur>) -> Bool {

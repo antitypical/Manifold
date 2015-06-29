@@ -8,14 +8,14 @@ public enum Inferable<Recur> {
 		@noescape ifUnitType: () -> T,
 		@noescape ifType: Int -> T,
 		@noescape ifVariable: Name -> T,
-		@noescape ifApplication: (Recur, Checkable<Recur>) -> T,
-		@noescape ifLambda: (Int, Checkable<Recur>, Checkable<Recur>) -> T,
+		@noescape ifApplication: (Recur, Recur) -> T,
+		@noescape ifLambda: (Int, Recur, Recur) -> T,
 		@noescape ifProjection: (Recur, Bool) -> T,
-		@noescape ifProduct: (Checkable<Recur>, Checkable<Recur>) -> T,
+		@noescape ifProduct: (Recur, Recur) -> T,
 		@noescape ifBooleanType: () -> T,
 		@noescape ifBoolean: Bool -> T,
 		@noescape ifIf: (Recur, Recur, Recur) -> T,
-		@noescape ifAnnotation: (Checkable<Recur>, Checkable<Recur>) -> T) -> T {
+		@noescape ifAnnotation: (Recur, Recur) -> T) -> T {
 		switch self {
 		case .Unit:
 			return ifUnit()
@@ -49,14 +49,14 @@ public enum Inferable<Recur> {
 		ifUnitType: (() -> T)? = nil,
 		ifType: (Int -> T)? = nil,
 		ifVariable: (Name -> T)? = nil,
-		ifApplication: ((Recur, Checkable<Recur>) -> T)? = nil,
-		ifLambda: ((Int, Checkable<Recur>, Checkable<Recur>) -> T)? = nil,
+		ifApplication: ((Recur, Recur) -> T)? = nil,
+		ifLambda: ((Int, Recur, Recur) -> T)? = nil,
 		ifProjection: ((Recur, Bool) -> T)? = nil,
-		ifProduct: ((Checkable<Recur>, Checkable<Recur>) -> T)? = nil,
+		ifProduct: ((Recur, Recur) -> T)? = nil,
 		ifBooleanType: (() -> T)? = nil,
 		ifBoolean: (Bool -> T)? = nil,
 		ifIf: ((Recur, Recur, Recur) -> T)? = nil,
-		ifAnnotation: ((Checkable<Recur>, Checkable<Recur>) -> T)? = nil,
+		ifAnnotation: ((Recur, Recur) -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifUnit: { ifUnit?() ?? otherwise() },
@@ -82,14 +82,14 @@ public enum Inferable<Recur> {
 			ifUnitType: const(.UnitType),
 			ifType: { .Type($0) },
 			ifVariable: { .Variable($0) },
-			ifApplication: { .Application(transform($0), $1.map(transform)) },
-			ifLambda: { .Lambda($0, $1.map(transform), $2.map(transform)) },
+			ifApplication: { .Application(transform($0), transform($1)) },
+			ifLambda: { .Lambda($0, transform($1), transform($2)) },
 			ifProjection: { .Projection(transform($0), $1) },
-			ifProduct: { .Product($0.map(transform), $1.map(transform)) },
+			ifProduct: { .Product(transform($0), transform($1)) },
 			ifBooleanType: const(.BooleanType),
 			ifBoolean: { .Boolean($0) },
 			ifIf: { .If(transform($0), transform($1), transform($2)) },
-			ifAnnotation: { .Annotation($0.map(transform), $1.map(transform)) })
+			ifAnnotation: { .Annotation(transform($0), transform($1)) })
 	}
 
 
@@ -99,31 +99,14 @@ public enum Inferable<Recur> {
 	case UnitType
 	case Type(Int)
 	case Variable(Name)
-	case Application(Recur, Checkable<Recur>)
-	case Lambda(Int, Checkable<Recur>, Checkable<Recur>) // (Πx:A)B where B can depend on x
+	case Application(Recur, Recur)
+	case Lambda(Int, Recur, Recur) // (Πx:A)B where B can depend on x
 	case Projection(Recur, Bool)
-	case Product(Checkable<Recur>, Checkable<Recur>)
+	case Product(Recur, Recur)
 	case BooleanType
 	case Boolean(Bool)
 	case If(Recur, Recur, Recur)
-	case Annotation(Checkable<Recur>, Checkable<Recur>)
-}
-
-
-public enum Checkable<Recur> {
-	public func analysis<T>(@noescape ifInferable ifInferable: Recur -> T) -> T {
-		switch self {
-		case let .Inferable(v):
-			return ifInferable(v)
-		}
-	}
-
-	public func map<T>(@noescape transform: Recur -> T) -> Checkable<T> {
-		return analysis(ifInferable: { .Inferable(transform($0)) })
-	}
-
-	case Inferable(Recur)
-
+	case Annotation(Recur, Recur)
 }
 
 
