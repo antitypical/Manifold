@@ -58,6 +58,10 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	}
 
 	public static func sigma(variable: Int, _ type: Term, _ body: Term) -> Term {
+		return sigma(variable, .Inferable(type), .Inferable(body))
+	}
+
+	public static func sigma(variable: Int, _ type: Checkable<Term>, _ body: Checkable<Term>) -> Term {
 		return Term(.Sigma(variable, type, body))
 	}
 
@@ -98,10 +102,14 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	}
 
 	public static func sigma(type: Term, _ f: Term -> Term) -> Term {
+		return sigma(.Inferable(type), f)
+	}
+
+	public static func sigma(type: Checkable<Term>, _ f: Term -> Term) -> Term {
 		var n = 0
 		let body = f(Term { .Variable(.Local(n)) })
 		n = body.maxBoundVariable + 1
-		return Term { .Sigma(n, type, body) }
+		return Term { .Sigma(n, type, .Inferable(body)) }
 	}
 
 
@@ -127,7 +135,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		return expression.analysis(ifLambda: Optional.Some, otherwise: const(nil))
 	}
 
-	public var sigma: (Int, Term, Term)? {
+	public var sigma: (Int, Checkable<Term>, Checkable<Term>)? {
 		return expression.analysis(ifSigma: Optional.Some, otherwise: const(nil))
 	}
 
@@ -161,7 +169,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 				ifApplication: { max($0, $1.analysis(ifInferable: id)) },
 				ifLambda: { max($0.0, $0.1.analysis(ifInferable: id)) },
 				ifProjection: { $0.0 },
-				ifSigma: { max($0.0, $0.1) },
+				ifSigma: { max($0.0, $0.1.analysis(ifInferable: id)) },
 				ifIf: { max($0, $1, $2) },
 				ifAnnotation: { max($0.analysis(ifInferable: id), $1.analysis(ifInferable: id)) },
 				otherwise: const(-1))
@@ -228,16 +236,26 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			return a.typecheck(environment)
 				.flatMap { t in
 					t.expression.analysis(
-						ifSigma: { i, v, f in Either.right(b ? f.substitute(i, v) : v) },
+						ifSigma: { i, v, f in
+							v.analysis(ifInferable: { v in
+								f.analysis(ifInferable: { f in
+									Either.right(b ? f.substitute(i, v) : v)
+								})
+							})
+						},
 						otherwise: const(Either.left("illegal projection of \(a) : \(t) field \(b ? 1 : 0)")))
 				}
 		case let .Sigma(i, a, b):
-			return a.typecheck(environment)
-				.flatMap { a in
-					let t = a.evaluate()
-					return b.typecheck(environment + [ .Local(i): t ])
-						.map { Term.sigma(t, const($0)) }
-				}
+			return a.analysis(ifInferable: { a in
+				a.typecheck(environment)
+					.flatMap { a in
+						let t = a.evaluate()
+						return b.analysis(ifInferable: { b in
+							b.typecheck(environment + [ .Local(i): t ])
+								.map { Term.sigma(t, const($0)) }
+						})
+					}
+			})
 		case .Boolean:
 			return .right(.booleanType)
 		case let .If(condition, then, `else`):
@@ -278,7 +296,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		case let .Application(a, b):
 			return a.evaluate(environment).lambda.map { i, type, body in body.analysis(ifInferable: { $0.substitute(i, b.analysis(ifInferable: { $0.evaluate(environment) })) }) }!
 		case let .Projection(a, b):
-			return a.evaluate(environment).sigma.map { b ? $2 : $1 }!
+			return a.evaluate(environment).sigma.map { (b ? $2 : $1).analysis(ifInferable: id) }!
 		case let .If(condition, then, `else`):
 			return condition.evaluate(environment).boolean!
 				? then.evaluate(environment)
@@ -343,7 +361,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 				ifApplication: { 7 ^ $0 ^ hash($1) },
 				ifLambda: { 11 ^ $0 ^ hash($1) ^ hash($2) },
 				ifProjection: { 13 ^ $0 ^ $1.hashValue },
-				ifSigma: { 17 ^ $0 ^ $1 ^ $2 },
+				ifSigma: { 17 ^ $0 ^ hash($1) ^ hash($2) },
 				ifBooleanType: { 19 },
 				ifBoolean: { 23 ^ $0.hashValue },
 				ifIf: { 29 ^ $0 ^ $1 ^ $2 },
@@ -382,7 +400,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 				"\($0.1).\($1 ? 1 : 0)"
 			},
 			ifSigma: {
-				"Σ \(alphabetize($0)) : \($1.1) . \($2.1)"
+				"Σ \(alphabetize($0)) : \($1.analysis(ifInferable: { $0.1 })) . \($2.analysis(ifInferable: { $0.1 }))"
 			},
 			ifBooleanType: const("Boolean"),
 			ifBoolean: { String($0) },
