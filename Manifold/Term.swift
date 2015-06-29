@@ -1,11 +1,11 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, FixpointType, Hashable, IntegerLiteralConvertible, CustomStringConvertible {
-	public init(_ expression: Inferable<Term>) {
+	public init(_ expression: Expression<Term>) {
 		self.init { expression }
 	}
 
-	public init(_ expression: () -> Inferable<Term>) {
+	public init(_ expression: () -> Expression<Term>) {
 		_expression = expression
 	}
 
@@ -122,8 +122,8 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		return expression.analysis(ifBoolean: Optional.Some, otherwise: const(nil))
 	}
 
-	private var _expression: () -> Inferable<Term>
-	public var expression: Inferable<Term> {
+	private var _expression: () -> Expression<Term>
+	public var expression: Expression<Term> {
 		return _expression()
 	}
 
@@ -285,7 +285,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		return cata(Term.toDebugString)(self)
 	}
 
-	private static func toDebugString(expression: Inferable<String>) -> String {
+	private static func toDebugString(expression: Expression<String>) -> String {
 		return expression.analysis(
 			ifUnit: const("()"),
 			ifUnitType: const("Unit"),
@@ -304,7 +304,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 	// MARK: FixpointType
 
-	public var out: Inferable<Term> {
+	public var out: Expression<Term> {
 		return expression
 	}
 
@@ -345,7 +345,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 	private static let alphabet = "abcdefghijklmnopqrstuvwxyz"
 
-	private static func toString(expression: Inferable<(Term, String)>) -> String {
+	private static func toString(expression: Expression<(Term, String)>) -> String {
 		let alphabetize: Int -> String = { index in Swift.String(Term.alphabet[advance(Term.alphabet.startIndex, index)]) }
 		return expression.analysis(
 			ifUnit: const("()"),
