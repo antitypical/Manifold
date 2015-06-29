@@ -1,8 +1,18 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-// MARK: Expression
+// MARK: Checkable
 
-public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Recur>) -> Bool {
+public func == <Recur: Equatable> (left: Checkable<Recur>, right: Checkable<Recur>) -> Bool {
+	switch (left, right) {
+	case let (.Inferable(a), .Inferable(b)):
+		return a == b
+	}
+}
+
+
+// MARK: Inferable
+
+public func == <Recur: Equatable> (left: Inferable<Recur>, right: Inferable<Recur>) -> Bool {
 	switch (left, right) {
 	case (.Unit, .Unit), (.UnitType, .UnitType), (.BooleanType, .BooleanType):
 		return true
@@ -22,6 +32,8 @@ public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Re
 		return a == b
 	case let (.If(a1, b1, c1), .If(a2, b2, c2)):
 		return a1 == a2 && b1 == b2 && c1 == c2
+	case let (.Annotation(term1, type1), .Annotation(term2, type2)):
+		return term1 == term2 && type1 == type2
 	default:
 		return false
 	}
