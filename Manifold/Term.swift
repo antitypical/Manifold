@@ -133,7 +133,6 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 	public var isNormalForm: Bool {
 		return expression.analysis(
-			ifVariable: const(false),
 			ifApplication: const(false),
 			ifProjection: const(false),
 			ifIf: const(false),
