@@ -32,6 +32,8 @@ public func == <Recur: Equatable> (left: Inferable<Recur>, right: Inferable<Recu
 		return a == b
 	case let (.If(a1, b1, c1), .If(a2, b2, c2)):
 		return a1 == a2 && b1 == b2 && c1 == c2
+	case let (.Annotation(term1, type1), .Annotation(term2, type2)):
+		return term1 == term2 && type1 == type2
 	default:
 		return false
 	}

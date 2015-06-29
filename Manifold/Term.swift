@@ -228,7 +228,11 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 						}
 				}
 		case let .Annotation(term, type):
-			return term.analysis(ifInferable: { $0.typecheck(environment, against: type) })
+			return type.analysis(ifInferable: {
+				$0.typecheck(environment, against: Term.type)
+					.map { $0.evaluate() }
+					.flatMap { type in term.analysis(ifInferable: { $0.typecheck(environment, against: type) }) }
+			})
 		}
 	}
 
@@ -290,7 +294,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifBooleanType: const("Boolean"),
 			ifBoolean: { String(reflecting: $0) },
 			ifIf: { "if \($0) then \($1) else \($2)" },
-			ifAnnotation: { "\($0) : \($1)" })
+			ifAnnotation: { "\($0.analysis(ifInferable: id)) : \($1.analysis(ifInferable: id))" })
 	}
 
 
@@ -317,7 +321,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 				ifBooleanType: { 19 },
 				ifBoolean: { 23 ^ $0.hashValue },
 				ifIf: { 29 ^ $0 ^ $1 ^ $2 },
-				ifAnnotation: { 31 ^ $0.analysis(ifInferable: id) ^ $1 })
+				ifAnnotation: { 31 ^ $0.analysis(ifInferable: id) ^ $1.analysis(ifInferable: id) })
 		} (self)
 	}
 
