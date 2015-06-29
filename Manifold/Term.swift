@@ -262,7 +262,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	public func typecheck(environment: [Name: Term], against: Term) -> Either<Error, Term> {
 		return typecheck(environment)
 			.flatMap { t in
-				(t == against) || (against == .type && t == Term.lambda(.type, const(.type)))
+				(t == against) || (against == .type && t.isType)
 					? Either.right(t)
 					: Either.left("type mismatch: expected (\(String(reflecting: self))) : (\(String(reflecting: against))), actually (\(String(reflecting: self))) : (\(String(reflecting: t))) in environment \(environment)")
 			}
