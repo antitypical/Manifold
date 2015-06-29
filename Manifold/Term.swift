@@ -361,7 +361,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifBooleanType: const("Boolean"),
 			ifBoolean: { String($0) },
 			ifIf: { "if \($0) then \($1) else \($2)" },
-			ifAnnotation: { "\($0) : \($1)" })
+			ifAnnotation: { "\($0.analysis(ifInferable: id)) : \($1.analysis(ifInferable: id))" })
 	}
 }
 
