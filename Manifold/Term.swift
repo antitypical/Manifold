@@ -88,6 +88,15 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	}
 
 
+	public static func annotation(term: Term, type: Term) -> Term {
+		return annotation(.Inferable(term), type: .Inferable(type))
+	}
+
+	public static func annotation(term: Checkable<Term>, type: Checkable<Term>) -> Term {
+		return Term(.Annotation(term, type))
+	}
+
+
 	// MARK: Higher-order construction
 
 	public static func lambda(type: Term, _ f: Term -> Term) -> Term {
