@@ -105,6 +105,13 @@ public enum Inferable<Recur> {
 
 public enum Checkable<Recur> {
 	case Inferable(Box<Manifold.Inferable<Recur>>)
+
+	public func map<T>(@noescape transform: Recur -> T) -> Checkable<T> {
+		switch self {
+		case let .Inferable(v):
+			return .Inferable(v.map { $0.map(transform) })
+		}
+	}
 }
 
 
