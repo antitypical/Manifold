@@ -104,8 +104,9 @@ public enum Inferable<Recur> {
 
 
 public enum Checkable<Recur> {
-	case Inferable(() -> Manifold.Inferable<Recur>)
+	case Inferable(Box<Manifold.Inferable<Recur>>)
 }
 
 
+import Box
 import Prelude

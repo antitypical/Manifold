@@ -5,7 +5,7 @@
 public func == <Recur: Equatable> (left: Checkable<Recur>, right: Checkable<Recur>) -> Bool {
 	switch (left, right) {
 	case let (.Inferable(a), .Inferable(b)):
-		return a() == b()
+		return a.value == b.value
 	}
 }
 
