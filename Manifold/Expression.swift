@@ -104,21 +104,20 @@ public enum Inferable<Recur> {
 
 
 public enum Checkable<Recur> {
-	public func analysis<T>(@noescape ifInferable ifInferable: Manifold.Inferable<Recur> -> T) -> T {
+	public func analysis<T>(@noescape ifInferable ifInferable: Recur -> T) -> T {
 		switch self {
 		case let .Inferable(v):
-			return ifInferable(v.value)
+			return ifInferable(v)
 		}
 	}
 
 	public func map<T>(@noescape transform: Recur -> T) -> Checkable<T> {
-		return analysis(ifInferable: { .Inferable(Box($0.map(transform))) })
+		return analysis(ifInferable: { .Inferable(transform($0)) })
 	}
 
-	case Inferable(Box<Manifold.Inferable<Recur>>)
+	case Inferable(Recur)
 
 }
 
 
-import Box
 import Prelude
