@@ -14,7 +14,8 @@ public enum Inferable<Recur> {
 		@noescape ifSigma: (Int, Recur, Recur) -> T,
 		@noescape ifBooleanType: () -> T,
 		@noescape ifBoolean: Bool -> T,
-		@noescape ifIf: (Recur, Recur, Recur) -> T) -> T {
+		@noescape ifIf: (Recur, Recur, Recur) -> T,
+		@noescape ifAnnotation: (Checkable<Recur>, Recur) -> T) -> T {
 		switch self {
 		case .Unit:
 			return ifUnit()
@@ -38,6 +39,8 @@ public enum Inferable<Recur> {
 			return ifBoolean(b)
 		case let .If(a, b, c):
 			return ifIf(a, b, c)
+		case let .Annotation(term, type):
+			return ifAnnotation(term, type)
 		}
 	}
 
@@ -53,6 +56,7 @@ public enum Inferable<Recur> {
 		ifBooleanType: (() -> T)? = nil,
 		ifBoolean: (Bool -> T)? = nil,
 		ifIf: ((Recur, Recur, Recur) -> T)? = nil,
+		ifAnnotation: ((Checkable<Recur>, Recur) -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifUnit: { ifUnit?() ?? otherwise() },
@@ -65,7 +69,8 @@ public enum Inferable<Recur> {
 			ifSigma: { ifSigma?($0) ?? otherwise() },
 			ifBooleanType: { ifBooleanType?() ?? otherwise() },
 			ifBoolean: { ifBoolean?($0) ?? otherwise() },
-			ifIf: { ifIf?($0) ?? otherwise() })
+			ifIf: { ifIf?($0) ?? otherwise() },
+			ifAnnotation: { ifAnnotation?($0) ?? otherwise() })
 	}
 
 
@@ -83,7 +88,8 @@ public enum Inferable<Recur> {
 			ifSigma: { .Sigma($0, transform($1), transform($2)) },
 			ifBooleanType: const(.BooleanType),
 			ifBoolean: { .Boolean($0) },
-			ifIf: { .If(transform($0), transform($1), transform($2)) })
+			ifIf: { .If(transform($0), transform($1), transform($2)) },
+			ifAnnotation: { .Annotation($0.map(transform), transform($1)) })
 	}
 
 
@@ -100,6 +106,7 @@ public enum Inferable<Recur> {
 	case BooleanType
 	case Boolean(Bool)
 	case If(Recur, Recur, Recur)
+	case Annotation(Checkable<Recur>, Recur)
 }
 
 

@@ -136,6 +136,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifApplication: const(false),
 			ifProjection: const(false),
 			ifIf: const(false),
+			ifAnnotation: const(false),
 			otherwise: const(true))
 	}
 
@@ -226,6 +227,8 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 								: Term.sigma(.booleanType) { Term.`if`($0, then: a, `else`: b) }
 						}
 				}
+		case let .Annotation(term, type):
+			return term.analysis(ifInferable: { $0.typecheck(environment, against: type) })
 		}
 	}
 
@@ -253,6 +256,8 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			return condition.evaluate(environment).boolean!
 				? then.evaluate(environment)
 				: `else`.evaluate(environment)
+		case let .Annotation(term, _):
+			return term.analysis(ifInferable: { $0.evaluate(environment) })
 		default:
 			return self
 		}
@@ -284,7 +289,8 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifSigma: { "Σ \($0) : \($1) . \($2)" },
 			ifBooleanType: const("Boolean"),
 			ifBoolean: { String(reflecting: $0) },
-			ifIf: { "if \($0) then \($1) else \($2)" })
+			ifIf: { "if \($0) then \($1) else \($2)" },
+			ifAnnotation: { "\($0) : \($1)" })
 	}
 
 
@@ -309,7 +315,8 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifSigma: { 17 ^ $0 ^ $1.hashValue ^ $2.hashValue },
 			ifBooleanType: const(19),
 			ifBoolean: { 23 ^ $0.hashValue },
-			ifIf: { 29 ^ $0.hashValue ^ $1.hashValue ^ $2.hashValue })
+			ifIf: { 29 ^ $0.hashValue ^ $1.hashValue ^ $2.hashValue },
+			ifAnnotation: { 31 ^ $0.analysis(ifInferable: { $0.hashValue }) ^ $1.hashValue })
 	}
 
 
@@ -347,7 +354,8 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			},
 			ifBooleanType: const("Boolean"),
 			ifBoolean: { String($0) },
-			ifIf: { "if \($0) then \($1) else \($2)" })
+			ifIf: { "if \($0) then \($1) else \($2)" },
+			ifAnnotation: { "\($0) : \($1)" })
 	}
 }
 
