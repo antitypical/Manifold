@@ -216,7 +216,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 				}
 		case let .Lambda(i, t, b):
 			return t.analysis(ifInferable: { t in
-				t.typecheck(environment)
+				t.typecheck(environment, against: Term.type)
 					.flatMap { _ in
 						b.analysis(ifInferable: { b in
 							b.typecheck(environment + [ .Local(i): t ])
