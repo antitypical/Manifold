@@ -304,19 +304,21 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	// MARK: Hashable
 
 	public var hashValue: Int {
-		return expression.analysis(
-			ifUnit: const(1),
-			ifUnitType: const(2),
-			ifType: { 3 ^ $0.hashValue },
-			ifVariable: { 5 ^ $0.hashValue },
-			ifApplication: { 7 ^ $0.hashValue ^ $1.hashValue },
-			ifLambda: { 11 ^ $0 ^ $1.hashValue ^ $2.hashValue },
-			ifProjection: { 13 ^ $0.hashValue ^ $1.hashValue },
-			ifSigma: { 17 ^ $0 ^ $1.hashValue ^ $2.hashValue },
-			ifBooleanType: const(19),
-			ifBoolean: { 23 ^ $0.hashValue },
-			ifIf: { 29 ^ $0.hashValue ^ $1.hashValue ^ $2.hashValue },
-			ifAnnotation: { 31 ^ $0.analysis(ifInferable: { $0.hashValue }) ^ $1.hashValue })
+		return cata {
+			$0.analysis(
+				ifUnit: { 1 },
+				ifUnitType: { 2 },
+				ifType: { 3 ^ $0 },
+				ifVariable: { 5 ^ $0.hashValue },
+				ifApplication: { 7 ^ $0 ^ $1 },
+				ifLambda: { 11 ^ $0 ^ $1 ^ $2 },
+				ifProjection: { 13 ^ $0 ^ $1.hashValue },
+				ifSigma: { 17 ^ $0 ^ $1 ^ $2 },
+				ifBooleanType: { 19 },
+				ifBoolean: { 23 ^ $0.hashValue },
+				ifIf: { 29 ^ $0 ^ $1 ^ $2 },
+				ifAnnotation: { 31 ^ $0.analysis(ifInferable: id) ^ $1 })
+		} (self)
 	}
 
 
