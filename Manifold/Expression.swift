@@ -8,7 +8,7 @@ public enum Inferable<Recur> {
 		@noescape ifUnitType: () -> T,
 		@noescape ifType: Int -> T,
 		@noescape ifVariable: Name -> T,
-		@noescape ifApplication: (Recur, Recur) -> T,
+		@noescape ifApplication: (Recur, Checkable<Recur>) -> T,
 		@noescape ifLambda: (Int, Recur, Recur) -> T,
 		@noescape ifProjection: (Recur, Bool) -> T,
 		@noescape ifSigma: (Int, Recur, Recur) -> T,
@@ -49,7 +49,7 @@ public enum Inferable<Recur> {
 		ifUnitType: (() -> T)? = nil,
 		ifType: (Int -> T)? = nil,
 		ifVariable: (Name -> T)? = nil,
-		ifApplication: ((Recur, Recur) -> T)? = nil,
+		ifApplication: ((Recur, Checkable<Recur>) -> T)? = nil,
 		ifLambda: ((Int, Recur, Recur) -> T)? = nil,
 		ifProjection: ((Recur, Bool) -> T)? = nil,
 		ifSigma: ((Int, Recur, Recur) -> T)? = nil,
@@ -82,7 +82,7 @@ public enum Inferable<Recur> {
 			ifUnitType: const(.UnitType),
 			ifType: { .Type($0) },
 			ifVariable: { .Variable($0) },
-			ifApplication: { .Application(transform($0), transform($1)) },
+			ifApplication: { .Application(transform($0), $1.map(transform)) },
 			ifLambda: { .Lambda($0, transform($1), transform($2)) },
 			ifProjection: { .Projection(transform($0), $1) },
 			ifSigma: { .Sigma($0, transform($1), transform($2)) },
@@ -99,7 +99,7 @@ public enum Inferable<Recur> {
 	case UnitType
 	case Type(Int)
 	case Variable(Name)
-	case Application(Recur, Recur)
+	case Application(Recur, Checkable<Recur>)
 	case Lambda(Int, Recur, Recur) // (Πx:A)B where B can depend on x
 	case Projection(Recur, Bool)
 	case Sigma(Int, Recur, Recur) // (Σx:A)B where B can depend on x

@@ -31,6 +31,10 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 
 	public static func application(a: Term, _ b: Term) -> Term {
+		return application(a, .Inferable(b))
+	}
+
+	public static func application(a: Term, _ b: Checkable<Term>) -> Term {
 		return Term(.Application(a, b))
 	}
 
@@ -107,7 +111,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		return expression.analysis(ifType: const(true), otherwise: const(false))
 	}
 
-	public var application: (Term, Term)? {
+	public var application: (Term, Checkable<Term>)? {
 		return expression.analysis(ifApplication: Optional.Some, otherwise: const(nil))
 	}
 
@@ -146,7 +150,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	private var maxBoundVariable: Int {
 		return cata {
 			$0.analysis(
-				ifApplication: max,
+				ifApplication: { max($0, $1.analysis(ifInferable: id)) },
 				ifLambda: { max($0.0, $0.1) },
 				ifProjection: { $0.0 },
 				ifSigma: { max($0.0, $0.1) },
@@ -193,7 +197,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			return a.typecheck(environment)
 				.flatMap { t in
 					t.expression.analysis(
-						ifLambda: { i, v, f in b.typecheck(environment, against: v).map { f.substitute(i, $0) } },
+						ifLambda: { i, v, f in b.analysis(ifInferable: { $0.typecheck(environment, against: v) }).map { f.substitute(i, $0) } },
 						otherwise: const(Either.left("illegal application of \(a) : \(t) to \(b)")))
 				}
 		case let .Lambda(i, t, b):
@@ -254,7 +258,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		case let .Variable(i):
 			return environment[i] ?? .variable(i)
 		case let .Application(a, b):
-			return a.evaluate(environment).lambda.map { $2.substitute($0, b.evaluate(environment)) }!
+			return a.evaluate(environment).lambda.map { $2.substitute($0, b.analysis(ifInferable: { $0.evaluate(environment) })) }!
 		case let .Projection(a, b):
 			return a.evaluate(environment).sigma.map { b ? $2 : $1 }!
 		case let .If(condition, then, `else`):
@@ -315,7 +319,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 				ifUnitType: { 2 },
 				ifType: { 3 ^ $0 },
 				ifVariable: { 5 ^ $0.hashValue },
-				ifApplication: { 7 ^ $0 ^ $1 },
+				ifApplication: { 7 ^ $0 ^ $1.analysis(ifInferable: id) },
 				ifLambda: { 11 ^ $0 ^ $1 ^ $2 },
 				ifProjection: { 13 ^ $0 ^ $1.hashValue },
 				ifSigma: { 17 ^ $0 ^ $1 ^ $2 },
@@ -349,7 +353,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifUnitType: const("Unit"),
 			ifType: { $0 > 0 ? "Type\($0)" : "Type" },
 			ifVariable: { $0.analysis(ifGlobal: id, ifLocal: alphabetize) },
-			ifApplication: { "\($0.1)(\($1.1))" },
+			ifApplication: { "\($0.1)(\($1.analysis(ifInferable: id)))" },
 			ifLambda: {
 				"λ \(alphabetize($0)) : \($1.1) . \($2.1)"
 			},
