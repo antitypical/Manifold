@@ -50,6 +50,10 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 
 
 	public static func lambda(variable: Int, _ type: Term, _ body: Term) -> Term {
+		return lambda(variable, .Inferable(type), .Inferable(body))
+	}
+
+	public static func lambda(variable: Int, _ type: Checkable<Term>, _ body: Checkable<Term>) -> Term {
 		return Term(.Lambda(variable, type, body))
 	}
 
@@ -83,10 +87,14 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	// MARK: Higher-order construction
 
 	public static func lambda(type: Term, _ f: Term -> Term) -> Term {
+		return lambda(.Inferable(type), f)
+	}
+
+	public static func lambda(type: Checkable<Term>, _ f: Term -> Term) -> Term {
 		var n = 0
 		let body = f(Term { .Variable(.Local(n)) })
 		n = body.maxBoundVariable + 1
-		return Term { .Lambda(n, type, body) }
+		return Term { .Lambda(n, type, .Inferable(body)) }
 	}
 
 	public static func sigma(type: Term, _ f: Term -> Term) -> Term {
@@ -115,7 +123,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		return expression.analysis(ifApplication: Optional.Some, otherwise: const(nil))
 	}
 
-	public var lambda: (Int, Term, Term)? {
+	public var lambda: (Int, Checkable<Term>, Checkable<Term>)? {
 		return expression.analysis(ifLambda: Optional.Some, otherwise: const(nil))
 	}
 
@@ -151,7 +159,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		return cata {
 			$0.analysis(
 				ifApplication: { max($0, $1.analysis(ifInferable: id)) },
-				ifLambda: { max($0.0, $0.1) },
+				ifLambda: { max($0.0, $0.1.analysis(ifInferable: id)) },
 				ifProjection: { $0.0 },
 				ifSigma: { max($0.0, $0.1) },
 				ifIf: { max($0, $1, $2) },
@@ -197,15 +205,25 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			return a.typecheck(environment)
 				.flatMap { t in
 					t.expression.analysis(
-						ifLambda: { i, v, f in b.analysis(ifInferable: { $0.typecheck(environment, against: v) }).map { f.substitute(i, $0) } },
+						ifLambda: { i, v, f in
+							v.analysis(ifInferable: { v in
+								f.analysis(ifInferable: { f in
+									b.analysis(ifInferable: { $0.typecheck(environment, against: v) }).map { f.substitute(i, $0) }
+								})
+							})
+						},
 						otherwise: const(Either.left("illegal application of \(a) : \(t) to \(b)")))
 				}
 		case let .Lambda(i, t, b):
-			return t.typecheck(environment)
-				.flatMap { _ in
-					b.typecheck(environment + [ .Local(i): t ])
-						.map { Term.lambda(t, const($0)) }
-				}
+			return t.analysis(ifInferable: { t in
+				t.typecheck(environment)
+					.flatMap { _ in
+						b.analysis(ifInferable: { b in
+							b.typecheck(environment + [ .Local(i): t ])
+								.map { Term.lambda(t, const($0)) }
+						})
+					}
+			})
 		case let .Projection(a, b):
 			return a.typecheck(environment)
 				.flatMap { t in
@@ -258,7 +276,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 		case let .Variable(i):
 			return environment[i] ?? .variable(i)
 		case let .Application(a, b):
-			return a.evaluate(environment).lambda.map { $2.substitute($0, b.analysis(ifInferable: { $0.evaluate(environment) })) }!
+			return a.evaluate(environment).lambda.map { i, type, body in body.analysis(ifInferable: { $0.substitute(i, b.analysis(ifInferable: { $0.evaluate(environment) })) }) }!
 		case let .Projection(a, b):
 			return a.evaluate(environment).sigma.map { b ? $2 : $1 }!
 		case let .If(condition, then, `else`):
@@ -293,7 +311,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifType: { "Type\($0)" },
 			ifVariable: { "Variable(\($0))" },
 			ifApplication: { "\($0)(\($1))" },
-			ifLambda: { "λ \($0) : \($1) . \($2)" },
+			ifLambda: { "λ \($0) : \($1.analysis(ifInferable: id)) . \($2.analysis(ifInferable: id))" },
 			ifProjection: { "\($0).\($1 ? 1 : 0)" },
 			ifSigma: { "Σ \($0) : \($1) . \($2)" },
 			ifBooleanType: const("Boolean"),
@@ -313,20 +331,23 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	// MARK: Hashable
 
 	public var hashValue: Int {
+		let hash: Checkable<Int> -> Int = {
+			$0.analysis(ifInferable: id)
+		}
 		return cata {
 			$0.analysis(
 				ifUnit: { 1 },
 				ifUnitType: { 2 },
 				ifType: { 3 ^ $0 },
 				ifVariable: { 5 ^ $0.hashValue },
-				ifApplication: { 7 ^ $0 ^ $1.analysis(ifInferable: id) },
-				ifLambda: { 11 ^ $0 ^ $1 ^ $2 },
+				ifApplication: { 7 ^ $0 ^ hash($1) },
+				ifLambda: { 11 ^ $0 ^ hash($1) ^ hash($2) },
 				ifProjection: { 13 ^ $0 ^ $1.hashValue },
 				ifSigma: { 17 ^ $0 ^ $1 ^ $2 },
 				ifBooleanType: { 19 },
 				ifBoolean: { 23 ^ $0.hashValue },
 				ifIf: { 29 ^ $0 ^ $1 ^ $2 },
-				ifAnnotation: { 31 ^ $0.analysis(ifInferable: id) ^ $1.analysis(ifInferable: id) })
+				ifAnnotation: { 31 ^ hash($0) ^ hash($1) })
 		} (self)
 	}
 
@@ -355,7 +376,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 			ifVariable: { $0.analysis(ifGlobal: id, ifLocal: alphabetize) },
 			ifApplication: { "\($0.1)(\($1.analysis(ifInferable: id)))" },
 			ifLambda: {
-				"λ \(alphabetize($0)) : \($1.1) . \($2.1)"
+				"λ \(alphabetize($0)) : \($1.analysis(ifInferable: { $0.1 })) . \($2.analysis(ifInferable: { $0.1 }))"
 			},
 			ifProjection: {
 				"\($0.1).\($1 ? 1 : 0)"

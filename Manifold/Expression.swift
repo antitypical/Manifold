@@ -9,7 +9,7 @@ public enum Inferable<Recur> {
 		@noescape ifType: Int -> T,
 		@noescape ifVariable: Name -> T,
 		@noescape ifApplication: (Recur, Checkable<Recur>) -> T,
-		@noescape ifLambda: (Int, Recur, Recur) -> T,
+		@noescape ifLambda: (Int, Checkable<Recur>, Checkable<Recur>) -> T,
 		@noescape ifProjection: (Recur, Bool) -> T,
 		@noescape ifSigma: (Int, Recur, Recur) -> T,
 		@noescape ifBooleanType: () -> T,
@@ -50,7 +50,7 @@ public enum Inferable<Recur> {
 		ifType: (Int -> T)? = nil,
 		ifVariable: (Name -> T)? = nil,
 		ifApplication: ((Recur, Checkable<Recur>) -> T)? = nil,
-		ifLambda: ((Int, Recur, Recur) -> T)? = nil,
+		ifLambda: ((Int, Checkable<Recur>, Checkable<Recur>) -> T)? = nil,
 		ifProjection: ((Recur, Bool) -> T)? = nil,
 		ifSigma: ((Int, Recur, Recur) -> T)? = nil,
 		ifBooleanType: (() -> T)? = nil,
@@ -83,7 +83,7 @@ public enum Inferable<Recur> {
 			ifType: { .Type($0) },
 			ifVariable: { .Variable($0) },
 			ifApplication: { .Application(transform($0), $1.map(transform)) },
-			ifLambda: { .Lambda($0, transform($1), transform($2)) },
+			ifLambda: { .Lambda($0, $1.map(transform), $2.map(transform)) },
 			ifProjection: { .Projection(transform($0), $1) },
 			ifSigma: { .Sigma($0, transform($1), transform($2)) },
 			ifBooleanType: const(.BooleanType),
@@ -100,7 +100,7 @@ public enum Inferable<Recur> {
 	case Type(Int)
 	case Variable(Name)
 	case Application(Recur, Checkable<Recur>)
-	case Lambda(Int, Recur, Recur) // (Πx:A)B where B can depend on x
+	case Lambda(Int, Checkable<Recur>, Checkable<Recur>) // (Πx:A)B where B can depend on x
 	case Projection(Recur, Bool)
 	case Sigma(Int, Recur, Recur) // (Σx:A)B where B can depend on x
 	case BooleanType
