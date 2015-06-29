@@ -103,4 +103,9 @@ public enum Inferable<Recur> {
 }
 
 
+enum Checkable<Recur> {
+	case Inferable(Manifold.Inferable<Recur>)
+}
+
+
 import Prelude
