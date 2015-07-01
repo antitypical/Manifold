@@ -109,5 +109,11 @@ public enum Expression<Recur> {
 	case Annotation(Recur, Recur)
 }
 
+extension Expression where Recur: FixpointType {
+	var destructured: Expression<Recur.Recur> {
+		return map { $0.out }
+	}
+}
+
 
 import Prelude
