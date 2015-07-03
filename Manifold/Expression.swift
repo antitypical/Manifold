@@ -187,6 +187,24 @@ extension Expression where Recur: FixpointType {
 				otherwise: const(t)))
 			} (Recur(self)).out
 	}
+
+
+	// MARK: Bound variables
+
+	private var maxBoundVariable: Int {
+		return cata {
+			$0.analysis(
+				ifApplication: {
+					max($0, $1)
+				},
+				ifLambda: { max($0.0, $0.1) },
+				ifProjection: { $0.0 },
+				ifProduct: { max($0, $1) },
+				ifIf: { max($0, $1, $2) },
+				ifAnnotation: { max($0, $1) },
+				otherwise: const(-1))
+		} (Recur(self))
+	}
 }
 
 
