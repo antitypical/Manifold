@@ -262,6 +262,28 @@ extension Expression where Recur: FixpointType {
 				otherwise: const(-1))
 		} (Recur(self))
 	}
+
+
+	// MARK: Hashable
+
+	var hashValue: Int {
+		return cata {
+			return $0.map { $0.hashValue }
+				.analysis(
+					ifUnit: { 1 },
+					ifUnitType: { 2 },
+					ifType: { 3 ^ $0 },
+					ifVariable: { 5 ^ $0.hashValue },
+					ifApplication: { 7 ^ $0 ^ $1 },
+					ifLambda: { 11 ^ $0 ^ $1 ^ $2 },
+					ifProjection: { 13 ^ $0 ^ $1.hashValue },
+					ifProduct: { 17 ^ $0 ^ $1 },
+					ifBooleanType: { 19 },
+					ifBoolean: { 23 ^ $0.hashValue },
+					ifIf: { 29 ^ $0 ^ $1 ^ $2 },
+					ifAnnotation: { 31 ^ $0 ^ $1 })
+		} (Recur(self))
+	}
 }
 
 extension Expression where Recur: FixpointType, Recur: Equatable {
