@@ -166,7 +166,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 				ifVariable: {
 					$0.analysis(
 						ifGlobal: const(Term(t)),
-						ifLocal: { $0 == i ? term : Term.variable(.Local($0)) })
+						ifLocal: { $0 == i ? term : Term(t) })
 				},
 				ifApplication: Term.application,
 				ifLambda: Term.lambda,
@@ -255,7 +255,7 @@ public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, Fix
 	public func evaluate(environment: [Name: Term] = [:]) -> Term {
 		switch expression {
 		case let .Variable(i):
-			return environment[i] ?? .variable(i)
+			return environment[i] ?? self
 		case let .Application(a, b):
 			return a.evaluate(environment).lambda.map { i, type, body in body.substitute(i, b.evaluate(environment)) }!
 		case let .Projection(a, b):
