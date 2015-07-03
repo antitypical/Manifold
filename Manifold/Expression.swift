@@ -142,6 +142,26 @@ extension Expression where Recur: FixpointType {
 	public var boolean: Bool? {
 		return analysis(ifBoolean: Optional.Some, otherwise: const(nil))
 	}
+
+
+	// MARK: Substitution
+
+	private func substitute(i: Int, _ expression: Expression) -> Expression {
+		return cata { t in
+			Recur(t.analysis(
+				ifVariable: {
+					$0.analysis(
+						ifGlobal: const(t),
+						ifLocal: { $0 == i ? expression : t })
+				},
+				ifApplication: Expression.Application,
+				ifLambda: Expression.Lambda,
+				ifProjection: Expression.Projection,
+				ifProduct: Expression.Product,
+				ifIf: Expression.If,
+				otherwise: const(t)))
+			} (Recur(self)).out
+	}
 }
 
 
