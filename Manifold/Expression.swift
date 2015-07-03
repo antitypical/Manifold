@@ -217,5 +217,83 @@ extension Expression where Recur: FixpointType {
 	}
 }
 
+extension Expression where Recur: FixpointType, Recur: Equatable {
+	// MARK: Typechecking
 
+	public func typecheck(environment: [Name: Expression] = [:]) -> Either<Error, Expression> {
+		switch destructured {
+		case .Unit:
+			return .right(.UnitType)
+		case .Boolean:
+			return .right(.BooleanType)
+
+		case let .If(condition, then, `else`):
+			return condition.typecheck(environment, against: .BooleanType)
+				.flatMap { _ in
+					(then.typecheck(environment) &&& `else`.typecheck(environment))
+						.map { a, b in
+							a == b
+								? a
+								: Expression.lambda(.BooleanType) { Expression.If($0, Recur(a), Recur(b)) }
+						}
+				}
+
+		case .UnitType, .BooleanType:
+			return .right(.Type(0))
+		case let .Type(n):
+			return .right(.Type(n + 1))
+
+		case let .Variable(i):
+			return environment[i].map(Either.Right) ?? Either.Left("Unexpectedly free variable \(i)")
+
+		case let .Lambda(i, type, body):
+			return type.typecheck(environment, against: .Type(0))
+				.flatMap { _ in
+					body.typecheck(environment + [ .Local(i): type ])
+						.map { Expression.lambda(type, const($0)) }
+			}
+
+		case let .Product(a, b):
+			return (a.typecheck(environment) &&& b.typecheck(environment))
+				.map { A, B in Expression.lambda(A, const(B)) }
+
+		case let .Application(a, b):
+			return a.typecheck(environment)
+				.flatMap { A in
+					A.analysis(
+						ifLambda: { i, type, body in
+							b.typecheck(environment, against: type.out).map { body.out.substitute(i, $0) }
+						},
+						otherwise: const(Either.Left("illegal application of \(a) : \(A) to \(b)")))
+				}
+
+		case let .Projection(term, branch):
+			return term.typecheck(environment)
+				.flatMap { type in
+					type.analysis(
+						ifLambda: { i, A, B in
+							Either.Right(branch ? B.out.substitute(i, A.out) : A.out)
+						},
+						otherwise: const(Either.Left("illegal attempt to project field \(branch ? 1 : 0) of value \(term) of non-product type \(type)")))
+				}
+
+		case let .Annotation(term, type):
+			return type.typecheck(environment, against: .Type(0))
+				.map { $0.evaluate() }
+				.flatMap { type in term.typecheck(environment, against: type) }
+		}
+	}
+
+	public func typecheck(environment: [Name: Expression], against: Expression) -> Either<Error, Expression> {
+		return typecheck(environment)
+			.flatMap { type in
+				type == against || against == .Type(0) && type.isType
+					? Either.Right(type)
+					: Either.Left("Type mismatch: expected \(String(reflecting: self)) to be of type \(String(reflecting: against)), but it was actually of type \(String(reflecting: type)) in environment \(environment)")
+		}
+	}
+}
+
+
+import Either
 import Prelude
