@@ -131,6 +131,10 @@ extension Expression where Recur: FixpointType {
 
 	// MARK: Destructuring accessors
 
+	public var isType: Bool {
+		return analysis(ifType: const(true), otherwise: const(false))
+	}
+
 	public var lambda: (Int, Recur, Recur)? {
 		return analysis(ifLambda: Optional.Some, otherwise: const(nil))
 	}
