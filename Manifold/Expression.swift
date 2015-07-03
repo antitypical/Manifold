@@ -124,6 +124,10 @@ extension Expression where Recur: FixpointType {
 	public var product: (Recur, Recur)? {
 		return analysis(ifProduct: Optional.Some, otherwise: const(nil))
 	}
+
+	public var boolean: Bool? {
+		return analysis(ifBoolean: Optional.Some, otherwise: const(nil))
+	}
 }
 
 
