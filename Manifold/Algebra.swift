@@ -8,7 +8,7 @@ public protocol FixpointType {
 }
 
 
-// MARK: Fix: FixpointType over Expression<Fix>
+// MARK: - Fix: FixpointType over Expression<Fix>
 
 public func cata<T, Fix: FixpointType where Fix.Recur == Expression<Fix>>(f: Expression<T> -> T)(_ term: Fix) -> T {
 	return term |> (out >>> (map <| cata(f)) >>> f)
@@ -29,6 +29,8 @@ public func apo<T>(f: T -> Expression<Either<Term, T>>)(_ seed: T) -> Term {
 	return seed |> (Term.init <<< (map { $0.either(ifLeft: id, ifRight: apo(f)) }) <<< f)
 }
 
+
+// MARK: - Implementation details
 
 private func map<T, U>(f: T -> U)(_ c: Expression<T>) -> Expression<U> {
 	return Expression.map(c)(f)
