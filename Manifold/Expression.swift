@@ -124,6 +124,16 @@ public enum Expression<Recur>: BooleanLiteralConvertible, IntegerLiteralConverti
 }
 
 extension Expression where Recur: FixpointType {
+	// MARK: Higher-order construction
+
+	public static func lambda(type: Expression, _ f: Recur -> Expression) -> Expression {
+		var n = 0
+		let body = f(Recur { .Variable(.Local(n)) })
+		n = body.maxBoundVariable + 1
+		return .Lambda(n, Recur(type), Recur(body))
+	}
+
+
 	// MARK: Destructuring accessors
 
 	var destructured: Expression<Expression<Recur>> {
