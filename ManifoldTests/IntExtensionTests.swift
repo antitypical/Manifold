@@ -20,6 +20,17 @@ final class IntExtensionTests: XCTestCase {
 	func testThereAreThreeDigitsInOneHundredAndTwentyThree() {
 		assert(123.digits, ==, [1, 2, 3])
 	}
+
+	func testBinaryDigits() {
+		assert(4.digits(2), ==, [ 1, 0, 0 ])
+		assert(7.digits(2), ==, [ 1, 1, 1 ])
+	}
+
+	func testHexDigits() {
+		assert(0.digits(16), ==, [ 0 ])
+		assert(255.digits(16), ==, [ 15, 15 ])
+		assert(65535.digits(16), ==, [ 15, 15, 15, 15 ])
+	}
 }
 
 
