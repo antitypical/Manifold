@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public protocol FixpointType {
+public protocol FixpointType: Equatable {
 	init(() -> Expression<Self>)
 	var out: Expression<Self> { get }
 }

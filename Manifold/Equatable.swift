@@ -52,8 +52,8 @@ public func == (left: Name, right: Name) -> Bool {
 }
 
 
-// MARK: Term
+// MARK: FixpointType
 
-public func == (left: Term, right: Term) -> Bool {
-	return left.expression == right.expression
+public func == <Fix: FixpointType> (left: Fix, right: Fix) -> Bool {
+	return left.out == right.out
 }
