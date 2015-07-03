@@ -113,6 +113,13 @@ extension Expression where Recur: FixpointType {
 	var destructured: Expression<Expression<Recur>> {
 		return map { $0.out }
 	}
+
+
+	// MARK: Destructuring accessors
+
+	public var lambda: (Int, Recur, Recur)? {
+		return analysis(ifLambda: Optional.Some, otherwise: const(nil))
+	}
 }
 
 
