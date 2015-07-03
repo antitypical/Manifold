@@ -144,6 +144,28 @@ extension Expression where Recur: FixpointType {
 	}
 
 
+	// MARK: Evaluation
+
+	public func evaluate(environment: [Name: Expression] = [:]) -> Expression {
+		switch self.destructured {
+		case let .Variable(i):
+			return environment[i] ?? self
+		case let .Application(a, b):
+			return a.evaluate(environment).lambda.map { i, _, body in body.out.substitute(i, b.evaluate(environment)) }!
+		case let .Projection(a, b):
+			return a.evaluate(environment).product.map { b ? $1 : $0 }.map { $0.out }!
+		case let .If(condition, then, `else`):
+			return condition.evaluate(environment).boolean!
+				? then.evaluate(environment)
+				: `else`.evaluate(environment)
+		case let .Annotation(term, _):
+			return term.evaluate(environment)
+		default:
+			return self
+		}
+	}
+
+
 	// MARK: Substitution
 
 	private func substitute(i: Int, _ expression: Expression) -> Expression {
