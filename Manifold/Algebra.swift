@@ -6,7 +6,7 @@ public protocol FixpointType {
 }
 
 extension FixpointType {
-	init(_ expression: Expression<Self>) {
+	public init(_ expression: Expression<Self>) {
 		self.init { expression }
 	}
 }
