@@ -124,12 +124,11 @@ public enum Expression<Recur>: BooleanLiteralConvertible, IntegerLiteralConverti
 }
 
 extension Expression where Recur: FixpointType {
+	// MARK: Destructuring accessors
+
 	var destructured: Expression<Expression<Recur>> {
 		return map { $0.out }
 	}
-
-
-	// MARK: Destructuring accessors
 
 	public var isType: Bool {
 		return analysis(ifType: const(true), otherwise: const(false))
