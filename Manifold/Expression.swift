@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Expression<Recur> {
+public enum Expression<Recur>: BooleanLiteralConvertible {
 	// MARK: Analyses
 
 	public func analysis<T>(
@@ -90,6 +90,13 @@ public enum Expression<Recur> {
 			ifBoolean: { .Boolean($0) },
 			ifIf: { .If(transform($0), transform($1), transform($2)) },
 			ifAnnotation: { .Annotation(transform($0), transform($1)) })
+	}
+
+
+	// MARK: BooleanLiteralConvertible
+
+	public init(booleanLiteral value: Bool) {
+		self = .Boolean(value)
 	}
 
 
