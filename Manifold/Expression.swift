@@ -110,7 +110,7 @@ public enum Expression<Recur> {
 }
 
 extension Expression where Recur: FixpointType {
-	var destructured: Expression<Recur.Recur> {
+	var destructured: Expression<Expression<Recur>> {
 		return map { $0.out }
 	}
 }
