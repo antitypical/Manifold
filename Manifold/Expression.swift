@@ -1,6 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
-public enum Expression<Recur>: BooleanLiteralConvertible, IntegerLiteralConvertible {
+public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertible, IntegerLiteralConvertible {
 	// MARK: Analyses
 
 	public func analysis<T>(
@@ -97,6 +97,53 @@ public enum Expression<Recur>: BooleanLiteralConvertible, IntegerLiteralConverti
 
 	public init(booleanLiteral value: Bool) {
 		self = .Boolean(value)
+	}
+
+
+	// MARK: CustomStringConvertible
+
+	public var description: String {
+		switch self {
+		case .Unit:
+			return "()"
+		case .UnitType:
+			return "Unit"
+
+		case let .Type(n) where n == 0:
+			return "Type"
+		case let .Type(n):
+			let subscripts = "₀₁₂₃₄₅₆₇₈₉"
+			return "Type" + "".join(lazy(n.digits).map { String(atModular(subscripts.characters, offset: $0)) })
+
+		case let .Variable(name):
+			let alphabet = "abcdefghijklmnopqrstuvwxyz"
+			return name.analysis(
+				ifGlobal: id,
+				ifLocal: { "".join(lazy($0.digits).map { String(atModular(alphabet.characters, offset: $0)) }) })
+
+		case let .Application(a, b):
+			return "(\(a) \(b))"
+
+		case let .Lambda(variable, type, body):
+			return "λ \(variable) : \(type) . \(body)"
+
+		case let .Projection(term, branch):
+			return "\(term).\(branch ? 1 : 0)"
+
+		case let .Product(a, b):
+			return "(\(a) × \(b))"
+
+		case .BooleanType:
+			return "Boolean"
+		case let .Boolean(b):
+			return String(b)
+
+		case let .If(condition, then, `else`):
+			return "if \(condition) then \(then) else \(`else`)"
+
+		case let .Annotation(term, type):
+			return "\(term) : \(type)"
+		}
 	}
 
 
@@ -292,6 +339,11 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 					: Either.Left("Type mismatch: expected \(String(reflecting: self)) to be of type \(String(reflecting: against)), but it was actually of type \(String(reflecting: type)) in environment \(environment)")
 		}
 	}
+}
+
+
+private func atModular<C: CollectionType>(collection: C, offset: C.Index.Distance) -> C.Generator.Element {
+	return collection[advance(collection.startIndex, offset % distance(collection.startIndex, collection.endIndex), collection.endIndex)]
 }
 
 
