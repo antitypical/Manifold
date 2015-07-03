@@ -1,10 +1,6 @@
 //  Copyright (c) 2015 Rob Rix. All rights reserved.
 
 public struct Term: BooleanLiteralConvertible, CustomDebugStringConvertible, FixpointType, Hashable, IntegerLiteralConvertible, CustomStringConvertible {
-	public init(_ expression: Expression<Term>) {
-		self.init { expression }
-	}
-
 	public init(_ expression: () -> Expression<Term>) {
 		_expression = expression
 	}
