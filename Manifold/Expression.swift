@@ -147,7 +147,7 @@ extension Expression where Recur: FixpointType {
 	// MARK: Evaluation
 
 	public func evaluate(environment: [Name: Expression] = [:]) -> Expression {
-		switch self.destructured {
+		switch destructured {
 		case let .Variable(i):
 			return environment[i] ?? self
 		case let .Application(a, b):
