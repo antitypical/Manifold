@@ -155,13 +155,13 @@
 		D4B3FBFF1A83515800DA2AC3 /* ManifoldTests */ = {
 			isa = PBXGroup;
 			children = (
+				D4F1B8581B470E8E0065BF22 /* DoubleExtensionTests.swift */,
 				D484903B1B2A40E800F249F7 /* EvaluationTests.swift */,
 				D4F1B8541B470B430065BF22 /* IntExtensionTests.swift */,
 				D4F1B8521B46FD4F0065BF22 /* ScanSequenceViewTests.swift */,
 				D4809FBC1AF6BD400084B8FE /* TermTests.swift */,
 				D4DF444F1B2DB043008DCA5D /* TypecheckingTests.swift */,
 				D4B3FC001A83515800DA2AC3 /* Supporting Files */,
-				D4F1B8581B470E8E0065BF22 /* DoubleExtensionTests.swift */,
 			);
 			path = ManifoldTests;
 			sourceTree = "<group>";
