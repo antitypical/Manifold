@@ -103,6 +103,7 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 	// MARK: CustomStringConvertible
 
 	public var description: String {
+		let alphabet = "abcdefghijklmnopqrstuvwxyz"
 		switch self {
 		case .Unit:
 			return "()"
@@ -116,7 +117,6 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 			return "Type" + "".join(lazy(n.digits).map { String(atModular(subscripts.characters, offset: $0)) })
 
 		case let .Variable(name):
-			let alphabet = "abcdefghijklmnopqrstuvwxyz"
 			return name.analysis(
 				ifGlobal: id,
 				ifLocal: { "".join(lazy($0.digits).map { String(atModular(alphabet.characters, offset: $0)) }) })
@@ -125,7 +125,7 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 			return "(\(a) \(b))"
 
 		case let .Lambda(variable, type, body):
-			return "λ \(variable) : \(type) . \(body)"
+			return "λ \(atModular(alphabet.characters, offset: variable)) : \(type) . \(body)"
 
 		case let .Projection(term, branch):
 			return "\(term).\(branch ? 1 : 0)"
