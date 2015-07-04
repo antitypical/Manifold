@@ -2,43 +2,43 @@
 
 final class TypecheckingTests: XCTestCase {
 	func testUnitTermTypechecksToUnitType() {
-		assert(Term.unit.typecheck().right, ==, Term.unitType)
+		assert(Term(.Unit).out.typecheck().right, ==, .UnitType)
 	}
 
 	func testUnitTypeTypechecksToType() {
-		assert(Term.unitType.typecheck().right, ==, Term.type)
+		assert(Term(.UnitType).out.typecheck().right, ==, .Type(0))
 	}
 
 	func testTypeTypechecksToNextTypeLevel() {
-		assert(Term.type.typecheck().right, ==, Term.type(1))
+		assert(Term(.Type(0)).out.typecheck().right, ==, .Type(1))
 	}
 
 	func testApplicationOfIdentityAbstractionToUnitTermTypechecksToUnitType() {
-		let identity = Term.lambda(.unitType, id)
-		assert(Term.application(identity, Term.unit).typecheck().right, ==, Term.unitType)
+		let identity = Expression.lambda(Term(.UnitType), id)
+		assert(Term(.Application(Term(identity), Term(.Unit))).out.typecheck().right, ==, .UnitType)
 	}
 
 	func testSimpleAbstractionTypechecksToAbstractionType() {
-		let identity = Term.lambda(.unitType, id)
-		assert(identity.typecheck().right, ==, Term.lambda(.unitType, const(.unitType)))
+		let identity = Expression.lambda(Term(.UnitType), id)
+		assert(identity.typecheck().right, ==, .lambda(Term(.UnitType), const(Term(.UnitType))))
 	}
 
 	func testAbstractedAbstractionTypechecks() {
-		assert(identity.typecheck().right, ==, Term.lambda(1, .type, .lambda(0, 1, 1)))
+		assert(identity.typecheck().right, ==, .Lambda(1, Term(.Type(0)), Term(.Lambda(0, Term(1), Term(1)))))
 	}
 
 	func testProjectionTypechecksToTypeOfProjectedField() {
-		let product = Term.product(.unit, false)
-		assert(Term.projection(product, false).typecheck().right, ==, Term.unitType)
-		assert(Term.projection(product, true).typecheck().right, ==, Term.booleanType)
+		let product = Expression.Product(Term(.Unit), Term(false))
+		assert(Term(.Projection(Term(product), false)).out.typecheck().right, ==, .UnitType)
+		assert(Term(.Projection(Term(product), true)).out.typecheck().right, ==, .BooleanType)
 	}
 
 	func testIfWithEqualBranchTypesTypechecksToBranchType() {
-		assert(Term.`if`(.boolean(true), then: .unit, `else`: .unit).typecheck().right, ==, Term.unitType)
+		assert(Term(.If(Term(true), Term(.Unit), Term(.Unit))).out.typecheck().right, ==, .UnitType)
 	}
 
 	func testIfWithDisjointBranchTypesTypechecksToSumOfBranchTypes() {
-		assert(Term.`if`(.boolean(true), then: .unit, `else`: .boolean(true)).typecheck().right, ==, Term.lambda(.booleanType) { Term.`if`($0, then: .unitType, `else`: .booleanType) })
+		assert(Term(.If(Term(true), Term(.Unit), Term(true))).out.typecheck().right, ==, Expression.lambda(Term(.BooleanType)) { Term(.If($0, Term(.UnitType), Term(.BooleanType))) })
 	}
 }
 
