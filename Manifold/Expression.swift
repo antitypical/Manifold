@@ -104,7 +104,7 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 
 	public var description: String {
 		let renderNumerals: (Int, String) -> String = { n, alphabet in
-			"".join(lazy(n.digits).map { String(atModular(alphabet.characters, offset: $0)) })
+			"".join(lazy(n.digits(alphabet.characters.count)).map { String(atModular(alphabet.characters, offset: $0)) })
 		}
 		let alphabet = "abcdefghijklmnopqrstuvwxyz"
 		switch self {
