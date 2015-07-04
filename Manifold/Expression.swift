@@ -174,6 +174,23 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 }
 
 extension Expression where Recur: FixpointType {
+	// MARK: First-order construction
+
+	/// Constructs a sum type of the elements in `terms`.
+	public static func Sum(terms: [Recur]) -> Expression {
+		switch terms.first.map({ ($0, dropFirst(terms)) }) {
+		case .None:
+			return .UnitType
+		case let .Some(first, rest) where rest.isEmpty:
+			return first.out
+		case let .Some(first, rest):
+			return Expression.lambda(Recur(.BooleanType)) {
+				Recur(.If($0, first, Recur(.Sum(Array(rest)))))
+			}
+		}
+	}
+
+
 	// MARK: Higher-order construction
 
 	public static func lambda(type: Recur, _ f: Recur -> Recur) -> Expression {
