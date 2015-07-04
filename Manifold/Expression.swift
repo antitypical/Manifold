@@ -228,7 +228,7 @@ extension Expression where Recur: FixpointType {
 
 	// MARK: Substitution
 
-	private func substitute(i: Int, _ expression: Expression) -> Expression {
+	func substitute(i: Int, _ expression: Expression) -> Expression {
 		return cata { t in
 			Recur(t.analysis(
 				ifVariable: {
