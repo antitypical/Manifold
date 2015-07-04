@@ -9,18 +9,22 @@ extension FixpointType {
 	public init(_ expression: Expression<Self>) {
 		self.init { expression }
 	}
+
+	public static func out(fixpoint: Self) -> Expression<Self> {
+		return fixpoint.out
+	}
 }
 
 
 // MARK: - Fix: FixpointType over Expression<Fix>
 
 public func cata<T, Fix: FixpointType>(f: Expression<T> -> T)(_ term: Fix) -> T {
-	return term |> (out >>> (map <| cata(f)) >>> f)
+	return term |> (Fix.out >>> (map <| cata(f)) >>> f)
 }
 
 public func para<T, Fix: FixpointType>(f: Expression<(Fix, T)> -> T)(_ term: Fix) -> T {
 	let fanout = { ($0, para(f)($0)) }
-	return term |> (out >>> (map <| fanout) >>> f)
+	return term |> (Fix.out >>> (map <| fanout) >>> f)
 }
 
 
@@ -38,10 +42,6 @@ public func apo<T>(f: T -> Expression<Either<Term, T>>)(_ seed: T) -> Term {
 
 private func map<T, U>(f: T -> U)(_ c: Expression<T>) -> Expression<U> {
 	return Expression.map(c)(f)
-}
-
-private func out<Fix: FixpointType>(v: Fix) -> Expression<Fix> {
-	return v.out
 }
 
 
