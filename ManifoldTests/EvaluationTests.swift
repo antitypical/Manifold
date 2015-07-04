@@ -2,24 +2,24 @@
 
 final class EvaluationTests: XCTestCase {
 	func testUnitTermEvaluatesToItself() {
-		assert(Term.unit.evaluate(), ==, Term.unit)
+		assert(Term(.Unit).out.evaluate(), ==, .Unit)
 	}
 
 	func testUnitTypeEvaluatesToItself() {
-		assert(Term.unitType.evaluate(), ==, Term.unitType)
+		assert(Term(.UnitType).out.evaluate(), ==, .UnitType)
 	}
 
 	func testTypeEvaluatesToItself() {
-		assert(Term.type.evaluate(), ==, Term.type)
+		assert(Term(.Type(0)).out.evaluate(), ==, .Type(0))
 	}
 
 	func testApplicationOfIdentityAbstractionToUnitTermEvaluatesToUnitTerm() {
-		let identity = Term.lambda(.unitType, id)
-		assert(Term.application(identity, Term.unit).evaluate(), ==, Term.unit)
+		let identity = Expression.lambda(Term(.UnitType), id)
+		assert(Expression.Application(Term(identity), Term(.Unit)).evaluate(), ==, .Unit)
 	}
 
 	func testSimpleAbstractionEvaluatesToItself() {
-		let identity = Term.lambda(.unitType, id)
+		let identity = Expression.lambda(Term(.UnitType), id)
 		assert(identity.evaluate(), ==, identity)
 	}
 
@@ -28,14 +28,14 @@ final class EvaluationTests: XCTestCase {
 	}
 
 	func testProjectionEvaluatesToProjectedField() {
-		let product = Term.sigma(.unit, const(false))
-		assert(Term.projection(product, false).evaluate(), ==, Term.unit)
-		assert(Term.projection(product, true).evaluate(), ==, false)
+		let product = Expression.Product(Term(.Unit), Term(false))
+		assert(Expression.Projection(Term(product), false).evaluate(), ==, .Unit)
+		assert(Expression.Projection(Term(product), true).evaluate(), ==, false)
 	}
 
 	func testIfEvaluatesToCorrectBranch() {
-		assert(Term.`if`(.boolean(true), then: .boolean(true), `else`: .boolean(false)).evaluate(), ==, Term.boolean(true))
-		assert(Term.`if`(.boolean(false), then: .boolean(true), `else`: .boolean(false)).evaluate(), ==, Term.boolean(false))
+		assert(Expression.If(Term(true), Term(true), Term(false)).evaluate(), ==, true)
+		assert(Expression.If(Term(false), Term(true), Term(false)).evaluate(), ==, false)
 	}
 }
 
