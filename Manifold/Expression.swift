@@ -176,11 +176,11 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 extension Expression where Recur: FixpointType {
 	// MARK: Higher-order construction
 
-	public static func lambda(type: Expression, _ f: Recur -> Expression) -> Expression {
+	public static func lambda(type: Recur, _ f: Recur -> Recur) -> Expression {
 		var n = 0
 		let body = f(Recur { .Variable(.Local(n)) })
-		n = body.maxBoundVariable + 1
-		return .Lambda(n, Recur(type), Recur(body))
+		n = body.out.maxBoundVariable + 1
+		return .Lambda(n, type, body)
 	}
 
 
@@ -306,7 +306,7 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 						.map { a, b in
 							a == b
 								? a
-								: Expression.lambda(.BooleanType) { Expression.If($0, Recur(a), Recur(b)) }
+								: Expression.lambda(Recur(.BooleanType)) { Recur(.If($0, Recur(a), Recur(b))) }
 						}
 				}
 
@@ -322,12 +322,12 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 			return type.typecheck(environment, against: .Type(0))
 				.flatMap { _ in
 					body.typecheck(environment + [ .Local(i): type ])
-						.map { Expression.lambda(type, const($0)) }
+						.map { Expression.lambda(Recur(type), const(Recur($0))) }
 			}
 
 		case let .Product(a, b):
 			return (a.typecheck(environment) &&& b.typecheck(environment))
-				.map { A, B in Expression.lambda(A, const(B)) }
+				.map { A, B in Expression.lambda(Recur(A), const(Recur(B))) }
 
 		case let .Application(a, b):
 			return a.typecheck(environment)
