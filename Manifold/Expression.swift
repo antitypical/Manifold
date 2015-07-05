@@ -271,12 +271,12 @@ extension Expression where Recur: FixpointType {
 	private var maxBoundVariable: Int {
 		return cata {
 			$0.analysis(
-				ifApplication: { max($0, $1) },
+				ifApplication: max,
 				ifLambda: { max($0.0, $0.1) },
 				ifProjection: { $0.0 },
-				ifProduct: { max($0, $1) },
+				ifProduct: max,
 				ifIf: { max($0, $1, $2) },
-				ifAnnotation: { max($0, $1) },
+				ifAnnotation: max,
 				otherwise: const(-1))
 		} (Recur(self))
 	}
