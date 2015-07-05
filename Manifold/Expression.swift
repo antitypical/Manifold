@@ -262,7 +262,7 @@ extension Expression where Recur: FixpointType {
 				ifProduct: Expression.Product,
 				ifIf: Expression.If,
 				otherwise: const(t)))
-			} (Recur(self)).out
+		} (Recur(self)).out
 	}
 
 
@@ -288,20 +288,19 @@ extension Expression where Recur: FixpointType {
 
 	var hashValue: Int {
 		return cata {
-			return $0.map { $0.hashValue }
-				.analysis(
-					ifUnit: { 1 },
-					ifUnitType: { 2 },
-					ifType: { 3 ^ $0 },
-					ifVariable: { 5 ^ $0.hashValue },
-					ifApplication: { 7 ^ $0 ^ $1 },
-					ifLambda: { 11 ^ $0 ^ $1 ^ $2 },
-					ifProjection: { 13 ^ $0 ^ $1.hashValue },
-					ifProduct: { 17 ^ $0 ^ $1 },
-					ifBooleanType: { 19 },
-					ifBoolean: { 23 ^ $0.hashValue },
-					ifIf: { 29 ^ $0 ^ $1 ^ $2 },
-					ifAnnotation: { 31 ^ $0 ^ $1 })
+			$0.map { $0.hashValue }.analysis(
+				ifUnit: { 1 },
+				ifUnitType: { 2 },
+				ifType: { 3 ^ $0 },
+				ifVariable: { 5 ^ $0.hashValue },
+				ifApplication: { 7 ^ $0 ^ $1 },
+				ifLambda: { 11 ^ $0 ^ $1 ^ $2 },
+				ifProjection: { 13 ^ $0 ^ $1.hashValue },
+				ifProduct: { 17 ^ $0 ^ $1 },
+				ifBooleanType: { 19 },
+				ifBoolean: { 23 ^ $0.hashValue },
+				ifIf: { 29 ^ $0 ^ $1 ^ $2 },
+				ifAnnotation: { 31 ^ $0 ^ $1 })
 		} (Recur(self))
 	}
 }
@@ -340,7 +339,7 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 				.flatMap { _ in
 					body.typecheck(environment + [ .Local(i): type ])
 						.map { Expression.lambda(Recur(type), const(Recur($0))) }
-			}
+				}
 
 		case let .Product(a, b):
 			return (a.typecheck(environment) &&& b.typecheck(environment))
@@ -393,7 +392,7 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 				type == against || against == .Type(0) && type.isType
 					? Either.Right(type)
 					: Either.Left("Type mismatch: expected \(String(reflecting: self)) to be of type \(String(reflecting: against)), but it was actually of type \(String(reflecting: type)) in environment \(environment)")
-		}
+			}
 	}
 }
 
