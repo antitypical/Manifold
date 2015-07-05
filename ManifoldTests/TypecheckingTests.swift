@@ -40,6 +40,10 @@ final class TypecheckingTests: XCTestCase {
 	func testIfWithDisjointBranchTypesTypechecksToSumOfBranchTypes() {
 		assert(Term(.If(Term(true), Term(.Unit), Term(true))).out.typecheck().right, ==, Expression.lambda(Term(.BooleanType)) { Term(.If($0, Term(.UnitType), Term(.BooleanType))) })
 	}
+
+	func testProductTypechecksToSigmaType() {
+		assert(Expression.Product(Term(.Unit), Term(false)).typecheck().right, ==, Expression.lambda(Term(.UnitType), const(Term(.BooleanType))))
+	}
 }
 
 import Assertions
