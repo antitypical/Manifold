@@ -268,7 +268,7 @@ extension Expression where Recur: FixpointType {
 
 	// MARK: Bound variables
 
-	private var maxBoundVariable: Int {
+	var maxBoundVariable: Int {
 		return cata {
 			$0.analysis(
 				ifApplication: max,
