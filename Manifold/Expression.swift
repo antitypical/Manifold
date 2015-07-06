@@ -219,6 +219,10 @@ extension Expression where Recur: FixpointType {
 		return lambda?.1
 	}
 
+	public var returnType: Recur? {
+		return typecheck().right?.lambda?.2
+	}
+
 	public var product: (Recur, Recur)? {
 		return analysis(ifProduct: Optional.Some, otherwise: const(nil))
 	}
