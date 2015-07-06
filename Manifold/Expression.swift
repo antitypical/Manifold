@@ -368,20 +368,6 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 						ifLambda: { i, A, B in
 							Either.Right(branch ? B.out.substitute(i, A.out) : A.out)
 						},
-				}
-
-		// Typecheck products annotated with lambda type as sums.
-		case let .Annotation(.Product(tag, body), .Lambda(i, tagType, typeBody)):
-			return tagType.out.typecheck(environment, against: .Type(0))
-				.flatMap { _ in
-					tag.out.typecheck(environment, against: tagType.out)
-						.flatMap { _ in
-							typeBody.out.substitute(i, tag.out).typecheck(environment)
-								.flatMap { bodyType in
-									body.out.typecheck(environment, against: bodyType)
-										.map(const(.Lambda(i, tagType, typeBody)))
-								}
-						}
 						otherwise: const(Either.Left("illegal projection of field \(branch ? 1 : 0) of non-product value \(term) of type \(type)")))
 				}
 
@@ -400,6 +386,17 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 				typecheck(environment)
 					.map { $0.evaluate() }
 					.flatMap { (type: Expression) -> Either<Error, Expression> in
+						if case let (.Product(tag, payload), .Lambda(i, tagType, body)) = (self, against) {
+							return tagType.out.typecheck(environment, against: .Type(0))
+								.flatMap { _ in
+									tag.out.typecheck(environment, against: tagType.out)
+										.flatMap { _ in
+											payload.out.typecheck(environment, against: body.out.substitute(i, tag.out))
+												.map(const(type))
+										}
+								}
+						}
+
 						if type == against || against == .Type(0) && type.isType {
 							return .Right(type)
 						}
