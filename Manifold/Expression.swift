@@ -368,7 +368,6 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 						ifLambda: { i, A, B in
 							Either.Right(branch ? B.out.substitute(i, A.out) : A.out)
 						},
-						otherwise: const(Either.Left("illegal attempt to project field \(branch ? 1 : 0) of value \(term) of non-product type \(type)")))
 				}
 
 		// Typecheck products annotated with lambda type as sums.
@@ -383,6 +382,7 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 										.map(const(.Lambda(i, tagType, typeBody)))
 								}
 						}
+						otherwise: const(Either.Left("illegal projection of field \(branch ? 1 : 0) of non-product value \(term) of type \(type)")))
 				}
 
 		case let .Annotation(term, type):
