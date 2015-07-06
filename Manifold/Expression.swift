@@ -401,9 +401,11 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 				typecheck(environment)
 					.map { $0.evaluate() }
 					.flatMap { (type: Expression) -> Either<Error, Expression> in
-						type == against || against == .Type(0) && type.isType
-							? Either.Right(against)
-							: Either.Left("Type mismatch: expected \(String(reflecting: self)) to be of type \(String(reflecting: against)), but it was actually of type \(String(reflecting: type)) in environment \(environment)")
+						if type == against || against == .Type(0) && type.isType {
+							return .Right(against)
+						}
+
+						return .Left("Type mismatch: expected \(String(reflecting: self)) to be of type \(String(reflecting: against)), but it was actually of type \(String(reflecting: type)) in environment \(environment)")
 					}
 			}
 	}
