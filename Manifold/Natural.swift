@@ -25,7 +25,7 @@ extension Expression where Recur: FixpointType {
 		return [
 			"Natural": lambda(Recur(.BooleanType), const(Recur(.Type(0)))),
 			"zero": .Variable("Natural"),
-			"successor": lambda(Recur(.Variable("Natural")), const(Recur(.Variable("")))),
+			"successor": lambda(Recur(.Variable("Natural")), const(Recur(.Variable("Natural")))),
 		]
 	}
 }
