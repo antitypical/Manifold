@@ -387,7 +387,6 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 
 		case let .Annotation(term, type):
 			return type.typecheck(environment, against: .Type(0))
-				.map { $0.evaluate() }
 				.flatMap { type in term.typecheck(environment, against: type) }
 		}
 	}
