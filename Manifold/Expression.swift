@@ -399,6 +399,7 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 			.map { _ in against.evaluate() }
 			.flatMap { against in
 				typecheck(environment)
+					.map { $0.evaluate() }
 					.flatMap { (type: Expression) -> Either<Error, Expression> in
 						type == against || against == .Type(0) && type.isType
 							? Either.Right(against)
