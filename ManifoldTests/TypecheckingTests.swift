@@ -44,6 +44,11 @@ final class TypecheckingTests: XCTestCase {
 	func testProductTypechecksToSigmaType() {
 		assert(Expression.Product(Term(.Unit), Term(false)).typecheck().right, ==, Expression.lambda(Term(.UnitType), const(Term(.BooleanType))))
 	}
+
+	func testDependentProductTypechecksToSigmaType() {
+		let type = Expression.lambda(Term(.BooleanType)) { c in Term(.If(c, Term(.UnitType), Term(.BooleanType))) }
+		assert(Expression.Annotation(Term(.Product(Term(true), Term(.Unit))), Term(type)).typecheck().right, ==, type)
+	}
 }
 
 import Assertions
