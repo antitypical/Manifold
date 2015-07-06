@@ -215,6 +215,10 @@ extension Expression where Recur: FixpointType {
 		return analysis(ifLambda: Optional.Some, otherwise: const(nil))
 	}
 
+	public var parameterType: Recur? {
+		return lambda?.1
+	}
+
 	public var product: (Recur, Recur)? {
 		return analysis(ifProduct: Optional.Some, otherwise: const(nil))
 	}
