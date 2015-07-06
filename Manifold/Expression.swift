@@ -208,7 +208,7 @@ extension Expression where Recur: FixpointType {
 	}
 
 	public var isType: Bool {
-		return analysis(ifType: const(true), otherwise: const(false))
+		return analysis(ifType: const(true), otherwise: { self.returnType?.out.isType ?? false })
 	}
 
 	public var lambda: (Int, Recur, Recur)? {
