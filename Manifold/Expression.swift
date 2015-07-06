@@ -314,7 +314,7 @@ extension Expression where Recur: FixpointType {
 extension Expression where Recur: FixpointType, Recur: Equatable {
 	// MARK: Typechecking
 
-	public func typecheck(environment: [Name: Expression] = [:]) -> Either<Error, Expression> {
+	public func typecheck(context: [Name: Expression] = [:]) -> Either<Error, Expression> {
 		switch destructured {
 		case .Unit:
 			return .right(.UnitType)
@@ -322,9 +322,9 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 			return .right(.BooleanType)
 
 		case let .If(condition, then, `else`):
-			return condition.typecheck(environment, against: .BooleanType)
+			return condition.typecheck(context, against: .BooleanType)
 				.flatMap { _ in
-					(then.typecheck(environment) &&& `else`.typecheck(environment))
+					(then.typecheck(context) &&& `else`.typecheck(context))
 						.map { a, b in
 							a == b
 								? a
@@ -338,31 +338,31 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 			return .right(.Type(n + 1))
 
 		case let .Variable(i):
-			return environment[i].map(Either.Right) ?? Either.Left("Unexpectedly free variable \(i)")
+			return context[i].map(Either.Right) ?? Either.Left("Unexpectedly free variable \(i)")
 
 		case let .Lambda(i, type, body):
-			return type.typecheck(environment, against: .Type(0))
+			return type.typecheck(context, against: .Type(0))
 				.flatMap { _ in
-					body.typecheck(environment + [ .Local(i): type ])
+					body.typecheck(context + [ .Local(i): type ])
 						.map { Expression.lambda(Recur(type), const(Recur($0))) }
 				}
 
 		case let .Product(a, b):
-			return (a.typecheck(environment) &&& b.typecheck(environment))
+			return (a.typecheck(context) &&& b.typecheck(context))
 				.map { A, B in Expression.lambda(Recur(A), const(Recur(B))) }
 
 		case let .Application(a, b):
-			return a.typecheck(environment)
+			return a.typecheck(context)
 				.flatMap { A in
 					A.analysis(
 						ifLambda: { i, type, body in
-							b.typecheck(environment, against: type.out).map { body.out.substitute(i, $0) }
+							b.typecheck(context, against: type.out).map { body.out.substitute(i, $0) }
 						},
 						otherwise: const(Either.Left("illegal application of \(a) : \(A) to \(b)")))
 				}
 
 		case let .Projection(term, branch):
-			return term.typecheck(environment)
+			return term.typecheck(context)
 				.flatMap { type in
 					type.analysis(
 						ifLambda: { i, A, B in
@@ -372,26 +372,26 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 				}
 
 		case let .Annotation(term, type):
-			return term.typecheck(environment, against: type)
+			return term.typecheck(context, against: type)
 				.map(const(type))
 		}
 	}
 
-	public func typecheck(environment: [Name: Expression], against: Expression) -> Either<Error, Expression> {
+	public func typecheck(context: [Name: Expression], against: Expression) -> Either<Error, Expression> {
 		return (against.isType
 				? Either.Right(against)
-				: against.typecheck(environment, against: .Type(0)))
+				: against.typecheck(context, against: .Type(0)))
 			.map { _ in against.evaluate() }
 			.flatMap { against in
-				typecheck(environment)
+				typecheck(context)
 					.map { $0.evaluate() }
 					.flatMap { (type: Expression) -> Either<Error, Expression> in
 						if case let (.Product(tag, payload), .Lambda(i, tagType, body)) = (self, against) {
-							return tagType.out.typecheck(environment, against: .Type(0))
+							return tagType.out.typecheck(context, against: .Type(0))
 								.flatMap { _ in
-									tag.out.typecheck(environment, against: tagType.out)
+									tag.out.typecheck(context, against: tagType.out)
 										.flatMap { _ in
-											payload.out.typecheck(environment, against: body.out.substitute(i, tag.out))
+											payload.out.typecheck(context, against: body.out.substitute(i, tag.out))
 												.map(const(type))
 										}
 								}
@@ -401,7 +401,7 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 							return .Right(type)
 						}
 
-						return .Left("Type mismatch: expected \(String(reflecting: self)) to be of type \(String(reflecting: against)), but it was actually of type \(String(reflecting: type)) in environment \(environment)")
+						return .Left("Type mismatch: expected \(String(reflecting: self)) to be of type \(String(reflecting: against)), but it was actually of type \(String(reflecting: type)) in environment \(context)")
 					}
 			}
 	}
