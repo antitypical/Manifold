@@ -7,7 +7,7 @@ final class ExpressionTests: XCTestCase {
 	}
 
 	func testProductDescription() {
-		assert(Expression.Product(Term(.UnitType), Term(.UnitType)).description, ==, "(Unit × Unit)")
+		assert(Expression.Product(Term(.Unit), Term(.Unit)).description, ==, "(() × ())")
 	}
 
 	func testProductTypeDescription() {

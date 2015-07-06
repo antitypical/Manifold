@@ -208,11 +208,19 @@ extension Expression where Recur: FixpointType {
 	}
 
 	public var isType: Bool {
-		return analysis(ifType: const(true), otherwise: const(false))
+		return analysis(ifType: const(true), otherwise: { self.returnType?.out.isType ?? false })
 	}
 
 	public var lambda: (Int, Recur, Recur)? {
 		return analysis(ifLambda: Optional.Some, otherwise: const(nil))
+	}
+
+	public var parameterType: Recur? {
+		return lambda?.1
+	}
+
+	public var returnType: Recur? {
+		return typecheck().right?.lambda?.2
 	}
 
 	public var product: (Recur, Recur)? {
@@ -262,23 +270,21 @@ extension Expression where Recur: FixpointType {
 				ifProduct: Expression.Product,
 				ifIf: Expression.If,
 				otherwise: const(t)))
-			} (Recur(self)).out
+		} (Recur(self)).out
 	}
 
 
 	// MARK: Bound variables
 
-	private var maxBoundVariable: Int {
+	var maxBoundVariable: Int {
 		return cata {
 			$0.analysis(
-				ifApplication: {
-					max($0, $1)
-				},
+				ifApplication: max,
 				ifLambda: { max($0.0, $0.1) },
 				ifProjection: { $0.0 },
-				ifProduct: { max($0, $1) },
+				ifProduct: max,
 				ifIf: { max($0, $1, $2) },
-				ifAnnotation: { max($0, $1) },
+				ifAnnotation: max,
 				otherwise: const(-1))
 		} (Recur(self))
 	}
@@ -288,20 +294,19 @@ extension Expression where Recur: FixpointType {
 
 	var hashValue: Int {
 		return cata {
-			return $0.map { $0.hashValue }
-				.analysis(
-					ifUnit: { 1 },
-					ifUnitType: { 2 },
-					ifType: { 3 ^ $0 },
-					ifVariable: { 5 ^ $0.hashValue },
-					ifApplication: { 7 ^ $0 ^ $1 },
-					ifLambda: { 11 ^ $0 ^ $1 ^ $2 },
-					ifProjection: { 13 ^ $0 ^ $1.hashValue },
-					ifProduct: { 17 ^ $0 ^ $1 },
-					ifBooleanType: { 19 },
-					ifBoolean: { 23 ^ $0.hashValue },
-					ifIf: { 29 ^ $0 ^ $1 ^ $2 },
-					ifAnnotation: { 31 ^ $0 ^ $1 })
+			$0.map { $0.hashValue }.analysis(
+				ifUnit: { 1 },
+				ifUnitType: { 2 },
+				ifType: { 3 ^ $0 },
+				ifVariable: { 5 ^ $0.hashValue },
+				ifApplication: { 7 ^ $0 ^ $1 },
+				ifLambda: { 11 ^ $0 ^ $1 ^ $2 },
+				ifProjection: { 13 ^ $0 ^ $1.hashValue },
+				ifProduct: { 17 ^ $0 ^ $1 },
+				ifBooleanType: { 19 },
+				ifBoolean: { 23 ^ $0.hashValue },
+				ifIf: { 29 ^ $0 ^ $1 ^ $2 },
+				ifAnnotation: { 31 ^ $0 ^ $1 })
 		} (Recur(self))
 	}
 }
@@ -309,7 +314,7 @@ extension Expression where Recur: FixpointType {
 extension Expression where Recur: FixpointType, Recur: Equatable {
 	// MARK: Typechecking
 
-	public func typecheck(environment: [Name: Expression] = [:]) -> Either<Error, Expression> {
+	public func typecheck(context: [Name: Expression] = [:]) -> Either<Error, Expression> {
 		switch destructured {
 		case .Unit:
 			return .right(.UnitType)
@@ -317,9 +322,9 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 			return .right(.BooleanType)
 
 		case let .If(condition, then, `else`):
-			return condition.typecheck(environment, against: .BooleanType)
+			return condition.typecheck(context, against: .BooleanType)
 				.flatMap { _ in
-					(then.typecheck(environment) &&& `else`.typecheck(environment))
+					(then.typecheck(context) &&& `else`.typecheck(context))
 						.map { a, b in
 							a == b
 								? a
@@ -333,67 +338,72 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 			return .right(.Type(n + 1))
 
 		case let .Variable(i):
-			return environment[i].map(Either.Right) ?? Either.Left("Unexpectedly free variable \(i)")
+			return context[i].map(Either.Right) ?? Either.Left("Unexpectedly free variable \(i)")
 
 		case let .Lambda(i, type, body):
-			return type.typecheck(environment, against: .Type(0))
+			return type.typecheck(context, against: .Type(0))
 				.flatMap { _ in
-					body.typecheck(environment + [ .Local(i): type ])
+					body.typecheck(context + [ .Local(i): type ])
 						.map { Expression.lambda(Recur(type), const(Recur($0))) }
-			}
+				}
 
 		case let .Product(a, b):
-			return (a.typecheck(environment) &&& b.typecheck(environment))
+			return (a.typecheck(context) &&& b.typecheck(context))
 				.map { A, B in Expression.lambda(Recur(A), const(Recur(B))) }
 
 		case let .Application(a, b):
-			return a.typecheck(environment)
+			return a.typecheck(context)
 				.flatMap { A in
 					A.analysis(
 						ifLambda: { i, type, body in
-							b.typecheck(environment, against: type.out).map { body.out.substitute(i, $0) }
+							b.typecheck(context, against: type.out).map { body.out.substitute(i, $0) }
 						},
 						otherwise: const(Either.Left("illegal application of \(a) : \(A) to \(b)")))
 				}
 
 		case let .Projection(term, branch):
-			return term.typecheck(environment)
+			return term.typecheck(context)
 				.flatMap { type in
 					type.analysis(
 						ifLambda: { i, A, B in
 							Either.Right(branch ? B.out.substitute(i, A.out) : A.out)
 						},
-						otherwise: const(Either.Left("illegal attempt to project field \(branch ? 1 : 0) of value \(term) of non-product type \(type)")))
-				}
-
-		// Typecheck products annotated with lambda type as sums.
-		case let .Annotation(.Product(tag, body), .Lambda(i, tagType, typeBody)):
-			return tagType.out.typecheck(environment, against: .Type(0))
-				.flatMap { _ in
-					tag.out.typecheck(environment, against: tagType.out)
-						.flatMap { _ in
-							typeBody.out.substitute(i, tag.out).typecheck(environment)
-								.flatMap { bodyType in
-									body.out.typecheck(environment, against: bodyType)
-										.map(const(.Lambda(i, tagType, typeBody)))
-								}
-						}
+						otherwise: const(Either.Left("illegal projection of field \(branch ? 1 : 0) of non-product value \(term) of type \(type)")))
 				}
 
 		case let .Annotation(term, type):
-			return type.typecheck(environment, against: .Type(0))
-				.map { $0.evaluate() }
-				.flatMap { type in term.typecheck(environment, against: type) }
+			return term.typecheck(context, against: type)
+				.map(const(type))
 		}
 	}
 
-	public func typecheck(environment: [Name: Expression], against: Expression) -> Either<Error, Expression> {
-		return typecheck(environment)
-			.flatMap { type in
-				type == against || against == .Type(0) && type.isType
-					? Either.Right(type)
-					: Either.Left("Type mismatch: expected \(String(reflecting: self)) to be of type \(String(reflecting: against)), but it was actually of type \(String(reflecting: type)) in environment \(environment)")
-		}
+	public func typecheck(context: [Name: Expression], against: Expression) -> Either<Error, Expression> {
+		return (against.isType
+				? Either.Right(against)
+				: against.typecheck(context, against: .Type(0)))
+			.map { _ in against.evaluate() }
+			.flatMap { against in
+				typecheck(context)
+					.map { $0.evaluate() }
+					.flatMap { (type: Expression) -> Either<Error, Expression> in
+						if case let (.Product(tag, payload), .Lambda(i, tagType, body)) = (self, against) {
+							return tagType.out.typecheck(context, against: .Type(0))
+								.flatMap { _ in
+									tag.out.typecheck(context, against: tagType.out)
+										.flatMap { _ in
+											payload.out.typecheck(context, against: body.out.substitute(i, tag.out))
+												.map(const(type))
+										}
+								}
+						}
+
+						if type == against || against == .Type(0) && type.isType {
+							return .Right(type)
+						}
+
+						return .Left("Type mismatch: expected \(String(reflecting: self)) to be of type \(String(reflecting: against)), but it was actually of type \(String(reflecting: type)) in environment \(context)")
+					}
+			}
 	}
 }
 
