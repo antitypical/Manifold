@@ -393,11 +393,16 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 	}
 
 	public func typecheck(environment: [Name: Expression], against: Expression) -> Either<Error, Expression> {
-		return typecheck(environment)
-			.flatMap { type in
-				type == against || against == .Type(0) && type.isType
-					? Either.Right(type)
-					: Either.Left("Type mismatch: expected \(String(reflecting: self)) to be of type \(String(reflecting: against)), but it was actually of type \(String(reflecting: type)) in environment \(environment)")
+		return (against.isType
+				? Either.Right(against)
+				: against.typecheck(environment, against: .Type(0)))
+			.flatMap { against in
+				typecheck(environment)
+					.flatMap { (type: Expression) -> Either<Error, Expression> in
+						type == against || against == .Type(0) && type.isType
+							? Either.Right(type)
+							: Either.Left("Type mismatch: expected \(String(reflecting: self)) to be of type \(String(reflecting: against)), but it was actually of type \(String(reflecting: type)) in environment \(environment)")
+					}
 			}
 	}
 }
