@@ -401,7 +401,7 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 				typecheck(environment)
 					.flatMap { (type: Expression) -> Either<Error, Expression> in
 						type == against || against == .Type(0) && type.isType
-							? Either.Right(type)
+							? Either.Right(against)
 							: Either.Left("Type mismatch: expected \(String(reflecting: self)) to be of type \(String(reflecting: against)), but it was actually of type \(String(reflecting: type)) in environment \(environment)")
 					}
 			}
