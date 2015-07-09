@@ -42,17 +42,17 @@ extension LazySequenceType {
 }
 
 extension LazySequence: LazySequenceType {
-	public typealias Sequence = S
+	public typealias Sequence = Base
 }
 
 extension LazyForwardCollection: LazySequenceType {
-	public typealias Sequence = S
+	public typealias Sequence = Base
 }
 
 extension LazyBidirectionalCollection: LazySequenceType {
-	public typealias Sequence = S
+	public typealias Sequence = Base
 }
 
 extension LazyRandomAccessCollection: LazySequenceType {
-	public typealias Sequence = S
+	public typealias Sequence = Base
 }
