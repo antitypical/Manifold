@@ -95,8 +95,13 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 
 	// MARK: Environment/context construction
 
+	public typealias Definition = (symbol: Name, value: Expression, type: Expression)
+	public typealias Environment = [Name: Expression]
+	public typealias Context = [Name: Expression]
+	public typealias Space = (environment: Environment, context: Context)
+
 	/// Construct an environment and context from symbol/value/type triples.
-	public static func environmentAndContext<S: SequenceType where S.Generator.Element == (Name, Expression, Expression)>(sequence: S) -> (environment: [Name: Expression], context: [Name: Expression]) {
+	public static func defineSpace<S: SequenceType where S.Generator.Element == Definition>(sequence: S) -> Space {
 		return sequence.reduce(([Name: Expression](), [Name: Expression]())) { into, each in
 			(into.0 + [each.0: each.1], into.1 + [each.0: each.2])
 		}
