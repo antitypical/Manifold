@@ -93,6 +93,16 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 	}
 
 
+	// MARK: Environment/context construction
+
+	/// Construct an environment and context from symbol/value/type triples.
+	public static func environmentAndContext<S: SequenceType where S.Generator.Element == (Name, Expression, Expression)>(sequence: S) -> ([Name: Expression], [Name: Expression]) {
+		return sequence.reduce(([Name: Expression](), [Name: Expression]())) { into, each in
+			(into.0 + [each.0: each.1], into.1 + [each.0: each.2])
+		}
+	}
+
+
 	// MARK: BooleanLiteralConvertible
 
 	public init(booleanLiteral value: Bool) {
