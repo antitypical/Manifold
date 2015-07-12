@@ -1,25 +1,24 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public struct Module<Recur> {
-	public typealias Binding = Expression<Recur>.Definition
 	public typealias Environment = Expression<Recur>.Environment
 	public typealias Context = Expression<Recur>.Context
 
-	public init<D: SequenceType, S: SequenceType where D.Generator.Element == Module, S.Generator.Element == Binding>(_ dependencies: D, _ definitions: S) {
+	public init<D: SequenceType, S: SequenceType where D.Generator.Element == Module, S.Generator.Element == Binding<Recur>>(_ dependencies: D, _ definitions: S) {
 		self.dependencies = Array(dependencies)
 		self.definitions = Array(definitions)
 	}
 
-	public init<D: SequenceType where D.Generator.Element == Module>(_ dependencies: D, _ definitions: Binding...) {
+	public init<D: SequenceType where D.Generator.Element == Module>(_ dependencies: D, _ definitions: Binding<Recur>...) {
 		self.init(dependencies, definitions)
 	}
 
-	public init(_ definitions: Binding...) {
+	public init(_ definitions: Binding<Recur>...) {
 		self.init([], definitions)
 	}
 
 	public let dependencies: [Module]
-	public let definitions: [Binding]
+	public let definitions: [Binding<Recur>]
 
 	public var environment: Environment {
 		let dependencies = lazy(self.dependencies).map { $0.environment }
