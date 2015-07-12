@@ -31,9 +31,13 @@ public struct Term: CustomStringConvertible, FixpointType, Hashable {
 
 
 // This would be an extension on `FixpointType` if protocol extensions could have inheritance clauses.
-extension Term: BooleanLiteralConvertible {
+extension Term: BooleanLiteralConvertible, StringLiteralConvertible {
 	public init(booleanLiteral: Bool) {
 		self = .boolean(booleanLiteral)
+	}
+
+	public init(stringLiteral: String) {
+		self = .variable(.Global(stringLiteral))
 	}
 }
 
