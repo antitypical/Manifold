@@ -4,6 +4,13 @@ extension Expression where Recur: FixpointType {
 	public static var description: Module<Recur> {
 		// Tag : λ _ : Enumeration . Type
 		// Tag = λ E : Enumeration . λ _ : Boolean . Tag E
+
+		let tag = Recur.Variable("Tag")
+		let enumeration = Recur.Variable("Enumeration")
+		let label = Recur.Variable("Label")
+		let cons = Recur.Variable("::")
+
+
 		let Tag = Binding("Tag",
 			lambda(.Variable("Enumeration")) { E in Recur.lambda(.BooleanType) { _ in
 				.Application(.Variable("Tag"), E)
