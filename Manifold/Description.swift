@@ -15,12 +15,19 @@ extension Expression where Recur: FixpointType {
 			lambda(enumeration, .BooleanType) { E, _ in .Application(tag, E) },
 			lambda(enumeration, const(.Type(0))))
 
+		// here : λ first : Label . λ rest : Enumeration . Tag (first :: rest)
+		// here = λ first : Label . (true, first)
+		let here = Binding("here",
+			lambda(label, enumeration) { first, rest in .Annotation(.Product(.Boolean(false), .Unit), .Application(.Application(cons, first), rest)) },
+			lambda(label, enumeration) { first, rest in .Application(tag, .Application(.Application(cons, first), rest)) })
+
 		return Module([ list ], [
 			Binding("String", .Axiom(String.self, .Type(0)), .Type(0)),
 			Binding("Label", .Variable("String"), .Type(0)),
 			Binding("Enumeration", .Application(.Variable("List"), .Variable("Label")), .Type(0)),
 
 			Tag,
+			here,
 		])
 	}
 }
