@@ -21,6 +21,12 @@ extension Expression where Recur: FixpointType {
 			lambda(label, enumeration) { first, rest in .Annotation(.Product(.Boolean(false), .Unit), .Application(.Application(cons, first), rest)) },
 			lambda(label, enumeration) { first, rest in .Application(tag, .Application(.Application(cons, first), rest)) })
 
+		// there : λ first : Label . λ rest : Enumeration . Tag (first :: rest)
+		// there = λ first : Label . (false, rest)
+		let there = Binding("there",
+			lambda(label, enumeration) { first, rest in Recur.lambda(.Application(tag, rest)) { _ in .Annotation(.Product(.Boolean(true), .Unit), .Application(.Application(cons, first), rest)) } },
+			lambda(label, enumeration) { first, rest in .Application(tag, .Application(.Application(cons, first), rest)) })
+
 		return Module([ list ], [
 			Binding("String", .Axiom(String.self, .Type(0)), .Type(0)),
 			Binding("Label", .Variable("String"), .Type(0)),
@@ -28,6 +34,7 @@ extension Expression where Recur: FixpointType {
 
 			Tag,
 			here,
+			there,
 		])
 	}
 }
