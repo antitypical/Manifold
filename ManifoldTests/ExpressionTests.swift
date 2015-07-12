@@ -1,4 +1,4 @@
-//  Copyright (c) 2015 Rob Rix. All rights reserved.
+//  Copyright © 2015 Rob Rix. All rights reserved.
 
 final class ExpressionTests: XCTestCase {
 	func testLambdaTypeDescription() {
