@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public struct Term: CustomStringConvertible, FixpointType, Hashable {
+public struct Term: CustomStringConvertible, FixpointType {
 	private var expression: () -> Expression<Term>
 
 
@@ -19,13 +19,6 @@ public struct Term: CustomStringConvertible, FixpointType, Hashable {
 
 	public var out: Expression<Term> {
 		return expression()
-	}
-
-
-	// MARK: Hashable
-
-	public var hashValue: Int {
-		return out.hashValue
 	}
 }
 
