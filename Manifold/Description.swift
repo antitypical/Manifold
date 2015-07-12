@@ -12,9 +12,7 @@ extension Expression where Recur: FixpointType {
 
 
 		let Tag = Binding("Tag",
-			lambda(enumeration, .BooleanType) { E, _ in
-				.Application(tag, E)
-			},
+			lambda(enumeration, .BooleanType) { E, _ in .Application(tag, E) },
 			lambda(enumeration, const(.Type(0))))
 
 		return Module([ list ], [
