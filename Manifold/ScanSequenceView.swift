@@ -6,20 +6,20 @@ extension SequenceType {
 	}
 }
 
-public struct ScanSequenceView<Base: SequenceType, T>: SequenceType {
-	init(sequence: Base, initial: T, combine: (T, Base.Generator.Element) -> T) {
-		self.sequence = sequence
+public struct ScanSequenceView<From, Into>: SequenceType {
+	init<Base: SequenceType where Base.Generator.Element == From>(sequence: Base, initial: Into, combine: (Into, From) -> Into) {
+		self.sequence = AnySequence(sequence)
 		self.initial = initial
 		self.combine = combine
 	}
 
-	let sequence: Base
-	let initial: T
-	let combine: (T, Base.Generator.Element) -> T
+	let sequence: AnySequence<From>
+	let initial: Into
+	let combine: (Into, From) -> Into
 
-	public func generate() -> AnyGenerator<T> {
-		var current: T? = initial
-		var generator = sequence.generate()
+	public func generate() -> AnyGenerator<Into> {
+		var current: Into? = initial
+		let generator = sequence.generate()
 		let combine = self.combine
 		return anyGenerator {
 			current.map { into in
@@ -36,7 +36,7 @@ public protocol LazySequenceType: SequenceType {
 }
 
 extension LazySequenceType {
-	public func scan<T>(initial: T, combine: (T, Generator.Element) -> T) -> LazySequence<ScanSequenceView<Self, T>> {
+	public func scan<Into>(initial: Into, combine: (Into, Generator.Element) -> Into) -> LazySequence<ScanSequenceView<Generator.Element, Into>> {
 		return lazy(ScanSequenceView(sequence: self, initial: initial, combine: combine))
 	}
 }
