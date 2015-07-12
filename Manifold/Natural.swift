@@ -10,7 +10,7 @@ extension Expression where Recur: FixpointType {
 	}
 
 	public static var successor: Expression {
-		return lambda(Recur(.Variable("Natural"))) { predecessor in Recur(lambda(Recur(true), const(predecessor))) }
+		return lambda(Recur(.Variable("Natural"))) { predecessor in Recur(.Annotation(Recur(lambda(Recur(true), const(predecessor))), Recur(.Variable("Natural")))) }
 	}
 
 	public static var natural: Space {
