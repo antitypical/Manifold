@@ -31,28 +31,14 @@ public struct ScanSequenceView<From, Into>: SequenceType {
 }
 
 
-public protocol LazySequenceType: SequenceType {
-	typealias Sequence: SequenceType
-}
+public protocol LazySequenceType: SequenceType {}
+extension LazySequence: LazySequenceType {}
+extension LazyForwardCollection: LazySequenceType {}
+extension LazyBidirectionalCollection: LazySequenceType {}
+extension LazyRandomAccessCollection: LazySequenceType {}
 
 extension LazySequenceType {
 	public func scan<Into>(initial: Into, combine: (Into, Generator.Element) -> Into) -> LazySequence<ScanSequenceView<Generator.Element, Into>> {
 		return lazy(ScanSequenceView(sequence: self, initial: initial, combine: combine))
 	}
-}
-
-extension LazySequence: LazySequenceType {
-	public typealias Sequence = Base
-}
-
-extension LazyForwardCollection: LazySequenceType {
-	public typealias Sequence = Base
-}
-
-extension LazyBidirectionalCollection: LazySequenceType {
-	public typealias Sequence = Base
-}
-
-extension LazyRandomAccessCollection: LazySequenceType {
-	public typealias Sequence = Base
 }
