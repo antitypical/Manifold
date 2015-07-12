@@ -18,7 +18,7 @@ extension Expression where Recur: FixpointType {
 	public static var successor: Definition {
 		return (
 			symbol: "successor",
-			value: lambda(.Variable("Natural")) { predecessor in .Annotation(.lambda(.Boolean(true), const(predecessor)), .Variable("Natural")) },
+			value: lambda(.Variable("Natural")) { predecessor in .Annotation(.Product(.Boolean(true), predecessor), .Variable("Natural")) },
 			type: lambda(.Variable("Natural"), const(.Variable("Natural"))))
 	}
 
