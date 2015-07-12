@@ -22,7 +22,7 @@ extension Expression where Recur: FixpointType {
 		// there : λ first : Label . λ rest : Enumeration . Tag (first :: rest)
 		// there = λ first : Label . (false, rest)
 		let there = Binding("there",
-			lambda(label, enumeration) { first, rest in Recur.lambda(.Application(tag, rest)) { _ in .Annotation(.Product(.Boolean(true), .Unit), .Application(.Application(cons, first), rest)) } },
+			lambda(label, enumeration) { first, rest in Recur.lambda(.Application(tag, rest)) { next in .Annotation(.Product(.Boolean(true), next), .Application(.Application(cons, first), rest)) } },
 			lambda(label, enumeration) { first, rest in .Application(tag, .Application(.Application(cons, first), rest)) })
 
 		return Module([ list ], [
