@@ -15,13 +15,13 @@ extension Expression where Recur: FixpointType {
 			lambda(enumeration, const(.Type(0))))
 
 		// here : λ first : Label . λ rest : Enumeration . Tag (first :: rest)
-		// here = λ first : Label . (true, first)
+		// here = λ first : Label . (true, first) : Tag (first :: rest)
 		let here = Binding("here",
 			lambda(label, enumeration) { first, rest in .Annotation(.Product(.Boolean(false), .Unit), tag |> (cons |> first |> rest)) },
 			lambda(label, enumeration) { first, rest in tag |> (cons |> first |> rest) })
 
 		// there : λ first : Label . λ rest : Enumeration . Tag (first :: rest)
-		// there = λ first : Label . (false, rest)
+		// there = λ first : Label . (false, rest) : Tag (first :: rest)
 		let there = Binding("there",
 			lambda(label, enumeration) { first, rest in Recur.lambda(tag |> rest) { next in .Annotation(.Product(.Boolean(true), next), tag |> (cons |> first |> rest)) } },
 			lambda(label, enumeration) { first, rest in tag |> (cons |> first |> rest) })
