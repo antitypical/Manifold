@@ -2,10 +2,10 @@
 
 extension Expression where Recur: FixpointType {
 	public static var description: Module<Recur> {
-		let tag = Recur.Variable("Tag")
-		let enumeration = Recur.Variable("Enumeration")
-		let label = Recur.Variable("Label")
-		let cons = Recur.Variable("::")
+		let tag = Recur("Tag")
+		let enumeration = Recur("Enumeration")
+		let label = Recur("Label")
+		let cons = Recur("::")
 
 		// Tag : λ _ : Enumeration . Type
 		// Tag = λ E : Enumeration . λ _ : Boolean . Tag E
@@ -27,7 +27,7 @@ extension Expression where Recur: FixpointType {
 
 		return Module([ list ], [
 			Binding("String", .Axiom(String.self, .Type(0)), .Type(0)),
-			Binding("Label", .Variable("String"), .Type(0)),
+			Binding("Label", "String", .Type(0)),
 			Binding("Enumeration", .Application(.Variable("List"), label), .Type(0)),
 
 			Tag,
