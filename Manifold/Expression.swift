@@ -249,7 +249,7 @@ extension Expression where Recur: FixpointType {
 
 	// MARK: Evaluation
 
-	public func evaluate(environment: [Name: Expression] = [:]) -> Expression {
+	public func evaluate(environment: Environment = [:]) -> Expression {
 		switch destructured {
 		case let .Variable(i):
 			return environment[i] ?? self
@@ -329,7 +329,7 @@ extension Expression where Recur: FixpointType {
 extension Expression where Recur: FixpointType, Recur: Equatable {
 	// MARK: Typechecking
 
-	public func typecheck(context: [Name: Expression] = [:]) -> Either<Error, Expression> {
+	public func typecheck(context: Context = [:]) -> Either<Error, Expression> {
 		switch destructured {
 		case .Unit:
 			return .right(.UnitType)
@@ -392,7 +392,7 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 		}
 	}
 
-	public func typecheck(context: [Name: Expression], against: Expression) -> Either<Error, Expression> {
+	public func typecheck(context: Context, against: Expression) -> Either<Error, Expression> {
 		return (against.isType
 				? Either.Right(against)
 				: against.typecheck(context, against: .Type(0)))
