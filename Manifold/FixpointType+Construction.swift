@@ -62,3 +62,11 @@ extension FixpointType {
 		return Self(.lambda(type, body))
 	}
 }
+
+
+public func |> <Recur: FixpointType> (left: Recur, right: Recur) -> Recur {
+	return .Application(left, right)
+}
+
+
+import Prelude
