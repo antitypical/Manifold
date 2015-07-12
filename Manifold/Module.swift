@@ -9,10 +9,6 @@ public struct Module<Recur> {
 		self.definitions = Array(definitions)
 	}
 
-	public init(_ definitions: Binding<Recur>...) {
-		self.init([], definitions)
-	}
-
 	public let dependencies: [Module]
 	public let definitions: [Binding<Recur>]
 

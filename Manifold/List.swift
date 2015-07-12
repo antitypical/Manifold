@@ -26,7 +26,7 @@ extension Expression where Recur: FixpointType {
 	}
 
 	public static var list: Module<Recur> {
-		return Module(List, `nil`, cons)
+		return Module([ List, `nil`, cons ])
 	}
 }
 

@@ -26,7 +26,7 @@ extension Expression where Recur: FixpointType {
 	}
 
 	public static var natural: Module<Recur> {
-		return Module(Natural, zero, successor)
+		return Module([ Natural, zero, successor ])
 	}
 }
 
