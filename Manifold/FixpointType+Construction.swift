@@ -56,11 +56,6 @@ extension FixpointType {
 	}
 
 
-	public init(_ name: Name) {
-		self.init(.Variable(name))
-	}
-
-
 	// MARK: Higher-order construction
 
 	public static func lambda(type: Self, _ body: Self -> Self) -> Self {

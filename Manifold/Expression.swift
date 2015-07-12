@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertible, IntegerLiteralConvertible {
+public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertible, IntegerLiteralConvertible, StringLiteralConvertible {
 	// MARK: Analyses
 
 	public func analysis<T>(
@@ -163,6 +163,13 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 
 	public init(integerLiteral value: Int) {
 		self = .Variable(.Local(value))
+	}
+
+
+	// MARK: StringLiteralConvertible
+
+	public init(stringLiteral: String) {
+		self = .Variable(.Global(stringLiteral))
 	}
 
 
