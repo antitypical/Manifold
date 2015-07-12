@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D415A0991B51EA8B001C15E5 /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = D415A0981B51EA8B001C15E5 /* List.swift */; };
 		D415A09B1B51EFDE001C15E5 /* FixpointType+Construction.swift in Sources */ = {isa = PBXBuildFile; fileRef = D415A09A1B51EFDE001C15E5 /* FixpointType+Construction.swift */; };
 		D4809FBD1AF6BD400084B8FE /* ExpressionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4809FBC1AF6BD400084B8FE /* ExpressionTests.swift */; };
 		D4809FBF1AF6CD720084B8FE /* Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4809FBE1AF6CD720084B8FE /* Equatable.swift */; };
@@ -50,6 +51,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D415A0981B51EA8B001C15E5 /* List.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
 		D415A09A1B51EFDE001C15E5 /* FixpointType+Construction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FixpointType+Construction.swift"; sourceTree = "<group>"; };
 		D46395AE1B17E24C00AA1B65 /* SwiftCheck.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SwiftCheck.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4809FBC1AF6BD400084B8FE /* ExpressionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpressionTests.swift; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 				D415A09A1B51EFDE001C15E5 /* FixpointType+Construction.swift */,
 				D4EDEF561AFEDEC5001B9A1D /* Name.swift */,
 				D4E101B91B484611001A7E55 /* Natural.swift */,
+				D415A0981B51EA8B001C15E5 /* List.swift */,
 				D4B3FBEE1A83515800DA2AC3 /* Supporting Files */,
 			);
 			path = Manifold;
@@ -300,6 +303,7 @@
 				D4F1B8511B46EBE10065BF22 /* ScanSequenceView.swift in Sources */,
 				D4809FBF1AF6CD720084B8FE /* Equatable.swift in Sources */,
 				D4E101BA1B484611001A7E55 /* Natural.swift in Sources */,
+				D415A0991B51EA8B001C15E5 /* List.swift in Sources */,
 				D4B56CB11AFDA26A00D7BD6F /* Expression.swift in Sources */,
 				D4B4AA571A90320F0089A5F2 /* Dictionary.swift in Sources */,
 				D4E8289D1B5202BB00713E60 /* StringLiteralConvertible.swift in Sources */,
