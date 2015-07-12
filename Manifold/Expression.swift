@@ -100,13 +100,6 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 	public typealias Context = [Name: Expression]
 	public typealias Space = (environment: Environment, context: Context)
 
-	/// Construct an environment and context from symbol/value/type triples.
-	public static func defineSpace<S: SequenceType where S.Generator.Element == Definition>(sequence: S) -> Space {
-		return sequence.reduce(([Name: Expression](), [Name: Expression]())) { into, each in
-			(into.0 + [each.0: each.1], into.1 + [each.0: each.2])
-		}
-	}
-
 
 	// MARK: BooleanLiteralConvertible
 
