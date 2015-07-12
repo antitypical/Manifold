@@ -93,11 +93,6 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 	}
 
 
-	// MARK: Environment/context construction
-
-	public typealias Context = [Name: Expression]
-
-
 	// MARK: BooleanLiteralConvertible
 
 	public init(booleanLiteral value: Bool) {
@@ -320,6 +315,8 @@ extension Expression where Recur: FixpointType {
 
 extension Expression where Recur: FixpointType, Recur: Equatable {
 	// MARK: Typechecking
+
+	public typealias Context = [Name: Expression]
 
 	public func typecheck(context: Context = [:]) -> Either<Error, Expression> {
 		switch destructured {
