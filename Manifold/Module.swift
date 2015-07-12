@@ -9,6 +9,10 @@ public struct Module<Recur> {
 		self.definitions = Array(definitions)
 	}
 
+	public init<S: SequenceType where S.Generator.Element == Binding<Recur>>(_ definitions: S) {
+		self.init([], definitions)
+	}
+
 	public let dependencies: [Module]
 	public let definitions: [Binding<Recur>]
 
