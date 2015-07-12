@@ -9,10 +9,6 @@ public struct Module<Recur> {
 		self.definitions = Array(definitions)
 	}
 
-	public init<D: SequenceType where D.Generator.Element == Module>(_ dependencies: D, _ definitions: Binding<Recur>...) {
-		self.init(dependencies, definitions)
-	}
-
 	public init(_ definitions: Binding<Recur>...) {
 		self.init([], definitions)
 	}
