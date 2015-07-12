@@ -210,6 +210,18 @@ extension Expression where Recur: FixpointType {
 		return .Lambda(n, type, body)
 	}
 
+	public static func lambda(type1: Recur, _ type2: Recur, _ f: (Recur, Recur) -> Recur) -> Expression {
+		return lambda(type1) { a in Recur.lambda(type2) { b in f(a, b) } }
+	}
+
+	public static func lambda(type1: Recur, _ type2: Recur, _ type3: Recur, _ f: (Recur, Recur, Recur) -> Recur) -> Expression {
+		return lambda(type1) { a in Recur.lambda(type2) { b in Recur.lambda(type3) { c in f(a, b, c) } } }
+	}
+
+	public static func lambda(type1: Recur, _ type2: Recur, _ type3: Recur, _ type4: Recur, _ f: (Recur, Recur, Recur, Recur) -> Recur) -> Expression {
+		return lambda(type1) { a in Recur.lambda(type2) { b in Recur.lambda(type3) { c in Recur.lambda(type4) { d in f(a, b, c, d) } } } }
+	}
+
 
 	// MARK: Destructuring accessors
 
