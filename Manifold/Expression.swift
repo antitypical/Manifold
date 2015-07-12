@@ -95,7 +95,6 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 
 	// MARK: Environment/context construction
 
-	public typealias Environment = [Name: Expression]
 	public typealias Context = [Name: Expression]
 
 
@@ -239,6 +238,8 @@ extension Expression where Recur: FixpointType {
 
 
 	// MARK: Evaluation
+
+	public typealias Environment = [Name: Expression]
 
 	public func evaluate(environment: Environment = [:]) -> Expression {
 		switch destructured {
