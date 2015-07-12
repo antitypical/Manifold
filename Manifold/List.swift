@@ -7,9 +7,16 @@ extension Expression where Recur: FixpointType {
 			type: lambda(.Type, const(.Type)))
 	}
 
+	public static var `nil`: Definition {
+		return (symbol: "nil",
+			value: .Annotation(.Product(.Boolean(false), .Unit), .Variable("List")),
+			type: .Variable("List"))
+	}
+
 	public static var list: Space {
 		return defineSpace([
 			List,
+			`nil`,
 		])
 	}
 }
