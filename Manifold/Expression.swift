@@ -15,7 +15,8 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 		@noescape ifBooleanType: () -> T,
 		@noescape ifBoolean: Bool -> T,
 		@noescape ifIf: (Recur, Recur, Recur) -> T,
-		@noescape ifAnnotation: (Recur, Recur) -> T) -> T {
+		@noescape ifAnnotation: (Recur, Recur) -> T,
+		@noescape ifAxiom: (Any, Recur) -> T) -> T {
 		switch self {
 		case .Unit:
 			return ifUnit()
@@ -41,6 +42,8 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 			return ifIf(a, b, c)
 		case let .Annotation(term, type):
 			return ifAnnotation(term, type)
+		case let .Axiom(v, type):
+			return ifAxiom(v, type)
 		}
 	}
 
@@ -57,6 +60,7 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 		ifBoolean: (Bool -> T)? = nil,
 		ifIf: ((Recur, Recur, Recur) -> T)? = nil,
 		ifAnnotation: ((Recur, Recur) -> T)? = nil,
+		ifAxiom: ((Any, Recur) -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifUnit: { ifUnit?() ?? otherwise() },
@@ -70,7 +74,8 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 			ifBooleanType: { ifBooleanType?() ?? otherwise() },
 			ifBoolean: { ifBoolean?($0) ?? otherwise() },
 			ifIf: { ifIf?($0) ?? otherwise() },
-			ifAnnotation: { ifAnnotation?($0) ?? otherwise() })
+			ifAnnotation: { ifAnnotation?($0) ?? otherwise() },
+			ifAxiom: { ifAxiom?($0) ?? otherwise() })
 	}
 
 
@@ -89,7 +94,8 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 			ifBooleanType: const(.BooleanType),
 			ifBoolean: { .Boolean($0) },
 			ifIf: { .If(transform($0), transform($1), transform($2)) },
-			ifAnnotation: { .Annotation(transform($0), transform($1)) })
+			ifAnnotation: { .Annotation(transform($0), transform($1)) },
+			ifAxiom: { .Axiom($0, transform($1)) })
 	}
 
 
@@ -146,6 +152,9 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 
 		case let .Annotation(term, type):
 			return "\(term) : \(type)"
+
+		case let .Axiom(v, type):
+			return "'\(v) : \(type)"
 		}
 	}
 
@@ -171,6 +180,7 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 	case Boolean(Bool)
 	case If(Recur, Recur, Recur)
 	case Annotation(Recur, Recur)
+	case Axiom(Any, Recur)
 }
 
 extension Expression where Recur: FixpointType {
@@ -271,6 +281,7 @@ extension Expression where Recur: FixpointType {
 				ifProjection: Expression.Projection,
 				ifProduct: Expression.Product,
 				ifIf: Expression.If,
+				ifAxiom: Expression.Axiom,
 				otherwise: const(t)))
 		} (Recur(self)).out
 	}
@@ -287,6 +298,7 @@ extension Expression where Recur: FixpointType {
 				ifProduct: max,
 				ifIf: { max($0, $1, $2) },
 				ifAnnotation: max,
+				ifAxiom: { $1 },
 				otherwise: const(-1))
 		} (Recur(self))
 	}
@@ -357,6 +369,9 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 		case let .Annotation(term, type):
 			return term.typecheck(context, against: type)
 				.map(const(type))
+
+		case let .Axiom(_, type):
+			return Either.right(type)
 		}
 	}
 
