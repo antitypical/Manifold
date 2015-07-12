@@ -25,12 +25,8 @@ extension Expression where Recur: FixpointType {
 			type: .Variable("List"))
 	}
 
-	public static var list: Space {
-		return defineSpace([
-			List,
-			`nil`,
-			cons,
-		])
+	public static var list: Module<Recur> {
+		return Module(List, `nil`, cons)
 	}
 }
 

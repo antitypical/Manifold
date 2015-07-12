@@ -25,12 +25,8 @@ extension Expression where Recur: FixpointType {
 			type: lambda(.Variable("Natural"), const(.Variable("Natural"))))
 	}
 
-	public static var natural: Space {
-		return defineSpace([
-			Natural,
-			zero,
-			successor
-		])
+	public static var natural: Module<Recur> {
+		return Module(Natural, zero, successor)
 	}
 }
 
