@@ -56,7 +56,7 @@ extension FixpointType {
 	}
 
 
-	public init(name: Name) {
+	public init(_ name: Name) {
 		self.init(.Variable(name))
 	}
 
