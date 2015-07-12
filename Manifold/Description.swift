@@ -28,7 +28,7 @@ extension Expression where Recur: FixpointType {
 		return Module([ list ], [
 			Binding("String", .Axiom(String.self, .Type(0)), .Type(0)),
 			Binding("Label", .Variable("String"), .Type(0)),
-			Binding("Enumeration", .Application(.Variable("List"), .Variable("Label")), .Type(0)),
+			Binding("Enumeration", .Application(.Variable("List"), label), .Type(0)),
 
 			Tag,
 			here,
