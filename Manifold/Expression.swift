@@ -95,7 +95,6 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 
 	// MARK: Environment/context construction
 
-	public typealias Definition = (symbol: Name, value: Expression, type: Expression)
 	public typealias Environment = [Name: Expression]
 	public typealias Context = [Name: Expression]
 
