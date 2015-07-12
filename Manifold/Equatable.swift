@@ -24,6 +24,8 @@ public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Re
 		return a1 == a2 && b1 == b2 && c1 == c2
 	case let (.Annotation(term1, type1), .Annotation(term2, type2)):
 		return term1 == term2 && type1 == type2
+	case let (.Axiom(_, type1), .Axiom(_, type2)):
+		return type1 == type2
 	default:
 		return false
 	}
