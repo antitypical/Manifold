@@ -1,6 +1,8 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 extension FixpointType {
+	// MARK: First-order construction
+
 	public static var Unit: Self {
 		return Self(.Unit)
 	}
@@ -51,5 +53,12 @@ extension FixpointType {
 
 	public static func Annotation(term: Self, _ type: Self) -> Self {
 		return Self(.Annotation(term, type))
+	}
+
+
+	// MARK: Higher-order construction
+
+	public static func lambda(type: Self, _ body: Self -> Self) -> Self {
+		return Self(.lambda(type, body))
 	}
 }
