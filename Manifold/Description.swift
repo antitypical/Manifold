@@ -6,6 +6,7 @@ extension Expression where Recur: FixpointType {
 		let enumeration = Recur("Enumeration")
 		let label = Recur("Label")
 		let cons = Recur("::")
+		let branches = Recur("Branches")
 
 		// Tag : λ _ : Enumeration . Type
 		// Tag = λ E : Enumeration . λ _ : Boolean . Tag E
@@ -25,6 +26,27 @@ extension Expression where Recur: FixpointType {
 			lambda(label, enumeration) { first, rest in Recur.lambda(.Application(tag, rest)) { next in .Annotation(.Product(.Boolean(true), next), .Application(.Application(cons, first), rest)) } },
 			lambda(label, enumeration) { first, rest in .Application(tag, .Application(.Application(cons, first), rest)) })
 
+
+		// Branches : λ E : Enumeration . λ _ : (λ _ : Tag E . Type) . Type
+		// Branches = λ E : Enumeration . λ P : (λ _ : Tag E . Type) . if E.0
+		//     then (P here, Branches E (λ t : Tag E . P (there t)))
+		//     else Unit
+		let Branches = Binding("Branches",
+			lambda(enumeration) { E in
+				Recur.lambda(.lambda(.Application(tag, E), const(.Type))) { P in
+					.If(.Projection(E, false),
+						.Product(
+							.Application(P, Recur("here")),
+							.Application(.Application(branches, E), Recur.lambda(.Application(tag, E)) { t in
+								.Application(P, .Application(Recur("there"), t))
+							})),
+						.Unit)
+				}
+			},
+			lambda(enumeration) { E in
+				.lambda(.lambda(.Application(tag, E), const(.Type)), const(.Type))
+			})
+
 		return Module([ list ], [
 			Binding("String", .Axiom(String.self, .Type(0)), .Type(0)),
 			Binding("Label", "String", .Type(0)),
@@ -33,6 +55,8 @@ extension Expression where Recur: FixpointType {
 			Tag,
 			here,
 			there,
+
+			Branches,
 		])
 	}
 }
