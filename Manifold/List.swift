@@ -13,10 +13,17 @@ extension Expression where Recur: FixpointType {
 			type: .Variable("List"))
 	}
 
+	public static var cons: Definition {
+		return (symbol: "cons",
+			value: lambda(.Type) { A in Recur.lambda(A) { first in Recur.lambda(.Application(.Variable("List"), A)) { rest in .Annotation(.Product(.Boolean(true), .Product(first, rest)), .Variable("List")) } } },
+			type: .Variable("List"))
+	}
+
 	public static var list: Space {
 		return defineSpace([
 			List,
 			`nil`,
+			cons,
 		])
 	}
 }
