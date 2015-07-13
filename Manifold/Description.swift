@@ -47,6 +47,26 @@ extension Expression where Recur: FixpointType {
 				.lambda(.lambda(tag <| E, const(.Type)), const(.Type))
 			})
 
+		// case : λ E : Enumeration . λ P : (λ _ : Tag E . Type) . λ cs : Branches E P . λ t : Tag E . P t
+		// case = λ E : Enumeration . λ P : (λ _ : Tag E . Type) . λ cs : Branches E P . λ t : Tag E . if t.0
+		//     then case E (λ t : Tag E . P (there t)) cs.1 t
+		//     else cs.0
+		let `case` = Binding("case",
+			lambda(enumeration) { E in
+				Recur.lambda(Recur.lambda(tag <| E, const(.Type))) { P in
+					Recur.lambda(branches <| E <| P) { cs in Recur.lambda(tag <| E) { t in
+						.If(.Projection(t, false),
+							Recur("case") <| E <| Recur.lambda(tag <| E) { t in P <| (Recur("there") <| t) } <| .Projection(cs, true) <| t,
+							.Projection(cs, false))
+					} }
+				}
+			},
+			lambda(enumeration) { E in
+				Recur.lambda(.lambda(tag <| E, const(.Type))) { P in
+					.lambda(branches <| E <| P, const(Recur.lambda(tag <| E) { t in P <| t }))
+				}
+			})
+
 		return Module([ list ], [
 			Binding("String", .Axiom(String.self, .Type(0)), .Type(0)),
 			Binding("Label", "String", .Type(0)),
@@ -57,6 +77,7 @@ extension Expression where Recur: FixpointType {
 			there,
 
 			Branches,
+			`case`,
 		])
 	}
 }
