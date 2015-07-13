@@ -4,6 +4,7 @@ final class ListTests: XCTestCase {
 	func testListTypechecks() {
 		let kind = Expression<Term>.Variable("List").typecheck(Expression.list.context)
 		assert(kind.left, ==, nil)
+		assert(kind.right, ==, .lambda(.Type, const(.Type)))
 	}
 }
 
