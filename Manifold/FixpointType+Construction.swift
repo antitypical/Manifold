@@ -73,9 +73,4 @@ extension FixpointType {
 }
 
 
-public func <| <Recur: FixpointType> (left: Recur, right: Recur) -> Recur {
-	return .Application(left, right)
-}
-
-
 import Prelude
