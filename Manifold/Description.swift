@@ -6,7 +6,7 @@ extension Expression where Recur: FixpointType {
 		let enumeration = Recur("Enumeration")
 		let label = Recur("Label")
 		let cons = Recur("::")
-		let branches = Recur("Branches")
+		let Branches = Recur("Branches")
 
 		// Tag : λ _ : Enumeration . Type
 		// Tag = λ E : Enumeration . λ _ : Boolean . Tag E
@@ -31,13 +31,13 @@ extension Expression where Recur: FixpointType {
 		// Branches = λ E : Enumeration . λ P : (λ _ : Tag E . Type) . if E.0
 		//     then (P here, Branches E (λ t : Tag E . P (there t)))
 		//     else Unit
-		let Branches = Binding("Branches",
+		let branches = Binding("Branches",
 			lambda(enumeration) { E in
 				Recur.lambda(.lambda(Tag[E], const(.Type))) { P in
 					.If(.Projection(E, false),
 						.Product(
 							P[Recur("here")],
-							branches[E, Recur.lambda(Tag[E]) { t in
+							Branches[E, Recur.lambda(Tag[E]) { t in
 								P[Recur("there")[t]]
 							}]),
 						.Unit)
@@ -54,7 +54,7 @@ extension Expression where Recur: FixpointType {
 		let `case` = Binding("case",
 			lambda(enumeration) { E in
 				Recur.lambda(Recur.lambda(Tag[E], const(.Type))) { P in
-					Recur.lambda(branches[E, P]) { cs in Recur.lambda(Tag[E]) { t in
+					Recur.lambda(Branches[E, P]) { cs in Recur.lambda(Tag[E]) { t in
 						.If(.Projection(t, false),
 							Recur("case")[E, Recur.lambda(Tag[E]) { t in P[Recur("there")[t]] }, .Projection(cs, true), t],
 							.Projection(cs, false))
@@ -63,7 +63,7 @@ extension Expression where Recur: FixpointType {
 			},
 			lambda(enumeration) { E in
 				Recur.lambda(.lambda(Tag[E], const(.Type))) { P in
-					.lambda(branches[E, P], const(Recur.lambda(Tag[E]) { t in P[t] }))
+					.lambda(Branches[E, P], const(Recur.lambda(Tag[E]) { t in P[t] }))
 				}
 			})
 
@@ -76,7 +76,7 @@ extension Expression where Recur: FixpointType {
 			here,
 			there,
 
-			Branches,
+			branches,
 			`case`,
 		])
 	}
