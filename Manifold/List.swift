@@ -7,7 +7,7 @@ extension Expression where Recur: FixpointType {
 		// List : λ A : Type . Type
 		// List = λ A : Type . λ tag : Boolean . if tag then (A, List A) else Unit
 		let list = Binding("List",
-			lambda(.Type) { A in Recur.lambda(.BooleanType) { .If($0, .Product(A, .Application(List, A)), .UnitType) } },
+			lambda(.Type) { A in Recur.lambda(.BooleanType) { .If($0, .Product(A, List[A]), .UnitType) } },
 			lambda(.Type, const(.Type)))
 
 		// nil : List
