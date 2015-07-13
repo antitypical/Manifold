@@ -55,6 +55,10 @@ extension FixpointType {
 		return Self(.Annotation(term, type))
 	}
 
+	public static func Axiom(value: Any, _ type: Self) -> Self {
+		return Self(.Axiom(value, type))
+	}
+
 
 	// MARK: Higher-order construction
 
