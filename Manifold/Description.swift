@@ -34,7 +34,7 @@ extension Expression where Recur: FixpointType {
 		let branches = Binding("Branches",
 			lambda(enumeration) { E in
 				Recur.lambda(.lambda(Tag[E], const(.Type))) { P in
-					.If(.Projection(E, false),
+					.If(E.first,
 						.Product(
 							P[Recur("here")],
 							Branches[E, Recur.lambda(Tag[E]) { t in
@@ -55,9 +55,9 @@ extension Expression where Recur: FixpointType {
 			lambda(enumeration) { E in
 				Recur.lambda(Recur.lambda(Tag[E], const(.Type))) { P in
 					Recur.lambda(Branches[E, P]) { cs in Recur.lambda(Tag[E]) { t in
-						.If(.Projection(t, false),
-							Recur("case")[E, Recur.lambda(Tag[E]) { t in P[Recur("there")[t]] }, .Projection(cs, true), t],
-							.Projection(cs, false))
+						.If(t.first,
+							Recur("case")[E, Recur.lambda(Tag[E]) { t in P[Recur("there")[t]] }, cs.second, t],
+							cs.first)
 					} }
 				}
 			},
