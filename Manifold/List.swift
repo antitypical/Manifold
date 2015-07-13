@@ -20,7 +20,7 @@ extension Expression where Recur: FixpointType {
 		// cons = λ A : Type . λ first : A . λ rest : List A . (true, (first, rest)) : List A
 		let cons = Binding("::",
 			lambda(.Type) { A in Recur.lambda(A) { first in Recur.lambda(.Application(List, A)) { rest in .Annotation(.Product(.Boolean(true), .Product(first, rest)), List) } } },
-			List.out)
+			lambda(.Type) { A in .lambda(A, const(.lambda(List[A], const(List[A])))) })
 
 		return Module([ list, `nil`, cons ])
 	}
