@@ -65,6 +65,15 @@ extension FixpointType {
 	}
 
 
+	public var first: Self {
+		return .Projection(self, false)
+	}
+
+	public var second: Self {
+		return .Projection(self, true)
+	}
+
+
 	// MARK: Higher-order construction
 
 	public static func lambda(type: Self, _ body: Self -> Self) -> Self {
