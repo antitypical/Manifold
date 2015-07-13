@@ -60,6 +60,11 @@ extension FixpointType {
 	}
 
 
+	public subscript (operands: Self...) -> Self {
+		return operands.reduce(self, combine: Self.Application)
+	}
+
+
 	// MARK: Higher-order construction
 
 	public static func lambda(type: Self, _ body: Self -> Self) -> Self {
