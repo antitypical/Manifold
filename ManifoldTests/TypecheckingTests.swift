@@ -52,7 +52,7 @@ final class TypecheckingTests: XCTestCase {
 }
 
 import Assertions
-import Manifold
+@testable import Manifold
 import Prelude
 import XCTest
 

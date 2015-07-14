@@ -1,6 +1,6 @@
-//  Copyright (c) 2015 Rob Rix. All rights reserved.
+//  Copyright © 2015 Rob Rix. All rights reserved.
 
-public struct Term: CustomStringConvertible, FixpointType, Hashable {
+public struct Term: CustomStringConvertible, FixpointType {
 	private var expression: () -> Expression<Term>
 
 
@@ -20,12 +20,17 @@ public struct Term: CustomStringConvertible, FixpointType, Hashable {
 	public var out: Expression<Term> {
 		return expression()
 	}
+}
 
 
-	// MARK: Hashable
+// This would be an extension on `FixpointType` if protocol extensions could have inheritance clauses.
+extension Term: BooleanLiteralConvertible, StringLiteralConvertible {
+	public init(booleanLiteral: Bool) {
+		self = .Boolean(booleanLiteral)
+	}
 
-	public var hashValue: Int {
-		return out.hashValue
+	public init(stringLiteral: String) {
+		self = .Variable(.Global(stringLiteral))
 	}
 }
 

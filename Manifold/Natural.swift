@@ -1,32 +1,26 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 extension Expression where Recur: FixpointType {
-	public static var Natural: Expression {
-		return lambda(Recur(.BooleanType)) { Recur(.If($0, Recur(.Variable("Natural")), Recur(.UnitType))) }
-	}
+	public static var natural: Module<Recur> {
+		// Natural : Type
+		// Natural = λ tag : Boolean . if tag then Natural else Unit
+		let Natural = Binding("Natural",
+			lambda(.BooleanType) { .If($0, .Variable("Natural"), .UnitType) },
+			lambda(.BooleanType, const(.Type(0))))
 
-	public static var zero: Expression {
-		return .Annotation(Recur(.Product(Recur(false), Recur(.Unit))), Recur(.Variable("Natural")))
-	}
+		// zero : Natural
+		// zero = (false, ()) : Natural
+		let zero = Binding("zero",
+			.Annotation(Recur.Product(.Boolean(false), .Unit), .Variable("Natural")),
+			.Variable("Natural"))
 
-	public static var successor: Expression {
-		return lambda(Recur(.Variable("Natural"))) { predecessor in Recur(lambda(Recur(true), const(predecessor))) }
-	}
+		// successor : Natural -> Natural
+		// successor = λ n : Natural . (true, n) : Natural
+		let successor = Binding("successor",
+			lambda(.Variable("Natural")) { predecessor in .Annotation(.Product(.Boolean(true), predecessor), .Variable("Natural")) },
+			lambda(.Variable("Natural"), const(.Variable("Natural"))))
 
-	public static var naturalEnvironment: [Name: Expression] {
-		return [
-			"Natural": Natural,
-			"zero": zero,
-			"successor": successor,
-		]
-	}
-
-	public static var naturalContext: [Name: Expression] {
-		return [
-			"Natural": lambda(Recur(.BooleanType), const(Recur(.Type(0)))),
-			"zero": .Variable("Natural"),
-			"successor": lambda(Recur(.Variable("Natural")), const(Recur(.Variable("Natural")))),
-		]
+		return Module([ Natural, zero, successor ])
 	}
 }
 

@@ -1,6 +1,6 @@
-//  Copyright (c) 2015 Rob Rix. All rights reserved.
+//  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertible, IntegerLiteralConvertible {
+public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertible, IntegerLiteralConvertible, StringLiteralConvertible {
 	// MARK: Analyses
 
 	public func analysis<T>(
@@ -15,7 +15,8 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 		@noescape ifBooleanType: () -> T,
 		@noescape ifBoolean: Bool -> T,
 		@noescape ifIf: (Recur, Recur, Recur) -> T,
-		@noescape ifAnnotation: (Recur, Recur) -> T) -> T {
+		@noescape ifAnnotation: (Recur, Recur) -> T,
+		@noescape ifAxiom: (Any, Recur) -> T) -> T {
 		switch self {
 		case .Unit:
 			return ifUnit()
@@ -41,6 +42,8 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 			return ifIf(a, b, c)
 		case let .Annotation(term, type):
 			return ifAnnotation(term, type)
+		case let .Axiom(v, type):
+			return ifAxiom(v, type)
 		}
 	}
 
@@ -57,6 +60,7 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 		ifBoolean: (Bool -> T)? = nil,
 		ifIf: ((Recur, Recur, Recur) -> T)? = nil,
 		ifAnnotation: ((Recur, Recur) -> T)? = nil,
+		ifAxiom: ((Any, Recur) -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifUnit: { ifUnit?() ?? otherwise() },
@@ -70,7 +74,8 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 			ifBooleanType: { ifBooleanType?() ?? otherwise() },
 			ifBoolean: { ifBoolean?($0) ?? otherwise() },
 			ifIf: { ifIf?($0) ?? otherwise() },
-			ifAnnotation: { ifAnnotation?($0) ?? otherwise() })
+			ifAnnotation: { ifAnnotation?($0) ?? otherwise() },
+			ifAxiom: { ifAxiom?($0) ?? otherwise() })
 	}
 
 
@@ -89,7 +94,8 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 			ifBooleanType: const(.BooleanType),
 			ifBoolean: { .Boolean($0) },
 			ifIf: { .If(transform($0), transform($1), transform($2)) },
-			ifAnnotation: { .Annotation(transform($0), transform($1)) })
+			ifAnnotation: { .Annotation(transform($0), transform($1)) },
+			ifAxiom: { .Axiom($0, transform($1)) })
 	}
 
 
@@ -146,6 +152,9 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 
 		case let .Annotation(term, type):
 			return "\(term) : \(type)"
+
+		case let .Axiom(v, type):
+			return "'\(v) : \(type)"
 		}
 	}
 
@@ -154,6 +163,13 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 
 	public init(integerLiteral value: Int) {
 		self = .Variable(.Local(value))
+	}
+
+
+	// MARK: StringLiteralConvertible
+
+	public init(stringLiteral: String) {
+		self = .Variable(.Global(stringLiteral))
 	}
 
 
@@ -171,6 +187,7 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 	case Boolean(Bool)
 	case If(Recur, Recur, Recur)
 	case Annotation(Recur, Recur)
+	case Axiom(Any, Recur)
 }
 
 extension Expression where Recur: FixpointType {
@@ -198,6 +215,18 @@ extension Expression where Recur: FixpointType {
 		let body = f(Recur { .Variable(.Local(n)) })
 		n = body.out.maxBoundVariable + 1
 		return .Lambda(n, type, body)
+	}
+
+	public static func lambda(type1: Recur, _ type2: Recur, _ f: (Recur, Recur) -> Recur) -> Expression {
+		return lambda(type1) { a in Recur.lambda(type2) { b in f(a, b) } }
+	}
+
+	public static func lambda(type1: Recur, _ type2: Recur, _ type3: Recur, _ f: (Recur, Recur, Recur) -> Recur) -> Expression {
+		return lambda(type1) { a in Recur.lambda(type2) { b in Recur.lambda(type3) { c in f(a, b, c) } } }
+	}
+
+	public static func lambda(type1: Recur, _ type2: Recur, _ type3: Recur, _ type4: Recur, _ f: (Recur, Recur, Recur, Recur) -> Recur) -> Expression {
+		return lambda(type1) { a in Recur.lambda(type2) { b in Recur.lambda(type3) { c in Recur.lambda(type4) { d in f(a, b, c, d) } } } }
 	}
 
 
@@ -234,7 +263,9 @@ extension Expression where Recur: FixpointType {
 
 	// MARK: Evaluation
 
-	public func evaluate(environment: [Name: Expression] = [:]) -> Expression {
+	public typealias Environment = [Name: Expression]
+
+	public func evaluate(environment: Environment = [:]) -> Expression {
 		switch destructured {
 		case let .Variable(i):
 			return environment[i] ?? self
@@ -269,6 +300,7 @@ extension Expression where Recur: FixpointType {
 				ifProjection: Expression.Projection,
 				ifProduct: Expression.Product,
 				ifIf: Expression.If,
+				ifAxiom: Expression.Axiom,
 				otherwise: const(t)))
 		} (Recur(self)).out
 	}
@@ -285,28 +317,8 @@ extension Expression where Recur: FixpointType {
 				ifProduct: max,
 				ifIf: { max($0, $1, $2) },
 				ifAnnotation: max,
+				ifAxiom: { $1 },
 				otherwise: const(-1))
-		} (Recur(self))
-	}
-
-
-	// MARK: Hashable
-
-	var hashValue: Int {
-		return cata {
-			$0.map { $0.hashValue }.analysis(
-				ifUnit: { 1 },
-				ifUnitType: { 2 },
-				ifType: { 3 ^ $0 },
-				ifVariable: { 5 ^ $0.hashValue },
-				ifApplication: { 7 ^ $0 ^ $1 },
-				ifLambda: { 11 ^ $0 ^ $1 ^ $2 },
-				ifProjection: { 13 ^ $0 ^ $1.hashValue },
-				ifProduct: { 17 ^ $0 ^ $1 },
-				ifBooleanType: { 19 },
-				ifBoolean: { 23 ^ $0.hashValue },
-				ifIf: { 29 ^ $0 ^ $1 ^ $2 },
-				ifAnnotation: { 31 ^ $0 ^ $1 })
 		} (Recur(self))
 	}
 }
@@ -314,7 +326,9 @@ extension Expression where Recur: FixpointType {
 extension Expression where Recur: FixpointType, Recur: Equatable {
 	// MARK: Typechecking
 
-	public func typecheck(context: [Name: Expression] = [:]) -> Either<Error, Expression> {
+	public typealias Context = [Name: Expression]
+
+	public func typecheck(context: Context = [:]) -> Either<Error, Expression> {
 		switch destructured {
 		case .Unit:
 			return .right(.UnitType)
@@ -374,10 +388,13 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 		case let .Annotation(term, type):
 			return term.typecheck(context, against: type)
 				.map(const(type))
+
+		case let .Axiom(_, type):
+			return Either.right(type)
 		}
 	}
 
-	public func typecheck(context: [Name: Expression], against: Expression) -> Either<Error, Expression> {
+	public func typecheck(context: Context, against: Expression) -> Either<Error, Expression> {
 		return (against.isType
 				? Either.Right(against)
 				: against.typecheck(context, against: .Type(0)))
