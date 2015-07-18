@@ -8,9 +8,6 @@
       location = "group:External/Assertions/Assertions.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:External/Box/Box.xcodeproj">
-   </FileRef>
-   <FileRef
       location = "group:External/Either/Either.xcodeproj">
    </FileRef>
    <FileRef
