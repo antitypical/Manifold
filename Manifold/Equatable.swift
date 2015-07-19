@@ -59,3 +59,10 @@ public func == (left: Name, right: Name) -> Bool {
 public func == <Fix: FixpointType> (left: Fix, right: Fix) -> Bool {
 	return left.out == right.out
 }
+
+
+// MARK: ListIndex
+
+public func == <Element> (left: ListIndex<Element>, right: ListIndex<Element>) -> Bool {
+	return left.index == right.index && left.list.isEmpty == right.list.isEmpty
+}
