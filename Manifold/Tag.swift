@@ -8,6 +8,16 @@ public enum Tag {
 	case Here(Label, Enumeration)
 	case There(Label, Enumeration, () -> Tag)
 
+	public static func tags(enumeration: Enumeration) -> [Tag] {
+		struct State {
+			let tags: [Tag]
+			let there: (Label, Enumeration) -> Tag
+		}
+		return enumeration.conses.reduce(State(tags: [], there: Tag.Here)) { into, each in
+			State(tags: into.tags + [ into.there(each.first, each.rest) ], there: { l, e in Tag.There(each.first, each.rest, { into.there(l, e) }) })
+		}.tags
+	}
+
 	public var label: Label {
 		switch self {
 		case let .Here(l, _):
