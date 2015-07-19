@@ -61,6 +61,13 @@ public func == <Fix: FixpointType> (left: Fix, right: Fix) -> Bool {
 }
 
 
+// MARK: List
+
+public func == <Element: Equatable> (left: List<Element>, right: List<Element>) -> Bool {
+	return left.count == right.count && lazy(zip(left, right)).map { $0 == $1 }.reduce(true) { $0 && $1 }
+}
+
+
 // MARK: ListIndex
 
 public func == <Element> (left: ListIndex<Element>, right: ListIndex<Element>) -> Bool {
