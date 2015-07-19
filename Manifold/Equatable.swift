@@ -73,3 +73,17 @@ public func == <Element: Equatable> (left: List<Element>, right: List<Element>) 
 public func == <Element> (left: ListIndex<Element>, right: ListIndex<Element>) -> Bool {
 	return left.index == right.index && left.list.isEmpty == right.list.isEmpty
 }
+
+
+// MARK: Tag
+
+public func == (left: Tag, right: Tag) -> Bool {
+	switch (left, right) {
+	case let (.Here(l1, e1), .Here(l2, e2)):
+		return l1 == l2 && e1 == e2
+	case let (.There(l1, e1, r1), .There(l2, e2, r2)):
+		return l1 == l2 && e1 == e2 && r1() == r2()
+	default:
+		return false
+	}
+}

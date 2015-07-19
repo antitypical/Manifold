@@ -4,7 +4,7 @@ public typealias Label = String
 
 public typealias Enumeration = [Label]
 
-public enum Tag {
+public enum Tag: Equatable {
 	case Here(Label, Enumeration)
 	case There(Label, Enumeration, () -> Tag)
 
