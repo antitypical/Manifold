@@ -8,7 +8,7 @@ public enum Tag {
 	case Here(Label, Enumeration)
 	case There(Label, Enumeration, () -> Tag)
 
-	var label: Label {
+	public var label: Label {
 		switch self {
 		case let .Here(l, _):
 			return l
@@ -17,7 +17,7 @@ public enum Tag {
 		}
 	}
 
-	var enumeration: Enumeration {
+	public var enumeration: Enumeration {
 		switch self {
 		case let .Here(_, e):
 			return e
