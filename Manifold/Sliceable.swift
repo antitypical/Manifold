@@ -15,3 +15,14 @@ extension Sliceable {
 			: dropFirst(self)
 	}
 }
+
+extension Sliceable where SubSlice == Self {
+	public var conses: AnyGenerator<(first: SubSlice.Generator.Element, rest: SubSlice)> {
+		var current = uncons
+		return anyGenerator {
+			let next = current
+			current = current?.rest.uncons
+			return next
+		}
+	}
+}
