@@ -4,7 +4,7 @@ public typealias Label = String
 
 public typealias Enumeration = [Label]
 
-public enum Tag: Equatable, CustomStringConvertible {
+public enum Tag: Equatable, CustomDebugStringConvertible, CustomStringConvertible {
 	case Here(Label, Enumeration)
 	case There(Label, Enumeration, () -> Tag)
 
@@ -36,6 +36,16 @@ public enum Tag: Equatable, CustomStringConvertible {
 		}
 	}
 
+
+	public var debugDescription: String {
+		switch self {
+		case let .Here(label, rest):
+			let s = " :: ".join(rest + [ "[]" ])
+			return "(\(label)) :: \(s)"
+		case let .There(label, _, next):
+			return "\(label) :: \(String(reflecting: next()))"
+		}
+	}
 
 	public var description: String {
 		return label
