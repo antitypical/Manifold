@@ -2,7 +2,7 @@
 
 public typealias Label = String
 
-public typealias Enumeration = List<Label>
+public typealias Enumeration = [Label]
 
 public enum Tag {
 	case Here(Label, Enumeration)
@@ -13,8 +13,8 @@ public enum Tag {
 			let tags: [Tag]
 			let there: (Label, Enumeration) -> Tag
 		}
-		return enumeration.conses.reduce(State(tags: [], there: Tag.Here)) { into, each in
-			State(tags: into.tags + [ into.there(each.first, each.rest) ], there: { l, e in Tag.There(each.first, each.rest, { into.there(l, e) }) })
+		return enumeration[enumeration.indices].conses.reduce(State(tags: [], there: Tag.Here)) { into, each in
+			State(tags: into.tags + [ into.there(each.first, Array(each.rest)) ], there: { l, e in Tag.There(each.first, Array(each.rest), { into.there(l, e) }) })
 		}.tags
 	}
 
