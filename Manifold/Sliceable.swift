@@ -16,6 +16,7 @@ extension Sliceable {
 	}
 }
 
+// This extension ought to be constrained such that SubSlice: Sliceable, SubSlice.SubSlice == SubSlice. However, such constraints crash swiftc as of Swift 2.0b3.
 extension Sliceable where SubSlice == Self {
 	public var conses: AnyGenerator<(first: SubSlice.Generator.Element, rest: SubSlice)> {
 		var current = uncons
