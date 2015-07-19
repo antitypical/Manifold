@@ -23,6 +23,16 @@ public enum List<Element>: ArrayLiteralConvertible, CollectionType, NilLiteralCo
 	}
 
 
+	public var conses: AnyGenerator<(first: Element, rest: List)> {
+		var current = uncons
+		return anyGenerator {
+			let next = current
+			current = current?.rest.uncons
+			return next
+		}
+	}
+
+
 	public init<S: SequenceType where S.Generator.Element == Element>(sequence: S) {
 		self.init(generator: sequence.generate())
 	}
