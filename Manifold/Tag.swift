@@ -11,10 +11,10 @@ public enum Tag: Equatable, CustomDebugStringConvertible, CustomStringConvertibl
 	public static func tags(enumeration: Enumeration) -> [Tag] {
 		struct State {
 			let tags: [Tag]
-			let there: (Label, Enumeration) -> Tag
+			let there: Tag -> Tag
 		}
-		return enumeration[enumeration.indices].conses.reduce(State(tags: [], there: Tag.Here)) { into, each in
-			State(tags: into.tags + [ into.there(each.first, Array(each.rest)) ], there: { l, e in Tag.There(each.first, Array(each.rest), { into.there(l, e) }) })
+		return enumeration[enumeration.indices].conses.reduce(State(tags: [], there: id)) { into, each in
+			State(tags: into.tags + [ into.there(.Here(each.first, Array(each.rest))) ], there: { next in into.there(Tag.There(each.first, Array(each.rest), { next })) })
 		}.tags
 	}
 
@@ -51,3 +51,6 @@ public enum Tag: Equatable, CustomDebugStringConvertible, CustomStringConvertibl
 		return label
 	}
 }
+
+
+import Prelude
