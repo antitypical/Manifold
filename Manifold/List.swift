@@ -30,7 +30,7 @@ public enum List<Element>: ArrayLiteralConvertible, CollectionType, NilLiteralCo
 	public init<G: GeneratorType where G.Element == Element>(var generator: G) {
 		self = generator.next().map {
 			.Cons($0, { List(generator: generator) })
-			} ?? nil
+		} ?? nil
 	}
 
 
