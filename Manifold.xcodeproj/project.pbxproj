@@ -25,7 +25,6 @@
 		D4DF44501B2DB043008DCA5D /* TypecheckingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DF444F1B2DB043008DCA5D /* TypecheckingTests.swift */; };
 		D4E01E441B5BF3A1003BAB46 /* TagTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E01E431B5BF3A1003BAB46 /* TagTests.swift */; };
 		D4E01E461B5BF5F7003BAB46 /* Sliceable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E01E451B5BF5F7003BAB46 /* Sliceable.swift */; };
-		D4E01E481B5C353B003BAB46 /* Fold.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E01E471B5C353B003BAB46 /* Fold.swift */; };
 		D4E101B81B484606001A7E55 /* NaturalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E101B71B484606001A7E55 /* NaturalTests.swift */; };
 		D4E101BA1B484611001A7E55 /* Expression+Natural.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E101B91B484611001A7E55 /* Expression+Natural.swift */; };
 		D4E49E611B4B6384002273A3 /* Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E49E601B4B6384002273A3 /* Description.swift */; };
@@ -82,7 +81,6 @@
 		D4DF444F1B2DB043008DCA5D /* TypecheckingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypecheckingTests.swift; sourceTree = "<group>"; };
 		D4E01E431B5BF3A1003BAB46 /* TagTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagTests.swift; sourceTree = "<group>"; };
 		D4E01E451B5BF5F7003BAB46 /* Sliceable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sliceable.swift; sourceTree = "<group>"; };
-		D4E01E471B5C353B003BAB46 /* Fold.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Fold.swift; sourceTree = "<group>"; };
 		D4E101B71B484606001A7E55 /* NaturalTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NaturalTests.swift; sourceTree = "<group>"; };
 		D4E101B91B484611001A7E55 /* Expression+Natural.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+Natural.swift"; sourceTree = "<group>"; };
 		D4E49E601B4B6384002273A3 /* Description.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Description.swift; sourceTree = "<group>"; };
@@ -186,7 +184,6 @@
 				D4E8291A1B521F1100713E60 /* ConcatSequenceView.swift */,
 				D4E8291C1B522A8400713E60 /* LazySequenceType.swift */,
 				D4E01E451B5BF5F7003BAB46 /* Sliceable.swift */,
-				D4E01E471B5C353B003BAB46 /* Fold.swift */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -338,7 +335,6 @@
 				D4B56CB11AFDA26A00D7BD6F /* Expression.swift in Sources */,
 				D4B4AA571A90320F0089A5F2 /* Dictionary.swift in Sources */,
 				D4E8289D1B5202BB00713E60 /* StringLiteralConvertible.swift in Sources */,
-				D4E01E481B5C353B003BAB46 /* Fold.swift in Sources */,
 				D4EDEF571AFEDEC5001B9A1D /* Name.swift in Sources */,
 				D4A31B2A1AA366EC00B3FC68 /* FixpointType.swift in Sources */,
 				D4E829191B521BFC00713E60 /* Binding.swift in Sources */,
