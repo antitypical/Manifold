@@ -59,17 +59,3 @@ public func == (left: Name, right: Name) -> Bool {
 public func == <Fix: FixpointType> (left: Fix, right: Fix) -> Bool {
 	return left.out == right.out
 }
-
-
-// MARK: Tag
-
-public func == (left: Tag, right: Tag) -> Bool {
-	switch (left, right) {
-	case let (.Here(l1, e1), .Here(l2, e2)):
-		return l1 == l2 && e1 == e2
-	case let (.There(l1, e1, r1), .There(l2, e2, r2)):
-		return l1 == l2 && e1 == e2 && r1() == r2()
-	default:
-		return false
-	}
-}
