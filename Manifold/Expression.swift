@@ -204,6 +204,15 @@ extension Expression where Recur: FixpointType {
 		} ?? .UnitType
 	}
 
+	/// Constructs a (non-dependent) function type of the elements in `types`.
+	public static func functionType(types: [Recur]) -> Expression {
+		return types.uncons.map { first, rest in
+			rest.isEmpty
+				? Expression.lambda(first, const(Recur(.functionType(Array(rest)))))
+				: first.out
+			} ?? .UnitType
+	}
+
 
 	// MARK: Higher-order construction
 
