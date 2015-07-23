@@ -11,6 +11,13 @@ final class TagTests: XCTestCase {
 		assert(tags[1], ==, Tag.There("a", ["b", "c"], { Tag.Here("b", ["c"]) }))
 		assert(tags[2], ==, Tag.There("a", ["b", "c"], { Tag.There("b", ["c"], { Tag.Here("c", []) }) }))
 	}
+
+	func testTagTypechecksAsFunction() {
+		let expected = Expression.FunctionType([ Term("Enumeration"), Term(.Type(0)) ])
+		let actual = Term("Tag").out.typecheck(Expression<Term>.tag.context, against: expected)
+		assert(actual.left, ==, nil)
+		assert(actual.right, ==, expected)
+	}
 }
 
 
