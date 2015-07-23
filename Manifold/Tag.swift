@@ -6,12 +6,13 @@ extension Expression where Recur: FixpointType {
 		let Enumeration = Recur("Enumeration")
 		let Label = Recur("Label")
 		let cons = Recur("::")
+		let uncons = Recur("uncons")
 		let Branches = Recur("Branches")
 
 		// Tag : λ _ : Enumeration . Type
 		// Tag = λ E : Enumeration . λ _ : Boolean . Tag E
 		let tag = Binding("Tag",
-			lambda(Enumeration, .BooleanType) { E, _ in Tag[E] },
+			lambda(Enumeration, .BooleanType) { E, c in .If(c, uncons[E, Recur.lambda(Label, Enumeration) { _, rest in rest }], .UnitType) },
 			lambda(Enumeration, const(.Type(0))))
 
 		// here : λ first : Label . λ rest : Enumeration . Tag (first :: rest)
