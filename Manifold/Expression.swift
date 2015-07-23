@@ -420,6 +420,10 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 								}
 						}
 
+						if case let .Lambda(_, _, returnType) = type where against.isType && returnType.out.isType {
+							return .Right(type)
+						}
+
 						if type == against || against == .Type(0) && type.isType {
 							return .Right(type)
 						}
