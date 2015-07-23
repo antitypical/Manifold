@@ -197,10 +197,10 @@ extension Expression where Recur: FixpointType {
 	public static func Sum(terms: [Recur]) -> Expression {
 		return terms.uncons.map { first, rest in
 			rest.isEmpty
-				? Expression.lambda(Recur(.BooleanType)) {
+				? first.out
+				: Expression.lambda(Recur(.BooleanType)) {
 					Recur(.If($0, first, Recur(.Sum(Array(rest)))))
 				}
-				: first.out
 		} ?? .UnitType
 	}
 
@@ -208,8 +208,8 @@ extension Expression where Recur: FixpointType {
 	public static func FunctionType(types: [Recur]) -> Expression {
 		return types.uncons.map { first, rest in
 			rest.isEmpty
-				? Expression.lambda(first, const(Recur(.FunctionType(Array(rest)))))
-				: first.out
+				? first.out
+				: Expression.lambda(first, const(Recur(.FunctionType(Array(rest)))))
 			} ?? .UnitType
 	}
 
