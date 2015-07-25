@@ -12,7 +12,7 @@ final class NaturalTests: XCTestCase {
 }
 
 
-let zero: Expression<Term> = .Variable("zero")
+private let zero = Term("zero").out
 
 
 import Assertions
