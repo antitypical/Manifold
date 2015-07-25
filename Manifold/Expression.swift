@@ -317,7 +317,7 @@ extension Expression where Recur: FixpointType {
 	}
 
 
-	// MARK: Bound variables
+	// MARK: Variables
 
 	var maxBoundVariable: Int {
 		return cata {
@@ -330,6 +330,21 @@ extension Expression where Recur: FixpointType {
 				ifAnnotation: max,
 				ifAxiom: { $1 },
 				otherwise: const(-1))
+		} (Recur(self))
+	}
+
+	var freeVariables: Set<Int> {
+		return cata {
+			$0.analysis(
+				ifVariable: { $0.local.map { [ $0 ] } ?? Set() },
+				ifApplication: uncurry(Set.union),
+				ifLambda: { $1.union($2.subtract([ $0 ])) },
+				ifProjection: { $0.0 },
+				ifProduct: uncurry(Set.union),
+				ifIf: { $0.union($1).union($2) },
+				ifAnnotation: uncurry(Set.union),
+				ifAxiom: { $1 },
+				otherwise: const(Set()))
 		} (Recur(self))
 	}
 }
