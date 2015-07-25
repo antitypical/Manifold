@@ -10,14 +10,14 @@ extension Expression where Recur: FixpointType {
 			lambda(.Type) { A in Recur.lambda(.BooleanType) { .If($0, .Product(A, List[A]), .UnitType) } },
 			lambda(.Type, const(.Type)))
 
-		// nil : List
-		// nil = (false, ()) : List
+		// [] : λ A : Type . List A
+		// [] = λ A : Type . (false, ()) : List A
 		let `nil` = Binding("[]",
-			.Annotation(Recur.Product(.Boolean(false), .Unit), List),
-			List.out)
+			lambda(.Type) { A in .Annotation(Recur.Product(.Boolean(false), .Unit), List[A]) },
+			lambda(.Type) { A in List[A] })
 
-		// cons : λ A : Type . λ _ : A . λ _ : List A . List A
-		// cons = λ A : Type . λ first : A . λ rest : List A . (true, (first, rest)) : List A
+		// (::) : λ A : Type . λ _ : A . λ _ : List A . List A
+		// (::) = λ A : Type . λ first : A . λ rest : List A . (true, (first, rest)) : List A
 		let cons = Binding("::",
 			lambda(.Type) { A in Recur.lambda(A) { first in Recur.lambda(.Application(List, A)) { rest in .Annotation(.Product(.Boolean(true), .Product(first, rest)), List) } } },
 			lambda(.Type) { A in .lambda(A, const(.lambda(List[A], const(List[A])))) })

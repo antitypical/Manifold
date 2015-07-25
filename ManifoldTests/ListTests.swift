@@ -25,7 +25,7 @@ private let environment = Expression<Term>.list.environment
 private let List = Term("List")
 private let cons = Term("::")
 private let uncons = Term("uncons")
-private let empty = Term("[]")
+private let empty = Term("[]")[Term(.UnitType)]
 private let unary = cons[Term(.UnitType), Term(.Unit), empty]
 
 
