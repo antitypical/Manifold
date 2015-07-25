@@ -7,7 +7,7 @@ public enum Name: CustomDebugStringConvertible, CustomStringConvertible, Hashabl
 		return analysis(ifGlobal: Optional.Some, ifLocal: const(nil))
 	}
 
-	public var value: Int? {
+	public var local: Int? {
 		return analysis(ifGlobal: const(nil), ifLocal: Optional.Some)
 	}
 
