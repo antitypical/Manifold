@@ -333,7 +333,7 @@ extension Expression where Recur: FixpointType {
 		} (Recur(self))
 	}
 
-	var freeVariables: Set<Int> {
+	public var freeVariables: Set<Int> {
 		return cata {
 			$0.analysis(
 				ifVariable: { $0.local.map { [ $0 ] } ?? Set() },
