@@ -276,7 +276,11 @@ extension Expression where Recur: FixpointType {
 		case let .Variable(i):
 			return environment[i] ?? self
 		case let .Application(a, b):
-			return a.evaluate(environment).lambda.map { i, _, body in body.out.substitute(i, b.evaluate(environment)).evaluate(environment) }!
+			let a = a.evaluate(environment)
+			if let (i, _, body) = a.lambda {
+				return body.out.substitute(i, b.evaluate(environment)).evaluate(environment)
+			}
+			return Application(Recur(a), Recur(b.evaluate(environment)))
 		case let .Projection(a, b):
 			return a.evaluate(environment).product.map { b ? $1 : $0 }.map { $0.out }!
 		case let .If(condition, then, `else`):
