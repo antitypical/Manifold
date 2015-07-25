@@ -3,11 +3,14 @@
 final class TagTests: XCTestCase {
 	func testTagTypechecksAsFunction() {
 		let expected = Expression.FunctionType([ Term("Enumeration"), Term(.Type(0)) ])
-		let actual = Term("Tag").out.typecheck(Expression<Term>.tag.context, against: expected)
+		let actual = Term("Tag").out.typecheck(context, against: expected)
 		assert(actual.left, ==, nil)
 		assert(actual.right, ==, expected)
 	}
 }
+
+
+private let context = Expression<Term>.tag.context
 
 
 import Assertions
