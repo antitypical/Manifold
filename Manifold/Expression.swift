@@ -428,7 +428,7 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 							return .Right(type)
 						}
 
-						return .Left("Type mismatch: expected \(String(reflecting: self)) to be of type \(String(reflecting: against)), but it was actually of type \(String(reflecting: type)) in environment \(context)")
+						return .Left("Type mismatch: expected \(String(reflecting: self)) to be of type \(String(reflecting: against)), but it was actually of type \(String(reflecting: type)) in context \(context)")
 					}
 			}
 	}
