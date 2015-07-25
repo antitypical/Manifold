@@ -310,6 +310,7 @@ extension Expression where Recur: FixpointType {
 				ifProjection: Expression.Projection,
 				ifProduct: Expression.Product,
 				ifIf: Expression.If,
+				ifAnnotation: Expression.Annotation,
 				ifAxiom: Expression.Axiom,
 				otherwise: const(t)))
 		} (Recur(self)).out
