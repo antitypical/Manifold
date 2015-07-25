@@ -2,15 +2,16 @@
 
 final class NaturalTests: XCTestCase {
 	func testZeroTypechecksAsNatural() {
-		assert(zero.typecheck(Expression<Term>.natural.context).right, ==, .Variable("Natural"))
+		assert(zero.typecheck(context).right, ==, "Natural")
 	}
 
 	func testSuccessorOfZeroTypechecksAsNatural() {
-		let typechecked = Term(.Application(Term(.Variable("successor")), Term(.Variable("zero")))).out.typecheck(Expression<Term>.natural.context)
-		assert(typechecked.right, ==, .Variable("Natural"))
+		let typechecked = Term(.Application(Term("successor"), Term("zero"))).out.typecheck(context)
+		assert(typechecked.right, ==, "Natural")
 	}
 }
 
+private let context = Expression<Term>.natural.context
 
 private let zero = Term("zero").out
 
