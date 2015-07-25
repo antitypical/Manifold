@@ -8,12 +8,8 @@ final class ListTests: XCTestCase {
 	}
 
 	func testEmptyListEliminatesWithSecondArgumentToUncons() {
-		let UnitType = Term(.UnitType)
-		let BooleanType = Term(.BooleanType)
-		let f = Term(false)
-		let t = Term(true)
-		let eliminated = uncons[UnitType, BooleanType, Term.lambda(UnitType, const(Term.lambda(List[UnitType], const(f)))), Term.lambda(UnitType, const(t)), empty]
-		assert(eliminated.out.evaluate(environment), ==, t.out)
+		let eliminated = uncons[Term(.UnitType), Term(.BooleanType), Term.lambda(Term(.UnitType), const(Term.lambda(List[Term(.UnitType)], const(Term(false))))), Term.lambda(Term(.UnitType), const(Term(true))), empty]
+		assert(eliminated.out.evaluate(environment), ==, true)
 	}
 }
 
