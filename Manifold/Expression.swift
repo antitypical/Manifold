@@ -432,7 +432,12 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 							return .Right(type)
 						}
 
-						return .Left("Type mismatch: expected \(String(reflecting: self)) to be of type \(String(reflecting: against)), but it was actually of type \(String(reflecting: type)) in context \(context)")
+						let keys = lazy(context.keys.sort())
+						let maxLength: Int = keys.maxElement { $0.description.characters.count < $1.description.characters.count }?.description.characters.count ?? 0
+						let padding: Character = " "
+						let formattedContext = ",\n\t".join(keys.map { "\(String($0, paddedTo: maxLength, with: padding)) : \(context[$0]!)" })
+
+						return .Left("Type mismatch: expected \(String(reflecting: self)) to be of type \(String(reflecting: against)), but it was actually of type \(String(reflecting: type)) in context [\n\t\(formattedContext)\n]")
 					}
 			}
 	}
