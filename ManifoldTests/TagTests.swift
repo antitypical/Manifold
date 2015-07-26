@@ -9,12 +9,15 @@ final class TagTests: XCTestCase {
 	}
 
 	func testBranchesProducesAType() {
-		assert(Term("Branches")[Term("[]")[Term("String")]].out.typecheck(context, against: .Type(0)).left, ==, nil)
+		assert(Branches[Empty].out.typecheck(context, against: .Type(0)).left, ==, nil)
 	}
 }
 
 private let Enumeration = Term("Enumeration")
+private let Branches = Term("Branches")
+private let `nil` = Term("[]")
 private let Tag = Term("Tag")
+private let Empty = `nil`[Term("String")]
 
 private let context = Expression<Term>.tag.context
 
