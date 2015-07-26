@@ -1,7 +1,14 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public struct Term: CustomStringConvertible, FixpointType {
+public struct Term: CustomDebugStringConvertible, CustomStringConvertible, FixpointType {
 	private var expression: () -> Expression<Term>
+
+
+	// MARK: CustomDebugStringConvertible
+
+	public var debugDescription: String {
+		return out.debugDescription
+	}
 
 
 	// MARK: CustomStringConvertible
