@@ -459,10 +459,10 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 		return (against.isType
 				? Either.Right(against)
 				: against.typecheck(context, against: .Type(0)))
-			.map { _ in against.evaluate() }
+			.map { _ in against.evaluate(context) }
 			.flatMap { against in
 				typecheck(context)
-					.map { $0.evaluate() }
+					.map { $0.evaluate(context) }
 					.flatMap { (type: Expression) -> Either<Error, Expression> in
 						if case let (.Product(tag, payload), .Lambda(i, tagType, body)) = (self, against) {
 							return tagType.out.typecheck(context, against: .Type(0))
