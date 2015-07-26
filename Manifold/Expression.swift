@@ -293,7 +293,7 @@ extension Expression where Recur: FixpointType {
 	}
 
 	public var product: (Recur, Recur)? {
-		return analysis(ifProduct: Optional.Some, otherwise: const(nil))
+		return analysis(ifProduct: Optional.Some, ifAnnotation: { $0.0.out.product }, otherwise: const(nil))
 	}
 
 	public var boolean: Bool? {
