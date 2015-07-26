@@ -23,8 +23,9 @@ private let `nil` = Term("[]")
 private let Tag = Term("Tag")
 private let Empty = `nil`[Term("String")]
 
-private let context = Expression<Term>.tag.context
-private let environment = Expression<Term>.tag.environment
+private let module = Expression<Term>.tag
+private let context = module.context
+private let environment = module.environment
 
 
 import Assertions
