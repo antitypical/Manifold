@@ -308,7 +308,10 @@ extension Expression where Recur: FixpointType {
 	public func evaluate(environment: Environment = [:]) -> Expression {
 		switch destructured {
 		case let .Variable(i):
-			return environment[i] ?? self
+			if let found = environment[i] {
+				return found
+			}
+			fatalError("Illegal free variable \(i)")
 		case let .Application(a, b):
 			return a.evaluate(environment).lambda.map { i, _, body in body.out.substitute(i, b.evaluate(environment)).evaluate(environment) }!
 		case let .Projection(a, b):
