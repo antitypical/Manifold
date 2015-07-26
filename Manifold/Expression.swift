@@ -319,7 +319,11 @@ extension Expression where Recur: FixpointType {
 			}
 			fatalError("Illegal application of non-lambda term \(a) to \(b)")
 		case let .Projection(a, b):
-			return a.evaluate(environment).product.map { b ? $1 : $0 }.map { $0.out }!
+			let a = a.evaluate(environment)
+			if let (a0, a1) = a.product {
+				return (b ? a1 : a0).out
+			}
+			fatalError("Illegal projection of non-product term \(a) field \(b ? 1 : 0)")
 		case let .If(condition, then, `else`):
 			return condition.evaluate(environment).boolean!
 				? then.evaluate(environment)
