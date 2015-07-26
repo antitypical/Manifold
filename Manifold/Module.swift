@@ -32,3 +32,15 @@ public struct Module<Recur> {
 			.reduce(Context(), combine: +)
 	}
 }
+
+extension Module where Recur: FixpointType {
+	public func typecheck() -> [Error] {
+		let context = self.context
+		return lazy(definitions)
+			.map { $0.typecheck(context) }
+			.reduce([]) { $0 + ($1.left.map { [ $0 ] } ?? []) }
+	}
+}
+
+
+import Either
