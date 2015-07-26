@@ -41,7 +41,7 @@ extension Expression where Recur: FixpointType {
 							Branches[E, Recur.lambda(Tag[E]) { t in
 								P[Recur("there")[t]]
 							}]),
-						.Unit)
+						.UnitType)
 				}
 			},
 			lambda(Enumeration) { E in
