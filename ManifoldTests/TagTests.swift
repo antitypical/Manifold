@@ -7,6 +7,10 @@ final class TagTests: XCTestCase {
 		assert(actual.left, ==, nil)
 		assert(actual.right, ==, expected)
 	}
+
+	func testBranchesProducesAType() {
+		assert(Term("Branches")[Term("[]")[Term("String")]].out.typecheck(context, against: .Type(0)).left, ==, nil)
+	}
 }
 
 
