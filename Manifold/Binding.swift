@@ -11,3 +11,12 @@ public struct Binding<Recur> {
 	public let value: Expression<Recur>
 	public let type: Expression<Recur>
 }
+
+extension Binding where Recur: FixpointType {
+	public func typecheck(context: [Name: Expression<Recur>]) -> Either<Error, Expression<Recur>> {
+		return value.typecheck(context, against: type)
+	}
+}
+
+
+import Either
