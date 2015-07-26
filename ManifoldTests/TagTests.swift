@@ -9,7 +9,7 @@ final class TagTests: XCTestCase {
 	}
 
 	func testBranchesProducesAType() {
-		assert(Branches[Empty].out.typecheck(context, against: .Type(0)).left, ==, nil)
+		assert(Branches[Empty, Term(.lambda(Tag[Empty], const(Term(.UnitType))))].out.typecheck(context, against: .Type(0)).right, ==, .Type(0))
 	}
 }
 
@@ -24,4 +24,5 @@ private let context = Expression<Term>.tag.context
 
 import Assertions
 @testable import Manifold
+import Prelude
 import XCTest
