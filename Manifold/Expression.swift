@@ -313,7 +313,11 @@ extension Expression where Recur: FixpointType {
 			}
 			fatalError("Illegal free variable \(i)")
 		case let .Application(a, b):
-			return a.evaluate(environment).lambda.map { i, _, body in body.out.substitute(i, b.evaluate(environment)).evaluate(environment) }!
+			let a = a.evaluate(environment)
+			if let (i, _, body) = a.lambda {
+				return body.out.substitute(i, b.evaluate(environment)).evaluate(environment)
+			}
+			fatalError("Illegal application of non-lambda term \(a) to \(b)")
 		case let .Projection(a, b):
 			return a.evaluate(environment).product.map { b ? $1 : $0 }.map { $0.out }!
 		case let .If(condition, then, `else`):
