@@ -430,7 +430,8 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 				.flatMap { A in
 					A.analysis(
 						ifLambda: { i, type, body in
-							b.typecheck(context, against: type.out).map { body.out.substitute(i, $0) }
+							b.typecheck(context, against: type.out)
+								.map { _ in body.out.substitute(i, b) }
 						},
 						otherwise: const(Either.Left("illegal application of \(a) : \(A) to \(b)")))
 				}
