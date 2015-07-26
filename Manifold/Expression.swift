@@ -325,9 +325,13 @@ extension Expression where Recur: FixpointType {
 			}
 			fatalError("Illegal projection of non-product term \(a) field \(b ? 1 : 0)")
 		case let .If(condition, then, `else`):
-			return condition.evaluate(environment).boolean!
-				? then.evaluate(environment)
-				: `else`.evaluate(environment)
+			let condition = condition.evaluate(environment)
+			if let boolean = condition.boolean {
+				return boolean
+					? then.evaluate(environment)
+					: `else`.evaluate(environment)
+			}
+			fatalError("Illegal branch on non-boolean term \(condition)")
 		case let .Annotation(term, _):
 			return term.evaluate(environment)
 		default:
