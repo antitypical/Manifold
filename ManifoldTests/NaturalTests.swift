@@ -11,7 +11,8 @@ final class NaturalTests: XCTestCase {
 	}
 }
 
-private let context = Expression<Term>.natural.context
+private let module = Expression<Term>.natural
+private let context = module.context
 
 private let zero = Term("zero").out
 
