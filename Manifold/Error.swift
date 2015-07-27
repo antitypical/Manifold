@@ -27,6 +27,13 @@ public enum Error: Equatable, CustomStringConvertible, StringInterpolationConver
 	}
 
 
+	public func map(transform: String -> String) -> Error {
+		return analysis(
+			ifLeaf: transform >>> Error.Leaf,
+			ifBranch: { Error.Branch($0.map { $0.map(transform) }) })
+	}
+
+
 	// MARK: ExtendedGraphemeClusterLiteralConvertible
 
 	public init(extendedGraphemeClusterLiteral value: String) {
