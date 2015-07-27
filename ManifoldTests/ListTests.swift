@@ -19,8 +19,9 @@ final class ListTests: XCTestCase {
 }
 
 
-private let context = Expression<Term>.list.context
-private let environment = Expression<Term>.list.environment
+private let module = Expression<Term>.list
+private let context = module.context
+private let environment = module.environment
 
 private let List = Term("List")
 private let cons = Term("::")
