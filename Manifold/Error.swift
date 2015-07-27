@@ -17,7 +17,7 @@ public enum Error: Equatable, CustomStringConvertible, StringInterpolationConver
 	}
 
 
-	public func analysis<T>(ifLeaf ifLeaf: String -> T, ifBranch: [Error] -> T) -> T {
+	public func analysis<T>(@noescape ifLeaf ifLeaf: String -> T, @noescape ifBranch: [Error] -> T) -> T {
 		switch self {
 		case let Leaf(string):
 			return ifLeaf(string)
