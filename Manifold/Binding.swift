@@ -15,6 +15,9 @@ public struct Binding<Recur> {
 extension Binding where Recur: FixpointType {
 	public func typecheck(context: [Name: Expression<Recur>]) -> Either<Error, Expression<Recur>> {
 		return value.typecheck(context, against: type)
+			.either(
+				ifLeft: { Either.left($0.map { "[\(self.symbol)]: " + $0 }) },
+				ifRight: Either.right)
 	}
 }
 
