@@ -13,14 +13,12 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 
 		case let .If(condition, then, `else`):
 			return condition.checkType(.BooleanType, context: context)
-				.flatMap { _ in
-					(then.inferType(context) &&& `else`.inferType(context))
-						.map { a, b in
-							a == b
-								? a
-								: Expression.lambda(Recur(.BooleanType)) { Recur(.If($0, Recur(a), Recur(b))) }
-						}
-				}
+				>> (then.inferType(context) &&& `else`.inferType(context))
+					.map { a, b in
+						a == b
+							? a
+							: Expression.lambda(Recur(.BooleanType)) { Recur(.If($0, Recur(a), Recur(b))) }
+					}
 
 		case .UnitType, .BooleanType:
 			return .right(.Type(0))
@@ -32,10 +30,8 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 
 		case let .Lambda(i, type, body):
 			return type.checkIsType(context)
-				.flatMap { _ in
-					body.inferType(context + [ .Local(i): type ])
-						.map { Expression.lambda(Recur(type), const(Recur($0))) }
-				}
+				>> body.inferType(context + [ .Local(i): type ])
+					.map { Expression.lambda(Recur(type), const(Recur($0))) }
 
 		case let .Product(a, b):
 			return (a.inferType(context) &&& b.inferType(context))
