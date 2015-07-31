@@ -68,6 +68,9 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 
 		case let .Axiom(_, type):
 			return Either.right(type)
+
+		default:
+			return Either.left("Cannot infer type for \(self). Try annotating?")
 		}
 	}
 }
