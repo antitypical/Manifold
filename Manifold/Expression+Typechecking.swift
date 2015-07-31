@@ -1,8 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 extension Expression where Recur: FixpointType, Recur: Equatable {
-	// MARK: Typechecking
-
 	public typealias Context = [Name: Expression]
 
 	public func inferType(context: Context = [:]) -> Either<Error, Expression> {
