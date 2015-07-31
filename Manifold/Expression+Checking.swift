@@ -7,7 +7,9 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 			return .Right(against)
 
 		case let (.Lambda(i, type, body), .Type):
-			return body.checkType(against, context: context + [ Name.Local(i) : type ])
+			return type.checkType(.Type(0), context: context)
+				>> body.checkType(against, context: context + [ Name.Local(i) : type ])
+					.map(const(against))
 
 		default:
 			return inferType(context)
