@@ -2,12 +2,12 @@
 
 final class NaturalTests: XCTestCase {
 	func testZeroTypechecksAsNatural() {
-		assert(zero.inferType(context).right, ==, "Natural")
+		assert(zero.checkType("Natural", context: context), ==, "Natural")
+		assert(zero.inferType(context), ==, "Natural")
 	}
 
 	func testSuccessorOfZeroTypechecksAsNatural() {
-		let typechecked = Term(.Application(Term("successor"), Term("zero"))).out.inferType(context)
-		assert(typechecked.right, ==, "Natural")
+		assert(Term(.Application(Term("successor"), Term("zero"))).out.inferType(context), ==, "Natural")
 	}
 }
 
