@@ -3,6 +3,9 @@
 extension Expression where Recur: FixpointType, Recur: Equatable {
 	public func checkType(against: Expression, context: Context = [:]) -> Either<Error, Expression> {
 		switch (destructured, against.destructured) {
+		case (.Type, .Type):
+			return .Right(.Type(0))
+
 		case let (.Lambda(i, type, body), .Type):
 			return body.checkType(against, context: context + [ Name.Local(i) : type ])
 
