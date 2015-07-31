@@ -108,7 +108,7 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 						let padding: Character = " "
 						let formattedContext = ",\n\t".join(keys.map { "\(String($0, paddedTo: maxLength, with: padding)) : \(context[$0]!)" })
 
-						return .Left("Type mismatch: expected \(String(reflecting: self)) to be of type \(String(reflecting: against)), but it was actually of type \(String(reflecting: type)) in context [\n\t\(formattedContext)\n]")
+						return .Left("Type mismatch: expected \(self) to be of type \(against), but it was actually of type \(type) in context [\n\t\(formattedContext)\n]")
 					}
 			}
 	}
