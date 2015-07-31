@@ -1,6 +1,10 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 extension Expression where Recur: FixpointType, Recur: Equatable {
+	public func checkIsType(context: Context) -> Either<Error, Expression> {
+		return checkType(.Type(0), context: context)
+	}
+
 	public func checkType(against: Expression, context: Context = [:]) -> Either<Error, Expression> {
 		switch (destructured, against.destructured) {
 		case (.Type, .Type):
