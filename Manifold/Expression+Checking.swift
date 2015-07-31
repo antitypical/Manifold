@@ -15,6 +15,12 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 				>> body.checkType(against, context: context + [ Name.Local(i) : type ])
 					.map(const(against))
 
+		case let (.Product(tag, payload), .Lambda(i, tagType, body)):
+			return tagType.checkIsType(context)
+				>> (tag.checkType(tagType, context: context)
+				>> payload.checkType(body.substitute(i, tag).evaluate(), context: context)
+					.map(const(against)))
+
 		default:
 			return inferType(context)
 				.flatMap { inferred in
