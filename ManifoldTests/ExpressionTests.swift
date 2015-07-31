@@ -3,7 +3,7 @@
 final class ExpressionTests: XCTestCase {
 	func testLambdaTypeDescription() {
 		assert(identity.description, ==, "λ b : Type . λ a : b . a")
-		assert(identity.typecheck().right?.description, ==, "λ b : Type . λ a : b . b")
+		assert(identity.inferType().right?.description, ==, "λ b : Type . λ a : b . b")
 	}
 
 	func testProductDescription() {
@@ -11,7 +11,7 @@ final class ExpressionTests: XCTestCase {
 	}
 
 	func testProductTypeDescription() {
-		assert(Expression.Product(Term(.Unit), Term(.Unit)).typecheck().right?.description, ==, "λ a : Unit . Unit")
+		assert(Expression.Product(Term(.Unit), Term(.Unit)).inferType().right?.description, ==, "λ a : Unit . Unit")
 	}
 
 	func testGlobalsPrintTheirNames() {

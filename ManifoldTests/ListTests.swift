@@ -2,7 +2,7 @@
 
 final class ListTests: XCTestCase {
 	func testListTypechecksAsAHigherOrderType() {
-		let kind = Expression<Term>.Variable("List").typecheck(context)
+		let kind = Expression<Term>.Variable("List").inferType(context)
 		assert(kind.left, ==, nil)
 		assert(kind.right, ==, Expression<Term>.lambda(.Type(0), const(.Type(0))))
 	}

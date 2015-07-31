@@ -6,10 +6,6 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 	public typealias Context = [Name: Expression]
 
 	public func inferType(context: Context = [:]) -> Either<Error, Expression> {
-		return typecheck(context)
-	}
-
-	public func typecheck(context: Context = [:]) -> Either<Error, Expression> {
 		switch destructured {
 		// Inference rules.
 		case .Unit:
@@ -20,7 +16,7 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 		case let .If(condition, then, `else`):
 			return condition.typecheck(context, against: .BooleanType)
 				.flatMap { _ in
-					(then.typecheck(context) &&& `else`.typecheck(context))
+					(then.inferType(context) &&& `else`.inferType(context))
 						.map { a, b in
 							a == b
 								? a
@@ -39,16 +35,16 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 		case let .Lambda(i, type, body):
 			return type.typecheck(context, against: .Type(0))
 				.flatMap { _ in
-					body.typecheck(context + [ .Local(i): type ])
+					body.inferType(context + [ .Local(i): type ])
 						.map { Expression.lambda(Recur(type), const(Recur($0))) }
 				}
 
 		case let .Product(a, b):
-			return (a.typecheck(context) &&& b.typecheck(context))
+			return (a.inferType(context) &&& b.inferType(context))
 				.map { A, B in Expression.lambda(Recur(A), const(Recur(B))) }
 
 		case let .Application(a, b):
-			return a.typecheck(context)
+			return a.inferType(context)
 				.flatMap { A in
 					A.analysis(
 						ifLambda: { i, type, body in
@@ -59,7 +55,7 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 				}
 
 		case let .Projection(term, branch):
-			return term.typecheck(context)
+			return term.inferType(context)
 				.flatMap { type in
 					type.analysis(
 						ifLambda: { i, A, B in
@@ -87,7 +83,7 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 				: against.typecheck(context, against: .Type(0)))
 			.map { _ in against.evaluate(context) }
 			.flatMap { against in
-				typecheck(context)
+				inferType(context)
 					.map { $0.evaluate(context) }
 					.flatMap { (type: Expression) -> Either<Error, Expression> in
 						if case let (.Product(tag, payload), .Lambda(i, tagType, body)) = (self, against) {
