@@ -9,7 +9,9 @@ final class TagTests: XCTestCase {
 	}
 
 	func testBranchesProducesAType() {
-		assert(Branches[Empty, Term(.lambda(Tag[Empty], const(Term(.UnitType))))].out.checkType(.Type(0), context: context).right, ==, .Type(0))
+		let branches = Branches[Empty, Term(.lambda(Tag[Empty], const(Term(.UnitType))))].out.checkType(.Type(0), context: context)
+		assert(branches.left, ==, nil)
+		assert(branches.right, ==, .Type(0))
 	}
 
 	func testBranchesOfEmptyEnumerationIsUnitType() {
