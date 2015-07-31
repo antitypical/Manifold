@@ -11,7 +11,7 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 			return .Right(against)
 
 		case let (.Lambda(i, type, body), .Type):
-			return type.checkType(.Type(0), context: context)
+			return type.checkIsType(context)
 				>> body.checkType(against, context: context + [ Name.Local(i) : type ])
 					.map(const(against))
 
@@ -26,7 +26,7 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 
 		return (against.isType
 				? Either.Right(against)
-				: against.checkType(.Type(0), context: context))
+				: against.checkIsType(context))
 			.map { _ in against.evaluate(context) }
 			.flatMap { against in
 				inferType(context)

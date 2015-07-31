@@ -31,7 +31,7 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 			return context[i].map(Either.Right) ?? Either.Left("Unexpectedly free variable \(i)")
 
 		case let .Lambda(i, type, body):
-			return type.checkType(.Type(0), context: context)
+			return type.checkIsType(context)
 				.flatMap { _ in
 					body.inferType(context + [ .Local(i): type ])
 						.map { Expression.lambda(Recur(type), const(Recur($0))) }
