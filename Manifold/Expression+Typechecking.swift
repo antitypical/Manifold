@@ -9,11 +9,6 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 		return typecheck(context)
 	}
 
-	public func checkType(against: Expression, context: Context = [:]) -> Either<Error, Expression> {
-		return typecheck(context, against: against)
-	}
-
-
 	public func typecheck(context: Context = [:], against: Expression? = nil) -> Either<Error, Expression> {
 		switch (destructured, against?.destructured) {
 		// Inference rules.
@@ -84,6 +79,10 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 		case let (_, .Some(x)):
 			return Either.left("Don’t know how to check \(self) against \(x).")
 		}
+	}
+
+	public func checkType(against: Expression, context: Context = [:]) -> Either<Error, Expression> {
+		return typecheck(context, against: against)
 	}
 
 	public func typecheck(context: Context, against: Expression) -> Either<Error, Expression> {
