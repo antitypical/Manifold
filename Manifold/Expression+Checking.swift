@@ -7,7 +7,15 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 				? Either.right(inferred)
 				: Either.left("Type mismatch: expected \(self) to be of type \(against), but it was actually of type \(inferred) in context \(Expression.toString(context))")
 		}
-		
+
+		switch (destructured, against.evaluate(context).destructured) {
+		case let (.Lambda(i, type, body), .Type):
+			return body.checkType(against, context: context + [ Name.Local(i) : type ])
+
+		default:
+			break
+		}
+
 		return (against.isType
 				? Either.Right(against)
 				: against.checkType(.Type(0), context: context))
