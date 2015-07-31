@@ -7,11 +7,12 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 			return body.checkType(against, context: context + [ Name.Local(i) : type ])
 
 		default:
-			if let inferred = inferType(context).right {
-				return inferred == against
-					? Either.right(inferred)
-					: Either.left("Type mismatch: expected \(self) to be of type \(against), but it was actually of type \(inferred) in context \(Expression.toString(context))")
-			}
+			return inferType(context)
+				.flatMap { inferred in
+					inferred == against
+						? Either.right(inferred)
+						: Either.left("Type mismatch: expected \(self) to be of type \(against), but it was actually of type \(inferred) in context \(Expression.toString(context))")
+				}
 		}
 
 		return (against.isType
