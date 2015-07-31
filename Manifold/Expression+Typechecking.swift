@@ -3,6 +3,14 @@
 extension Expression where Recur: FixpointType, Recur: Equatable {
 	// MARK: Typechecking
 
+	public func inferType() -> Either<Error, Expression> {
+		return typecheck()
+	}
+
+	public func checkType(against: Expression) -> Either<Error, Expression> {
+		return typecheck(against: against)
+	}
+
 	public typealias Context = [Name: Expression]
 
 	public func typecheck(context: Context = [:], against: Expression? = nil) -> Either<Error, Expression> {
