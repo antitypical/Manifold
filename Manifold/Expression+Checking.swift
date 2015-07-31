@@ -2,6 +2,12 @@
 
 extension Expression where Recur: FixpointType, Recur: Equatable {
 	public func checkType(against: Expression, context: Context = [:]) -> Either<Error, Expression> {
+		if let inferred = inferType(context).right {
+			return inferred == against
+				? Either.right(inferred)
+				: Either.left("Type mismatch: expected \(self) to be of type \(against), but it was actually of type \(inferred) in context \(Expression.toString(context))")
+		}
+		
 		return (against.isType
 				? Either.Right(against)
 				: against.checkType(.Type(0), context: context))
