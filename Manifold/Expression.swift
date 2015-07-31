@@ -399,14 +399,14 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 
 	public typealias Context = [Name: Expression]
 
-	public func typecheck(context: Context = [:]) -> Either<Error, Expression> {
-		switch destructured {
-		case .Unit:
+	public func typecheck(context: Context = [:], against: Expression? = nil) -> Either<Error, Expression> {
+		switch (destructured, against?.destructured) {
+		case (.Unit, _):
 			return .right(.UnitType)
-		case .Boolean:
+		case (.Boolean, _):
 			return .right(.BooleanType)
 
-		case let .If(condition, then, `else`):
+		case let (.If(condition, then, `else`), _):
 			return condition.typecheck(context, against: .BooleanType)
 				.flatMap { _ in
 					(then.typecheck(context) &&& `else`.typecheck(context))
@@ -417,26 +417,26 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 						}
 				}
 
-		case .UnitType, .BooleanType:
+		case (.UnitType, _), (.BooleanType, _):
 			return .right(.Type(0))
-		case let .Type(n):
+		case let (.Type(n), _):
 			return .right(.Type(n + 1))
 
-		case let .Variable(i):
+		case let (.Variable(i), _):
 			return context[i].map(Either.Right) ?? Either.Left("Unexpectedly free variable \(i)")
 
-		case let .Lambda(i, type, body):
+		case let (.Lambda(i, type, body), _):
 			return type.typecheck(context, against: .Type(0))
 				.flatMap { _ in
 					body.typecheck(context + [ .Local(i): type ])
 						.map { Expression.lambda(Recur(type), const(Recur($0))) }
 				}
 
-		case let .Product(a, b):
+		case let (.Product(a, b), _):
 			return (a.typecheck(context) &&& b.typecheck(context))
 				.map { A, B in Expression.lambda(Recur(A), const(Recur(B))) }
 
-		case let .Application(a, b):
+		case let (.Application(a, b), _):
 			return a.typecheck(context)
 				.flatMap { A in
 					A.analysis(
@@ -447,7 +447,7 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 						otherwise: const(Either.Left("illegal application of \(a) : \(A) to \(b)")))
 				}
 
-		case let .Projection(term, branch):
+		case let (.Projection(term, branch), _):
 			return term.typecheck(context)
 				.flatMap { type in
 					type.analysis(
@@ -457,11 +457,11 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 						otherwise: const(Either.Left("illegal projection of field \(branch ? 1 : 0) of non-product value \(term) of type \(type)")))
 				}
 
-		case let .Annotation(term, type):
+		case let (.Annotation(term, type), _):
 			return term.typecheck(context, against: type)
 				.map(const(type))
 
-		case let .Axiom(_, type):
+		case let (.Axiom(_, type), _):
 			return Either.right(type)
 		}
 	}
