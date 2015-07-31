@@ -70,7 +70,6 @@
 		D440FCBE1B6BBE7300C56B19 /* Expression+Substitution.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+Substitution.swift"; sourceTree = "<group>"; };
 		D440FCC01B6BBF0D00C56B19 /* Expression+Inference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+Inference.swift"; sourceTree = "<group>"; };
 		D440FCC21B6C00C400C56B19 /* Expression+Checking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+Checking.swift"; sourceTree = "<group>"; };
-		D46395AE1B17E24C00AA1B65 /* SwiftCheck.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SwiftCheck.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4809FBC1AF6BD400084B8FE /* ExpressionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpressionTests.swift; sourceTree = "<group>"; };
 		D4809FBE1AF6CD720084B8FE /* Equatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Equatable.swift; sourceTree = "<group>"; };
 		D48490391B29352600F249F7 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
@@ -224,7 +223,6 @@
 			isa = PBXGroup;
 			children = (
 				D4B4AA541A902A6F0089A5F2 /* Assertions.framework */,
-				D46395AE1B17E24C00AA1B65 /* SwiftCheck.framework */,
 				D4B3FC011A83515800DA2AC3 /* Info.plist */,
 			);
 			name = "Supporting Files";
