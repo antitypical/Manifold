@@ -63,6 +63,19 @@ extension Expression where Recur: FixpointType {
 		case let .Axiom(any, type):
 			return Weaver(type.out, { Expression.Axiom(any, Recur($0)) }, weave)
 
+		// MARK: Binary
+		case let .Application(a, b):
+			return Weaver(a.out, b.out, curry { Expression.Application(Recur($0), Recur($1)) }, weave)
+
+		case let .Lambda(i, a, b):
+			return Weaver(a.out, b.out, curry { Expression.Lambda(i, Recur($0), Recur($1)) }, weave)
+
+		case let .Product(a, b):
+			return Weaver(a.out, b.out, curry { Expression.Product(Recur($0), Recur($1)) }, weave)
+
+		case let .Annotation(a, b):
+			return Weaver(a.out, b.out, curry { Expression.Annotation(Recur($0), Recur($1)) }, weave)
+
 		default:
 			fatalError("unimplemented (n>1)-ary zipper")
 		}
