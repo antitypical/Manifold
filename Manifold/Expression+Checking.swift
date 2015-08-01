@@ -11,23 +11,23 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 			return .Right(against)
 
 		case let (.Lambda(i, type, body), .Type):
-			return type.checkIsType(context)
+			return annotate(type.checkIsType(context)
 				>> body.checkType(against, context: context + [ Name.Local(i) : type ])
-					.map(const(against))
-
-		case let (.Product(tag, payload), .Lambda(i, tagType, body)):
-			return tagType.checkIsType(context)
-				>> (tag.checkType(tagType, context: context)
-				>> payload.checkType(body.substitute(i, tag).evaluate(), context: context)
 					.map(const(against)))
 
+		case let (.Product(tag, payload), .Lambda(i, tagType, body)):
+			return annotate(tagType.checkIsType(context)
+				>> (tag.checkType(tagType, context: context)
+				>> payload.checkType(body.substitute(i, tag).evaluate(), context: context)
+					.map(const(against))))
+
 		default:
-			return inferType(context)
+			return annotate(inferType(context)
 				.flatMap { inferred in
 					inferred == against
 						? Either.right(inferred)
 						: Either.left("Type mismatch: expected \(self) to be of type \(against), but it was actually of type \(inferred) in context \(Expression.toString(context))")
-				}
+				})
 		}
 	}
 
