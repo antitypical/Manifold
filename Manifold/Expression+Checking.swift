@@ -29,37 +29,6 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 						: Either.left("Type mismatch: expected \(self) to be of type \(against), but it was actually of type \(inferred) in context \(Expression.toString(context))")
 				}
 		}
-
-		return (against.isType
-				? Either.Right(against)
-				: against.checkIsType(context))
-			.map { _ in against.evaluate(context) }
-			.flatMap { against in
-				inferType(context)
-					.map { $0.evaluate(context) }
-					.flatMap { (type: Expression) -> Either<Error, Expression> in
-						if case let (.Product(tag, payload), .Lambda(i, tagType, body)) = (self, against) {
-							return tagType.out.checkType(.Type(0), context: context)
-								.flatMap { _ in
-									tag.out.checkType(tagType.out, context: context)
-										.flatMap { _ in
-											payload.out.checkType(body.out.substitute(i, tag.out), context: context)
-												.map(const(type))
-										}
-								}
-						}
-
-						if case let .Lambda(_, _, returnType) = type where against.isType && returnType.out.isType {
-							return .Right(type)
-						}
-
-						if type == against || against == .Type(0) && type.isType {
-							return .Right(type)
-						}
-
-						return .Left("Type mismatch: expected \(self) to be of type \(against), but it was actually of type \(type) in context \(Expression.toString(context))")
-					}
-			}
 	}
 
 	private static func toString(context: Context) -> String {
