@@ -14,6 +14,10 @@ public struct Location<A> {
 	public let up: A -> Location
 	public let left: A -> Location
 	public let right: A -> Location
+
+	public static func loc<A>(wv: (A -> Location) -> A -> Location, _ fl0: Location) -> Location {
+		return fl0
+	}
 }
 
 public struct Weaver<A> {
@@ -22,7 +26,7 @@ public struct Weaver<A> {
 
 	public init(_ k: A, _ wv: Weave) {
 		self.init { fl0 in
-			loc0(Weaver.call(wv), fl0(k))
+			Location.loc(Weaver.call(wv), fl0(k))
 		}
 	}
 
@@ -89,10 +93,6 @@ extension Expression where Recur: FixpointType {
 	}
 }
 
-
-public func loc0<A>(wv: (A -> Location<A>) -> A -> Location<A>, _ fl0: Location<A>) -> Location<A> {
-	return fl0
-}
 
 public func loc1<A>(wv: (A -> Location<A>) -> A -> Location<A>, _ fl0: A -> Location<A>) -> A -> Location<A> {
 	let upd: (A -> Location<A>) -> A -> Location<A> = { fl in { t1 in fl(t1) } }
