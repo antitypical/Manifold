@@ -43,6 +43,26 @@ public struct Weaver<A> {
 	}
 }
 
+extension Expression where Recur: FixpointType {
+	public static func weave(expression: Expression) -> Weaver<Expression> {
+		switch expression {
+		// MARK: Nullary
+		case .Unit, .UnitType, .Type, .Variable, .BooleanType, .Boolean:
+			return Weaver(expression, weave)
+
+		// MARK: Unary
+		case let .Projection(a, b):
+			return Weaver(a.out, { Expression.Projection(Recur($0), b) }, weave)
+
+		case let .Axiom(any, type):
+			return Weaver(type.out, { Expression.Axiom(any, Recur($0)) }, weave)
+
+		default:
+			fatalError("unimplemented (n>1)-ary zipper")
+		}
+	}
+}
+
 
 public func loc0<A>(wv: (A -> Location<A>) -> A -> Location<A>, _ fl0: Location<A>) -> Location<A> {
 	return fl0
@@ -56,3 +76,5 @@ public func loc1<A>(wv: (A -> Location<A>) -> A -> Location<A>, _ fl0: A -> Loca
 	return fl1
 }
 
+
+import Prelude
