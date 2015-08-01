@@ -82,6 +82,10 @@ extension Expression where Recur: FixpointType {
 		case let .Annotation(a, b):
 			return Weaver(a.out, b.out, curry { Expression.Annotation(Recur($0), Recur($1)) }, weave)
 
+		// MARK: Ternary
+		case let .If(a, b, c):
+			return Weaver(a.out, b.out, c.out, curry { Expression.If(Recur($0), Recur($1), Recur($2)) }, weave)
+
 		default:
 			fatalError("unimplemented (n>1)-ary zipper")
 		}
