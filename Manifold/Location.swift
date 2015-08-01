@@ -38,6 +38,12 @@ public struct Weaver<A> {
 		}
 	}
 
+	public init(_ t1: A, _ t2: A, _ t3: A, _ k:  A -> A -> A -> A, _ wv: Weave) {
+		self.init { fl0 in
+			loc3(Weaver.call(wv), { t1 in { t2 in { t3 in fl0(k(t1)(t2)(t3)) } } })(t1)(t2)(t3)
+		}
+	}
+
 	public init(unweave: Unweave) {
 		self.unweave = unweave
 	}
