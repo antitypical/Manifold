@@ -39,6 +39,10 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 
 		return "[\n\t\(formattedContext)\n]"
 	}
+
+	func annotate<T>(either: Either<Error, T>) -> Either<Error, T> {
+		return either.either(ifLeft: { $0.map { "\($0)\nin: \(self)" } } >>> Either.left, ifRight: Either.right)
+	}
 }
 
 
