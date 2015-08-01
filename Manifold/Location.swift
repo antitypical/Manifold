@@ -20,3 +20,11 @@ public func loc0<A>(wv: (A -> Location<A>) -> A -> Location<A>, _ fl0: Location<
 	return fl0
 }
 
+public func loc1<A>(wv: (A -> Location<A>) -> A -> Location<A>, _ fl0: A -> Location<A>) -> A -> Location<A> {
+	let upd: (A -> Location<A>) -> A -> Location<A> = { fl in { t1 in fl(t1) } }
+	func fl1(t1: A) -> Location<A> {
+		return Location(it: t1, down: wv(upd(fl1)), up: upd(fl0), left: upd(fl1), right: upd(fl1))
+	}
+	return fl1
+}
+
