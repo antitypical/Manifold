@@ -76,5 +76,17 @@ public func loc1<A>(wv: (A -> Location<A>) -> A -> Location<A>, _ fl0: A -> Loca
 	return fl1
 }
 
+public func loc2<A>(wv: (A -> Location<A>) -> A -> Location<A>, _ fl0: A -> A -> Location<A>) -> A -> A -> Location<A> {
+	func fl1(t1: A)(_ t2: A) -> Location<A> {
+		let upd: (A -> A -> Location<A>) -> A -> Location<A> = { fl in { t1 in fl(t1)(t2) } }
+		return Location(it: t1, down: wv(upd(fl1)), up: upd(fl0), left: upd(fl1), right: upd(fl2))
+	}
+	func fl2(t1: A)(_ t2: A) -> Location<A> {
+		let upd: (A -> A -> Location<A>) -> A -> Location<A> = { fl in { t2 in fl(t1)(t2) } }
+		return Location(it: t2, down: wv(upd(fl2)), up: upd(fl0), left: upd(fl1), right: upd(fl2))
+	}
+	return fl1
+}
+
 
 import Prelude
