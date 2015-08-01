@@ -26,6 +26,19 @@ public struct Location<A> {
 		}
 		return fl1
 	}
+
+	public static func loc(wv: (A -> Location) -> A -> Location, _ fl0: A -> A -> Location) -> A -> A -> Location {
+		func fl1(t1: A)(_ t2: A) -> Location {
+			let upd: (A -> A -> Location) -> A -> Location = { fl in { t1 in fl(t1)(t2) } }
+			return Location(it: t1, down: wv(upd(fl1)), up: upd(fl0), left: upd(fl1), right: upd(fl2))
+		}
+		func fl2(t1: A)(_ t2: A) -> Location {
+			let upd: (A -> A -> Location) -> A -> Location = { fl in { t2 in fl(t1)(t2) } }
+			return Location(it: t2, down: wv(upd(fl2)), up: upd(fl0), left: upd(fl1), right: upd(fl2))
+		}
+		return fl1
+	}
+
 }
 
 public struct Weaver<A> {
@@ -46,7 +59,7 @@ public struct Weaver<A> {
 
 	public init(_ t1: A, _ t2: A, _ k: A -> A -> A, _ wv: Weave) {
 		self.init { fl0 in
-			loc2(Weaver.call(wv), { t1 in { t2 in fl0(k(t1)(t2)) } })(t1)(t2)
+			Location.loc(Weaver.call(wv), { t1 in { t2 in fl0(k(t1)(t2)) } })(t1)(t2)
 		}
 	}
 
@@ -101,18 +114,6 @@ extension Expression where Recur: FixpointType {
 	}
 }
 
-
-public func loc2<A>(wv: (A -> Location<A>) -> A -> Location<A>, _ fl0: A -> A -> Location<A>) -> A -> A -> Location<A> {
-	func fl1(t1: A)(_ t2: A) -> Location<A> {
-		let upd: (A -> A -> Location<A>) -> A -> Location<A> = { fl in { t1 in fl(t1)(t2) } }
-		return Location(it: t1, down: wv(upd(fl1)), up: upd(fl0), left: upd(fl1), right: upd(fl2))
-	}
-	func fl2(t1: A)(_ t2: A) -> Location<A> {
-		let upd: (A -> A -> Location<A>) -> A -> Location<A> = { fl in { t2 in fl(t1)(t2) } }
-		return Location(it: t2, down: wv(upd(fl2)), up: upd(fl0), left: upd(fl1), right: upd(fl2))
-	}
-	return fl1
-}
 
 public func loc3<A>(wv: (A -> Location<A>) -> A -> Location<A>, _ fl0: A -> A -> A -> Location<A>) -> A -> A -> A -> Location<A> {
 	func fl1(t1: A)(_ t2: A)(_ t3: A) -> Location<A> {
