@@ -16,3 +16,7 @@ public struct Location<A> {
 	public let right: A -> Location
 }
 
+public func loc0<A>(wv: (A -> Location<A>) -> A -> Location<A>, _ fl0: Location<A>) -> Location<A> {
+	return fl0
+}
+
