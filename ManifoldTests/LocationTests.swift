@@ -38,6 +38,10 @@ final class LocationTests: XCTestCase {
 	func testRootReturnsOutOfDeepExplorations() {
 		assert(identity.explore().down?.right?.down?.right?.root.it, ==, identity)
 	}
+
+	func testSequenceIsPreOrderDepthFirstTraversal() {
+		assert(identity.explore().map { Term($0.it) }, ==, [ Term(identity), .Type(0), .lambda(Term(.Variable(.Local(1))), const(Term(.Variable(.Local(0))))), .Variable(.Local(1)), .Variable(.Local(0)) ])
+	}
 }
 
 
