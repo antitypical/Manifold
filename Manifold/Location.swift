@@ -53,13 +53,6 @@ public struct Location<A> {
 		self = location
 	}
 
-	static func loc(weave: (A -> Location?) -> A -> Location?, _ up: A -> Location?) -> A -> Location? {
-		func into(t1: A) -> Location? {
-			return Location(it: t1, down: weave(into), up: up, left: const(nil), right: const(nil))
-		}
-		return into
-	}
-
 	static func loc(weave: (A -> Location?) -> A -> Location?, _ up: (A, A) -> Location?) -> (A, A) -> Location? {
 		func into1(t1: A, _ t2: A) -> Location? {
 			let update: ((A, A) -> Location?) -> A -> Location? = { fl in { t1 in fl(t1, t2) } }
