@@ -36,9 +36,8 @@ public struct Location<A> {
 	}
 
 	public static func loc(weave: (A -> Location?) -> A -> Location?, _ fl0: A -> Location?) -> A -> Location? {
-		let upd: (A -> Location?) -> A -> Location? = { fl in { t1 in fl(t1) } }
 		func fl1(t1: A) -> Location? {
-			return Location(it: t1, down: weave(upd(fl1)), up: upd(fl0), left: upd(fl1), right: upd(fl1))
+			return Location(it: t1, down: weave(fl1), up: fl0, left: fl1, right: fl1)
 		}
 		return fl1
 	}
