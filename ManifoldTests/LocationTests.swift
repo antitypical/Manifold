@@ -34,6 +34,10 @@ final class LocationTests: XCTestCase {
 	func testModifyReplacesSubtrees() {
 		assert(identity.explore().down?.modify(const(.BooleanType)).right?.modify(const(.Boolean(true))).up?.it, ==, Expression.Lambda(1, Term(.BooleanType), Term(.Boolean(true))))
 	}
+
+	func testRootReturnsOutOfDeepExplorations() {
+		assert(identity.explore().down?.right?.down?.right?.root.it, ==, identity)
+	}
 }
 
 
