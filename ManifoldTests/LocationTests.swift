@@ -21,6 +21,10 @@ final class LocationTests: XCTestCase {
 	func testDeepNavigationExploresChildrenOfChildrenRecursively() {
 		assert(identity.explore().down?.right?.down?.right?.it, ==, .Variable(.Local(0)))
 	}
+
+	func testDeepNavigationReturnsUpwards() {
+		assert(identity.explore().down?.right?.down?.right?.up?.up?.it, ==, identity)
+	}
 }
 
 
