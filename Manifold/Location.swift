@@ -37,6 +37,7 @@ public struct Location<A> {
 	}
 
 
+	/// Return a new Location by replacing the current value with a new one produced by `f`.
 	public func modify(@noescape f: A -> A) -> Location {
 		return Location(it: f(it), down: _down, up: _up, left: _left, right: _right)
 	}
