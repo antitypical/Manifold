@@ -1,7 +1,7 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 final class LocationTests: XCTestCase {
-	func testTraversingAnExpressionReturnsALocationAtTheTraversedExpression() {
+	func testExploringAnExpressionReturnsALocationAtTheExploredExpression() {
 		assert(identity.explore().it, ==, identity)
 	}
 
@@ -23,11 +23,11 @@ final class LocationTests: XCTestCase {
 		assert(axiom.explore().down?.up?.it, ==, axiom)
 	}
 
-	func testDeepNavigationExploresChildrenOfChildrenRecursively() {
+	func testExplorationOfChildrenIsRecursive() {
 		assert(identity.explore().down?.right?.down?.right?.it, ==, .Variable(.Local(0)))
 	}
 
-	func testDeepNavigationReturnsUpwards() {
+	func testDeepExplorationCanBeReturnedOutOf() {
 		assert(identity.explore().down?.right?.down?.right?.up?.up?.it, ==, identity)
 	}
 
