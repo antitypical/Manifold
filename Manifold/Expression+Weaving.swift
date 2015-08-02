@@ -5,7 +5,7 @@ extension Expression where Recur: FixpointType {
 		switch expression {
 		// MARK: Nullary
 		case .Unit, .UnitType, .Type, .Variable, .BooleanType, .Boolean:
-			return Weaver(expression, weave)
+			return Weaver()
 
 		// MARK: Unary
 		case let .Projection(a, b):

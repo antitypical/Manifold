@@ -4,7 +4,7 @@ public struct Weaver<A> {
 	public typealias Weave = A -> Weaver
 	public typealias Unweave = (A -> Location<A>?) -> Location<A>?
 
-	public init(_ k: A, _ weave: Weave) {
+	public init() {
 		self.init(unweave: const(nil))
 	}
 
