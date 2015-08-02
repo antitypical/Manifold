@@ -72,9 +72,9 @@ public struct Weaver<A> {
 		}
 	}
 
-	public init(_ t1: A, _ t2: A, _ k: A -> A -> A, _ wv: Weave) {
+	public init(_ t1: A, _ t2: A, _ k: (A, A) -> A, _ wv: Weave) {
 		self.init { fl0 in
-			Location.loc(Weaver.call(wv), { t1 in { t2 in fl0(k(t1)(t2)) } })(t1)(t2)
+			Location.loc(Weaver.call(wv), { t1 in { t2 in fl0(k(t1, t2)) } })(t1)(t2)
 		}
 	}
 
@@ -111,16 +111,16 @@ extension Expression where Recur: FixpointType {
 
 		// MARK: Binary
 		case let .Application(a, b):
-			return Weaver(a.out, b.out, curry { Expression.Application(Recur($0), Recur($1)) }, weave)
+			return Weaver(a.out, b.out, { Expression.Application(Recur($0), Recur($1)) }, weave)
 
 		case let .Lambda(i, a, b):
-			return Weaver(a.out, b.out, curry { Expression.Lambda(i, Recur($0), Recur($1)) }, weave)
+			return Weaver(a.out, b.out, { Expression.Lambda(i, Recur($0), Recur($1)) }, weave)
 
 		case let .Product(a, b):
-			return Weaver(a.out, b.out, curry { Expression.Product(Recur($0), Recur($1)) }, weave)
+			return Weaver(a.out, b.out, { Expression.Product(Recur($0), Recur($1)) }, weave)
 
 		case let .Annotation(a, b):
-			return Weaver(a.out, b.out, curry { Expression.Annotation(Recur($0), Recur($1)) }, weave)
+			return Weaver(a.out, b.out, { Expression.Annotation(Recur($0), Recur($1)) }, weave)
 
 		// MARK: Ternary
 		case let .If(a, b, c):
