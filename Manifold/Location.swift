@@ -37,7 +37,7 @@ public struct Location<A> {
 
 	public static func loc(weave: (A -> Location?) -> A -> Location?, _ fl0: A -> Location?) -> A -> Location? {
 		func fl1(t1: A) -> Location? {
-			return Location(it: t1, down: weave(fl1), up: fl0, left: fl1, right: fl1)
+			return Location(it: t1, down: weave(fl1), up: fl0, left: const(nil), right: const(nil))
 		}
 		return fl1
 	}
@@ -70,3 +70,6 @@ public struct Location<A> {
 		return fl1
 	}
 }
+
+
+import Prelude
