@@ -55,6 +55,3 @@ public struct Location<A> {
 		return fl1
 	}
 }
-
-
-import Prelude
