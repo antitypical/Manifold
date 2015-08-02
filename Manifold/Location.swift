@@ -45,11 +45,11 @@ public struct Location<A> {
 	public static func loc(weave: (A -> Location?) -> A -> Location?, _ fl0: (A, A) -> Location?) -> (A, A) -> Location? {
 		func fl1(t1: A, _ t2: A) -> Location? {
 			let upd: ((A, A) -> Location?) -> A -> Location? = { fl in { t1 in fl(t1, t2) } }
-			return Location(it: t1, down: weave(upd(fl1)), up: upd(fl0), left: upd(fl1), right: upd(fl2))
+			return Location(it: t1, down: weave(upd(fl1)), up: upd(fl0), left: const(nil), right: upd(fl2))
 		}
 		func fl2(t1: A, _ t2: A) -> Location? {
 			let upd: ((A, A) -> Location?) -> A -> Location? = { fl in { t2 in fl(t1, t2) } }
-			return Location(it: t2, down: weave(upd(fl2)), up: upd(fl0), left: upd(fl1), right: upd(fl2))
+			return Location(it: t2, down: weave(upd(fl2)), up: upd(fl0), left: upd(fl1), right: const(nil))
 		}
 		return fl1
 	}
@@ -57,7 +57,7 @@ public struct Location<A> {
 	public static func loc(weave: (A -> Location?) -> A -> Location?, _ fl0: (A, A, A) -> Location?) -> (A, A, A) -> Location? {
 		func fl1(t1: A, _ t2: A, _ t3: A) -> Location? {
 			let upd: ((A, A, A) -> Location?) -> A -> Location? = { fl in { t1 in fl(t1, t2, t3) } }
-			return Location(it: t1, down: weave(upd(fl1)), up: upd(fl0), left: upd(fl1), right: upd(fl2))
+			return Location(it: t1, down: weave(upd(fl1)), up: upd(fl0), left: const(nil), right: upd(fl2))
 		}
 		func fl2(t1: A, _ t2: A, _ t3: A) -> Location? {
 			let upd: ((A, A, A) -> Location?) -> A -> Location? = { fl in { t2 in fl(t1, t2, t3) } }
@@ -65,7 +65,7 @@ public struct Location<A> {
 		}
 		func fl3(t1: A, _ t2: A, _ t3: A) -> Location? {
 			let upd: ((A, A, A) -> Location?) -> A -> Location? = { fl in { t3 in fl(t1, t2, t3) } }
-			return Location(it: t1, down: weave(upd(fl3)), up: upd(fl0), left: upd(fl2), right: upd(fl3))
+			return Location(it: t1, down: weave(upd(fl3)), up: upd(fl0), left: upd(fl2), right: const(nil))
 		}
 		return fl1
 	}
