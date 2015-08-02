@@ -37,9 +37,14 @@ public struct Location<A> {
 	}
 
 
-	/// Returns the logically next `Location` in a pre-order depth-first traversal.
+	/// Returns the logically next `Location` after the receiver in a pre-order depth-first traversal.
 	public var next: Location? {
-		return down ?? right ?? up?.next
+		return down ?? nextOut
+	}
+
+	/// Returns the logically next `Location` after the receiver and its children in a pre-order depth-first traversal.
+	private var nextAfter: Location? {
+		return right ?? up?.nextAfter
 	}
 
 
