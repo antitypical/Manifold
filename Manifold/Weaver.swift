@@ -10,19 +10,19 @@ public struct Weaver<A> {
 
 	public init(_ t1: A, _ weave: Weave, _ reconstruct: A -> A) {
 		self.init { up in
-			Location.loc(Weaver.call(weave), { t1 in up(reconstruct(t1)) })(t1)
+			Location.loc(Weaver.call(weave), reconstruct >>> up)(t1)
 		}
 	}
 
 	public init(_ t1: A, _ t2: A, _ weave: Weave, _ reconstruct: (A, A) -> A) {
 		self.init { up in
-			Location.loc(Weaver.call(weave), { t1, t2 in up(reconstruct(t1, t2)) })(t1, t2)
+			Location.loc(Weaver.call(weave), reconstruct >>> up)(t1, t2)
 		}
 	}
 
 	public init(_ t1: A, _ t2: A, _ t3: A, _ weave: Weave, _ reconstruct:  (A, A, A) -> A) {
 		self.init { up in
-			Location.loc(Weaver.call(weave), { t1, t2, t3 in up(reconstruct(t1, t2, t3)) })(t1, t2, t3)
+			Location.loc(Weaver.call(weave), reconstruct >>> up)(t1, t2, t3)
 		}
 	}
 
