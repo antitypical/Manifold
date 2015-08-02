@@ -72,7 +72,7 @@ public struct Location<A> {
 
 	// MARK: - Implementation details
 
-	init?(_ weave: (A -> Location?) -> A -> Location?, _ up: A -> Location?, _ a: A) {
+	private init?(_ weave: (A -> Location?) -> A -> Location?, _ up: A -> Location?, _ a: A) {
 		func into(t1: A) -> Location? {
 			return Location(it: t1, down: weave(into), up: up, left: const(nil), right: const(nil))
 		}
@@ -80,7 +80,7 @@ public struct Location<A> {
 		self = location
 	}
 
-	init?(_ weave: (A -> Location?) -> A -> Location?, _ up: (A, A) -> Location?, _ t1: A, _ t2: A) {
+	private init?(_ weave: (A -> Location?) -> A -> Location?, _ up: (A, A) -> Location?, _ t1: A, _ t2: A) {
 		func into1(t1: A, _ t2: A) -> Location? {
 			let update: ((A, A) -> Location?) -> A -> Location? = { fl in { t1 in fl(t1, t2) } }
 			return Location(it: t1, down: weave(update(into1)), up: update(up), left: const(nil), right: update(into2))
@@ -93,7 +93,7 @@ public struct Location<A> {
 		self = location
 	}
 
-	init?(_ weave: (A -> Location?) -> A -> Location?, _ up: (A, A, A) -> Location?, _ t1: A, _ t2: A, _ t3: A) {
+	private init?(_ weave: (A -> Location?) -> A -> Location?, _ up: (A, A, A) -> Location?, _ t1: A, _ t2: A, _ t3: A) {
 		func into1(t1: A, _ t2: A, _ t3: A) -> Location? {
 			let update: ((A, A, A) -> Location?) -> A -> Location? = { fl in { t1 in fl(t1, t2, t3) } }
 			return Location(it: t1, down: weave(update(into1)), up: update(up), left: const(nil), right: update(into2))
