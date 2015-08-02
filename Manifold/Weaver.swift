@@ -34,7 +34,7 @@ public struct Weaver<A> {
 
 	private let unweave: Unweave
 
-	public static func call<T>(weave: T -> Weaver)(_ fl0: A -> Location<A>?)(_ t: T) -> Location<A>? {
+	public static func call(weave: A -> Weaver)(_ fl0: A -> Location<A>?)(_ t: A) -> Location<A>? {
 		return weave(t).unweave(fl0)
 	}
 
