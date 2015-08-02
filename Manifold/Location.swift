@@ -3,17 +3,17 @@
 public struct Location<A> {
 	public init(it: A, down: A -> Location, up: A -> Location, left: A -> Location, right: A -> Location) {
 		self.it = it
-		self.left = left
-		self.right = right
-		self.up = up
-		self.down = down
+		_left = left
+		_right = right
+		_up = up
+		_down = down
 	}
 
 	public let it: A
-	private let down: A -> Location
-	private let up: A -> Location
-	private let left: A -> Location
-	private let right: A -> Location
+	private let _down: A -> Location
+	private let _up: A -> Location
+	private let _left: A -> Location
+	private let _right: A -> Location
 
 	public static func loc(weave: (A -> Location) -> A -> Location, _ fl0: Location) -> Location {
 		return fl0
