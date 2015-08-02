@@ -8,21 +8,21 @@ public struct Weaver<A> {
 		self.init(unweave: const(nil))
 	}
 
-	public init(_ t1: A, _ weave: Weave, _ k: A -> A) {
+	public init(_ t1: A, _ weave: Weave, _ reconstruct: A -> A) {
 		self.init { fl0 in
-			Location.loc(Weaver.call(weave), { t1 in fl0(k(t1)) })(t1)
+			Location.loc(Weaver.call(weave), { t1 in fl0(reconstruct(t1)) })(t1)
 		}
 	}
 
-	public init(_ t1: A, _ t2: A, _ weave: Weave, _ k: (A, A) -> A) {
+	public init(_ t1: A, _ t2: A, _ weave: Weave, _ reconstruct: (A, A) -> A) {
 		self.init { fl0 in
-			Location.loc(Weaver.call(weave), { t1, t2 in fl0(k(t1, t2)) })(t1, t2)
+			Location.loc(Weaver.call(weave), { t1, t2 in fl0(reconstruct(t1, t2)) })(t1, t2)
 		}
 	}
 
-	public init(_ t1: A, _ t2: A, _ t3: A, _ weave: Weave, _ k:  (A, A, A) -> A) {
+	public init(_ t1: A, _ t2: A, _ t3: A, _ weave: Weave, _ reconstruct:  (A, A, A) -> A) {
 		self.init { fl0 in
-			Location.loc(Weaver.call(weave), { t1, t2, t3 in fl0(k(t1, t2, t3)) })(t1, t2, t3)
+			Location.loc(Weaver.call(weave), { t1, t2, t3 in fl0(reconstruct(t1, t2, t3)) })(t1, t2, t3)
 		}
 	}
 
