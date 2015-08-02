@@ -37,4 +37,12 @@ public struct Weaver<A> {
 	public static func call<T>(wv: T -> Weaver)(_ fl0: A -> Location<A>)(_ t: T) -> Location<A> {
 		return wv(t).unweave(fl0)
 	}
+
+	// explore :: (t -> Weaver t) -> t -> Loc t
+	public static func explore(weave: A -> Weaver) -> A -> Location<A> {
+		func fr(a: A) -> Location<A> {
+			return Location(it: a, down: call(weave)(fr), up: fr, left: fr, right: fr)
+		}
+		return fr
+	}
 }
