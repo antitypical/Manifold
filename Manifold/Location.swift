@@ -46,6 +46,16 @@ public struct Location<A> {
 	public typealias Weave = A -> Unweave
 	public typealias Unweave = (A -> Location?) -> Location?
 
+
+	private static var call: Weave -> (A -> Location<A>?) -> A -> Location<A>? {
+		return uncurry >>> flip >>> curry
+	}
+
+	public static func explore(weave: Weave)(_ a : A) -> Location<A> {
+		return Location(it: a, down: call(weave)(explore(weave) >>> Optional.Some), up: const(nil), left: const(nil), right: const(nil))
+	}
+
+
 	// MARK: - Implementation details
 
 	init?(_ weave: (A -> Location?) -> A -> Location?, _ up: A -> Location?, _ a: A) {
