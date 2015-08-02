@@ -12,22 +12,22 @@ public struct Location<A> {
 	public let it: A
 
 	private let _down: A -> Location
-	public var down: Location {
+	public var down: Location? {
 		return _down(it)
 	}
 
 	private let _up: A -> Location
-	public var up: Location {
+	public var up: Location? {
 		return _up(it)
 	}
 
 	private let _left: A -> Location
-	public var left: Location {
+	public var left: Location? {
 		return _left(it)
 	}
 
 	private let _right: A -> Location
-	public var right: Location {
+	public var right: Location? {
 		return _right(it)
 	}
 
