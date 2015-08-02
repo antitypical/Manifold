@@ -16,7 +16,6 @@
 		D440FCC51B6C100500C56B19 /* Assertions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCC41B6C100500C56B19 /* Assertions.swift */; };
 		D440FCC71B6C1D2500C56B19 /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCC61B6C1D2500C56B19 /* Either.swift */; };
 		D440FCC91B6C76B400C56B19 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCC81B6C76B400C56B19 /* Location.swift */; };
-		D440FCCB1B6E6E5B00C56B19 /* Weaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCCA1B6E6E5B00C56B19 /* Weaver.swift */; };
 		D440FCCD1B6E6E9100C56B19 /* Expression+Weaving.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCCC1B6E6E9100C56B19 /* Expression+Weaving.swift */; };
 		D440FCCF1B6E73B900C56B19 /* LocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCCE1B6E73B900C56B19 /* LocationTests.swift */; };
 		D4809FBD1AF6BD400084B8FE /* ExpressionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4809FBC1AF6BD400084B8FE /* ExpressionTests.swift */; };
@@ -79,7 +78,6 @@
 		D440FCC41B6C100500C56B19 /* Assertions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Assertions.swift; sourceTree = "<group>"; };
 		D440FCC61B6C1D2500C56B19 /* Either.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Either.swift; sourceTree = "<group>"; };
 		D440FCC81B6C76B400C56B19 /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
-		D440FCCA1B6E6E5B00C56B19 /* Weaver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Weaver.swift; sourceTree = "<group>"; };
 		D440FCCC1B6E6E9100C56B19 /* Expression+Weaving.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+Weaving.swift"; sourceTree = "<group>"; };
 		D440FCCE1B6E73B900C56B19 /* LocationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationTests.swift; sourceTree = "<group>"; };
 		D4809FBC1AF6BD400084B8FE /* ExpressionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpressionTests.swift; sourceTree = "<group>"; };
@@ -188,7 +186,6 @@
 				D4E829161B521B3400713E60 /* Module.swift */,
 				D4E829181B521BFC00713E60 /* Binding.swift */,
 				D440FCC81B6C76B400C56B19 /* Location.swift */,
-				D440FCCA1B6E6E5B00C56B19 /* Weaver.swift */,
 				D440FCCC1B6E6E9100C56B19 /* Expression+Weaving.swift */,
 				D4B3FBEE1A83515800DA2AC3 /* Supporting Files */,
 			);
@@ -355,7 +352,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D440FCC71B6C1D2500C56B19 /* Either.swift in Sources */,
-				D440FCCB1B6E6E5B00C56B19 /* Weaver.swift in Sources */,
 				D415A09B1B51EFDE001C15E5 /* FixpointType+Construction.swift in Sources */,
 				D440FCBD1B6BBE1400C56B19 /* Expression+Evaluation.swift in Sources */,
 				D4E289A21B641B0B0070389F /* Comparable.swift in Sources */,
