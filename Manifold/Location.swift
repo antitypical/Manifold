@@ -43,6 +43,8 @@ public struct Location<A> {
 	}
 
 
+	// MARK: - Implementation details
+
 	static func loc(weave: (A -> Location?) -> A -> Location?, _ up: A -> Location?) -> A -> Location? {
 		func into(t1: A) -> Location? {
 			return Location(it: t1, down: weave(into), up: up, left: const(nil), right: const(nil))
