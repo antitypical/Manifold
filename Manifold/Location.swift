@@ -61,6 +61,10 @@ public struct Location<A> {
 		return Location(flip(weave), reconstruct >>> up, t1, t2)
 	}
 
+	public static func ternary(t1: A, _ t2: A, _ t3: A, _ weave: Weave, _ reconstruct:  (A, A, A) -> A)(_ up: A -> Location?) -> Location? {
+		return Location(flip(weave), reconstruct >>> up, t1, t2, t3)
+	}
+
 	public static func explore(weave: Weave)(_ a : A) -> Location {
 		return Location(it: a, down: flip(weave)(explore(weave) >>> Optional.Some), up: const(nil), left: const(nil), right: const(nil))
 	}
