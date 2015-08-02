@@ -31,6 +31,12 @@ public struct Location<A> {
 		return _right(it)
 	}
 
+
+	public func modify(@noescape f: A -> A) -> Location {
+		return Location(it: f(it), down: _down, up: _up, left: _left, right: _right)
+	}
+
+
 	public static func loc(weave: (A -> Location?) -> A -> Location?, _ fl0: A -> Location?) -> A -> Location? {
 		func fl1(t1: A) -> Location? {
 			return Location(it: t1, down: weave(fl1), up: fl0, left: const(nil), right: const(nil))
