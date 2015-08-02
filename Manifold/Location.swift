@@ -43,6 +43,9 @@ public struct Location<A> {
 	}
 
 
+	public typealias Weave = A -> Unweave
+	public typealias Unweave = (A -> Location?) -> Location?
+
 	// MARK: - Implementation details
 
 	init?(_ weave: (A -> Location?) -> A -> Location?, _ up: A -> Location?, _ a: A) {
