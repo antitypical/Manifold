@@ -13,6 +13,10 @@ final class LocationTests: XCTestCase {
 		assert(Expression<Term>.Unit.explore().left?.it, ==, nil)
 		assert(Expression<Term>.Unit.explore().right?.it, ==, nil)
 	}
+
+	func testNullaryNodesHaveNoChildren() {
+		assert(Expression<Term>.Unit.explore().down?.it, ==, nil)
+	}
 }
 
 
