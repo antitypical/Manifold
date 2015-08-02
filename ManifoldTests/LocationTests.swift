@@ -5,11 +5,11 @@ final class LocationTests: XCTestCase {
 		assert(identity.explore().it, ==, identity)
 	}
 
-	func testTopLevelNodesHaveNoParents() {
+	func testRootNodesHaveNoParents() {
 		assert(Expression<Term>.Unit.explore().up?.it, ==, nil)
 	}
 
-	func testTopLevelNodesHaveNoSiblings() {
+	func testRootNodesHaveNoSiblings() {
 		assert(Expression<Term>.Unit.explore().left?.it, ==, nil)
 		assert(Expression<Term>.Unit.explore().right?.it, ==, nil)
 	}
