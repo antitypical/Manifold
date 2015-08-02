@@ -18,6 +18,11 @@ final class LocationTests: XCTestCase {
 		assert(Expression<Term>.Unit.explore().down?.it, ==, nil)
 	}
 
+	func testNullaryNodesCanBeReturnedOutOf() {
+		let axiom = Expression.Axiom((), Term(.UnitType))
+		assert(axiom.explore().down?.up?.it, ==, axiom)
+	}
+
 	func testDeepNavigationExploresChildrenOfChildrenRecursively() {
 		assert(identity.explore().down?.right?.down?.right?.it, ==, .Variable(.Local(0)))
 	}
