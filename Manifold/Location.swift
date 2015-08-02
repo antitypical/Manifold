@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public struct Location<A> {
+public struct Location<A>: SequenceType {
 	public init(it: A, down: A -> Location?, up: A -> Location?, left: A -> Location?, right: A -> Location?) {
 		self.it = it
 		_left = left
@@ -119,6 +119,18 @@ public struct Location<A> {
 		}
 		guard let location = into1(t1, t2, t3) else { return nil }
 		self = location
+	}
+
+
+	// MARK: SequenceType
+
+	public func generate() -> AnyGenerator<Location> {
+		var current: Location? = self
+		return anyGenerator {
+			let next = current
+			current = current?.next
+			return next
+		}
 	}
 }
 
