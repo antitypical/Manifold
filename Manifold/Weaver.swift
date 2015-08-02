@@ -2,7 +2,7 @@
 
 public struct Weaver<A> {
 	public typealias Weave = A -> Weaver
-	public typealias Unweave = (A -> Location<A>) -> Location<A>
+	public typealias Unweave = (A -> Location<A>?) -> Location<A>?
 
 	public init(_ k: A, _ weave: Weave) {
 		self.init { fl0 in
@@ -34,15 +34,19 @@ public struct Weaver<A> {
 
 	private let unweave: Unweave
 
-	public static func call<T>(weave: T -> Weaver)(_ fl0: A -> Location<A>)(_ t: T) -> Location<A> {
+	public static func call<T>(weave: T -> Weaver)(_ fl0: A -> Location<A>?)(_ t: T) -> Location<A>? {
 		return weave(t).unweave(fl0)
 	}
 
 	// explore :: (t -> Weaver t) -> t -> Loc t
 	public static func explore(weave: A -> Weaver) -> A -> Location<A> {
 		func fr(a: A) -> Location<A> {
-			return Location(it: a, down: call(weave)(fr), up: fr, left: fr, right: fr)
+			let r = fr >>> Optional.Some
+			return Location(it: a, down: call(weave)(r), up: r, left: r, right: r)
 		}
 		return fr
 	}
 }
+
+
+import Prelude
