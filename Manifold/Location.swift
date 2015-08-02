@@ -53,6 +53,10 @@ public struct Location<A> {
 		return nil
 	}
 
+	public static func unary(t1: A, _ weave: Weave, _ reconstruct: A -> A)(_ up: A -> Location?) -> Location? {
+		return Location(flip(weave), reconstruct >>> up, t1)
+	}
+
 	public static func explore(weave: Weave)(_ a : A) -> Location {
 		return Location(it: a, down: flip(weave)(explore(weave) >>> Optional.Some), up: const(nil), left: const(nil), right: const(nil))
 	}
