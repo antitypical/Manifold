@@ -10,10 +10,10 @@ public struct Location<A> {
 	}
 
 	public let it: A
-	public let down: A -> Location
-	public let up: A -> Location
-	public let left: A -> Location
-	public let right: A -> Location
+	private let down: A -> Location
+	private let up: A -> Location
+	private let left: A -> Location
+	private let right: A -> Location
 
 	public static func loc(weave: (A -> Location) -> A -> Location, _ fl0: Location) -> Location {
 		return fl0
