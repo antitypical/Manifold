@@ -28,11 +28,11 @@ public struct Weaver<A> {
 		}
 	}
 
-	public init(unweave: Unweave) {
+	private init(unweave: Unweave) {
 		self.unweave = unweave
 	}
 
-	public let unweave: Unweave
+	private let unweave: Unweave
 
 	public static func call<T>(wv: T -> Weaver)(_ fl0: A -> Location<A>)(_ t: T) -> Location<A> {
 		return wv(t).unweave(fl0)
