@@ -17,6 +17,10 @@ final class LocationTests: XCTestCase {
 	func testNullaryNodesHaveNoChildren() {
 		assert(Expression<Term>.Unit.explore().down?.it, ==, nil)
 	}
+
+	func testDeepNavigationExploresChildrenOfChildrenRecursively() {
+		assert(identity.explore().down?.right?.down?.right?.it, ==, .Variable(.Local(0)))
+	}
 }
 
 
