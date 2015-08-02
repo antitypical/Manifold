@@ -40,8 +40,7 @@ public struct Weaver<A> {
 
 	public static func explore(weave: A -> Weaver) -> A -> Location<A> {
 		func fr(a: A) -> Location<A> {
-			let r = fr >>> Optional.Some
-			return Location(it: a, down: call(weave)(r), up: r, left: r, right: r)
+			return Location(it: a, down: call(weave)(fr >>> Optional.Some), up: const(nil), left: const(nil), right: const(nil))
 		}
 		return fr
 	}
