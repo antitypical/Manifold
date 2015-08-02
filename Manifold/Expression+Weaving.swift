@@ -32,4 +32,8 @@ extension Expression where Recur: FixpointType {
 			return Weaver(a.out, b.out, c.out, weave) { Expression.If(Recur($0), Recur($1), Recur($2)) }
 		}
 	}
+
+	public func explore() -> Location<Expression> {
+		return Weaver.explore(Expression.weave)(self)
+	}
 }
