@@ -31,6 +31,11 @@ public struct Location<A> {
 		return _right(it)
 	}
 
+	/// The root Location in the current exploration.
+	public var root: Location {
+		return up?.root ?? self
+	}
+
 
 	public func modify(@noescape f: A -> A) -> Location {
 		return Location(it: f(it), down: _down, up: _up, left: _left, right: _right)
