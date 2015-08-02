@@ -47,6 +47,12 @@ public struct Location<A> {
 	public typealias Unweave = (A -> Location?) -> Location?
 
 
+	// MARK: - Constructors
+
+	public static func nullary(up: A -> Location?) -> Location? {
+		return nil
+	}
+
 	public static func explore(weave: Weave)(_ a : A) -> Location {
 		return Location(it: a, down: flip(weave)(explore(weave) >>> Optional.Some), up: const(nil), left: const(nil), right: const(nil))
 	}
