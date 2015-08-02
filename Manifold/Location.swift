@@ -66,19 +66,19 @@ public struct Weaver<A> {
 		}
 	}
 
-	public init(_ t1: A, _ k: A -> A, _ wv: Weave) {
+	public init(_ t1: A, _ wv: Weave, _ k: A -> A) {
 		self.init { fl0 in
 			Location.loc(Weaver.call(wv), { t1 in fl0(k(t1)) })(t1)
 		}
 	}
 
-	public init(_ t1: A, _ t2: A, _ k: (A, A) -> A, _ wv: Weave) {
+	public init(_ t1: A, _ t2: A, _ wv: Weave, _ k: (A, A) -> A) {
 		self.init { fl0 in
 			Location.loc(Weaver.call(wv), { t1, t2 in fl0(k(t1, t2)) })(t1, t2)
 		}
 	}
 
-	public init(_ t1: A, _ t2: A, _ t3: A, _ k:  (A, A, A) -> A, _ wv: Weave) {
+	public init(_ t1: A, _ t2: A, _ t3: A, _ wv: Weave, _ k:  (A, A, A) -> A) {
 		self.init { fl0 in
 			Location.loc(Weaver.call(wv), { t1, t2, t3 in fl0(k(t1, t2, t3)) })(t1, t2, t3)
 		}
@@ -104,27 +104,27 @@ extension Expression where Recur: FixpointType {
 
 		// MARK: Unary
 		case let .Projection(a, b):
-			return Weaver(a.out, { Expression.Projection(Recur($0), b) }, weave)
+			return Weaver(a.out, weave, { Expression.Projection(Recur($0), b) })
 
 		case let .Axiom(any, type):
-			return Weaver(type.out, { Expression.Axiom(any, Recur($0)) }, weave)
+			return Weaver(type.out, weave, { Expression.Axiom(any, Recur($0)) })
 
 		// MARK: Binary
 		case let .Application(a, b):
-			return Weaver(a.out, b.out, { Expression.Application(Recur($0), Recur($1)) }, weave)
+			return Weaver(a.out, b.out, weave, { Expression.Application(Recur($0), Recur($1)) })
 
 		case let .Lambda(i, a, b):
-			return Weaver(a.out, b.out, { Expression.Lambda(i, Recur($0), Recur($1)) }, weave)
+			return Weaver(a.out, b.out, weave, { Expression.Lambda(i, Recur($0), Recur($1)) })
 
 		case let .Product(a, b):
-			return Weaver(a.out, b.out, { Expression.Product(Recur($0), Recur($1)) }, weave)
+			return Weaver(a.out, b.out, weave, { Expression.Product(Recur($0), Recur($1)) })
 
 		case let .Annotation(a, b):
-			return Weaver(a.out, b.out, { Expression.Annotation(Recur($0), Recur($1)) }, weave)
+			return Weaver(a.out, b.out, weave, { Expression.Annotation(Recur($0), Recur($1)) })
 
 		// MARK: Ternary
 		case let .If(a, b, c):
-			return Weaver(a.out, b.out, c.out, { Expression.If(Recur($0), Recur($1), Recur($2)) }, weave)
+			return Weaver(a.out, b.out, c.out, weave, { Expression.If(Recur($0), Recur($1), Recur($2)) })
 		}
 	}
 }
