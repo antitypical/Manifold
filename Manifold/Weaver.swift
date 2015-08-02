@@ -10,7 +10,7 @@ public struct Weaver<A> {
 
 	public init(_ t1: A, _ weave: Weave, _ reconstruct: A -> A) {
 		self.init { up in
-			Location.loc(Weaver.call(weave), reconstruct >>> up)(t1)
+			Location(Weaver.call(weave), reconstruct >>> up, t1)
 		}
 	}
 
