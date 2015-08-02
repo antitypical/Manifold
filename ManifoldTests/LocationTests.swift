@@ -30,9 +30,14 @@ final class LocationTests: XCTestCase {
 	func testDeepNavigationReturnsUpwards() {
 		assert(identity.explore().down?.right?.down?.right?.up?.up?.it, ==, identity)
 	}
+
+	func testModifyReplacesSubtrees() {
+		assert(identity.explore().down?.modify(const(.BooleanType)).right?.modify(const(.Boolean(true))).up?.it, ==, Expression.Lambda(1, Term(.BooleanType), Term(.Boolean(true))))
+	}
 }
 
 
 import Assertions
 @testable import Manifold
+import Prelude
 import XCTest
