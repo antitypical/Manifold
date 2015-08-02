@@ -38,7 +38,6 @@ public struct Weaver<A> {
 		return weave(t).unweave(fl0)
 	}
 
-	// explore :: (t -> Weaver t) -> t -> Loc t
 	public static func explore(weave: A -> Weaver) -> A -> Location<A> {
 		func fr(a: A) -> Location<A> {
 			let r = fr >>> Optional.Some
