@@ -39,7 +39,7 @@ public struct Location<A>: SequenceType {
 
 	/// Returns the logically next `Location` after the receiver in a pre-order depth-first traversal.
 	public var next: Location? {
-		return down ?? nextOut
+		return down ?? nextAfter
 	}
 
 	/// Returns the logically next `Location` after the receiver and its children in a pre-order depth-first traversal.
