@@ -82,22 +82,6 @@ public struct Location<A> {
 		guard let location = into1(t1, t2, t3) else { return nil }
 		self = location
 	}
-
-	static func loc(weave: (A -> Location?) -> A -> Location?, _ up: (A, A, A) -> Location?) -> (A, A, A) -> Location? {
-		func into1(t1: A, _ t2: A, _ t3: A) -> Location? {
-			let update: ((A, A, A) -> Location?) -> A -> Location? = { fl in { t1 in fl(t1, t2, t3) } }
-			return Location(it: t1, down: weave(update(into1)), up: update(up), left: const(nil), right: update(into2))
-		}
-		func into2(t1: A, _ t2: A, _ t3: A) -> Location? {
-			let update: ((A, A, A) -> Location?) -> A -> Location? = { fl in { t2 in fl(t1, t2, t3) } }
-			return Location(it: t1, down: weave(update(into2)), up: update(up), left: update(into1), right: update(into3))
-		}
-		func into3(t1: A, _ t2: A, _ t3: A) -> Location? {
-			let update: ((A, A, A) -> Location?) -> A -> Location? = { fl in { t3 in fl(t1, t2, t3) } }
-			return Location(it: t1, down: weave(update(into3)), up: update(up), left: update(into2), right: const(nil))
-		}
-		return into1
-	}
 }
 
 
