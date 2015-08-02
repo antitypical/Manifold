@@ -37,6 +37,12 @@ public struct Location<A> {
 	}
 
 
+	/// Returns the logically next `Location` in a pre-order depth-first traversal.
+	public var next: Location? {
+		return down ?? right ?? up?.next
+	}
+
+
 	/// Return a new Location by replacing the current value with a new one produced by `f`.
 	public func modify(@noescape f: A -> A) -> Location {
 		return Location(it: f(it), down: _down, up: _up, left: _left, right: _right)
