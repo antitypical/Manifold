@@ -47,12 +47,8 @@ public struct Location<A> {
 	public typealias Unweave = (A -> Location?) -> Location?
 
 
-	private static var call: Weave -> (A -> Location<A>?) -> A -> Location<A>? {
-		return uncurry >>> flip >>> curry
-	}
-
 	public static func explore(weave: Weave)(_ a : A) -> Location<A> {
-		return Location(it: a, down: call(weave)(explore(weave) >>> Optional.Some), up: const(nil), left: const(nil), right: const(nil))
+		return Location(it: a, down: flip(weave)(explore(weave) >>> Optional.Some), up: const(nil), left: const(nil), right: const(nil))
 	}
 
 
@@ -95,6 +91,12 @@ public struct Location<A> {
 		guard let location = into1(t1, t2, t3) else { return nil }
 		self = location
 	}
+}
+
+
+// Flipping of curried functions.
+private func flip<A, B, C>(f: A -> B -> C)(_ b: B)(_ a: A) -> C {
+	return f(a)(b)
 }
 
 
