@@ -32,8 +32,8 @@ public struct Weaver<A> {
 
 	private let unweave: Unweave
 
-	public static func call(weave: A -> Weaver)(_ fl0: A -> Location<A>?)(_ t: A) -> Location<A>? {
-		return weave(t).unweave(fl0)
+	public static func call(weave: A -> Weaver)(_ up: A -> Location<A>?)(_ t: A) -> Location<A>? {
+		return weave(t).unweave(up)
 	}
 
 	public static func explore(weave: A -> Weaver) -> A -> Location<A> {
