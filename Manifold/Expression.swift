@@ -9,7 +9,7 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomDebugStringConve
 		@noescape ifType: Int -> T,
 		@noescape ifVariable: Name -> T,
 		@noescape ifApplication: (Recur, Recur) -> T,
-		@noescape ifLambda: (Int, Recur, Recur) -> T,
+		@noescape ifLambda: (Int, Recur?, Recur) -> T,
 		@noescape ifProjection: (Recur, Bool) -> T,
 		@noescape ifProduct: (Recur, Recur) -> T,
 		@noescape ifBooleanType: () -> T,
@@ -53,7 +53,7 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomDebugStringConve
 		ifType: (Int -> T)? = nil,
 		ifVariable: (Name -> T)? = nil,
 		ifApplication: ((Recur, Recur) -> T)? = nil,
-		ifLambda: ((Int, Recur, Recur) -> T)? = nil,
+		ifLambda: ((Int, Recur?, Recur) -> T)? = nil,
 		ifProjection: ((Recur, Bool) -> T)? = nil,
 		ifProduct: ((Recur, Recur) -> T)? = nil,
 		ifBooleanType: (() -> T)? = nil,
@@ -88,7 +88,7 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomDebugStringConve
 			ifType: { .Type($0) },
 			ifVariable: { .Variable($0) },
 			ifApplication: { .Application(transform($0), transform($1)) },
-			ifLambda: { .Lambda($0, transform($1), transform($2)) },
+			ifLambda: { .Lambda($0, $1.map(transform), transform($2)) },
 			ifProjection: { .Projection(transform($0), $1) },
 			ifProduct: { .Product(transform($0), transform($1)) },
 			ifBooleanType: const(.BooleanType),
@@ -214,7 +214,7 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomDebugStringConve
 	case Type(Int)
 	case Variable(Name)
 	case Application(Recur, Recur)
-	case Lambda(Int, Recur, Recur) // (Πx:A)B where B can depend on x
+	case Lambda(Int, Recur?, Recur) // (Πx:A)B where B can depend on x
 	case Projection(Recur, Bool)
 	case Product(Recur, Recur)
 	case BooleanType
@@ -280,7 +280,7 @@ extension Expression where Recur: FixpointType {
 		return analysis(ifType: const(true), otherwise: { returnType?.out.isType ?? false })
 	}
 
-	public var lambda: (Int, Recur, Recur)? {
+	public var lambda: (Int, Recur?, Recur)? {
 		return analysis(ifLambda: Optional.Some, otherwise: const(nil))
 	}
 
@@ -307,7 +307,7 @@ extension Expression where Recur: FixpointType {
 		return cata {
 			$0.analysis(
 				ifApplication: max,
-				ifLambda: { max($0.0, $0.1) },
+				ifLambda: { max($0.0, $0.1 ?? -1) },
 				ifProjection: { $0.0 },
 				ifProduct: max,
 				ifIf: { max($0, $1, $2) },
@@ -322,7 +322,7 @@ extension Expression where Recur: FixpointType {
 			$0.analysis(
 				ifVariable: { $0.local.map { [ $0 ] } ?? Set() },
 				ifApplication: uncurry(Set.union),
-				ifLambda: { $1.union($2.subtract([ $0 ])) },
+				ifLambda: { ($1 ?? []).union($2.subtract([ $0 ])) },
 				ifProjection: { $0.0 },
 				ifProduct: uncurry(Set.union),
 				ifIf: { $0.union($1).union($2) },

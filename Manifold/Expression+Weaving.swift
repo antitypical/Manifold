@@ -15,11 +15,14 @@ extension Expression where Recur: FixpointType {
 			case let .Axiom(any, type):
 				return Location.unary(type.out, weave, { Expression.Axiom(any, Recur($0)) })
 
+			case let .Lambda(i, .None, b):
+				return Location.unary(b.out, weave) { Expression.Lambda(i, nil, Recur($0)) }
+
 			// MARK: Binary
 			case let .Application(a, b):
 				return Location.binary(a.out, b.out, weave) { Expression.Application(Recur($0), Recur($1)) }
 
-			case let .Lambda(i, a, b):
+			case let .Lambda(i, .Some(a), b):
 				return Location.binary(a.out, b.out, weave) { Expression.Lambda(i, Recur($0), Recur($1)) }
 
 			case let .Product(a, b):
