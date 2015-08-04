@@ -28,7 +28,7 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 		case let .Variable(i):
 			return annotate(context[i].map(Either.Right) ?? Either.Left("Unexpectedly free variable \(i)"))
 
-		case let .Lambda(i, .Some(type), body):
+		case let .Lambda(i, type, body):
 			return annotate(type.checkIsType(context)
 				>> body.inferType(context + [ .Local(i): type ])
 					.map { Expression.lambda(Recur(type), const(Recur($0))) })
@@ -42,12 +42,8 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 				.flatMap { A in
 					A.analysis(
 						ifLambda: { i, type, body in
-							if let type = type {
-								return b.checkType(type.out, context: context)
-									.map { _ in body.out.substitute(i, b) }
-							} else {
-								return Either.Left("illegal application of unelaborated lambda \(a) to \(b)")
-							}
+							b.checkType(type.out, context: context)
+								.map { _ in body.out.substitute(i, b) }
 						},
 						otherwise: const(Either.Left("illegal application of \(a) : \(A) to \(b)")))
 				})
@@ -57,11 +53,7 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 				.flatMap { type in
 					type.analysis(
 						ifLambda: { i, A, B in
-							if let A = A {
-								return Either.Right(branch ? B.out.substitute(i, A.out) : A.out)
-							} else {
-								return Either.Left("illegal projection of field \(branch ? 1 : 0) of unelaborated product value \(term)")
-							}
+							Either.Right(branch ? B.out.substitute(i, A.out) : A.out)
 						},
 						otherwise: const(Either.Left("illegal projection of field \(branch ? 1 : 0) of non-product value \(term) of type \(type)")))
 				})

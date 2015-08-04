@@ -10,15 +10,15 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 		case (.Type, .Type):
 			return .Right(against)
 
-		case let (.Lambda(i, .Some(type), body), .Type):
+		case let (.Lambda(i, type, body), .Type):
 			return annotate(type.checkIsType(context)
 				>> body.checkType(against, context: context + [ Name.Local(i) : type ])
 					.map(const(against)))
 
-		case let (.Product(tag, payload), .Lambda(i, .Some(tagType), body)):
+		case let (.Product(tag, payload), .Lambda(i, tagType, body)):
 			return annotate(tagType.checkIsType(context)
 				>> (tag.checkType(tagType, context: context)
-				>> payload.checkType(body.substitute(i, tag), context: context)
+				>> payload.checkType(body.substitute(i, tag).evaluate(), context: context)
 					.map(const(against))))
 
 		default:
