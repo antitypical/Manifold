@@ -56,6 +56,7 @@
 		D4F9F86B1A8496F700B7071E /* Prelude.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4F9F86A1A8496F700B7071E /* Prelude.framework */; };
 		D4F9F86C1A84970900B7071E /* Prelude.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4F9F86A1A8496F700B7071E /* Prelude.framework */; };
 		D4F9F86E1A84977400B7071E /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F9F86D1A84977400B7071E /* Error.swift */; };
+		D4FB02D91B71D06A0090E764 /* Expression+Boolean.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FB02D81B71D06A0090E764 /* Expression+Boolean.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -119,6 +120,7 @@
 		D4F9F8641A84958000B7071E /* Either.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Either.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4F9F86A1A8496F700B7071E /* Prelude.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Prelude.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4F9F86D1A84977400B7071E /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
+		D4FB02D81B71D06A0090E764 /* Expression+Boolean.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+Boolean.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -244,6 +246,7 @@
 		D4FB02D71B71D0500090E764 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				D4FB02D81B71D06A0090E764 /* Expression+Boolean.swift */,
 				D415A0981B51EA8B001C15E5 /* Expression+List.swift */,
 				D4E101B91B484611001A7E55 /* Expression+Natural.swift */,
 				D4AAE5511B5B24D0004E581F /* Expression+Tag.swift */,
@@ -385,6 +388,7 @@
 				D4DE7E731AF66E25004D0CB9 /* Term.swift in Sources */,
 				D4E8291B1B521F1100713E60 /* ConcatSequenceView.swift in Sources */,
 				D4F9F86E1A84977400B7071E /* Error.swift in Sources */,
+				D4FB02D91B71D06A0090E764 /* Expression+Boolean.swift in Sources */,
 				D440FCCD1B6E6E9100C56B19 /* Expression+Weaving.swift in Sources */,
 				D4E829171B521B3400713E60 /* Module.swift in Sources */,
 				D4F1B8571B470E800065BF22 /* Double.swift in Sources */,
