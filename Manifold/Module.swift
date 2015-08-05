@@ -6,7 +6,7 @@ public struct Module<Recur> {
 
 	public init<D: SequenceType, S: SequenceType where D.Generator.Element == Module, S.Generator.Element == Binding<Recur>>(_ dependencies: D, _ definitions: S) {
 		self.dependencies = Array(dependencies)
-		self.definitions = Array(definitions)
+		self.declarations = Array(definitions)
 	}
 
 	public init<S: SequenceType where S.Generator.Element == Binding<Recur>>(_ definitions: S) {
@@ -14,11 +14,11 @@ public struct Module<Recur> {
 	}
 
 	public let dependencies: [Module]
-	public let definitions: [Binding<Recur>]
+	public let declarations: [Binding<Recur>]
 
 	public var environment: Environment {
 		let dependencies = lazy(self.dependencies).map { $0.environment }
-		let definitions = lazy(self.definitions).map { [$0.symbol: $0.value] }
+		let definitions = lazy(self.declarations).map { [$0.symbol: $0.value] }
 		return dependencies
 			.concat(definitions)
 			.reduce(Environment(), combine: +)
@@ -26,7 +26,7 @@ public struct Module<Recur> {
 
 	public var context: Context {
 		let dependencies = lazy(self.dependencies).map { $0.context }
-		let definitions = lazy(self.definitions).map { [$0.symbol: $0.type] }
+		let definitions = lazy(self.declarations).map { [$0.symbol: $0.type] }
 		return dependencies
 			.concat(definitions)
 			.reduce(Context(), combine: +)
@@ -37,7 +37,7 @@ extension Module where Recur: FixpointType {
 	public func typecheck() -> [Error] {
 		let environment = self.environment
 		let context = self.context
-		return lazy(definitions)
+		return lazy(declarations)
 			.map { $0.typecheck(environment, context) }
 			.reduce([]) { $0 + ($1.left.map { [ $0 ] } ?? []) }
 	}
