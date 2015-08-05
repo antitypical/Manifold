@@ -11,7 +11,7 @@ extension Expression where Recur: FixpointType {
 		// zero : Natural
 		// zero = (false, ()) : Natural
 		let zero = Binding("zero",
-			.Annotation(Recur.Product(.Boolean(false), .Unit), .Variable("Natural")),
+			.Product(Recur.Boolean(false), .Unit),
 			"Natural")
 
 		// successor : Natural -> Natural
