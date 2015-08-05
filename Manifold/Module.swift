@@ -4,17 +4,17 @@ public struct Module<Recur> {
 	public typealias Environment = Expression<Recur>.Environment
 	public typealias Context = Expression<Recur>.Context
 
-	public init<D: SequenceType, S: SequenceType where D.Generator.Element == Module, S.Generator.Element == Binding<Recur>>(_ dependencies: D, _ definitions: S) {
+	public init<D: SequenceType, S: SequenceType where D.Generator.Element == Module, S.Generator.Element == Declaration<Recur>>(_ dependencies: D, _ definitions: S) {
 		self.dependencies = Array(dependencies)
 		self.declarations = Array(definitions)
 	}
 
-	public init<S: SequenceType where S.Generator.Element == Binding<Recur>>(_ definitions: S) {
+	public init<S: SequenceType where S.Generator.Element == Declaration<Recur>>(_ definitions: S) {
 		self.init([], definitions)
 	}
 
 	public let dependencies: [Module]
-	public let declarations: [Binding<Recur>]
+	public let declarations: [Declaration<Recur>]
 
 	public var environment: Environment {
 		let dependencies = lazy(self.dependencies).map { $0.environment }

@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public struct Binding<Recur> {
+public struct Declaration<Recur> {
 	public init(_ symbol: Name, _ value: Expression<Recur>, _ type: Expression<Recur>) {
 		self.symbol = symbol
 		self.value = value
@@ -12,7 +12,7 @@ public struct Binding<Recur> {
 	public let type: Expression<Recur>
 }
 
-extension Binding where Recur: FixpointType {
+extension Declaration where Recur: FixpointType {
 	public func typecheck(environment: Expression<Recur>.Environment, _ context: Expression<Recur>.Context) -> Either<Error, Expression<Recur>> {
 		return type.checkIsType(context)
 			>> value.checkType(type.evaluate(environment), context: context)
