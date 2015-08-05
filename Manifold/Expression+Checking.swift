@@ -18,7 +18,7 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 		case let (.Product(tag, payload), .Lambda(i, tagType, body)):
 			return annotate(tagType.checkIsType(environment, context)
 				>> (tag.checkType(tagType, environment, context)
-				>> payload.checkType(body.substitute(i, tag).evaluate(), environment, context)
+				>> payload.checkType(body.substitute(i, tag).evaluate(environment), environment, context)
 					.map(const(against))))
 
 		default:
