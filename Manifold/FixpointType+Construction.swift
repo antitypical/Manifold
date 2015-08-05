@@ -60,8 +60,8 @@ extension FixpointType {
 	}
 
 
-	public static func FunctionType(types: [Self]) -> Self {
-		return Self(.FunctionType(types))
+	public static func FunctionType(a: Self, _ b: Self) -> Self {
+		return Self(.FunctionType(a, b))
 	}
 
 

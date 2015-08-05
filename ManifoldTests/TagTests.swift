@@ -2,7 +2,7 @@
 
 final class TagTests: XCTestCase {
 	func testTagTypechecksAsFunction() {
-		let expected = Expression.FunctionType([ Enumeration, Term(.Type(0)) ])
+		let expected = Expression.FunctionType(Enumeration, Term(.Type(0)))
 		let actual = Tag.out.checkType(expected, context: context)
 		assert(actual.left, ==, nil)
 		assert(actual.right, ==, expected)

@@ -25,8 +25,8 @@ extension Expression where Recur: FixpointType {
 		// uncons : λ A : Type . λ B : Type . λ ifCons : (λ _ : A . λ _ : List A . B) . λ ifNil : (λ _ : Unit . B) . λ list : List A . B
 		// uncons = λ A : Type . λ B : Type . λ ifCons : (λ _ : A . λ _ : List A . B) . λ ifNil : (λ _ : Unit . B) . λ list : List A . if list.0 then ifCons list.1.0 list.1.1 else ifNil ()
 		let uncons = Binding("uncons",
-			lambda(.Type, .Type) { A, B in Recur.lambda(Recur.FunctionType([ A, List[A], B ]), Recur.FunctionType([ Recur.UnitType, B ]), List[A]) { ifCons, ifNil, list in .If(list.first, ifCons[list.second.first, list.second.second], ifNil[Recur.Unit]) } },
-			lambda(.Type, .Type) { A, B in Recur.lambda(Recur.FunctionType([ A, List[A], B ]), Recur.FunctionType([ .UnitType, B ]), List[A]) { _ in B } })
+			lambda(.Type, .Type) { A, B in Recur.lambda(Recur.FunctionType(A, Recur.FunctionType(List[A], B)), Recur.FunctionType(Recur.UnitType, B), List[A]) { ifCons, ifNil, list in .If(list.first, ifCons[list.second.first, list.second.second], ifNil[Recur.Unit]) } },
+			lambda(.Type, .Type) { A, B in Recur.lambda(Recur.FunctionType(A, Recur.FunctionType(List[A], B)), Recur.FunctionType(.UnitType, B), List[A]) { _ in B } })
 
 		return Module([ list, `nil`, cons, uncons ])
 	}
