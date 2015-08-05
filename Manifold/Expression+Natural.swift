@@ -17,7 +17,7 @@ extension Expression where Recur: FixpointType {
 		// successor : Natural -> Natural
 		// successor = λ n : Natural . (true, n) : Natural
 		let successor = Binding("successor",
-			lambda(.Variable("Natural")) { predecessor in .Annotation(.Product(.Boolean(true), predecessor), .Variable("Natural")) },
+			lambda(.Variable("Natural")) { predecessor in .Product(.Boolean(true), predecessor) },
 			lambda(.Variable("Natural"), const(.Variable("Natural"))))
 
 		return Module([ Natural, zero, successor ])
