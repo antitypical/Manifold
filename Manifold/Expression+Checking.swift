@@ -1,28 +1,28 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 extension Expression where Recur: FixpointType, Recur: Equatable {
-	public func checkIsType(context: Context) -> Either<Error, Expression> {
-		return checkType(.Type(0), context: context)
+	public func checkIsType(environment: Environment, _ context: Context) -> Either<Error, Expression> {
+		return checkType(.Type(0), environment, context)
 	}
 
-	public func checkType(against: Expression, context: Context = [:]) -> Either<Error, Expression> {
+	public func checkType(against: Expression, _ environment: Environment = [:], _ context: Context = [:]) -> Either<Error, Expression> {
 		switch (destructured, against.destructured) {
 		case (.Type, .Type):
 			return .Right(against)
 
 		case let (.Lambda(i, type, body), .Type):
-			return annotate(type.checkIsType(context)
-				>> body.checkType(against, context: context + [ Name.Local(i) : type ])
+			return annotate(type.checkIsType(environment, context)
+				>> body.checkType(against, environment, context + [ Name.Local(i) : type ])
 					.map(const(against)))
 
 		case let (.Product(tag, payload), .Lambda(i, tagType, body)):
-			return annotate(tagType.checkIsType(context)
-				>> (tag.checkType(tagType, context: context)
-				>> payload.checkType(body.substitute(i, tag).evaluate(), context: context)
+			return annotate(tagType.checkIsType(environment, context)
+				>> (tag.checkType(tagType, environment, context)
+				>> payload.checkType(body.substitute(i, tag).evaluate(), environment, context)
 					.map(const(against))))
 
 		default:
-			return annotate(inferType(context)
+			return annotate(inferType(environment, context)
 				.flatMap { inferred in
 					inferred == against
 						? Either.right(inferred)

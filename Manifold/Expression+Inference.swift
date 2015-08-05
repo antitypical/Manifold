@@ -3,7 +3,7 @@
 extension Expression where Recur: FixpointType, Recur: Equatable {
 	public typealias Context = [Name: Expression]
 
-	public func inferType(context: Context = [:]) -> Either<Error, Expression> {
+	public func inferType(environment: Environment = [:], _ context: Context = [:]) -> Either<Error, Expression> {
 		switch destructured {
 		// Inference rules.
 		case .Unit:
@@ -12,8 +12,8 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 			return .right(.BooleanType)
 
 		case let .If(condition, then, `else`):
-			return annotate(condition.checkType(.BooleanType, context: context)
-				>> (then.inferType(context) &&& `else`.inferType(context))
+			return annotate(condition.checkType(.BooleanType, environment, context)
+				>> (then.inferType(environment, context) &&& `else`.inferType(environment, context))
 					.map { a, b in
 						a == b
 							? a
@@ -29,27 +29,27 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 			return annotate(context[i].map(Either.Right) ?? Either.Left("Unexpectedly free variable \(i)"))
 
 		case let .Lambda(i, type, body):
-			return annotate(type.checkIsType(context)
-				>> body.inferType(context + [ .Local(i): type ])
+			return annotate(type.checkIsType(environment, context)
+				>> body.inferType(environment, context + [ .Local(i): type ])
 					.map { Expression.lambda(Recur(type), const(Recur($0))) })
 
 		case let .Product(a, b):
-			return annotate((a.inferType(context) &&& b.inferType(context))
+			return annotate((a.inferType(environment, context) &&& b.inferType(environment, context))
 				.map { A, B in Expression.lambda(Recur(A), const(Recur(B))) })
 
 		case let .Application(a, b):
-			return annotate(a.inferType(context)
+			return annotate(a.inferType(environment, context)
 				.flatMap { A in
 					A.analysis(
 						ifLambda: { i, type, body in
-							b.checkType(type.out, context: context)
+							b.checkType(type.out, environment, context)
 								.map { _ in body.out.substitute(i, b) }
 						},
 						otherwise: const(Either.Left("illegal application of \(a) : \(A) to \(b)")))
 				})
 
 		case let .Projection(term, branch):
-			return annotate(term.inferType(context)
+			return annotate(term.inferType(environment, context)
 				.flatMap { type in
 					type.analysis(
 						ifLambda: { i, A, B in
@@ -59,7 +59,7 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 				})
 
 		case let .Annotation(term, type):
-			return annotate(term.checkType(type, context: context)
+			return annotate(term.checkType(type, environment, context)
 				.map(const(type)))
 
 		case let .Axiom(_, type):

@@ -287,7 +287,7 @@ extension Expression where Recur: FixpointType {
 	}
 
 	public var returnType: Recur? {
-		return inferType().right?.lambda?.2
+		return inferType([:], [:]).right?.lambda?.2
 	}
 
 	public var product: (Recur, Recur)? {

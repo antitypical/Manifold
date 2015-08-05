@@ -24,8 +24,8 @@ public struct Declaration<Recur>: CustomDebugStringConvertible, CustomStringConv
 
 extension Declaration where Recur: FixpointType {
 	public func typecheck(environment: Expression<Recur>.Environment, _ context: Expression<Recur>.Context) -> Either<Error, Expression<Recur>> {
-		return type.checkIsType(context)
-			>> value.checkType(type.evaluate(environment), context: context)
+		return type.checkIsType(environment, context)
+			>> value.checkType(type.evaluate(environment), environment, context)
 				.either(
 					ifLeft: { Either.left($0.map { "\(self.symbol)\n\t: \(self.type)\n\t= \(self.value)\n: " + $0 }) },
 					ifRight: Either.right)
