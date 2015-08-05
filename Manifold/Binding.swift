@@ -14,10 +14,11 @@ public struct Binding<Recur> {
 
 extension Binding where Recur: FixpointType {
 	public func typecheck(context: [Name: Expression<Recur>]) -> Either<Error, Expression<Recur>> {
-		return value.checkType(type, context: context)
-			.either(
-				ifLeft: { Either.left($0.map { "\(self.symbol)\n\t: \(self.type)\n\t= \(self.value)\n: " + $0 }) },
-				ifRight: Either.right)
+		return type.checkIsType(context)
+			>> value.checkType(type, context: context)
+				.either(
+					ifLeft: { Either.left($0.map { "\(self.symbol)\n\t: \(self.type)\n\t= \(self.value)\n: " + $0 }) },
+					ifRight: Either.right)
 	}
 }
 
