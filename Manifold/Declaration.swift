@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public struct Declaration<Recur> {
+public struct Declaration<Recur>: CustomStringConvertible {
 	public init(_ symbol: Name, _ value: Expression<Recur>, _ type: Expression<Recur>) {
 		self.symbol = symbol
 		self.value = value
@@ -10,6 +10,11 @@ public struct Declaration<Recur> {
 	public let symbol: Name
 	public let value: Expression<Recur>
 	public let type: Expression<Recur>
+
+
+	public var description: String {
+		return "\(symbol) : \(type)\n\(symbol) = \(value)"
+	}
 }
 
 extension Declaration where Recur: FixpointType {
