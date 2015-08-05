@@ -2,8 +2,8 @@
 
 final class NaturalTests: XCTestCase {
 	func testZeroTypechecksAsNatural() {
-		assert(zero.checkType("Natural", context: context), ==, "Natural")
-		assert(zero.inferType(context), ==, "Natural")
+		assert(zero.out.checkType("Natural", context: context), ==, "Natural")
+		assert(zero.out.inferType(context), ==, "Natural")
 	}
 
 	func testSuccessorOfZeroTypechecksAsNatural() {
@@ -14,7 +14,7 @@ final class NaturalTests: XCTestCase {
 private let module = Expression<Term>.natural
 private let context = module.context
 
-private let zero = Term("zero").out
+private let zero = Term("zero")
 
 
 import Assertions
