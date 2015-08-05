@@ -240,6 +240,11 @@ extension Expression where Recur: FixpointType {
 		} ?? .UnitType
 	}
 
+	/// Constructs a (non-dependent) function type from `A` to `B`.
+	public static func FunctionType(a: Recur, _ b: Recur) -> Expression {
+		return .Lambda(-1, a, b)
+	}
+
 	/// Constructs a (non-dependent) function type of the elements in `types`.
 	public static func FunctionType(types: [Recur]) -> Expression {
 		return types.uncons.map { first, rest in
