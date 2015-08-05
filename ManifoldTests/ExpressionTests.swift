@@ -37,6 +37,12 @@ final class ExpressionTests: XCTestCase {
 		assert(constant, ==, .Lambda(3, Term(.Type(0)), Term(.Lambda(2, Term(.Type(0)), Term(.Lambda(1, Term(3), Term(.Lambda(0, Term(2), Term(1)))))))))
 	}
 
+	func testFunctionTypeConstruction() {
+		let expected = Expression.lambda(Term(.Type(0))) { A in Term(.lambda(Term(.FunctionType(A, A)), A, const(A))) }
+		let actual = Expression.Lambda(2, Term(.Type(0)), Term(.Lambda(1, Term(.Lambda(-1, Term(.Variable(2)), Term(.Variable(2)))), Term(.Lambda(0, Term(.Variable(2)), Term(.Variable(2)))))))
+		assert(expected, ==, actual)
+	}
+
 	func testSubstitution() {
 		assert(Expression.Lambda(0, Term(1), Term(0)).substitute(1, .Unit), ==, .Lambda(0, Term(.Unit), Term(0)))
 	}
