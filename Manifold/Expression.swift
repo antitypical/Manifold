@@ -250,7 +250,7 @@ extension Expression where Recur: FixpointType {
 		return types.uncons.map { first, rest in
 			rest.isEmpty
 				? first.out
-				: Expression.lambda(first, const(Recur(.FunctionType(Array(rest)))))
+				: Expression.FunctionType(first, Recur(.FunctionType(Array(rest))))
 			} ?? .UnitType
 	}
 
