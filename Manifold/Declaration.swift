@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public struct Declaration<Recur>: CustomStringConvertible {
+public struct Declaration<Recur>: CustomDebugStringConvertible, CustomStringConvertible {
 	public init(_ symbol: Name, _ value: Expression<Recur>, _ type: Expression<Recur>) {
 		self.symbol = symbol
 		self.value = value
@@ -10,6 +10,11 @@ public struct Declaration<Recur>: CustomStringConvertible {
 	public let symbol: Name
 	public let value: Expression<Recur>
 	public let type: Expression<Recur>
+
+
+	public var debugDescription: String {
+		return "\(symbol) : \(String(reflecting: type))\n\(symbol) = \(String(reflecting: value))"
+	}
 
 
 	public var description: String {
