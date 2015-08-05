@@ -168,7 +168,9 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomDebugStringConve
 			return "(\(a) \(b))"
 
 		case let .Lambda(variable, type, body):
-			return "λ \(renderNumerals(variable, alphabet)) : \(type) . \(body)"
+			return variable < 0
+				? "λ _ : \(type) . \(body)"
+				: "λ \(renderNumerals(variable, alphabet)) : \(type) . \(body)"
 
 		case let .Projection(term, branch):
 			return "\(term).\(branch ? 1 : 0)"
