@@ -7,13 +7,14 @@ final class NaturalTests: XCTestCase {
 	}
 
 	func testSuccessorOfZeroTypechecksAsNatural() {
-		assert(Term(.Application(Term("successor"), Term("zero"))).out.inferType(context), ==, "Natural")
+		assert(successor[zero].out.inferType(context), ==, "Natural")
 	}
 }
 
 private let module = Expression<Term>.natural
 private let context = module.context
 
+private let successor = Term("successor")
 private let zero = Term("zero")
 
 
