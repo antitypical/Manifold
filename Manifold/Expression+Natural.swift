@@ -6,7 +6,7 @@ extension Expression where Recur: FixpointType {
 		// Natural = λ tag : Boolean . if tag then Natural else Unit
 		let Natural = Binding("Natural",
 			lambda(.BooleanType) { .If($0, .Variable("Natural"), .UnitType) },
-			lambda(.BooleanType, const(.Type)))
+			.Type(0))
 
 		// zero : Natural
 		// zero = (false, ()) : Natural
