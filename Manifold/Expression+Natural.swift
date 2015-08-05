@@ -6,13 +6,13 @@ extension Expression where Recur: FixpointType {
 		// Natural = λ tag : Boolean . if tag then Natural else Unit
 		let Natural = Binding("Natural",
 			lambda(.BooleanType) { .If($0, .Variable("Natural"), .UnitType) },
-			lambda(.BooleanType, const(.Type(0))))
+			lambda(.BooleanType, const(.Type)))
 
 		// zero : Natural
 		// zero = (false, ()) : Natural
 		let zero = Binding("zero",
 			.Annotation(Recur.Product(.Boolean(false), .Unit), .Variable("Natural")),
-			.Variable("Natural"))
+			"Natural")
 
 		// successor : Natural -> Natural
 		// successor = λ n : Natural . (true, n) : Natural
