@@ -35,9 +35,10 @@ public struct Module<Recur> {
 
 extension Module where Recur: FixpointType {
 	public func typecheck() -> [Error] {
+		let environment = self.environment
 		let context = self.context
 		return lazy(definitions)
-			.map { $0.typecheck(context) }
+			.map { $0.typecheck(environment, context) }
 			.reduce([]) { $0 + ($1.left.map { [ $0 ] } ?? []) }
 	}
 }
