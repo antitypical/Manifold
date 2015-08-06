@@ -6,7 +6,7 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 	}
 
 	public func checkType(against: Expression, _ environment: Environment = [:], _ context: Context = [:]) -> Either<Error, Expression> {
-		switch (destructured, against.destructured) {
+		switch (destructured, against.weakHeadNormalForm(environment).destructured) {
 		case (.Type, .Type):
 			return .Right(against)
 
@@ -18,13 +18,13 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 		case let (.Product(tag, payload), .Lambda(i, tagType, body)):
 			return annotate(tagType.checkIsType(environment, context)
 				>> (tag.checkType(tagType, environment, context)
-				>> payload.checkType(body.substitute(i, tag).evaluate(environment), environment, context)
+				>> payload.checkType(body.substitute(i, tag).weakHeadNormalForm(environment), environment, context)
 					.map(const(against))))
 
 		default:
 			return annotate(inferType(environment, context)
 				.flatMap { inferred in
-					inferred == against
+					inferred.weakHeadNormalForm(environment) == against
 						? Either.right(inferred)
 						: Either.left("Type mismatch: expected \(self) to be of type \(against), but it was actually of type \(inferred) in context \(Expression.toString(context))")
 				})
