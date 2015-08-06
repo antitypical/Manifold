@@ -24,7 +24,7 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 		default:
 			return annotate(inferType(environment, context)
 				.flatMap { inferred in
-					inferred.weakHeadNormalForm(environment) == against
+					Expression.alphaEquivalent(inferred, against, environment)
 						? Either.right(inferred)
 						: Either.left("Type mismatch: expected \(self) to be of type \(against), but it was actually of type \(inferred) in context \(Expression.toString(context))")
 				})
