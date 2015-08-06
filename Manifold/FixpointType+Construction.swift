@@ -64,6 +64,10 @@ extension FixpointType {
 		return Self(.FunctionType(a, b))
 	}
 
+	public static func FunctionType(a: Self, _ b: Self, _ c: Self) -> Self {
+		return FunctionType(a, FunctionType(b, c))
+	}
+
 
 	public subscript (operands: Self...) -> Self {
 		return operands.reduce(self, combine: Self.Application)
