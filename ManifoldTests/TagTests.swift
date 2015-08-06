@@ -3,13 +3,13 @@
 final class TagTests: XCTestCase {
 	func testTagTypechecksAsFunction() {
 		let expected = Expression.FunctionType(Enumeration, Term(.Type(0)))
-		let actual = Tag.out.checkType(expected, context: context)
+		let actual = Tag.out.checkType(expected, environment, context)
 		assert(actual.left, ==, nil)
 		assert(actual.right, ==, expected)
 	}
 
 	func testBranchesProducesAType() {
-		let branches = Branches[Empty, Term(.lambda(Tag[Empty], const(Term(.UnitType))))].out.checkType(.Type(0), context: context)
+		let branches = Branches[Empty, Term(.lambda(Tag[Empty], const(Term(.UnitType))))].out.checkType(.Type(0), environment, context)
 		assert(branches.left, ==, nil)
 		assert(branches.right, ==, .Type(0))
 	}
