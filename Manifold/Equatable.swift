@@ -36,7 +36,7 @@ extension Expression where Recur: FixpointType {
 		let recur: (Expression, Expression) -> Bool = {
 			alphaEquivalent($0, $1, environment)
 		}
-		switch (left.weakHeadNormalForm(environment).destructured, right.weakHeadNormalForm(environment).destructured) {
+		switch (left.weakHeadNormalForm(environment, shouldRecur: false).destructured, right.weakHeadNormalForm(environment, shouldRecur: false).destructured) {
 		case (.Type, .Type), (.Unit, .Unit), (.UnitType, .UnitType), (.BooleanType, .BooleanType):
 			return true
 
