@@ -329,6 +329,66 @@ extension Expression where Recur: FixpointType {
 				otherwise: const(Set()))
 		} (Recur(self))
 	}
+
+
+	// MARK: Weak-head normal form
+
+	public func weakHeadNormalForm(environment: Environment) -> Expression {
+		return weakHeadNormalForm(environment, shouldRecur: true)
+	}
+
+	private func weakHeadNormalForm(environment: Environment, shouldRecur: Bool) -> Expression {
+		let unfold: Expression -> Expression = {
+			$0.weakHeadNormalForm(environment, shouldRecur: shouldRecur)
+		}
+		let done: Expression -> Expression = {
+			$0.weakHeadNormalForm(environment, shouldRecur: false)
+		}
+		switch destructured {
+		case let .Variable(name) where shouldRecur:
+			return environment[name].map(done) ?? self
+
+		case let .Variable(name):
+			return environment[name] ?? self
+
+		case let .Application(t1, t2):
+			let t1 = unfold(t1)
+			switch t1 {
+			case let .Lambda(i, _, body):
+				return unfold(body.out.substitute(i, t2))
+
+			case let .Variable(name) where shouldRecur:
+				let t2 = unfold(t2)
+				return environment[name].map(done).map { .Application(Recur($0), Recur(t2)) } ?? .Application(Recur(t1), Recur(t2))
+
+			default:
+				return .Application(Recur(t1), Recur(t2))
+			}
+
+		case let .Projection(a, b):
+			let a = unfold(a)
+			switch a {
+			case let .Product(t1, t2):
+				return unfold(b ? t1.out : t2.out)
+
+			default:
+				return .Projection(Recur(a), b)
+			}
+
+		case let .If(condition, then, `else`):
+			let condition = unfold(condition)
+			switch condition {
+			case let .Boolean(flag):
+				return unfold(flag ? then : `else`)
+
+			default:
+				return .If(Recur(condition), Recur(then), Recur(`else`))
+			}
+
+		default:
+			return self
+		}
+	}
 }
 
 
