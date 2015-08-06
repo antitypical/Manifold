@@ -245,6 +245,11 @@ extension Expression where Recur: FixpointType {
 		return .Lambda(-1, a, b)
 	}
 
+	/// Constructs a (non-dependent) function type from `A` to `B` to `C`.
+	public static func FunctionType(a: Recur, _ b: Recur, _ c: Recur) -> Expression {
+		return .FunctionType(a, Recur(FunctionType(b, c)))
+	}
+
 
 	// MARK: Higher-order construction
 
