@@ -2,9 +2,7 @@
 
 final class ListTests: XCTestCase {
 	func testListTypechecksAsAHigherOrderType() {
-		let kind = Expression<Term>.Variable("List").inferType(environment, context)
-		assert(kind.left, ==, nil)
-		assert(kind.right, ==, Expression<Term>.lambda(.Type(0), const(.Type(0))))
+		assert(Expression<Term>.Variable("List").inferType(environment, context), ==, Expression<Term>.lambda(.Type(0), const(.Type(0))))
 	}
 
 	func testEmptyListEliminatesWithSecondArgumentToUncons() {
