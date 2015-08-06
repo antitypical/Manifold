@@ -355,7 +355,7 @@ extension Expression where Recur: FixpointType {
 
 			case let .Variable(name) where shouldRecur:
 				let t2 = unfold(t2)
-				return environment[name].map(done).map { .Application(Recur($0), Recur(t2)) } ?? .Application(Recur(t1), Recur(t2))
+				return environment[name].map { .Application(Recur($0), Recur(t2)) }.map(done) ?? .Application(Recur(t1), Recur(t2))
 
 			default:
 				return .Application(Recur(t1), Recur(t2))
