@@ -40,7 +40,7 @@ extension Expression where Recur: FixpointType, Recur: Equatable {
 		case let .Application(a, b):
 			return annotate(a.inferType(environment, context)
 				.flatMap { A in
-					A.analysis(
+					A.weakHeadNormalForm(environment).analysis(
 						ifLambda: { i, type, body in
 							b.checkType(type.out, environment, context)
 								.map { _ in body.out.substitute(i, b) }
