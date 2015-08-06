@@ -333,11 +333,7 @@ extension Expression where Recur: FixpointType {
 
 	// MARK: Weak-head normal form
 
-	public func weakHeadNormalForm(environment: Environment) -> Expression {
-		return weakHeadNormalForm(environment, shouldRecur: true)
-	}
-
-	private func weakHeadNormalForm(environment: Environment, shouldRecur: Bool) -> Expression {
+	public func weakHeadNormalForm(environment: Environment, shouldRecur: Bool = true) -> Expression {
 		let unfold: Expression -> Expression = {
 			$0.weakHeadNormalForm(environment, shouldRecur: shouldRecur)
 		}
