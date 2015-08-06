@@ -1,25 +1,51 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public struct Declaration<Recur>: CustomDebugStringConvertible, CustomStringConvertible {
+public enum Declaration<Recur>: CustomDebugStringConvertible, CustomStringConvertible {
 	public init(_ symbol: String, type: Expression<Recur>, value: Expression<Recur>) {
-		self.symbol = symbol
-		self.type = type
-		self.value = value
+		self = .Definition(symbol, type, value)
 	}
 
-	public let symbol: String
-	public let type: Expression<Recur>
-	public let value: Expression<Recur>
+
+	public var symbol: String {
+		switch self {
+		case let .Definition(symbol, _, _):
+			return symbol
+		}
+	}
+
+	public var type: Expression<Recur> {
+		switch self {
+		case let .Definition(_, type, _):
+			return type
+		}
+	}
+
+	public var value: Expression<Recur> {
+		switch self {
+		case let .Definition(_, _, value):
+			return value
+		}
+	}
 
 
 	public var debugDescription: String {
-		return "\(symbol) : \(String(reflecting: type))\n\(symbol) = \(String(reflecting: value))"
+		switch self {
+		case let .Definition(symbol, type, value):
+			return "\(symbol) : \(String(reflecting: type))\n"
+				+ "\(symbol) = \(String(reflecting: value))"
+		}
 	}
-
 
 	public var description: String {
-		return "\(symbol) : \(type)\n\(symbol) = \(value)"
+		switch self {
+		case let .Definition(symbol, type, value):
+			return "\(symbol) : \(type)\n"
+				+ "\(symbol) = \(value)"
+		}
 	}
+
+
+	case Definition(String, Expression<Recur>, Expression<Recur>)
 }
 
 extension Declaration where Recur: FixpointType {
