@@ -32,11 +32,21 @@ public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Re
 }
 
 extension Expression where Recur: FixpointType {
-	public static func alphaEquivalent(left: Expression, _ right: Expression, _ environment: Environment) -> Bool {
+	public static func alphaEquivalent(left: Expression, _ right: Expression, _ environment: Environment, var _ visited: Set<Name> = []) -> Bool {
 		let recur: (Expression, Expression) -> Bool = {
-			alphaEquivalent($0, $1, environment)
+			alphaEquivalent($0, $1, environment, visited)
 		}
-		switch (left.weakHeadNormalForm(environment, shouldRecur: false).destructured, right.weakHeadNormalForm(environment, shouldRecur: false).destructured) {
+
+		let normalize: (Expression, Set<Name>) -> (Expression, Set<Name>) = { (expression, var visited) in
+			(expression.weakHeadNormalForm(environment, shouldRecur: false, visited: &visited), visited)
+		}
+
+		let (left, lnames) = normalize(left, visited)
+		let (right, rnames) = normalize(right, visited)
+		visited.unionInPlace(lnames)
+		visited.unionInPlace(rnames)
+
+		switch (left.destructured, right.destructured) {
 		case (.Type, .Type), (.Unit, .Unit), (.UnitType, .UnitType), (.BooleanType, .BooleanType):
 			return true
 
