@@ -389,6 +389,47 @@ extension Expression where Recur: FixpointType {
 			return self
 		}
 	}
+
+
+	static func alphaEquivalent(left: Expression, _ right: Expression, _ environment: Environment) -> Bool {
+		let recur: (Expression, Expression) -> Bool = {
+			alphaEquivalent($0, $1, environment)
+		}
+		switch (left.weakHeadNormalForm(environment).destructured, right.weakHeadNormalForm(environment).destructured) {
+		case (.Type, .Type), (.Unit, .Unit), (.UnitType, .UnitType), (.BooleanType, .BooleanType):
+			return true
+
+		case let (.Variable(a), .Variable(b)):
+			return a == b
+
+		case let (.Application(a1, a2), .Application(b1, b2)):
+			return recur(a1, b1) && recur(a2, b2)
+
+		case let (.Lambda(_, a1, a2), .Lambda(_, b1, b2)):
+			return recur(a1, b1) && recur(a2, b2)
+
+		case let (.Projection(a1, a2), .Projection(b1, b2)):
+			return recur(a1, b1) && a2 == b2
+
+		case let (.Product(a1, a2), .Product(b1, b2)):
+			return recur(a1, b1) && recur(a2, b2)
+
+		case let (.Boolean(a), .Boolean(b)):
+			return a == b
+
+		case let (.If(a1, a2, a3), .If(b1, b2, b3)):
+			return recur(a1, b1) && recur(a2, b2) && recur(a3, b3)
+
+		case let (.Annotation(a1, a2), .Annotation(b1, b2)):
+			return recur(a1, b1) && recur(a2, b2)
+
+		case let (.Axiom(_, a), .Axiom(_, b)):
+			return recur(a, b)
+
+		default:
+			return false
+		}
+	}
 }
 
 
