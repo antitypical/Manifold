@@ -7,11 +7,11 @@ extension Expression where Recur: FixpointType {
 			value: lambda(.Type) { A in Recur.lambda(A, A, const(A)) })
 
 		let `true` = Declaration("true",
-			type: "Boolean",
+			type: Boolean.ref.out,
 			value: lambda(.Type) { A in Recur.lambda(A, A) { a, _ in a } })
 
 		let `false` = Declaration("false",
-			type: "Boolean",
+			type: Boolean.ref.out,
 			value: lambda(.Type) { A in Recur.lambda(A, A) { _, a in a } })
 
 		return Module([ Boolean, `true`, `false` ])
