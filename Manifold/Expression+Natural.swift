@@ -5,20 +5,20 @@ extension Expression where Recur: FixpointType {
 		// Natural : Type
 		// Natural = λ tag : Boolean . if tag then Natural else Unit
 		let Natural = Declaration("Natural",
-			lambda(.Type) { A in Recur.lambda(.FunctionType(A, A), A, const(A)) },
-			.Type(0))
+			type: .Type(0),
+			value: lambda(.Type) { A in Recur.lambda(.FunctionType(A, A), A, const(A)) })
 
 		// zero : Natural
 		// zero = (false, ()) : Natural
 		let zero = Declaration("zero",
-			lambda(.Type) { A in Recur.lambda(.FunctionType(A, A), A) { f, s in s } },
-			"Natural")
+			type: "Natural",
+			value: lambda(.Type) { A in Recur.lambda(.FunctionType(A, A), A) { f, s in s } })
 
 		// successor : Natural -> Natural
 		// successor = λ n : Natural . (true, n) : Natural
 		let successor = Declaration("successor",
-			lambda(Recur("Natural")) { n in Recur.lambda(.Type) { A in Recur.lambda(.FunctionType(A, A), A) { f, s in f[n[A, f, s]] } } },
-			FunctionType(Recur("Natural"), Recur("Natural")))
+			type: FunctionType(Recur("Natural"), Recur("Natural")),
+			value: lambda(Recur("Natural")) { n in Recur.lambda(.Type) { A in Recur.lambda(.FunctionType(A, A), A) { f, s in f[n[A, f, s]] } } })
 
 		return Module([ Natural, zero, successor ])
 	}

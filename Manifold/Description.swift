@@ -24,8 +24,8 @@ extension Expression where Recur: FixpointType {
 		// End : λ I : Type . λ _ : I . Description I
 		// End = λ I : Type . λ i : I . (:End, i) : Description I
 		let end = Declaration("End",
-			lambda(.Type) { I in Recur.lambda(I) { i in .Annotation(.Product(endTag, i), Description[I]) } },
-			lambda(.Type) { I in Recur.lambda(I, const(Description[I])) })
+			type: lambda(.Type) { I in Recur.lambda(I, const(Description[I])) },
+			value: lambda(.Type) { I in Recur.lambda(I) { i in .Annotation(.Product(endTag, i), Description[I]) } })
 
 		return Module([ Expression.list, tag ], [
 			end,

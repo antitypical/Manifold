@@ -1,15 +1,15 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public struct Declaration<Recur>: CustomDebugStringConvertible, CustomStringConvertible {
-	public init(_ symbol: String, _ value: Expression<Recur>, _ type: Expression<Recur>) {
+	public init(_ symbol: String, type: Expression<Recur>, value: Expression<Recur>) {
 		self.symbol = symbol
-		self.value = value
 		self.type = type
+		self.value = value
 	}
 
 	public let symbol: String
-	public let value: Expression<Recur>
 	public let type: Expression<Recur>
+	public let value: Expression<Recur>
 
 
 	public var debugDescription: String {
