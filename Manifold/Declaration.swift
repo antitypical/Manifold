@@ -23,6 +23,10 @@ public struct Declaration<Recur>: CustomDebugStringConvertible, CustomStringConv
 }
 
 extension Declaration where Recur: FixpointType {
+	public var ref: Recur {
+		return Recur(.Variable(Name.Global(symbol)))
+	}
+
 	public func typecheck(environment: Expression<Recur>.Environment, _ context: Expression<Recur>.Context) -> Either<Error, Expression<Recur>> {
 		return type.checkIsType(environment, context)
 			>> value.checkType(type.evaluate(environment), environment, context)
