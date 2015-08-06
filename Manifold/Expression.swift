@@ -334,17 +334,24 @@ extension Expression where Recur: FixpointType {
 	// MARK: Weak-head normal form
 
 	public func weakHeadNormalForm(environment: Environment, shouldRecur: Bool = true) -> Expression {
+		var visited: Set<Name> = []
+		return weakHeadNormalForm(environment, shouldRecur: shouldRecur, visited: &visited)
+	}
+
+	public func weakHeadNormalForm(environment: Environment, shouldRecur: Bool = true, inout visited: Set<Name>) -> Expression {
 		let unfold: Expression -> Expression = {
-			$0.weakHeadNormalForm(environment, shouldRecur: shouldRecur)
+			$0.weakHeadNormalForm(environment, shouldRecur: shouldRecur, visited: &visited)
 		}
 		let done: Expression -> Expression = {
-			$0.weakHeadNormalForm(environment, shouldRecur: false)
+			$0.weakHeadNormalForm(environment, shouldRecur: false, visited: &visited)
 		}
 		switch destructured {
-		case let .Variable(name) where shouldRecur:
+		case let .Variable(name) where shouldRecur && !visited.contains(name):
+			visited.insert(name)
 			return environment[name].map(done) ?? self
 
-		case let .Variable(name):
+		case let .Variable(name) where !visited.contains(name):
+			visited.insert(name)
 			return environment[name] ?? self
 
 		case let .Application(t1, t2):
@@ -354,6 +361,7 @@ extension Expression where Recur: FixpointType {
 				return unfold(body.out.substitute(i, t2))
 
 			case let .Variable(name) where shouldRecur:
+				visited.insert(name)
 				let t2 = unfold(t2)
 				return environment[name].map { .Application(Recur($0), Recur(t2)) }.map(done) ?? .Application(Recur(t1), Recur(t2))
 
