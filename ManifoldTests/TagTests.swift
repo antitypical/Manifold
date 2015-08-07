@@ -1,6 +1,10 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 final class TagTests: XCTestCase {
+	func testEmptyEnumerationYieldsEmptyTag() {
+		assert(Manifold.Tag.tags([]), ==, [])
+	}
+
 	func testTagTypechecksAsFunction() {
 		let expected = Expression.FunctionType(Enumeration, Term(.Type(0)))
 		let actual = Tag.out.checkType(expected, environment, context)
