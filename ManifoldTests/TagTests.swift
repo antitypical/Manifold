@@ -13,6 +13,14 @@ final class TagTests: XCTestCase {
 		assert(Manifold.Tag.tags([ "true", "false" ]), ==, [ Manifold.Tag.Here("true", [ "false" ]), Manifold.Tag.There("true", Manifold.Tag.Here("false", [])) ])
 	}
 
+	func testNLabelsMapToNTags() {
+		assert(Manifold.Tag.tags([ "a", "b", "c" ]), ==, [
+			Manifold.Tag.Here("a", [ "b", "c" ]),
+			Manifold.Tag.There("a", Manifold.Tag.Here("b", [ "c" ])),
+			Manifold.Tag.There("a", Manifold.Tag.There("b", Manifold.Tag.Here("c", []))),
+		])
+	}
+
 	func testTagTypechecksAsFunction() {
 		let expected = Expression.FunctionType(Enumeration, Term(.Type(0)))
 		let actual = Tag.out.checkType(expected, environment, context)
