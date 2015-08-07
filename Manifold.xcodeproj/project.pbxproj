@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D4012F981B753A2A0070B636 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4012F971B753A2A0070B636 /* Tag.swift */; };
 		D415A0991B51EA8B001C15E5 /* Expression+List.swift in Sources */ = {isa = PBXBuildFile; fileRef = D415A0981B51EA8B001C15E5 /* Expression+List.swift */; };
 		D415A09B1B51EFDE001C15E5 /* Term+Construction.swift in Sources */ = {isa = PBXBuildFile; fileRef = D415A09A1B51EFDE001C15E5 /* Term+Construction.swift */; };
 		D440FCBD1B6BBE1400C56B19 /* Expression+Evaluation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCBC1B6BBE1400C56B19 /* Expression+Evaluation.swift */; };
@@ -71,6 +72,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D4012F971B753A2A0070B636 /* Tag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		D415A0981B51EA8B001C15E5 /* Expression+List.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+List.swift"; sourceTree = "<group>"; };
 		D415A09A1B51EFDE001C15E5 /* Term+Construction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Term+Construction.swift"; sourceTree = "<group>"; };
 		D440FCBC1B6BBE1400C56B19 /* Expression+Evaluation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+Evaluation.swift"; sourceTree = "<group>"; };
@@ -188,6 +190,7 @@
 				D4E829181B521BFC00713E60 /* Declaration.swift */,
 				D440FCC81B6C76B400C56B19 /* Location.swift */,
 				D440FCCC1B6E6E9100C56B19 /* Expression+Weaving.swift */,
+				D4012F971B753A2A0070B636 /* Tag.swift */,
 				D4B3FBEE1A83515800DA2AC3 /* Supporting Files */,
 			);
 			path = Manifold;
@@ -365,6 +368,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4012F981B753A2A0070B636 /* Tag.swift in Sources */,
 				D440FCC71B6C1D2500C56B19 /* Either.swift in Sources */,
 				D415A09B1B51EFDE001C15E5 /* Term+Construction.swift in Sources */,
 				D440FCBD1B6BBE1400C56B19 /* Expression+Evaluation.swift in Sources */,
