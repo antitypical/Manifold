@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D415A0991B51EA8B001C15E5 /* Expression+List.swift in Sources */ = {isa = PBXBuildFile; fileRef = D415A0981B51EA8B001C15E5 /* Expression+List.swift */; };
-		D415A09B1B51EFDE001C15E5 /* FixpointType+Construction.swift in Sources */ = {isa = PBXBuildFile; fileRef = D415A09A1B51EFDE001C15E5 /* FixpointType+Construction.swift */; };
+		D415A09B1B51EFDE001C15E5 /* Term+Construction.swift in Sources */ = {isa = PBXBuildFile; fileRef = D415A09A1B51EFDE001C15E5 /* Term+Construction.swift */; };
 		D440FCBD1B6BBE1400C56B19 /* Expression+Evaluation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCBC1B6BBE1400C56B19 /* Expression+Evaluation.swift */; };
 		D440FCBF1B6BBE7300C56B19 /* Expression+Substitution.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCBE1B6BBE7300C56B19 /* Expression+Substitution.swift */; };
 		D440FCC11B6BBF0D00C56B19 /* Expression+Inference.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCC01B6BBF0D00C56B19 /* Expression+Inference.swift */; };
@@ -22,7 +22,7 @@
 		D4809FBF1AF6CD720084B8FE /* Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4809FBE1AF6CD720084B8FE /* Equatable.swift */; };
 		D484903A1B29352600F249F7 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D48490391B29352600F249F7 /* CoreFoundation.framework */; };
 		D484903C1B2A40E800F249F7 /* EvaluationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D484903B1B2A40E800F249F7 /* EvaluationTests.swift */; };
-		D4A31B2A1AA366EC00B3FC68 /* FixpointType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A31B291AA366EC00B3FC68 /* FixpointType.swift */; };
+		D4A31B2A1AA366EC00B3FC68 /* TermType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A31B291AA366EC00B3FC68 /* TermType.swift */; };
 		D4AAE5521B5B24D0004E581F /* Expression+Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AAE5511B5B24D0004E581F /* Expression+Tag.swift */; };
 		D4B3FBF11A83515800DA2AC3 /* Manifold.h in Headers */ = {isa = PBXBuildFile; fileRef = D4B3FBF01A83515800DA2AC3 /* Manifold.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4B3FBFC1A83515800DA2AC3 /* Manifold.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4B3FBEB1A83515800DA2AC3 /* Manifold.framework */; };
@@ -72,7 +72,7 @@
 
 /* Begin PBXFileReference section */
 		D415A0981B51EA8B001C15E5 /* Expression+List.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+List.swift"; sourceTree = "<group>"; };
-		D415A09A1B51EFDE001C15E5 /* FixpointType+Construction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FixpointType+Construction.swift"; sourceTree = "<group>"; };
+		D415A09A1B51EFDE001C15E5 /* Term+Construction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Term+Construction.swift"; sourceTree = "<group>"; };
 		D440FCBC1B6BBE1400C56B19 /* Expression+Evaluation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+Evaluation.swift"; sourceTree = "<group>"; };
 		D440FCBE1B6BBE7300C56B19 /* Expression+Substitution.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+Substitution.swift"; sourceTree = "<group>"; };
 		D440FCC01B6BBF0D00C56B19 /* Expression+Inference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+Inference.swift"; sourceTree = "<group>"; };
@@ -86,7 +86,7 @@
 		D4809FBE1AF6CD720084B8FE /* Equatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Equatable.swift; sourceTree = "<group>"; };
 		D48490391B29352600F249F7 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		D484903B1B2A40E800F249F7 /* EvaluationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EvaluationTests.swift; sourceTree = "<group>"; };
-		D4A31B291AA366EC00B3FC68 /* FixpointType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FixpointType.swift; sourceTree = "<group>"; };
+		D4A31B291AA366EC00B3FC68 /* TermType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TermType.swift; sourceTree = "<group>"; };
 		D4AAE5511B5B24D0004E581F /* Expression+Tag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+Tag.swift"; sourceTree = "<group>"; };
 		D4B3FBEB1A83515800DA2AC3 /* Manifold.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Manifold.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4B3FBEF1A83515800DA2AC3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -181,8 +181,8 @@
 				D440FCC01B6BBF0D00C56B19 /* Expression+Inference.swift */,
 				D440FCC21B6C00C400C56B19 /* Expression+Checking.swift */,
 				D4FB02D71B71D0500090E764 /* Modules */,
-				D4A31B291AA366EC00B3FC68 /* FixpointType.swift */,
-				D415A09A1B51EFDE001C15E5 /* FixpointType+Construction.swift */,
+				D4A31B291AA366EC00B3FC68 /* TermType.swift */,
+				D415A09A1B51EFDE001C15E5 /* Term+Construction.swift */,
 				D4EDEF561AFEDEC5001B9A1D /* Name.swift */,
 				D4E829161B521B3400713E60 /* Module.swift */,
 				D4E829181B521BFC00713E60 /* Declaration.swift */,
@@ -366,7 +366,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D440FCC71B6C1D2500C56B19 /* Either.swift in Sources */,
-				D415A09B1B51EFDE001C15E5 /* FixpointType+Construction.swift in Sources */,
+				D415A09B1B51EFDE001C15E5 /* Term+Construction.swift in Sources */,
 				D440FCBD1B6BBE1400C56B19 /* Expression+Evaluation.swift in Sources */,
 				D4E289A21B641B0B0070389F /* Comparable.swift in Sources */,
 				D4E289A41B641FDA0070389F /* String.swift in Sources */,
@@ -385,7 +385,7 @@
 				D4E8289D1B5202BB00713E60 /* StringLiteralConvertible.swift in Sources */,
 				D4EDEF571AFEDEC5001B9A1D /* Name.swift in Sources */,
 				D440FCC91B6C76B400C56B19 /* Location.swift in Sources */,
-				D4A31B2A1AA366EC00B3FC68 /* FixpointType.swift in Sources */,
+				D4A31B2A1AA366EC00B3FC68 /* TermType.swift in Sources */,
 				D4E829191B521BFC00713E60 /* Declaration.swift in Sources */,
 				D440FCC11B6BBF0D00C56B19 /* Expression+Inference.swift in Sources */,
 				D4DE7E731AF66E25004D0CB9 /* Term.swift in Sources */,

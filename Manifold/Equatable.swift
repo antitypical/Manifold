@@ -31,7 +31,7 @@ public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Re
 	}
 }
 
-extension Expression where Recur: FixpointType {
+extension Expression where Recur: TermType {
 	public static func alphaEquivalent(left: Expression, _ right: Expression, _ environment: Environment, var _ visited: Set<Name> = []) -> Bool {
 		let recur: (Expression, Expression) -> Bool = {
 			alphaEquivalent($0, $1, environment, visited)
@@ -106,8 +106,8 @@ public func == (left: Name, right: Name) -> Bool {
 }
 
 
-// MARK: FixpointType
+// MARK: TermType
 
-public func == <Fix: FixpointType> (left: Fix, right: Fix) -> Bool {
+public func == <Fix: TermType> (left: Fix, right: Fix) -> Bool {
 	return left.out == right.out
 }

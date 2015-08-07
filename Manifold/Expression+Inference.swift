@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-extension Expression where Recur: FixpointType, Recur: Equatable {
+extension Expression where Recur: TermType, Recur: Equatable {
 	public typealias Context = [Name: Expression]
 
 	public func inferType(environment: Environment = [:], _ context: Context = [:]) -> Either<Error, Expression> {

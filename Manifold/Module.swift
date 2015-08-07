@@ -33,7 +33,7 @@ public struct Module<Recur> {
 	}
 }
 
-extension Module where Recur: FixpointType {
+extension Module where Recur: TermType {
 	public func typecheck() -> [Error] {
 		let environment = self.environment
 		let context = self.context

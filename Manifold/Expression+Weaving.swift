@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-extension Expression where Recur: FixpointType {
+extension Expression where Recur: TermType {
 	public func explore() -> Location<Expression> {
 		func weave(expression: Expression) -> Location<Expression>.Unweave {
 			switch expression {

@@ -48,7 +48,7 @@ public enum Declaration<Recur>: CustomDebugStringConvertible, CustomStringConver
 	case Definition(String, Expression<Recur>, Expression<Recur>)
 }
 
-extension Declaration where Recur: FixpointType {
+extension Declaration where Recur: TermType {
 	public var ref: Recur {
 		return Recur(.Variable(Name.Global(symbol)))
 	}

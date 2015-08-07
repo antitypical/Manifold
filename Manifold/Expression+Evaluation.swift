@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-extension Expression where Recur: FixpointType {
+extension Expression where Recur: TermType {
 	public typealias Environment = [Name: Expression]
 
 	public func evaluate(environment: Environment = [:]) -> Expression {

@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-extension Expression where Recur: FixpointType {
+extension Expression where Recur: TermType {
 	public static var tag: Module<Recur> {
 		let Tag = Recur("Tag")
 		let Enumeration = Recur("Enumeration")

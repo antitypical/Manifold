@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-extension Expression where Recur: FixpointType {
+extension Expression where Recur: TermType {
 	func substitute(i: Int, _ expression: Expression) -> Expression {
 		return cata { t in
 			Recur(t.analysis(

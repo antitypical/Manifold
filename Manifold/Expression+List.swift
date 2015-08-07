@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-extension Expression where Recur: FixpointType {
+extension Expression where Recur: TermType {
 	public static var list: Module<Recur> {
 		// List : λ A : Type . Type
 		// List = λ A : Type . λ tag : Boolean . if tag then (A, List A) else Unit

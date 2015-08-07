@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-extension FixpointType {
+extension TermType {
 	// MARK: First-order construction
 
 	public static var Unit: Self {

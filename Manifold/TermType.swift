@@ -1,11 +1,11 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public protocol FixpointType: Equatable {
+public protocol TermType: Equatable {
 	init(_: () -> Expression<Self>)
 	var out: Expression<Self> { get }
 }
 
-extension FixpointType {
+extension TermType {
 	public init(_ expression: Expression<Self>) {
 		self.init { expression }
 	}
@@ -16,19 +16,19 @@ extension FixpointType {
 }
 
 
-// MARK: - Fix: FixpointType over Expression<Fix>
+// MARK: - Fix: TermType over Expression<Fix>
 
-public func cata<T, Fix: FixpointType>(f: Expression<T> -> T)(_ term: Fix) -> T {
+public func cata<T, Fix: TermType>(f: Expression<T> -> T)(_ term: Fix) -> T {
 	return term |> (Fix.out >>> (map <| cata(f)) >>> f)
 }
 
-public func para<T, Fix: FixpointType>(f: Expression<(Fix, T)> -> T)(_ term: Fix) -> T {
+public func para<T, Fix: TermType>(f: Expression<(Fix, T)> -> T)(_ term: Fix) -> T {
 	let fanout = { ($0, para(f)($0)) }
 	return term |> (Fix.out >>> (map <| fanout) >>> f)
 }
 
 
-public func ana<T, Fix: FixpointType>(f: T -> Expression<T>)(_ seed: T) -> Fix {
+public func ana<T, Fix: TermType>(f: T -> Expression<T>)(_ seed: T) -> Fix {
 	return seed |> (Fix.init <<< (map <| ana(f)) <<< f)
 }
 

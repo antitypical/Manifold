@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-extension Expression where Recur: FixpointType, Recur: Equatable {
+extension Expression where Recur: TermType, Recur: Equatable {
 	public func checkIsType(environment: Environment, _ context: Context) -> Either<Error, Expression> {
 		return checkType(.Type(0), environment, context)
 	}

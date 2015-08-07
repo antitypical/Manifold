@@ -226,7 +226,7 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomDebugStringConve
 	case Axiom(Any, Recur)
 }
 
-extension Expression where Recur: FixpointType {
+extension Expression where Recur: TermType {
 	// MARK: First-order construction
 
 	/// Constructs a sum type of the elements in `terms`.

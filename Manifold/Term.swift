@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public struct Term: CustomDebugStringConvertible, CustomStringConvertible, FixpointType {
+public struct Term: CustomDebugStringConvertible, CustomStringConvertible, TermType {
 	private var expression: () -> Expression<Term>
 
 
@@ -18,7 +18,7 @@ public struct Term: CustomDebugStringConvertible, CustomStringConvertible, Fixpo
 	}
 
 
-	// MARK: FixpointType
+	// MARK: TermType
 
 	public init(_ expression: () -> Expression<Term>) {
 		self.expression = expression
@@ -30,7 +30,7 @@ public struct Term: CustomDebugStringConvertible, CustomStringConvertible, Fixpo
 }
 
 
-// This would be an extension on `FixpointType` if protocol extensions could have inheritance clauses.
+// This would be an extension on `TermType` if protocol extensions could have inheritance clauses.
 extension Term: BooleanLiteralConvertible, StringLiteralConvertible {
 	public init(booleanLiteral: Bool) {
 		self = .Boolean(booleanLiteral)
