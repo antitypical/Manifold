@@ -9,6 +9,10 @@ final class TagTests: XCTestCase {
 		assert(Manifold.Tag.tags([ "unit" ]), ==, [ Manifold.Tag.Here("unit", []) ])
 	}
 
+	func testLaterLabelsMapToThere() {
+		assert(Manifold.Tag.tags([ "true", "false" ]), ==, [ Manifold.Tag.Here("true", [ "false" ]), Manifold.Tag.There("true", Manifold.Tag.Here("false", [])) ])
+	}
+
 	func testTagTypechecksAsFunction() {
 		let expected = Expression.FunctionType(Enumeration, Term(.Type(0)))
 		let actual = Tag.out.checkType(expected, environment, context)
