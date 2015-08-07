@@ -115,7 +115,7 @@ public func == <Fix: TermType> (left: Fix, right: Fix) -> Bool {
 
 // MARK: Tag
 
-public func == <Term: TermType> (left: Tag<Term>, right: Tag<Term>) -> Bool {
+public func == (left: Tag, right: Tag) -> Bool {
 	switch (left, right) {
 	case let (.Here(x, xs), .Here(y, ys)):
 		return x == y && xs == ys
