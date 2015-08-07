@@ -4,7 +4,7 @@ extension CollectionType {
 	public var uncons: (first: SubSequence._Element, rest: SubSequence)? {
 		if !isEmpty {
 			let some = self[startIndex..<advance(startIndex, 1)]
-			return (first: some[some.startIndex], rest: dropFirst(self))
+			return (first: some[some.startIndex], rest: dropFirst())
 		}
 		return nil
 	}
@@ -12,7 +12,7 @@ extension CollectionType {
 	public var rest: SubSequence {
 		return isEmpty
 			? self[startIndex..<endIndex]
-			: dropFirst(self)
+			: dropFirst()
 	}
 }
 
