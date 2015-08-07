@@ -5,7 +5,7 @@ final class TagTests: XCTestCase {
 		assert(Manifold.Tag.tags([]), ==, [])
 	}
 
-	func testEnumeratedLabelsMapToHereCases() {
+	func testFirstLabelMapsToHere() {
 		assert(Manifold.Tag.tags([ "unit" ]), ==, [ Manifold.Tag.Here("unit", []) ])
 	}
 
