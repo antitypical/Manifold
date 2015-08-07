@@ -5,6 +5,10 @@ final class TagTests: XCTestCase {
 		assert(Manifold.Tag.tags([]), ==, [])
 	}
 
+	func testEnumeratedLabelsMapToHereCases() {
+		assert(Manifold.Tag.tags([ "unit" ]), ==, [ Manifold.Tag.Here("unit", []) ])
+	}
+
 	func testTagTypechecksAsFunction() {
 		let expected = Expression.FunctionType(Enumeration, Term(.Type(0)))
 		let actual = Tag.out.checkType(expected, environment, context)
