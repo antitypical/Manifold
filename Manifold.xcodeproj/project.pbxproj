@@ -17,9 +17,6 @@
 		D440FCC31B6C00C400C56B19 /* Expression+Checking.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCC21B6C00C400C56B19 /* Expression+Checking.swift */; };
 		D440FCC51B6C100500C56B19 /* Assertions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCC41B6C100500C56B19 /* Assertions.swift */; };
 		D440FCC71B6C1D2500C56B19 /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCC61B6C1D2500C56B19 /* Either.swift */; };
-		D440FCC91B6C76B400C56B19 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCC81B6C76B400C56B19 /* Location.swift */; };
-		D440FCCD1B6E6E9100C56B19 /* Expression+Weaving.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCCC1B6E6E9100C56B19 /* Expression+Weaving.swift */; };
-		D440FCCF1B6E73B900C56B19 /* LocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCCE1B6E73B900C56B19 /* LocationTests.swift */; };
 		D4809FBD1AF6BD400084B8FE /* ExpressionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4809FBC1AF6BD400084B8FE /* ExpressionTests.swift */; };
 		D4809FBF1AF6CD720084B8FE /* Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4809FBE1AF6CD720084B8FE /* Equatable.swift */; };
 		D484903A1B29352600F249F7 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D48490391B29352600F249F7 /* CoreFoundation.framework */; };
@@ -83,9 +80,6 @@
 		D440FCC21B6C00C400C56B19 /* Expression+Checking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+Checking.swift"; sourceTree = "<group>"; };
 		D440FCC41B6C100500C56B19 /* Assertions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Assertions.swift; sourceTree = "<group>"; };
 		D440FCC61B6C1D2500C56B19 /* Either.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Either.swift; sourceTree = "<group>"; };
-		D440FCC81B6C76B400C56B19 /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
-		D440FCCC1B6E6E9100C56B19 /* Expression+Weaving.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+Weaving.swift"; sourceTree = "<group>"; };
-		D440FCCE1B6E73B900C56B19 /* LocationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationTests.swift; sourceTree = "<group>"; };
 		D4809FBC1AF6BD400084B8FE /* ExpressionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpressionTests.swift; sourceTree = "<group>"; };
 		D4809FBE1AF6CD720084B8FE /* Equatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Equatable.swift; sourceTree = "<group>"; };
 		D48490391B29352600F249F7 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
@@ -190,8 +184,6 @@
 				D4EDEF561AFEDEC5001B9A1D /* Name.swift */,
 				D4E829161B521B3400713E60 /* Module.swift */,
 				D4E829181B521BFC00713E60 /* Declaration.swift */,
-				D440FCC81B6C76B400C56B19 /* Location.swift */,
-				D440FCCC1B6E6E9100C56B19 /* Expression+Weaving.swift */,
 				D4012F971B753A2A0070B636 /* Tag.swift */,
 				D4B3FBEE1A83515800DA2AC3 /* Supporting Files */,
 			);
@@ -233,7 +225,6 @@
 				D4DF444F1B2DB043008DCA5D /* TypecheckingTests.swift */,
 				D4E8291E1B54285700713E60 /* ListTests.swift */,
 				D4E01E431B5BF3A1003BAB46 /* TagTests.swift */,
-				D440FCCE1B6E73B900C56B19 /* LocationTests.swift */,
 				D4FB02DA1B71D1F10090E764 /* BooleanTests.swift */,
 				D4012F951B7486020070B636 /* DescriptionTests.swift */,
 				D4B3FC001A83515800DA2AC3 /* Supporting Files */,
@@ -391,7 +382,6 @@
 				D4B4AA571A90320F0089A5F2 /* Dictionary.swift in Sources */,
 				D4E8289D1B5202BB00713E60 /* StringLiteralConvertible.swift in Sources */,
 				D4EDEF571AFEDEC5001B9A1D /* Name.swift in Sources */,
-				D440FCC91B6C76B400C56B19 /* Location.swift in Sources */,
 				D4A31B2A1AA366EC00B3FC68 /* TermType.swift in Sources */,
 				D4E829191B521BFC00713E60 /* Declaration.swift in Sources */,
 				D440FCC11B6BBF0D00C56B19 /* Expression+Inference.swift in Sources */,
@@ -399,7 +389,6 @@
 				D4E8291B1B521F1100713E60 /* ConcatSequenceView.swift in Sources */,
 				D4F9F86E1A84977400B7071E /* Error.swift in Sources */,
 				D4FB02D91B71D06A0090E764 /* Expression+Boolean.swift in Sources */,
-				D440FCCD1B6E6E9100C56B19 /* Expression+Weaving.swift in Sources */,
 				D4E829171B521B3400713E60 /* Module.swift in Sources */,
 				D4F1B8571B470E800065BF22 /* Double.swift in Sources */,
 				D4F1B84F1B46E2F40065BF22 /* Int.swift in Sources */,
@@ -418,7 +407,6 @@
 				D4809FBD1AF6BD400084B8FE /* ExpressionTests.swift in Sources */,
 				D4DF44501B2DB043008DCA5D /* TypecheckingTests.swift in Sources */,
 				D4012F961B7486020070B636 /* DescriptionTests.swift in Sources */,
-				D440FCCF1B6E73B900C56B19 /* LocationTests.swift in Sources */,
 				D4F1B8531B46FD4F0065BF22 /* ScanSequenceViewTests.swift in Sources */,
 				D484903C1B2A40E800F249F7 /* EvaluationTests.swift in Sources */,
 				D440FCC51B6C100500C56B19 /* Assertions.swift in Sources */,
