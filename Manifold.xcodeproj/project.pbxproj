@@ -22,7 +22,6 @@
 		D484903A1B29352600F249F7 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D48490391B29352600F249F7 /* CoreFoundation.framework */; };
 		D484903C1B2A40E800F249F7 /* EvaluationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D484903B1B2A40E800F249F7 /* EvaluationTests.swift */; };
 		D4A31B2A1AA366EC00B3FC68 /* TermType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A31B291AA366EC00B3FC68 /* TermType.swift */; };
-		D4AAE5521B5B24D0004E581F /* Expression+Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4AAE5511B5B24D0004E581F /* Expression+Tag.swift */; };
 		D4B3FBF11A83515800DA2AC3 /* Manifold.h in Headers */ = {isa = PBXBuildFile; fileRef = D4B3FBF01A83515800DA2AC3 /* Manifold.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D4B3FBFC1A83515800DA2AC3 /* Manifold.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4B3FBEB1A83515800DA2AC3 /* Manifold.framework */; };
 		D4B4AA551A902A6F0089A5F2 /* Assertions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4B4AA541A902A6F0089A5F2 /* Assertions.framework */; };
@@ -85,7 +84,6 @@
 		D48490391B29352600F249F7 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		D484903B1B2A40E800F249F7 /* EvaluationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EvaluationTests.swift; sourceTree = "<group>"; };
 		D4A31B291AA366EC00B3FC68 /* TermType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TermType.swift; sourceTree = "<group>"; };
-		D4AAE5511B5B24D0004E581F /* Expression+Tag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+Tag.swift"; sourceTree = "<group>"; };
 		D4B3FBEB1A83515800DA2AC3 /* Manifold.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Manifold.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4B3FBEF1A83515800DA2AC3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D4B3FBF01A83515800DA2AC3 /* Manifold.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Manifold.h; sourceTree = "<group>"; };
@@ -249,7 +247,6 @@
 				D4FB02D81B71D06A0090E764 /* Expression+Boolean.swift */,
 				D415A0981B51EA8B001C15E5 /* Expression+List.swift */,
 				D4E101B91B484611001A7E55 /* Expression+Natural.swift */,
-				D4AAE5511B5B24D0004E581F /* Expression+Tag.swift */,
 			);
 			name = Modules;
 			sourceTree = "<group>";
@@ -371,7 +368,6 @@
 				D4E49E611B4B6384002273A3 /* Description.swift in Sources */,
 				D4E01E461B5BF5F7003BAB46 /* CollectionType.swift in Sources */,
 				D4F1B8511B46EBE10065BF22 /* ScanSequenceView.swift in Sources */,
-				D4AAE5521B5B24D0004E581F /* Expression+Tag.swift in Sources */,
 				D440FCBF1B6BBE7300C56B19 /* Expression+Substitution.swift in Sources */,
 				D440FCC31B6C00C400C56B19 /* Expression+Checking.swift in Sources */,
 				D4809FBF1AF6CD720084B8FE /* Equatable.swift in Sources */,
