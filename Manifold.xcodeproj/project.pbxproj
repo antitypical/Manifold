@@ -185,6 +185,7 @@
 				D4E829161B521B3400713E60 /* Module.swift */,
 				D4E829181B521BFC00713E60 /* Declaration.swift */,
 				D4012F971B753A2A0070B636 /* Tag.swift */,
+				D4E49E601B4B6384002273A3 /* Description.swift */,
 				D4B3FBEE1A83515800DA2AC3 /* Supporting Files */,
 			);
 			path = Manifold;
@@ -249,7 +250,6 @@
 				D415A0981B51EA8B001C15E5 /* Expression+List.swift */,
 				D4E101B91B484611001A7E55 /* Expression+Natural.swift */,
 				D4AAE5511B5B24D0004E581F /* Expression+Tag.swift */,
-				D4E49E601B4B6384002273A3 /* Description.swift */,
 			);
 			name = Modules;
 			sourceTree = "<group>";
