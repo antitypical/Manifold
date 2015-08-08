@@ -9,7 +9,6 @@ public enum Description<Term: TermType>: DictionaryLiteralConvertible {
 			self = elements[0].1
 		case let x:
 			self = .Argument(Term(.Axiom(x, Term(.Axiom(Int.self, Term(.Type(0)))))), { tag in
-				// at this point we have a variable standing in for the tag
 				if case let .Axiom(any, _) = tag.out, let i = any as? Int {
 					return elements[i].1
 				}
