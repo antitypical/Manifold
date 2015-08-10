@@ -1,7 +1,7 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public enum Description<Term: TermType>: DictionaryLiteralConvertible {
-	public init(dictionaryLiteral elements: (String, Description<Term>)...) {
+	public init(dictionaryLiteral elements: (String, Description)...) {
 		switch elements.count {
 		case 0:
 			self = .End
