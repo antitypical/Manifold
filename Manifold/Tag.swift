@@ -7,6 +7,10 @@ public enum Tag: Equatable {
 		}.tags
 	}
 
+	static func encodeTagType<Term: TermType>(labels: [String]) -> Term {
+		return Term(.UnitType)
+	}
+
 	case Here(String, [String])
 	indirect case There(String, Tag)
 }
