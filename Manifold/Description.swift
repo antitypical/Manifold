@@ -1,36 +1,51 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Description<Term: TermType>: DictionaryLiteralConvertible {
+public enum Description: DictionaryLiteralConvertible, TermType {
+	// MARK: DictionaryLiteralConvertible
+
 	public init(dictionaryLiteral elements: (String, Description)...) {
 		switch elements.count {
 		case 0:
 			self = .End
 		case 1:
 			self = elements[0].1
-		case let x:
-			self = .Argument(Term(.Axiom(x, Term(.Axiom(Int.self, Term(.Type(0)))))), { tag in
-				if case let .Axiom(any, _) = tag.out, let i = any as? Int {
-					return elements[i].1
-				}
-				fatalError("tag \(tag) was not embedded Int")
+		default:
+			let tagType: Description = Tag.encodeTagType(elements.map { $0.0 })
+			self = .Argument(tagType.out, { tag in
+				Description(Expression.lambda(tagType) {
+					$0
+				})[Description(tag)]
 			})
 		}
 	}
 
-	case End
-	indirect case Recursive(Description)
-	indirect case Argument(Term, Term -> Description)
 
-	func term(name: String) -> Term {
+	// MARK: TermType
+
+	public init(_ expression: () -> Expression<Description>) {
+		self = .Pure(expression())
+	}
+
+	public var out: Expression<Description> {
 		switch self {
 		case .End:
-			return Term(.UnitType)
+			return Expression.UnitType
+		case let .Pure(a):
+			return a
 		case let .Recursive(rest):
-			return Term(.Product(Term(.Variable(Name.Global(name))), rest.term(name)))
-		case let .Argument(argument, continuation):
-			return Term(.Product(argument, Term(Expression.lambda(argument) { continuation($0).term(name) })))
+			return rest.out
+		case let .Argument(x, continuation):
+			return Expression.lambda(Description(x)) { Description(continuation($0.out).out) }
 		}
 	}
+
+
+	// MARK: Cases
+
+	case End
+	indirect case Pure(Expression<Description>)
+	indirect case Recursive(Description)
+	indirect case Argument(Expression<Description>, Expression<Description> -> Description)
 }
 
 

@@ -2,11 +2,20 @@
 
 final class DescriptionTests: XCTestCase {
 	func testOneEmptyBranchProducesUnitType() {
-		let UnitDescription: Description<Term> = [
+		let UnitDescription: Description = [
 			"unit": .End,
 		]
 
-		assert(UnitDescription.term("Unit"), ==, Term(.UnitType))
+		assert(UnitDescription.out, ==, .UnitType)
+	}
+
+	func testTwoEmptyBranchesProduceBooleanType() {
+		let BooleanDescription: Description = [
+			"true": .End,
+			"false": .End,
+		]
+
+		assert(Term(BooleanDescription).out, ==, .UnitType)
 	}
 }
 
