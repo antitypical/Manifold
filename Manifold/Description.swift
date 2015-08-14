@@ -11,10 +11,9 @@ public enum Description: DictionaryLiteralConvertible, TermType {
 			self = elements[0].1
 		default:
 			let tagType: Description = Tag.encodeTagType(elements.map { $0.0 })
-			self = .Argument(tagType.out, { tag in
-				Description(Expression.lambda(tagType) {
-					$0
-				})[Description(tag)]
+			self = .Argument(tagType, { tag in
+				let eliminator = Description.lambda(tagType) { $0 }
+				return eliminator[tag]
 			})
 		}
 	}
@@ -35,7 +34,7 @@ public enum Description: DictionaryLiteralConvertible, TermType {
 		case let .Recursive(rest):
 			return rest.out
 		case let .Argument(x, continuation):
-			return Expression.lambda(Description(x)) { Description(continuation($0.out).out) }
+			return .lambda(x, continuation)
 		}
 	}
 
@@ -45,7 +44,7 @@ public enum Description: DictionaryLiteralConvertible, TermType {
 	case End
 	indirect case Pure(Expression<Description>)
 	indirect case Recursive(Description)
-	indirect case Argument(Expression<Description>, Expression<Description> -> Description)
+	indirect case Argument(Description, Description -> Description)
 }
 
 
