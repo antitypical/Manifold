@@ -62,9 +62,6 @@ extension Expression where Recur: TermType, Recur: Equatable {
 			return annotate(term.checkType(type, environment, context)
 				.map(const(type)))
 
-		case let .Axiom(_, type):
-			return Either.right(type)
-
 		default:
 			return Either.left("Cannot infer type for \(self). Try annotating?")
 		}

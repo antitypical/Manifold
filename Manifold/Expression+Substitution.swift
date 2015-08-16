@@ -15,7 +15,6 @@ extension Expression where Recur: TermType {
 				ifProduct: Expression.Product,
 				ifIf: Expression.If,
 				ifAnnotation: Expression.Annotation,
-				ifAxiom: Expression.Axiom,
 				otherwise: const(t)))
 		} (Recur(self)).out
 	}

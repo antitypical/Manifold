@@ -55,10 +55,6 @@ extension TermType {
 		return Self(.Annotation(term, type))
 	}
 
-	public static func Axiom(value: Any, _ type: Self) -> Self {
-		return Self(.Axiom(value, type))
-	}
-
 
 	public static func FunctionType(a: Self, _ b: Self) -> Self {
 		return Self(.FunctionType(a, b))
