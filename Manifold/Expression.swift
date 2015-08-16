@@ -81,13 +81,13 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomDebugStringConve
 			ifUnit: const(.Unit),
 			ifUnitType: const(.UnitType),
 			ifType: { .Type($0) },
-			ifVariable: { .Variable($0) },
+			ifVariable: Expression<T>.Variable,
 			ifApplication: { .Application(transform($0), transform($1)) },
 			ifLambda: { .Lambda($0, transform($1), transform($2)) },
 			ifProjection: { .Projection(transform($0), $1) },
 			ifProduct: { .Product(transform($0), transform($1)) },
 			ifBooleanType: const(.BooleanType),
-			ifBoolean: { .Boolean($0) },
+			ifBoolean: Expression<T>.Boolean,
 			ifIf: { .If(transform($0), transform($1), transform($2)) },
 			ifAnnotation: { .Annotation(transform($0), transform($1)) })
 	}
