@@ -63,7 +63,7 @@ extension Expression where Recur: TermType, Recur: Equatable {
 				.map(const(type)))
 
 		default:
-			return Either.left("Cannot infer type for \(self). Try annotating?")
+			return Either.Left("Cannot infer type for \(self). Try annotating?")
 		}
 	}
 }
