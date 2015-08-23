@@ -7,12 +7,12 @@ public enum Tag: Equatable {
 		}.tags
 	}
 
-	var enumeration: [String] {
+	var cases: [String] {
 		switch self {
 		case let .Here(s, ss):
 			return [s] + ss
 		case let .There(s, t):
-			return [s] + t.enumeration
+			return [s] + t.cases
 		}
 	}
 
