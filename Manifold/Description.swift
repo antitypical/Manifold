@@ -1,21 +1,26 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public enum Description: DictionaryLiteralConvertible, TermType {
-	// MARK: DictionaryLiteralConvertible
-
-	public init(dictionaryLiteral elements: (String, Description)...) {
-		switch elements.count {
+	public init(branches: [(String, Description)]) {
+		switch branches.count {
 		case 0:
 			self = .End
 		case 1:
-			self = elements[0].1
+			self = branches[0].1
 		default:
-			let tagType: Description = Tag.encodeTagType(elements.map { $0.0 })
+			let tagType: Description = Tag.encodeTagType(branches.map { $0.0 })
 			self = .Argument(tagType, { tag in
 				let eliminator = Description.lambda(tagType) { $0 }
 				return eliminator[tag]
 			})
 		}
+	}
+
+
+	// MARK: DictionaryLiteralConvertible
+
+	public init(dictionaryLiteral elements: (String, Description)...) {
+		self.init(branches: elements)
 	}
 
 
