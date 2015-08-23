@@ -15,7 +15,7 @@ final class DescriptionTests: XCTestCase {
 			"false": .End,
 		]
 
-		assert(Term(BooleanDescription).out, ==, .UnitType)
+		assert(Term(BooleanDescription).out, ==, Expression.lambda(Term(.BooleanType)) { Term(.If($0, Term(.UnitType), Term(.UnitType))) })
 	}
 }
 
