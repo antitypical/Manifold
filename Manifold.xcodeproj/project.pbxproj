@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		D4012F961B7486020070B636 /* DescriptionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4012F951B7486020070B636 /* DescriptionTests.swift */; };
 		D4012F981B753A2A0070B636 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4012F971B753A2A0070B636 /* Tag.swift */; };
-		D415A09B1B51EFDE001C15E5 /* Term+Construction.swift in Sources */ = {isa = PBXBuildFile; fileRef = D415A09A1B51EFDE001C15E5 /* Term+Construction.swift */; };
+		D415A09B1B51EFDE001C15E5 /* TermType+Construction.swift in Sources */ = {isa = PBXBuildFile; fileRef = D415A09A1B51EFDE001C15E5 /* TermType+Construction.swift */; };
 		D440FCBD1B6BBE1400C56B19 /* Expression+Evaluation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCBC1B6BBE1400C56B19 /* Expression+Evaluation.swift */; };
 		D440FCBF1B6BBE7300C56B19 /* Expression+Substitution.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCBE1B6BBE7300C56B19 /* Expression+Substitution.swift */; };
 		D440FCC11B6BBF0D00C56B19 /* Expression+Inference.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCC01B6BBF0D00C56B19 /* Expression+Inference.swift */; };
@@ -69,7 +69,7 @@
 /* Begin PBXFileReference section */
 		D4012F951B7486020070B636 /* DescriptionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DescriptionTests.swift; sourceTree = "<group>"; };
 		D4012F971B753A2A0070B636 /* Tag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
-		D415A09A1B51EFDE001C15E5 /* Term+Construction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Term+Construction.swift"; sourceTree = "<group>"; };
+		D415A09A1B51EFDE001C15E5 /* TermType+Construction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermType+Construction.swift"; sourceTree = "<group>"; };
 		D440FCBC1B6BBE1400C56B19 /* Expression+Evaluation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+Evaluation.swift"; sourceTree = "<group>"; };
 		D440FCBE1B6BBE7300C56B19 /* Expression+Substitution.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+Substitution.swift"; sourceTree = "<group>"; };
 		D440FCC01B6BBF0D00C56B19 /* Expression+Inference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+Inference.swift"; sourceTree = "<group>"; };
@@ -174,7 +174,7 @@
 				D440FCC21B6C00C400C56B19 /* Expression+Checking.swift */,
 				D4FB02D71B71D0500090E764 /* Modules */,
 				D4A31B291AA366EC00B3FC68 /* TermType.swift */,
-				D415A09A1B51EFDE001C15E5 /* Term+Construction.swift */,
+				D415A09A1B51EFDE001C15E5 /* TermType+Construction.swift */,
 				D4EDEF561AFEDEC5001B9A1D /* Name.swift */,
 				D4E829161B521B3400713E60 /* Module.swift */,
 				D4E829181B521BFC00713E60 /* Declaration.swift */,
@@ -355,7 +355,7 @@
 			files = (
 				D4012F981B753A2A0070B636 /* Tag.swift in Sources */,
 				D440FCC71B6C1D2500C56B19 /* Either.swift in Sources */,
-				D415A09B1B51EFDE001C15E5 /* Term+Construction.swift in Sources */,
+				D415A09B1B51EFDE001C15E5 /* TermType+Construction.swift in Sources */,
 				D440FCBD1B6BBE1400C56B19 /* Expression+Evaluation.swift in Sources */,
 				D4E289A21B641B0B0070389F /* Comparable.swift in Sources */,
 				D4E289A41B641FDA0070389F /* String.swift in Sources */,
