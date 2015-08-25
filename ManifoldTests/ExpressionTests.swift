@@ -28,23 +28,23 @@ final class ExpressionTests: XCTestCase {
 	}
 
 	func testNArySumsAreProducts() {
-		assert(Expression.Sum([ Term.BooleanType, Term.BooleanType ]), ==, Expression.Lambda(0, .BooleanType, .If(Term(0), .BooleanType, .BooleanType)))
+		assert(Expression.Sum([ Term.BooleanType, Term.BooleanType ]), ==, Expression.Lambda(0, .BooleanType, .If(0, .BooleanType, .BooleanType)))
 	}
 
 	func testHigherOrderConstruction() {
-		assert(Term.lambda(.UnitType, id), ==, .Lambda(0, .UnitType, Term(0)))
-		assert(identity, ==, .Lambda(1, .Type, .Lambda(0, Term(1), Term(0))))
-		assert(constant, ==, .Lambda(3, .Type, .Lambda(2, .Type, .Lambda(1, Term(3), .Lambda(0, Term(2), Term(1))))))
+		assert(Term.lambda(.UnitType, id), ==, .Lambda(0, .UnitType, 0))
+		assert(identity, ==, .Lambda(1, .Type, .Lambda(0, 1, 0)))
+		assert(constant, ==, .Lambda(3, .Type, .Lambda(2, .Type, .Lambda(1, 3, .Lambda(0, 2, 1)))))
 	}
 
 	func testFunctionTypeConstruction() {
 		let expected = Term.lambda(.Type) { A in .lambda(.FunctionType(A, A), A, const(A)) }
-		let actual = Term.Lambda(2, .Type, .Lambda(1, .Lambda(-1, Term(2), Term(2)), .Lambda(0, Term(2), Term(2))))
+		let actual = Term.Lambda(2, .Type, .Lambda(1, .Lambda(-1, 2, 2), .Lambda(0, 2, 2)))
 		assert(expected, ==, actual)
 	}
 
 	func testSubstitution() {
-		assert(Expression.Lambda(0, Term(1), Term(0)).substitute(1, .Unit), ==, .Lambda(0, .Unit, Term(0)))
+		assert(Expression<Term>.Lambda(0, 1, 0).substitute(1, .Unit), ==, .Lambda(0, .Unit, 0))
 	}
 }
 
