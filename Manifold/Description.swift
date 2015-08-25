@@ -8,11 +8,11 @@ public enum Description: DictionaryLiteralConvertible, TermType {
 		case 1:
 			self = branches[0].1
 		default:
-			let tagType: Description = Description(.BooleanType)
+			let tagType: Description = .BooleanType
 			self = .Argument(tagType, { tag in
-				Description(.If(tag,
+				.If(tag,
 					branches[0].1,
-					Description(branches: Array(branches.dropFirst()))))
+					Description(branches: Array(branches.dropFirst())))
 			})
 		}
 	}

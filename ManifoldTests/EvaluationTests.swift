@@ -15,7 +15,7 @@ final class EvaluationTests: XCTestCase {
 
 	func testApplicationOfIdentityAbstractionToUnitTermEvaluatesToUnitTerm() {
 		let identity = Expression.lambda(Term(.UnitType), id)
-		assert(Expression.Application(Term(identity), Term(.Unit)).evaluate(), ==, .Unit)
+		assert(Expression.Application(Term(identity), .Unit).evaluate(), ==, .Unit)
 	}
 
 	func testSimpleAbstractionEvaluatesToItself() {
@@ -28,14 +28,14 @@ final class EvaluationTests: XCTestCase {
 	}
 
 	func testProjectionEvaluatesToProjectedField() {
-		let product = Expression.Product(Term(.Unit), Term(false))
-		assert(Expression.Projection(Term(product), false).evaluate(), ==, .Unit)
-		assert(Expression.Projection(Term(product), true).evaluate(), ==, false)
+		let product = Term.Product(.Unit, false)
+		assert(Expression.Projection(product, false).evaluate(), ==, .Unit)
+		assert(Expression.Projection(product, true).evaluate(), ==, false)
 	}
 
 	func testIfEvaluatesToCorrectBranch() {
-		assert(Expression.If(Term(true), Term(true), Term(false)).evaluate(), ==, true)
-		assert(Expression.If(Term(false), Term(true), Term(false)).evaluate(), ==, false)
+		assert(Expression<Term>.If(true, true, false).evaluate(), ==, true)
+		assert(Expression<Term>.If(false, true, false).evaluate(), ==, false)
 	}
 }
 

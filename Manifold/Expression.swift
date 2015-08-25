@@ -222,8 +222,8 @@ extension Expression where Recur: TermType {
 		return terms.uncons.map { first, rest in
 			rest.isEmpty
 				? first.out
-				: Expression.lambda(Recur(.BooleanType)) {
-					Recur(.If($0, first, Recur(.Sum(Array(rest)))))
+				: Expression.lambda(.BooleanType) {
+					.If($0, first, Recur(.Sum(Array(rest))))
 				}
 		} ?? .UnitType
 	}
@@ -235,7 +235,7 @@ extension Expression where Recur: TermType {
 
 	/// Constructs a (non-dependent) function type from `A` to `B` to `C`.
 	public static func FunctionType(a: Recur, _ b: Recur, _ c: Recur) -> Expression {
-		return .FunctionType(a, Recur(FunctionType(b, c)))
+		return .FunctionType(a, .FunctionType(b, c))
 	}
 
 

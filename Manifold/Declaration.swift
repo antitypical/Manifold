@@ -50,7 +50,7 @@ public enum Declaration<Recur>: CustomDebugStringConvertible, CustomStringConver
 
 extension Declaration where Recur: TermType {
 	public var ref: Recur {
-		return Recur(.Variable(Name.Global(symbol)))
+		return .Variable(Name.Global(symbol))
 	}
 
 	public func typecheck(environment: Expression<Recur>.Environment, _ context: Expression<Recur>.Context) -> Either<Error, Expression<Recur>> {

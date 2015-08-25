@@ -17,7 +17,7 @@ extension Expression where Recur: TermType, Recur: Equatable {
 					.map { a, b in
 						a == b
 							? a
-							: Expression.lambda(Recur(.BooleanType)) { Recur(.If($0, Recur(a), Recur(b))) }
+							: Expression.lambda(.BooleanType) { .If($0, Recur(a), Recur(b)) }
 					})
 
 		case .UnitType, .BooleanType:
