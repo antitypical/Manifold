@@ -34,17 +34,5 @@ public struct Term: CustomDebugStringConvertible, CustomStringConvertible, TermT
 }
 
 
-// This would be an extension on `TermType` if protocol extensions could have inheritance clauses.
-extension Term: BooleanLiteralConvertible, StringLiteralConvertible {
-	public init(booleanLiteral: Bool) {
-		self = .Boolean(booleanLiteral)
-	}
-
-	public init(stringLiteral: String) {
-		self = .Variable(.Global(stringLiteral))
-	}
-}
-
-
 import Either
 import Prelude
