@@ -101,6 +101,11 @@ extension TermType {
 	public init<T: TermType>(term: T) {
 		self.init(term.out.map { Self(term: $0) })
 	}
+
+
+	public init(booleanLiteral value: Bool) {
+		self.init(.Boolean(value))
+	}
 }
 
 
