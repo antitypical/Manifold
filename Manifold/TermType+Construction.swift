@@ -96,6 +96,11 @@ extension TermType {
 	public static func lambda(type1: Self, _ type2: Self, _ type3: Self, _ type4: Self, _ body: (Self, Self, Self, Self) -> Self) -> Self {
 		return Self(.lambda(type1, type2, type3, type4, body))
 	}
+
+
+	public init<T: TermType>(term: T) {
+		self.init(term.out.map { Self(term: $0) })
+	}
 }
 
 
