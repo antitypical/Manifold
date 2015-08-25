@@ -17,16 +17,16 @@ public struct Module<Recur> {
 	public let declarations: [Declaration<Recur>]
 
 	public var environment: Environment {
-		let dependencies = lazy(self.dependencies).map { $0.environment }
-		let definitions = lazy(self.declarations).map { [Name.Global($0.symbol): $0.value] }
+		let dependencies = self.dependencies.lazy.map { $0.environment }
+		let definitions = self.declarations.lazy.map { (declaration: Declaration<Recur>) in [Name.Global(declaration.symbol): declaration.value] }
 		return dependencies
 			.concat(definitions)
 			.reduce(Environment(), combine: +)
 	}
 
 	public var context: Context {
-		let dependencies = lazy(self.dependencies).map { $0.context }
-		let definitions = lazy(self.declarations).map { [Name.Global($0.symbol): $0.type] }
+		let dependencies = self.dependencies.lazy.map { $0.context }
+		let definitions = self.declarations.lazy.map { [Name.Global($0.symbol): $0.type] }
 		return dependencies
 			.concat(definitions)
 			.reduce(Context(), combine: +)
@@ -37,7 +37,8 @@ extension Module where Recur: TermType {
 	public func typecheck() -> [Error] {
 		let environment = self.environment
 		let context = self.context
-		return lazy(declarations)
+		return declarations
+			.lazy
 			.map { $0.typecheck(environment, context) }
 			.reduce([]) { $0 + ($1.left.map { [ $0 ] } ?? []) }
 	}

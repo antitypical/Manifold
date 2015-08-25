@@ -46,7 +46,7 @@ public enum Error: Equatable, CustomStringConvertible, StringInterpolationConver
 	public var description: String {
 		return analysis(
 			ifLeaf: id,
-			ifBranch: { "\n".join(lazy($0).map { String($0) }) })
+			ifBranch: { $0.lazy.map { String($0) }.joinWithSeparator("\n") })
 	}
 
 

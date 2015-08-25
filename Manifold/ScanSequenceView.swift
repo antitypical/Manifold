@@ -2,7 +2,7 @@
 
 extension SequenceType {
 	public func scan<T>(initial: T, combine: (T, Generator.Element) -> T) -> [T] {
-		return Array(lazy(self).scan(initial, combine: combine))
+		return Array(lazy.scan(initial, combine: combine))
 	}
 }
 

@@ -2,7 +2,7 @@
 
 extension SequenceType {
 	public func concat<S: SequenceType where S.Generator.Element == Generator.Element>(other: S) -> [Generator.Element] {
-		return Array(lazy(self).concat(other))
+		return Array(lazy.concat(other))
 	}
 }
 

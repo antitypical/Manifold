@@ -82,7 +82,8 @@ extension Expression where Recur: TermType {
 // MARK: Error
 
 public func == (left: Error, right: Error) -> Bool {
-	return lazy(zip(left.errors, right.errors))
+	return zip(left.errors, right.errors)
+		.lazy
 		.map(==).reduce(true) { $0 && $1 }
 }
 

@@ -32,10 +32,10 @@ extension Expression where Recur: TermType, Recur: Equatable {
 	}
 
 	private static func toString(context: Context) -> String {
-		let keys = lazy(context.keys.sort())
+		let keys = context.keys.sort().lazy
 		let maxLength: Int = keys.maxElement { $0.description.characters.count < $1.description.characters.count }?.description.characters.count ?? 0
 		let padding: Character = " "
-		let formattedContext = ",\n\t".join(keys.map { "\(String($0, paddedTo: maxLength, with: padding)) : \(context[$0]!)" })
+		let formattedContext = keys.map { "\(String($0, paddedTo: maxLength, with: padding)) : \(context[$0]!)" }.joinWithSeparator(",\n\t")
 
 		return "[\n\t\(formattedContext)\n]"
 	}
