@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public protocol TermType: BooleanLiteralConvertible, Equatable {
+public protocol TermType: BooleanLiteralConvertible, Equatable, StringLiteralConvertible {
 	init(_: () -> Expression<Self>)
 	var out: Expression<Self> { get }
 }

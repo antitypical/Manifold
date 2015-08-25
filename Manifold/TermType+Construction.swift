@@ -106,6 +106,19 @@ extension TermType {
 	public init(booleanLiteral value: Bool) {
 		self.init(.Boolean(value))
 	}
+
+
+	public init(stringLiteral value: String) {
+		self.init(.Variable(Name.Global(value)))
+	}
+
+	public init(unicodeScalarLiteral: Self.StringLiteralType) {
+		self.init(stringLiteral: unicodeScalarLiteral)
+	}
+
+	public init(extendedGraphemeClusterLiteral: Self.StringLiteralType) {
+		self.init(stringLiteral: extendedGraphemeClusterLiteral)
+	}
 }
 
 
