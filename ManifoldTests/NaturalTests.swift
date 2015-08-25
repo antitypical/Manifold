@@ -19,8 +19,8 @@ private let module = Expression<Term>.natural
 private let environment = module.environment
 private let context = module.context
 
-private let successor = Term("successor")
-private let zero = Term("zero")
+private let successor: Term = "successor"
+private let zero: Term = "zero"
 
 
 import Assertions
