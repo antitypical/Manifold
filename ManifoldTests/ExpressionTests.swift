@@ -50,7 +50,7 @@ final class ExpressionTests: XCTestCase {
 
 
 let identity = Term.lambda(.Type) { A in .lambda(A, id) }
-let constant = Term.lambda(.Type) { A in Term.lambda(.Type) { B in Term.lambda(A) { a in Term.lambda(B, const(a)) } } }
+let constant = Term.lambda(.Type) { A in Term.lambda(.Type) { B in Term.lambda(A) { a in .lambda(B, const(a)) } } }
 
 
 import Assertions
