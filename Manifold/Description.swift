@@ -28,7 +28,7 @@ public enum Description: DictionaryLiteralConvertible, TermType {
 	// MARK: TermType
 
 	public init(_ expression: () -> Expression<Description>) {
-		self = .Pure(expression())
+		self = .Pure(expression)
 	}
 
 	public var out: Expression<Description> {
@@ -36,7 +36,7 @@ public enum Description: DictionaryLiteralConvertible, TermType {
 		case .End:
 			return Expression.UnitType
 		case let .Pure(a):
-			return a
+			return a()
 		case let .Recursive(rest):
 			return rest.out
 		case let .Argument(x, continuation):
@@ -48,7 +48,7 @@ public enum Description: DictionaryLiteralConvertible, TermType {
 	// MARK: Cases
 
 	case End
-	indirect case Pure(Expression<Description>)
+	indirect case Pure(() -> Expression<Description>)
 	indirect case Recursive(Description)
 	indirect case Argument(Description, Description -> Description)
 }
