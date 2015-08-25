@@ -2,7 +2,7 @@
 
 final class NaturalTests: XCTestCase {
 	func testModuleTypechecks() {
-		module.typecheck().map { XCTFail($0.description) }
+		module.typecheck().forEach { XCTFail($0.description) }
 	}
 
 	func testZeroTypechecksAsNatural() {
