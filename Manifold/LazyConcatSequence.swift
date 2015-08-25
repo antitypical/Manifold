@@ -6,7 +6,7 @@ extension SequenceType {
 	}
 }
 
-public struct ConcatSequenceView<T>: SequenceType {
+public struct LazyConcatSequence<T>: SequenceType {
 	init<A: SequenceType, B: SequenceType where A.Generator.Element == T, B.Generator.Element == T>(_ a: A, _ b: B) {
 		self.a = AnySequence(a)
 		self.b = AnySequence(b)
@@ -26,7 +26,7 @@ public struct ConcatSequenceView<T>: SequenceType {
 }
 
 extension LazySequenceType {
-	public func concat<S: SequenceType where S.Generator.Element == Generator.Element>(other: S) -> LazySequence<ConcatSequenceView<Generator.Element>> {
-		return lazy(ConcatSequenceView(self, other))
+	public func concat<S: SequenceType where S.Generator.Element == Generator.Element>(other: S) -> LazyConcatSequence<Generator.Element> {
+		return LazyConcatSequence(self, other)
 	}
 }
