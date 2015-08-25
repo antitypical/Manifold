@@ -1,10 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public struct Term: CustomDebugStringConvertible, CustomStringConvertible, TermType {
-	public init<T: TermType>(_ term: T) {
-		self.init(term.out.map(Term.init))
-	}
-
 	private var expression: () -> Expression<Term>
 
 
