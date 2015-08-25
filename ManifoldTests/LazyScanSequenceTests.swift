@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-final class ScanSequenceViewTests: XCTestCase {
+final class LazyScanSequenceTests: XCTestCase {
 	func testSequenceTypeScanEvaluatesEagerly() {
 		var i = 0
 		[1, 2, 3, 4, 5, 6].scan(0) { i += $0 + $1 ; return i }
@@ -9,7 +9,7 @@ final class ScanSequenceViewTests: XCTestCase {
 
 	func testLazySequenceScanEvaluatesLazily() {
 		var i = 0
-		lazy([1, 2, 3, 4, 5, 6]).scan(0) { i += $0 + $1 ; return i }
+		[1, 2, 3, 4, 5, 6].lazy.scan(0) { i += $0 + $1 ; return i }
 		assert(i, ==, 0)
 	}
 
