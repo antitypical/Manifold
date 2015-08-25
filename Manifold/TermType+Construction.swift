@@ -114,7 +114,7 @@ extension TermType {
 
 
 	public init(stringLiteral value: String) {
-		self.init(.Variable(Name.Global(value)))
+		self.init(.Variable(.Global(value)))
 	}
 
 	public init(unicodeScalarLiteral: Self.StringLiteralType) {
