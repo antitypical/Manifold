@@ -136,7 +136,7 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomDebugStringConve
 
 	public var description: String {
 		let renderNumerals: (Int, String) -> String = { n, alphabet in
-			"".join(lazy(n.digits(alphabet.characters.count)).map { String(atModular(alphabet.characters, offset: $0)) })
+			n.digits(alphabet.characters.count).lazy.map { String(atModular(alphabet.characters, offset: $0)) }.joinWithSeparator("")
 		}
 		let alphabet = "abcdefghijklmnopqrstuvwxyz"
 		switch self {
@@ -388,7 +388,7 @@ extension Expression where Recur: TermType {
 
 
 private func atModular<C: CollectionType>(collection: C, offset: C.Index.Distance) -> C.Generator.Element {
-	return collection[advance(collection.startIndex, offset % distance(collection.startIndex, collection.endIndex), collection.endIndex)]
+	return collection[collection.startIndex.advancedBy(offset % collection.startIndex.distanceTo(collection.endIndex), limit: collection.endIndex)]
 }
 
 

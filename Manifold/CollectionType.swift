@@ -3,7 +3,7 @@
 extension CollectionType {
 	public var uncons: (first: SubSequence._Element, rest: SubSequence)? {
 		if !isEmpty {
-			let some = self[startIndex..<advance(startIndex, 1)]
+			let some = self[startIndex..<startIndex.advancedBy(1)]
 			return (first: some[some.startIndex], rest: dropFirst())
 		}
 		return nil
