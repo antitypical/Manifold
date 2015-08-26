@@ -27,6 +27,13 @@ public enum Declaration<Recur>: CustomDebugStringConvertible, CustomStringConver
 		}
 	}
 
+	public var definitions: [(String, Expression<Recur>, Expression<Recur>)] {
+		switch self {
+		case let .Definition(symbol, type, value):
+			return [ (symbol, type, value) ]
+		}
+	}
+
 
 	public var debugDescription: String {
 		switch self {
