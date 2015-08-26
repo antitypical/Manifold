@@ -28,7 +28,7 @@ public struct Module<Recur> {
 
 	public var environment: Environment {
 		let dependencies = self.dependencies.lazy.map { $0.environment }
-		let definitions = self.declarations.lazy.map { (declaration: Declaration<Recur>) in [Name.Global(declaration.symbol): declaration.value] }
+		let definitions = self.definitions.lazy.map { symbol, _, value in [ symbol: value ] }
 		return dependencies
 			.concat(definitions)
 			.reduce(Environment(), combine: +)
@@ -36,7 +36,7 @@ public struct Module<Recur> {
 
 	public var context: Context {
 		let dependencies = self.dependencies.lazy.map { $0.context }
-		let definitions = self.declarations.lazy.map { [Name.Global($0.symbol): $0.type] }
+		let definitions = self.definitions.lazy.map { symbol, type, _ in [ symbol: type ] }
 		return dependencies
 			.concat(definitions)
 			.reduce(Context(), combine: +)
