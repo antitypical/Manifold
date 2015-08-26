@@ -4,13 +4,13 @@ public struct Module<Recur> {
 	public typealias Environment = Expression<Recur>.Environment
 	public typealias Context = Expression<Recur>.Context
 
-	public init<D: SequenceType, S: SequenceType where D.Generator.Element == Module, S.Generator.Element == Declaration<Recur>>(_ dependencies: D, _ definitions: S) {
+	public init<D: SequenceType, S: SequenceType where D.Generator.Element == Module, S.Generator.Element == Declaration<Recur>>(_ dependencies: D, _ declarations: S) {
 		self.dependencies = Array(dependencies)
-		self.declarations = Array(definitions)
+		self.declarations = Array(declarations)
 	}
 
-	public init<S: SequenceType where S.Generator.Element == Declaration<Recur>>(_ definitions: S) {
-		self.init([], definitions)
+	public init<S: SequenceType where S.Generator.Element == Declaration<Recur>>(_ declarations: S) {
+		self.init([], declarations)
 	}
 
 	public let dependencies: [Module]
