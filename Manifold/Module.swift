@@ -16,6 +16,16 @@ public struct Module<Recur> {
 	public let dependencies: [Module]
 	public let declarations: [Declaration<Recur>]
 
+	private var definitions: AnySequence<(Name, Expression<Recur>, Expression<Recur>)> {
+		return AnySequence(declarations
+			.lazy
+			.flatMap {
+				$0.definitions.lazy.map { symbol, type, value in
+					(.Global(symbol), type, value)
+				}
+			})
+	}
+
 	public var environment: Environment {
 		let dependencies = self.dependencies.lazy.map { $0.environment }
 		let definitions = self.declarations.lazy.map { (declaration: Declaration<Recur>) in [Name.Global(declaration.symbol): declaration.value] }
