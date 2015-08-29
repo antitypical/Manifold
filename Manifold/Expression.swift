@@ -12,7 +12,10 @@ public enum Expression<Recur>: CustomDebugStringConvertible, CustomStringConvert
 		@noescape ifLambda: (Int, Recur, Recur) -> T,
 		@noescape ifProjection: (Recur, Bool) -> T,
 		@noescape ifProduct: (Recur, Recur) -> T,
-		@noescape ifAnnotation: (Recur, Recur) -> T) -> T {
+		@noescape ifAnnotation: (Recur, Recur) -> T,
+		@noescape ifEnumeration: Int -> T,
+		@noescape ifTag: (Int, Int) -> T,
+		@noescape ifSwitch: (Recur, [Recur]) -> T) -> T {
 		switch self {
 		case .Unit:
 			return ifUnit()
@@ -32,6 +35,12 @@ public enum Expression<Recur>: CustomDebugStringConvertible, CustomStringConvert
 			return ifProduct(a, b)
 		case let .Annotation(term, type):
 			return ifAnnotation(term, type)
+		case let .Enumeration(n):
+			return ifEnumeration(n)
+		case let .Tag(n, m):
+			return ifTag(n, m)
+		case let .Switch(tag, labels):
+			return ifSwitch(tag, labels)
 		}
 	}
 
@@ -45,6 +54,9 @@ public enum Expression<Recur>: CustomDebugStringConvertible, CustomStringConvert
 		ifProjection: ((Recur, Bool) -> T)? = nil,
 		ifProduct: ((Recur, Recur) -> T)? = nil,
 		ifAnnotation: ((Recur, Recur) -> T)? = nil,
+		ifEnumeration: (Int -> T)? = nil,
+		ifTag: ((Int, Int) -> T)? = nil,
+		ifSwitch: ((Recur, [Recur]) -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifUnit: { ifUnit?() ?? otherwise() },
@@ -55,7 +67,10 @@ public enum Expression<Recur>: CustomDebugStringConvertible, CustomStringConvert
 			ifLambda: { ifLambda?($0) ?? otherwise() },
 			ifProjection: { ifProjection?($0) ?? otherwise() },
 			ifProduct: { ifProduct?($0) ?? otherwise() },
-			ifAnnotation: { ifAnnotation?($0) ?? otherwise() })
+			ifAnnotation: { ifAnnotation?($0) ?? otherwise() },
+			ifEnumeration: { ifEnumeration?($0) ?? otherwise() },
+			ifTag: { ifTag?($0) ?? otherwise() },
+			ifSwitch: { ifSwitch?($0) ?? otherwise() })
 	}
 
 
@@ -71,7 +86,10 @@ public enum Expression<Recur>: CustomDebugStringConvertible, CustomStringConvert
 			ifLambda: { .Lambda($0, transform($1), transform($2)) },
 			ifProjection: { .Projection(transform($0), $1) },
 			ifProduct: { .Product(transform($0), transform($1)) },
-			ifAnnotation: { .Annotation(transform($0), transform($1)) })
+			ifAnnotation: { .Annotation(transform($0), transform($1)) },
+			ifEnumeration: Expression<T>.Enumeration,
+			ifTag: Expression<T>.Tag,
+			ifSwitch: { .Switch(transform($0), $1.map(transform)) })
 	}
 
 
@@ -97,6 +115,13 @@ public enum Expression<Recur>: CustomDebugStringConvertible, CustomStringConvert
 			return ".Product(\(String(reflecting: a)), \(String(reflecting: b)))"
 		case let .Annotation(a, b):
 			return ".Annotation(\(String(reflecting: a)), \(String(reflecting: b)))"
+		case let .Enumeration(n):
+			return ".Enumeration(\(n))"
+		case let .Tag(t, u):
+			return ".Tag(\(t), \(u))"
+		case let .Switch(tag, labels):
+			let	l = labels.lazy.map { String(reflecting: $0) }.joinWithSeparator(", ")
+			return ".Switch(\(tag), [ \(l) ])"
 		}
 	}
 
@@ -141,6 +166,14 @@ public enum Expression<Recur>: CustomDebugStringConvertible, CustomStringConvert
 
 		case let .Annotation(term, type):
 			return "\(term) : \(type)"
+
+		case let .Enumeration(n):
+			return "@\(n)"
+		case let .Tag(m, n):
+			return "#{\(m) of \(n)}"
+		case let .Switch(tag, labels):
+			let l = labels.lazy.map { String($0) }.joinWithSeparator(",\n\t")
+			return "case \(tag) of [\n\t\(l)\n]"
 		}
 	}
 
@@ -170,6 +203,9 @@ public enum Expression<Recur>: CustomDebugStringConvertible, CustomStringConvert
 	case Projection(Recur, Bool)
 	case Product(Recur, Recur)
 	case Annotation(Recur, Recur)
+	case Enumeration(Int) // n-point domain
+	case Tag(Int, Int) // a point x in an n-point domain
+	case Switch(Recur, [Recur]) // select one of n points
 }
 
 extension Expression where Recur: TermType {
