@@ -13,7 +13,6 @@ extension Expression where Recur: TermType {
 				ifLambda: Expression.Lambda,
 				ifProjection: Expression.Projection,
 				ifProduct: Expression.Product,
-				ifIf: Expression.If,
 				ifAnnotation: Expression.Annotation,
 				otherwise: const(t)))
 		} (Recur(self)).out

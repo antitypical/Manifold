@@ -28,28 +28,20 @@ final class TypecheckingTests: XCTestCase {
 	}
 
 	func testProjectionTypechecksToTypeOfProjectedField() {
-		let product = Term.Product(.Unit, false)
+		let product = Term.Product(.Unit, .Product(.Unit, .Unit))
 		assert(Term.Projection(product, false).out.inferType(), ==, .UnitType)
-		assert(Term.Projection(product, true).out.inferType(), ==, .BooleanType)
-	}
-
-	func testIfWithEqualBranchTypesTypechecksToBranchType() {
-		assert(Term.If(true, .Unit, .Unit).out.inferType(), ==, .UnitType)
-	}
-
-	func testIfWithDisjointBranchTypesTypechecksToSumOfBranchTypes() {
-		assert(Term.If(true, .Unit, true).out.inferType(), ==, Term.lambda(.BooleanType) { .If($0, .UnitType, .BooleanType) }.out)
+		assert(Term.Projection(product, true).out.inferType(), ==, .Lambda(0, .UnitType, .UnitType))
 	}
 
 	func testProductTypechecksToSigmaType() {
-		assert(Term.Product(.Unit, false).out.inferType(), ==, Term.lambda(.UnitType, const(.BooleanType)).out)
+		assert(Term.Product(.Unit, .Product(.Unit, .Unit)).out.inferType(), ==, Term.lambda(.UnitType, const(.lambda(.UnitType, const(.UnitType)))).out)
 	}
 
-	func testDependentProductTypechecksToSigmaType() {
-		let type = Term.lambda(.BooleanType) { c in .If(c, .UnitType, .BooleanType) }
-		assert(Term.Annotation(.Product(true, .Unit), type).out.inferType(), ==, type.out)
-		assert(Term.Annotation(.Product(false, true), type).out.inferType(), ==, type.out)
-	}
+//	func testDependentProductTypechecksToSigmaType() {
+//		let type = Term.lambda(.BooleanType) { c in .If(c, .UnitType, .BooleanType) }
+//		assert(Term.Annotation(.Product(true, .Unit), type).out.inferType(), ==, type.out)
+//		assert(Term.Annotation(.Product(false, true), type).out.inferType(), ==, type.out)
+//	}
 }
 
 import Assertions

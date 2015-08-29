@@ -8,19 +8,8 @@ extension Expression where Recur: TermType, Recur: Equatable {
 		// Inference rules.
 		case .Unit:
 			return .right(.UnitType)
-		case .Boolean:
-			return .right(.BooleanType)
 
-		case let .If(condition, then, `else`):
-			return annotate(condition.checkType(.BooleanType, environment, context)
-				>> (then.inferType(environment, context) &&& `else`.inferType(environment, context))
-					.map { a, b in
-						a == b
-							? a
-							: Expression.lambda(.BooleanType) { .If($0, Recur(a), Recur(b)) }
-					})
-
-		case .UnitType, .BooleanType:
+		case .UnitType:
 			return .right(.Type(0))
 		case let .Type(n):
 			return .right(.Type(n + 1))

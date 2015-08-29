@@ -4,7 +4,7 @@
 
 public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Recur>) -> Bool {
 	switch (left, right) {
-	case (.Unit, .Unit), (.UnitType, .UnitType), (.BooleanType, .BooleanType):
+	case (.Unit, .Unit), (.UnitType, .UnitType):
 		return true
 	case let (.Type(i), .Type(j)):
 		return i == j
@@ -18,10 +18,6 @@ public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Re
 		return p == q && f == g
 	case let (.Product(t, a), .Product(u, b)):
 		return t == u && a == b
-	case let (.Boolean(a), .Boolean(b)):
-		return a == b
-	case let (.If(a1, b1, c1), .If(a2, b2, c2)):
-		return a1 == a2 && b1 == b2 && c1 == c2
 	case let (.Annotation(term1, type1), .Annotation(term2, type2)):
 		return term1 == term2 && type1 == type2
 	default:
@@ -45,7 +41,7 @@ extension Expression where Recur: TermType {
 		visited.unionInPlace(rnames)
 
 		switch (left.destructured, right.destructured) {
-		case (.Type, .Type), (.Unit, .Unit), (.UnitType, .UnitType), (.BooleanType, .BooleanType):
+		case (.Type, .Type), (.Unit, .Unit), (.UnitType, .UnitType):
 			return true
 
 		case let (.Variable(a), .Variable(b)):
@@ -62,12 +58,6 @@ extension Expression where Recur: TermType {
 
 		case let (.Product(a1, a2), .Product(b1, b2)):
 			return recur(a1, b1) && recur(a2, b2)
-
-		case let (.Boolean(a), .Boolean(b)):
-			return a == b
-
-		case let (.If(a1, a2, a3), .If(b1, b2, b3)):
-			return recur(a1, b1) && recur(a2, b2) && recur(a3, b3)
 
 		case let (.Annotation(a1, a2), .Annotation(b1, b2)):
 			return recur(a1, b1) && recur(a2, b2)
