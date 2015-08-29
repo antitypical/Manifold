@@ -68,6 +68,15 @@ extension Expression where Recur: TermType {
 		case let (.Annotation(a1, a2), .Annotation(b1, b2)):
 			return recur(a1, b1) && recur(a2, b2)
 
+		case let (.Enumeration(m), .Enumeration(n)):
+			return m == n
+
+		case let (.Tag(m1, m2), .Tag(n1, n2)):
+			return m1 == n1 && m2 == n2
+
+		case let (.Switch(t, l), .Switch(u, m)):
+			return recur(t, u) && l.count == m.count && zip(l, m).lazy.map(recur).reduce(true) { $0 && $1 }
+
 		default:
 			return false
 		}
