@@ -9,7 +9,7 @@ func assert<L, R>(@autoclosure expression1: () -> Either<L, R>, _ test: (R, R) -
 		let expected = expression2()
 		return test(r, expected)
 			? r
-			: failure("\(String(reflecting: r)) did not match \(String(reflecting: expected))")
+			: failure("\(String(reflecting: r)) did not match \(String(reflecting: expected))", file: file, line: line)
 	}
 }
 
