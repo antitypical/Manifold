@@ -51,6 +51,9 @@ extension Expression where Recur: TermType, Recur: Equatable {
 			return annotate(term.checkType(type, environment, context)
 				.map(const(type)))
 
+		case let .Tag(_, n):
+			return Either.Right(.Enumeration(n))
+
 		default:
 			return Either.Left("Cannot infer type for \(self). Try annotating?")
 		}
