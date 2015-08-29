@@ -20,6 +20,12 @@ public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Re
 		return t == u && a == b
 	case let (.Annotation(term1, type1), .Annotation(term2, type2)):
 		return term1 == term2 && type1 == type2
+	case let (.Enumeration(m), .Enumeration(n)):
+		return m == n
+	case let (.Tag(x1, x2), .Tag(y1, y2)):
+		return x1 == y1 && x2 == y2
+	case let (.Switch(t, l), .Switch(u, m)):
+		return t == u && l == m
 	default:
 		return false
 	}
