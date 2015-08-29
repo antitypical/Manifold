@@ -24,8 +24,8 @@ public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Re
 		return m == n
 	case let (.Tag(x1, x2), .Tag(y1, y2)):
 		return x1 == y1 && x2 == y2
-	case let (.Switch(t, l), .Switch(u, m)):
-		return t == u && l == m
+	case let (.Switch(t, l, x), .Switch(u, m, y)):
+		return t == u && l == m && x == y
 	default:
 		return false
 	}
@@ -74,8 +74,8 @@ extension Expression where Recur: TermType {
 		case let (.Tag(m1, m2), .Tag(n1, n2)):
 			return m1 == n1 && m2 == n2
 
-		case let (.Switch(t, l), .Switch(u, m)):
-			return recur(t, u) && l.count == m.count && zip(l, m).lazy.map(recur).reduce(true) { $0 && $1 }
+		case let (.Switch(t, l, x), .Switch(u, m, y)):
+			return recur(t, u) && l.count == m.count && zip(l, m).lazy.map(recur).reduce(true) { $0 && $1 } && recur(x, y)
 
 		default:
 			return false

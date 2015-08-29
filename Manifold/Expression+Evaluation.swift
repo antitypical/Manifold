@@ -25,7 +25,7 @@ extension Expression where Recur: TermType {
 		case let .Annotation(term, _):
 			return term.evaluate(environment)
 
-		case let .Switch(tag, labels):
+		case let .Switch(tag, labels, _):
 			switch tag.evaluate(environment) {
 			case let .Tag(_, n) where n != labels.count:
 				fatalError("Illegal switch on \(n)-point domain with \(labels.count) cases")

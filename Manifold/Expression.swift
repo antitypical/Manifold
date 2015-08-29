@@ -15,7 +15,7 @@ public enum Expression<Recur>: CustomDebugStringConvertible, CustomStringConvert
 		@noescape ifAnnotation: (Recur, Recur) -> T,
 		@noescape ifEnumeration: Int -> T,
 		@noescape ifTag: (Int, Int) -> T,
-		@noescape ifSwitch: (Recur, [Recur]) -> T) -> T {
+		@noescape ifSwitch: (Recur, [Recur], Recur) -> T) -> T {
 		switch self {
 		case .Unit:
 			return ifUnit()
@@ -39,8 +39,8 @@ public enum Expression<Recur>: CustomDebugStringConvertible, CustomStringConvert
 			return ifEnumeration(n)
 		case let .Tag(n, m):
 			return ifTag(n, m)
-		case let .Switch(tag, labels):
-			return ifSwitch(tag, labels)
+		case let .Switch(tag, labels, type):
+			return ifSwitch(tag, labels, type)
 		}
 	}
 
@@ -56,7 +56,7 @@ public enum Expression<Recur>: CustomDebugStringConvertible, CustomStringConvert
 		ifAnnotation: ((Recur, Recur) -> T)? = nil,
 		ifEnumeration: (Int -> T)? = nil,
 		ifTag: ((Int, Int) -> T)? = nil,
-		ifSwitch: ((Recur, [Recur]) -> T)? = nil,
+		ifSwitch: ((Recur, [Recur], Recur) -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifUnit: { ifUnit?() ?? otherwise() },
@@ -89,7 +89,7 @@ public enum Expression<Recur>: CustomDebugStringConvertible, CustomStringConvert
 			ifAnnotation: { .Annotation(transform($0), transform($1)) },
 			ifEnumeration: Expression<T>.Enumeration,
 			ifTag: Expression<T>.Tag,
-			ifSwitch: { .Switch(transform($0), $1.map(transform)) })
+			ifSwitch: { .Switch(transform($0), $1.map(transform), transform($2)) })
 	}
 
 
@@ -119,9 +119,9 @@ public enum Expression<Recur>: CustomDebugStringConvertible, CustomStringConvert
 			return ".Enumeration(\(n))"
 		case let .Tag(t, u):
 			return ".Tag(\(t), \(u))"
-		case let .Switch(tag, labels):
+		case let .Switch(tag, labels, type):
 			let	l = labels.lazy.map { String(reflecting: $0) }.joinWithSeparator(", ")
-			return ".Switch(\(tag), [ \(l) ])"
+			return ".Switch(\(tag), [ \(l) ], \(String(reflecting: type)))"
 		}
 	}
 
@@ -171,9 +171,9 @@ public enum Expression<Recur>: CustomDebugStringConvertible, CustomStringConvert
 			return "@\(n)"
 		case let .Tag(m, n):
 			return "#{\(m) of \(n)}"
-		case let .Switch(tag, labels):
+		case let .Switch(tag, labels, type):
 			let l = labels.lazy.map { String($0) }.joinWithSeparator(",\n\t")
-			return "case \(tag) of [\n\t\(l)\n]"
+			return "case \(tag) of [\n\t\(l)\n] : \(type)"
 		}
 	}
 
@@ -205,7 +205,7 @@ public enum Expression<Recur>: CustomDebugStringConvertible, CustomStringConvert
 	case Annotation(Recur, Recur)
 	case Enumeration(Int) // n-point domain
 	case Tag(Int, Int) // a point x in an n-point domain
-	case Switch(Recur, [Recur]) // select one of n points
+	case Switch(Recur, [Recur], Recur) // select one of n points of a given type
 }
 
 extension Expression where Recur: TermType {
