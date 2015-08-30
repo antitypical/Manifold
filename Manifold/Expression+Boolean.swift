@@ -18,7 +18,11 @@ extension Expression where Recur: TermType {
 			type: FunctionType(Boolean.ref, Boolean.ref),
 			value: lambda(Boolean.ref, .Type) { b, A in Recur.lambda(A, A) { t, f in b[A, f, t] } })
 
-		return Module([ Boolean, `true`, `false`, not ])
+		let `if` = Declaration("if",
+			type: lambda(.Type, Boolean.ref) { t, _ in .FunctionType(t, t, t) },
+			value: lambda(.Type, Boolean.ref) { t, condition in Recur.lambda(t, t) { condition[$0, $1] } })
+
+		return Module([ Boolean, `true`, `false`, not, `if` ])
 	}
 }
 
