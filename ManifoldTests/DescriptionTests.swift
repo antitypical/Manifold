@@ -17,6 +17,15 @@ final class DescriptionTests: XCTestCase {
 
 		assert(Term(term: BooleanDescription).out, ==, Expression.lambda(.BooleanType) { .If($0, .UnitType, .UnitType) })
 	}
+
+	func testCaseConstruction() {
+		let NaturalDescription: Description = [
+			"zero": .End,
+			"successor": .Argument(.Recursive(.End), id),
+		]
+
+		assert(NaturalDescription, ==, Description.Argument(.BooleanType) { .If($0, .UnitType, .Argument(.Recursive(.End), id)) })
+	}
 }
 
 
