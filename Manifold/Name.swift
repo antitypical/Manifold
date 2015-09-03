@@ -30,8 +30,8 @@ public enum Name: Comparable, CustomDebugStringConvertible, CustomStringConverti
 
 	public var debugDescription: String {
 		return analysis(
-			ifGlobal: { "Global(\($0))" },
-			ifLocal: { "Local(\($0))" })
+			ifGlobal: { ".Global(\($0))" },
+			ifLocal: { ".Local(\($0))" })
 	}
 
 
