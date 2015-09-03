@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Description: DictionaryLiteralConvertible, TermType {
+public enum Description: CustomDebugStringConvertible, DictionaryLiteralConvertible, TermType {
 	public init(branches: [(String, Description)]) {
 		switch branches.count {
 		case 0:
@@ -14,6 +14,22 @@ public enum Description: DictionaryLiteralConvertible, TermType {
 					branches[0].1,
 					Description(branches: Array(branches.dropFirst())))
 			})
+		}
+	}
+
+
+	// MARK: CustomDebugStringConvertible
+
+	public var debugDescription: String {
+		switch self {
+		case .End:
+			return ".End"
+		case let .Pure(f):
+			return ".Pure(\(String(reflecting: f())))"
+		case let .Recursive(r):
+			return ".Recursive(\(String(reflecting: r)))"
+		case let .Argument(a, f):
+			return ".Argument(\(String(reflecting: a)), \(String(reflecting: f(.Variable(.Local(0))))))"
 		}
 	}
 
