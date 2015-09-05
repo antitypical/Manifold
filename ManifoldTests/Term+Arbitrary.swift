@@ -33,7 +33,7 @@ extension Term: Arbitrary {
 			]
 
 			let inBinder = [
-				Int.arbitrary.suchThat { $0 <= n }.fmap { Term.Variable(.Local($0)) },
+				Int.arbitrary.suchThat { $0 <= n && $0 >= 0 }.fmap { Term.Variable(.Local($0)) },
 			]
 
 			return Gen.oneOf(topLevel + (n >= 0 ? inBinder : []))
