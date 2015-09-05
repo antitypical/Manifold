@@ -44,6 +44,5 @@ extension Term: Arbitrary {
 
 
 @testable import Manifold
-import Prelude
 import SwiftCheck
 import XCTest
