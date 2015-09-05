@@ -32,4 +32,5 @@ private let NaturalDescription: Description = [
 
 import Assertions
 @testable import Manifold
+import Prelude
 import XCTest
