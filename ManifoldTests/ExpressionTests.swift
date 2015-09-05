@@ -19,18 +19,6 @@ final class ExpressionTests: XCTestCase {
 	}
 
 
-	func testNullarySumsAreUnitType() {
-		assert(Expression<Term>.Sum([]), ==, .UnitType)
-	}
-
-	func testUnarySumsAreTheIdentityConstructor() {
-		assert(Expression.Sum([ Term.BooleanType ]), ==, .BooleanType)
-	}
-
-	func testNArySumsAreProducts() {
-		assert(Expression.Sum([ Term.BooleanType, Term.BooleanType ]), ==, Expression.Lambda(0, .BooleanType, .If(0, .BooleanType, .BooleanType)))
-	}
-
 	func testHigherOrderConstruction() {
 		assert(Term.lambda(.UnitType, id), ==, .Lambda(0, .UnitType, 0))
 		assert(identity, ==, .Lambda(1, .Type, .Lambda(0, 1, 0)))

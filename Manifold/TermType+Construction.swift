@@ -39,18 +39,6 @@ extension TermType {
 		return Self(.Product(a, b))
 	}
 
-	public static var BooleanType: Self {
-		return Self(.BooleanType)
-	}
-
-	public static func Boolean(value: Bool) -> Self {
-		return Self(.Boolean(value))
-	}
-
-	public static func If(condition: Self, _ then: Self, _ `else`: Self) -> Self {
-		return Self(.If(condition, then, `else`))
-	}
-
 	public static func Annotation(term: Self, _ type: Self) -> Self {
 		return Self(.Annotation(term, type))
 	}
@@ -100,11 +88,6 @@ extension TermType {
 
 	public init<T: TermType>(term: T) {
 		self.init(term.out.map { Self(term: $0) })
-	}
-
-
-	public init(booleanLiteral value: Bool) {
-		self.init(.Boolean(value))
 	}
 
 

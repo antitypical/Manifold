@@ -8,19 +8,8 @@ extension Expression where Recur: TermType, Recur: Equatable {
 		// Inference rules.
 		case .Unit:
 			return .right(.UnitType)
-		case .Boolean:
-			return .right(.BooleanType)
 
-		case let .If(condition, then, `else`):
-			return annotate(condition.checkType(.BooleanType, environment, context)
-				>> (then.inferType(environment, context) &&& `else`.inferType(environment, context))
-					.map { a, b in
-						a == b
-							? a
-							: Expression.lambda(.BooleanType) { .If($0, Recur(a), Recur(b)) }
-					})
-
-		case .UnitType, .BooleanType:
+		case .UnitType:
 			return .right(.Type(0))
 		case let .Type(n):
 			return .right(.Type(n + 1))
@@ -61,6 +50,21 @@ extension Expression where Recur: TermType, Recur: Equatable {
 		case let .Annotation(term, type):
 			return annotate(term.checkType(type, environment, context)
 				.map(const(type)))
+
+		case let .Tag(_, n):
+			return Either.Right(.Enumeration(n))
+
+		case let .Switch(tag, labels, type):
+			return annotate(tag.checkType(.Enumeration(labels.count), environment, context)
+				>> (type.checkIsType(environment, context)
+				>>- { type in
+					labels.lazy
+						.map { $0.checkType(type, environment, context) }
+						.reduce(Either.Right(())) {
+							($0 &&& $1).map(const(()))
+						}
+						>> Either.Right(type)
+				}))
 
 		default:
 			return Either.Left("Cannot infer type for \(self). Try annotating?")

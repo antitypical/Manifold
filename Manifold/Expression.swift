@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Expression<Recur>: BooleanLiteralConvertible, CustomDebugStringConvertible, CustomStringConvertible, IntegerLiteralConvertible, StringLiteralConvertible {
+public enum Expression<Recur>: CustomDebugStringConvertible, CustomStringConvertible, IntegerLiteralConvertible, StringLiteralConvertible {
 	// MARK: Analyses
 
 	public func analysis<T>(
@@ -12,10 +12,10 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomDebugStringConve
 		@noescape ifLambda: (Int, Recur, Recur) -> T,
 		@noescape ifProjection: (Recur, Bool) -> T,
 		@noescape ifProduct: (Recur, Recur) -> T,
-		@noescape ifBooleanType: () -> T,
-		@noescape ifBoolean: Bool -> T,
-		@noescape ifIf: (Recur, Recur, Recur) -> T,
-		@noescape ifAnnotation: (Recur, Recur) -> T) -> T {
+		@noescape ifAnnotation: (Recur, Recur) -> T,
+		@noescape ifEnumeration: Int -> T,
+		@noescape ifTag: (Int, Int) -> T,
+		@noescape ifSwitch: (Recur, [Recur], Recur) -> T) -> T {
 		switch self {
 		case .Unit:
 			return ifUnit()
@@ -33,14 +33,14 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomDebugStringConve
 			return ifProjection(a, b)
 		case let .Product(a, b):
 			return ifProduct(a, b)
-		case .BooleanType:
-			return ifBooleanType()
-		case let .Boolean(b):
-			return ifBoolean(b)
-		case let .If(a, b, c):
-			return ifIf(a, b, c)
 		case let .Annotation(term, type):
 			return ifAnnotation(term, type)
+		case let .Enumeration(n):
+			return ifEnumeration(n)
+		case let .Tag(n, m):
+			return ifTag(n, m)
+		case let .Switch(tag, labels, type):
+			return ifSwitch(tag, labels, type)
 		}
 	}
 
@@ -53,10 +53,10 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomDebugStringConve
 		ifLambda: ((Int, Recur, Recur) -> T)? = nil,
 		ifProjection: ((Recur, Bool) -> T)? = nil,
 		ifProduct: ((Recur, Recur) -> T)? = nil,
-		ifBooleanType: (() -> T)? = nil,
-		ifBoolean: (Bool -> T)? = nil,
-		ifIf: ((Recur, Recur, Recur) -> T)? = nil,
 		ifAnnotation: ((Recur, Recur) -> T)? = nil,
+		ifEnumeration: (Int -> T)? = nil,
+		ifTag: ((Int, Int) -> T)? = nil,
+		ifSwitch: ((Recur, [Recur], Recur) -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifUnit: { ifUnit?() ?? otherwise() },
@@ -67,10 +67,10 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomDebugStringConve
 			ifLambda: { ifLambda?($0) ?? otherwise() },
 			ifProjection: { ifProjection?($0) ?? otherwise() },
 			ifProduct: { ifProduct?($0) ?? otherwise() },
-			ifBooleanType: { ifBooleanType?() ?? otherwise() },
-			ifBoolean: { ifBoolean?($0) ?? otherwise() },
-			ifIf: { ifIf?($0) ?? otherwise() },
-			ifAnnotation: { ifAnnotation?($0) ?? otherwise() })
+			ifAnnotation: { ifAnnotation?($0) ?? otherwise() },
+			ifEnumeration: { ifEnumeration?($0) ?? otherwise() },
+			ifTag: { ifTag?($0) ?? otherwise() },
+			ifSwitch: { ifSwitch?($0) ?? otherwise() })
 	}
 
 
@@ -86,17 +86,10 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomDebugStringConve
 			ifLambda: { .Lambda($0, transform($1), transform($2)) },
 			ifProjection: { .Projection(transform($0), $1) },
 			ifProduct: { .Product(transform($0), transform($1)) },
-			ifBooleanType: const(.BooleanType),
-			ifBoolean: Expression<T>.Boolean,
-			ifIf: { .If(transform($0), transform($1), transform($2)) },
-			ifAnnotation: { .Annotation(transform($0), transform($1)) })
-	}
-
-
-	// MARK: BooleanLiteralConvertible
-
-	public init(booleanLiteral value: Bool) {
-		self = .Boolean(value)
+			ifAnnotation: { .Annotation(transform($0), transform($1)) },
+			ifEnumeration: Expression<T>.Enumeration,
+			ifTag: Expression<T>.Tag,
+			ifSwitch: { .Switch(transform($0), $1.map(transform), transform($2)) })
 	}
 
 
@@ -120,14 +113,15 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomDebugStringConve
 			return ".Projection(\(String(reflecting: a)), \(field))"
 		case let .Product(a, b):
 			return ".Product(\(String(reflecting: a)), \(String(reflecting: b)))"
-		case .BooleanType:
-			return ".BooleanType"
-		case let .Boolean(a):
-			return ".Boolean(\(a))"
-		case let .If(a, b, c):
-			return ".If(\(String(reflecting: a)), \(String(reflecting: b)), \(String(reflecting: c)))"
 		case let .Annotation(a, b):
 			return ".Annotation(\(String(reflecting: a)), \(String(reflecting: b)))"
+		case let .Enumeration(n):
+			return ".Enumeration(\(n))"
+		case let .Tag(t, u):
+			return ".Tag(\(t), \(u))"
+		case let .Switch(tag, labels, type):
+			let	l = labels.lazy.map { String(reflecting: $0) }.joinWithSeparator(", ")
+			return ".Switch(\(tag), [ \(l) ], \(String(reflecting: type)))"
 		}
 	}
 
@@ -170,16 +164,16 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomDebugStringConve
 		case let .Product(a, b):
 			return "(\(a) × \(b))"
 
-		case .BooleanType:
-			return "Boolean"
-		case let .Boolean(b):
-			return String(b)
-
-		case let .If(condition, then, `else`):
-			return "if \(condition) then \(then) else \(`else`)"
-
 		case let .Annotation(term, type):
 			return "\(term) : \(type)"
+
+		case let .Enumeration(n):
+			return "@\(n)"
+		case let .Tag(m, n):
+			return "#{\(m) of \(n)}"
+		case let .Switch(tag, labels, type):
+			let l = labels.lazy.map { String($0) }.joinWithSeparator(",\n\t")
+			return "case \(tag) of [\n\t\(l)\n] : \(type)"
 		}
 	}
 
@@ -208,25 +202,14 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomDebugStringConve
 	case Lambda(Int, Recur, Recur) // (Πx:A)B where B can depend on x
 	case Projection(Recur, Bool)
 	case Product(Recur, Recur)
-	case BooleanType
-	case Boolean(Bool)
-	case If(Recur, Recur, Recur)
 	case Annotation(Recur, Recur)
+	case Enumeration(Int) // n-point domain
+	case Tag(Int, Int) // a point x in an n-point domain
+	case Switch(Recur, [Recur], Recur) // select one of n points of a given type
 }
 
 extension Expression where Recur: TermType {
 	// MARK: First-order construction
-
-	/// Constructs a sum type of the elements in `terms`.
-	public static func Sum(terms: [Recur]) -> Expression {
-		return terms.uncons.map { first, rest in
-			rest.isEmpty
-				? first.out
-				: Expression.lambda(.BooleanType) {
-					.If($0, first, Recur(.Sum(Array(rest))))
-				}
-		} ?? .UnitType
-	}
 
 	/// Constructs a (non-dependent) function type from `A` to `B`.
 	public static func FunctionType(a: Recur, _ b: Recur) -> Expression {
@@ -287,10 +270,6 @@ extension Expression where Recur: TermType {
 		return analysis(ifProduct: Optional.Some, ifAnnotation: { $0.0.out.product }, otherwise: const(nil))
 	}
 
-	public var boolean: Bool? {
-		return analysis(ifBoolean: Optional.Some, otherwise: const(nil))
-	}
-
 
 	// MARK: Variables
 
@@ -301,7 +280,6 @@ extension Expression where Recur: TermType {
 				ifLambda: { max($0.0, $0.1) },
 				ifProjection: { $0.0 },
 				ifProduct: max,
-				ifIf: { max($0, $1, $2) },
 				ifAnnotation: max,
 				otherwise: const(-1))
 		} (Recur(self))
@@ -315,7 +293,6 @@ extension Expression where Recur: TermType {
 				ifLambda: { $1.union($2.subtract([ $0 ])) },
 				ifProjection: { $0.0 },
 				ifProduct: uncurry(Set.union),
-				ifIf: { $0.union($1).union($2) },
 				ifAnnotation: uncurry(Set.union),
 				otherwise: const(Set()))
 		} (Recur(self))
@@ -368,16 +345,6 @@ extension Expression where Recur: TermType {
 
 			default:
 				return .Projection(Recur(a), b)
-			}
-
-		case let .If(condition, then, `else`):
-			let condition = unfold(condition)
-			switch condition {
-			case let .Boolean(flag):
-				return unfold(flag ? then : `else`)
-
-			default:
-				return .If(Recur(condition), Recur(then), Recur(`else`))
 			}
 
 		default:
