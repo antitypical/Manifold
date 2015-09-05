@@ -19,13 +19,13 @@ extension Term: Arbitrary {
 				Bool.arbitrary.fmap(Term.Boolean),
 				Bool.arbitrary.fmap { $0 ? .Type : .Type(1) },
 				Gen.pure(()).bind {
-					Term.arbitrary.bind { a in Term.arbitrary.fmap { b in Term.Application(a, b) } }
+					arbitrary(n).bind { a in arbitrary(n).fmap { b in Term.Application(a, b) } }
 				},
 				Gen.pure(()).bind {
-					Term.arbitrary.bind { a in Bool.arbitrary.fmap { b in Term.Projection(a, b) } }
+					arbitrary(n).bind { a in Bool.arbitrary.fmap { b in Term.Projection(a, b) } }
 				},
 				Gen.pure(()).bind {
-					Term.arbitrary.bind { a in Term.arbitrary.bind { b in Term.arbitrary.fmap { c in Term.If(a, b, c) } } }
+					arbitrary(n).bind { a in arbitrary(n).bind { b in Term.arbitrary.fmap { c in Term.If(a, b, c) } } }
 				},
 			]
 
