@@ -27,6 +27,9 @@ extension Term: Arbitrary {
 				Gen.pure(()).bind {
 					arbitrary(n).bind { a in arbitrary(n).bind { b in Term.arbitrary.fmap { c in Term.If(a, b, c) } } }
 				},
+				Gen.pure(()).bind {
+					arbitrary(n).bind { type in arbitrary(n + 1).fmap { body in Term.Lambda(n + 1, type, body) } }
+				},
 			]
 
 			let inBinder = [
