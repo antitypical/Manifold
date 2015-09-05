@@ -15,7 +15,7 @@ final class DescriptionTests: XCTestCase {
 			"false": .End,
 		]
 
-		assert(Term(term: BooleanDescription).out, ==, Expression.lambda(.BooleanType) { .If($0, .UnitType, .UnitType) })
+		assert(Term(term: BooleanDescription), ==, Term.lambda(.BooleanType) { .If($0, .UnitType, .UnitType) })
 	}
 
 	func testCaseConstruction() {
