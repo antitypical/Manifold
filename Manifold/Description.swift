@@ -47,6 +47,19 @@ public enum Description: CustomDebugStringConvertible, DictionaryLiteralConverti
 		self = .Pure(expression)
 	}
 
+	func out(recur: Description) -> Expression<Description> {
+		switch self {
+		case .End:
+			return Expression.UnitType
+		case let .Pure(a):
+			return a()
+		case .Recursive:
+			return recur.out
+		case let .Argument(x, continuation):
+			return .lambda(x, continuation)
+		}
+	}
+
 	public var out: Expression<Description> {
 		switch self {
 		case .End:
