@@ -26,8 +26,8 @@ public enum Description: CustomDebugStringConvertible, DictionaryLiteralConverti
 			return ".End"
 		case let .Pure(f):
 			return ".Pure(\(String(reflecting: f())))"
-		case let .Recursive(r):
-			return ".Recursive(\(String(reflecting: r)))"
+		case .Recursive:
+			return ".Recursive"
 		case let .Argument(a, f):
 			return ".Argument(\(String(reflecting: a)), \(String(reflecting: f(.Variable(.Local(0))))))"
 		}
@@ -54,7 +54,7 @@ public enum Description: CustomDebugStringConvertible, DictionaryLiteralConverti
 		case let .Pure(a):
 			return a()
 		case .Recursive:
-			return recur.out
+			return recur.out(recur)
 		case let .Argument(x, continuation):
 			return .lambda(x, continuation)
 		}
@@ -69,7 +69,7 @@ public enum Description: CustomDebugStringConvertible, DictionaryLiteralConverti
 
 	case End
 	indirect case Pure(() -> Expression<Description>)
-	indirect case Recursive(Description)
+	case Recursive
 	indirect case Argument(Description, Description -> Description)
 }
 

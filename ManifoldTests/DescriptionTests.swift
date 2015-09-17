@@ -19,13 +19,13 @@ final class DescriptionTests: XCTestCase {
 	}
 
 	func testCaseConstruction() {
-		assert(NaturalDescription, ==, Description.Argument(.BooleanType) { .If($0, .UnitType, .Argument(.Recursive(.End), id)) })
+		assert(NaturalDescription, ==, Description.Argument(.BooleanType) { .If($0, .UnitType, .Argument(.Recursive, id)) })
 	}
 }
 
 private let NaturalDescription: Description = [
 	"zero": .End,
-	"successor": .Argument(.Recursive(.End), id),
+	"successor": .Argument(.Recursive, id),
 ]
 
 
