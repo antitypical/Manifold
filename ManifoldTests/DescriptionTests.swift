@@ -19,7 +19,7 @@ final class DescriptionTests: XCTestCase {
 	}
 
 	func testCaseConstruction() {
-		assert(NaturalDescription, ==, Description.Argument(.BooleanType) { .If($0, .UnitType, .Argument(.Recursive, id)) })
+		assert(NaturalDescription, ==, Description.Argument(.BooleanType) { .If($0, .End, .Argument(.Recursive, id)) })
 	}
 }
 
