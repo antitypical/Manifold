@@ -1,5 +1,21 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
+// MARK: Description
+
+public func == (left: Description, right: Description) -> Bool {
+	switch (left, right) {
+	case (.End, .End), (.Recursive, .Recursive):
+		return true
+	case let (.Pure(a), .Pure(b)):
+		return a() == b()
+	case let (.Argument(a, f), .Argument(b, g)):
+		return a == b && f(.Variable(-1)) == g(.Variable(-1))
+	default:
+		return false
+	}
+}
+
+
 // MARK: Expression
 
 public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Recur>) -> Bool {
