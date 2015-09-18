@@ -50,7 +50,7 @@ public enum Description: CustomDebugStringConvertible, DictionaryLiteralConverti
 	func out(recur: Description) -> Expression<Description> {
 		switch self {
 		case .End:
-			return Expression.UnitType
+			return .UnitType
 		case let .Pure(a):
 			return a()
 		case .Recursive:
