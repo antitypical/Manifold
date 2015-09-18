@@ -21,6 +21,13 @@ final class DescriptionTests: XCTestCase {
 	func testCaseConstruction() {
 		assert(NaturalDescription, ==, Description.Argument(.BooleanType) { .If($0, .End, .Argument(.Recursive, id)) })
 	}
+
+	func testNaturalDescriptionProducesRecursiveSumType() {
+		func toTerm(description: Description) -> Term {
+			return Term(description.out("Natural").map(toTerm))
+		}
+		assert(toTerm(NaturalDescription), ==, Term.lambda(.BooleanType) { .If($0, .UnitType, .lambda(.Variable("Natural"), id)) })
+	}
 }
 
 private let NaturalDescription: Description = [
