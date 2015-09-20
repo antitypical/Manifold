@@ -76,7 +76,7 @@ public enum Description: CustomDebugStringConvertible, DictionaryLiteralConverti
 	// MARK: Cases
 
 	case End
-	indirect case Pure(() -> Expression<Description>)
+	case Pure(() -> Expression<Description>)
 	case Recursive
 	indirect case Argument(Description, Description -> Description)
 }
