@@ -38,10 +38,10 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 		case let .Definition(symbol, type, value):
 			return [ (symbol, type, value) ]
 		case let .Datatype(symbol, branches):
+			let recur: Expression<Description> = .Variable(.Global(symbol))
 			return [
-				(symbol, .Type(0), Description(branches: branches).out(.Variable(.Global(symbol))).map(Recur.init))
-				// fixme: add the data constructors
-			]
+				(symbol, .Type(0), Description(branches: branches).out(recur).map(Recur.init))
+			] + branches.map { ($0, .Variable(.Global(symbol)), $1.out(recur).map(Recur.init)) }
 		}
 	}
 
