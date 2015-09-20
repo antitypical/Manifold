@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public struct Module<Recur> {
+public struct Module<Recur: TermType> {
 	public typealias Environment = Expression<Recur>.Environment
 	public typealias Context = Expression<Recur>.Context
 
