@@ -102,6 +102,10 @@ extension TermType {
 		self.init(term.out.map { Self(term: $0) })
 	}
 
+	public init<T: TermType>(expression: Expression<T>) {
+		self.init(expression.map { Self(term: $0) })
+	}
+
 
 	public init(booleanLiteral value: Bool) {
 		self.init(.Boolean(value))
