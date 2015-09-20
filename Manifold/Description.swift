@@ -8,8 +8,7 @@ public enum Description: CustomDebugStringConvertible, DictionaryLiteralConverti
 		case 1:
 			self = branches[0].1
 		default:
-			let tagType: Description = .BooleanType
-			self = .Argument(tagType, { tag in
+			self = .Argument(.BooleanType, { tag in
 				.If(tag,
 					branches[0].1,
 					Description(branches: Array(branches.dropFirst())))
