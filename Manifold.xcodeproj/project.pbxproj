@@ -54,6 +54,7 @@
 		D4F9F86E1A84977400B7071E /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F9F86D1A84977400B7071E /* Error.swift */; };
 		D4FB02D91B71D06A0090E764 /* Expression+Boolean.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FB02D81B71D06A0090E764 /* Expression+Boolean.swift */; };
 		D4FB02DB1B71D1F10090E764 /* BooleanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FB02DA1B71D1F10090E764 /* BooleanTests.swift */; };
+		D4FC2FDE1BAF564F005F3B26 /* DeclarationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FC2FDD1BAF564F005F3B26 /* DeclarationTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,6 +116,7 @@
 		D4F9F86D1A84977400B7071E /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		D4FB02D81B71D06A0090E764 /* Expression+Boolean.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+Boolean.swift"; sourceTree = "<group>"; };
 		D4FB02DA1B71D1F10090E764 /* BooleanTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BooleanTests.swift; sourceTree = "<group>"; };
+		D4FC2FDD1BAF564F005F3B26 /* DeclarationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeclarationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -220,6 +222,7 @@
 				D4FB02DA1B71D1F10090E764 /* BooleanTests.swift */,
 				D4012F951B7486020070B636 /* DescriptionTests.swift */,
 				D4F969971B98F3220069F481 /* Term+Arbitrary.swift */,
+				D4FC2FDD1BAF564F005F3B26 /* DeclarationTests.swift */,
 				D4B3FC001A83515800DA2AC3 /* Supporting Files */,
 			);
 			path = ManifoldTests;
@@ -396,6 +399,7 @@
 				D4DF44501B2DB043008DCA5D /* TypecheckingTests.swift in Sources */,
 				D4012F961B7486020070B636 /* DescriptionTests.swift in Sources */,
 				D4F1B8531B46FD4F0065BF22 /* LazyScanSequenceTests.swift in Sources */,
+				D4FC2FDE1BAF564F005F3B26 /* DeclarationTests.swift in Sources */,
 				D484903C1B2A40E800F249F7 /* EvaluationTests.swift in Sources */,
 				D440FCC51B6C100500C56B19 /* Assertions.swift in Sources */,
 				D4F1B8551B470B430065BF22 /* IntExtensionTests.swift in Sources */,
