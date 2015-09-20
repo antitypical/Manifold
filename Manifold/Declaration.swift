@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Declaration<Recur>: CustomDebugStringConvertible, CustomStringConvertible {
+public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomStringConvertible {
 	public init(_ symbol: String, type: Expression<Recur>, value: Expression<Recur>) {
 		self = .Definition(symbol, type, value)
 	}
