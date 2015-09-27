@@ -28,8 +28,8 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 		switch self {
 		case let .Definition(_, _, value):
 			return value
-		case let .Datatype(_, description):
-			return Description(branches: description).out(.Variable(.Global(symbol))).map(Recur.init)
+		case let .Datatype(_, datatype):
+			return Description(branches: datatype.branches).out(.Variable(.Global(symbol))).map(Recur.init)
 		}
 	}
 
@@ -37,11 +37,11 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 		switch self {
 		case let .Definition(symbol, type, value):
 			return [ (symbol, type, value) ]
-		case let .Datatype(symbol, branches):
+		case let .Datatype(symbol, datatype):
 			let recur: Expression<Description> = .Variable(.Global(symbol))
 			return [
-				(symbol, .Type(0), Description(branches: branches).out(recur).map(Recur.init))
-			] + branches.map { ($0, .Variable(.Global(symbol)), $1.out(recur).map(Recur.init)) }
+				(symbol, .Type(0), Description(branches: datatype.branches).out(recur).map(Recur.init))
+			] + datatype.branches.map { ($0, .Variable(.Global(symbol)), $1.out(recur).map(Recur.init)) }
 		}
 	}
 
@@ -68,7 +68,7 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 
 
 	case Definition(String, Expression<Recur>, Expression<Recur>)
-	case Datatype(String, [(String, Description)])
+	case Datatype(String, Manifold.Datatype)
 }
 
 extension Declaration where Recur: TermType {

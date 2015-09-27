@@ -15,8 +15,8 @@ final class DeclarationTests: XCTestCase {
 
 private let booleanModule = Module<Term>([], [
 	Declaration.Datatype("Boolean", [
-		("true", .End),
-		("false", .End),
+		"true": .End,
+		"false": .End,
 	])
 ])
 
