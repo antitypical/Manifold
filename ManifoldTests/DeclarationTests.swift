@@ -12,14 +12,14 @@ final class DeclarationTests: XCTestCase {
 	}
 
 	func testDatatypeDeclarationsAddDataConstructorsToEnvironment() {
-		assert(booleanModule.environment["true"].map(Term.init), ==, Term.Product(.Boolean(true), .Unit))
-		assert(booleanModule.environment["false"].map(Term.init), ==, Term.Product(.Boolean(false), .Unit))
+		assert(booleanModule.environment["true"].map(Term.init), ==, Term.Product(true, .Unit))
+		assert(booleanModule.environment["false"].map(Term.init), ==, Term.Product(false, .Unit))
 	}
 
 	func testDatatypeConstructorsProduceRightNestedValues() {
-		assert(selfModule.environment["me"].map(Term.init), ==, Term.Product(.Boolean(true), .Unit))
-		assert(selfModule.environment["myself"].map(Term.init), ==, Term.Product(.Boolean(false), .Product(.Boolean(true), .Unit)))
-		assert(selfModule.environment["I"].map(Term.init), ==, Term.Product(.Boolean(false), .Product(.Boolean(false), .Unit)))
+		assert(selfModule.environment["me"].map(Term.init), ==, Term.Product(true, .Unit))
+		assert(selfModule.environment["myself"].map(Term.init), ==, Term.Product(false, .Product(true, .Unit)))
+		assert(selfModule.environment["I"].map(Term.init), ==, Term.Product(false, .Product(false, .Unit)))
 	}
 }
 
