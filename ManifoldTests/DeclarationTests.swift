@@ -21,6 +21,10 @@ final class DeclarationTests: XCTestCase {
 		assert(selfModule.environment["myself"].map(Term.init), ==, Term.Product(false, .Product(true, .Unit)))
 		assert(selfModule.environment["I"].map(Term.init), ==, Term.Product(false, .Product(false, .Unit)))
 	}
+
+	func testDatatypeConstructorsWithArgumentsProduceFunctions() {
+		assert(oneConstructorWithArgumentModule.environment["a"].map(Term.init), ==, Term.lambda(.BooleanType, id))
+	}
 }
 
 
@@ -37,6 +41,12 @@ private let selfModule = Module<Term>([], [
 		"me": .End,
 		"myself": .End,
 		"I": .End,
+	])
+])
+
+private let oneConstructorWithArgumentModule = Module<Term>([], [
+	Declaration.Datatype("A", [
+		"a": .Argument(.BooleanType, id)
 	])
 ])
 
