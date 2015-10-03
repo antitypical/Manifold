@@ -44,24 +44,24 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 			let recur: Expression<Description> = .Variable(.Global(symbol))
 			let description = Description(datatype: datatype)
 
-			func definitions(branches: [(String, Description)], transform: Expression<Recur> -> Expression<Recur>) -> [DefinitionType] {
-				func type(description: Description) -> Expression<Description> {
-					switch description {
-					case .End:
-						return recur
-					case .Recursive:
-						return recur
-					case let .Pure(a):
-						return a()
-					case let .Argument(type, continuation):
-						var variable: Expression<Description> = 0
-						let body = continuation(Description { variable })
-						let n = body.out.maxBoundVariable + 1
-						variable = recur
-						return .Lambda(n, type, body)
-					}
+			func type(description: Description) -> Expression<Description> {
+				switch description {
+				case .End:
+					return recur
+				case .Recursive:
+					return recur
+				case let .Pure(a):
+					return a()
+				case let .Argument(type, continuation):
+					var variable: Expression<Description> = 0
+					let body = continuation(Description { variable })
+					let n = body.out.maxBoundVariable + 1
+					variable = recur
+					return .Lambda(n, type, body)
 				}
+			}
 
+			func definitions(branches: [(String, Description)], transform: Expression<Recur> -> Expression<Recur>) -> [DefinitionType] {
 				switch branches.count {
 				case 0:
 					return []
