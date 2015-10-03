@@ -30,6 +30,12 @@ final class DeclarationTests: XCTestCase {
 		assert(oneConstructorWithArgumentModule.environment["a"].map(Term.init), ==, Term.lambda(.BooleanType, id))
 	}
 
+	func testDatatypeConstructorsWithArgumentsHaveFunctionTypes() {
+		assert(multipleConstructorsWithArgumentsModule.context["a"].map(Term.init), ==, Term.lambda(.BooleanType, const("A")))
+		assert(multipleConstructorsWithArgumentsModule.context["b"].map(Term.init), ==, Term.lambda(.BooleanType, const("A")))
+		assert(multipleConstructorsWithArgumentsModule.context["c"].map(Term.init), ==, Term.lambda(.BooleanType, const("A")))
+	}
+
 	func testDatatypeConstructorsWithArgumentsProduceFunctionsReturningRightNestedValues() {
 		assert(multipleConstructorsWithArgumentsModule.environment["a"].map(Term.init), ==, Term.lambda(.BooleanType, { .Product(true, $0) }))
 		assert(multipleConstructorsWithArgumentsModule.environment["b"].map(Term.init), ==, Term.lambda(.BooleanType, { .Product(false, .Product(true, $0)) }))
