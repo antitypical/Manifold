@@ -34,7 +34,7 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 	}
 
 
-	public typealias DefinitionType = (String, Expression<Recur>, Expression<Recur>)
+	public typealias DefinitionType = (symbol: String, type: Expression<Recur>, value: Expression<Recur>)
 
 	public var definitions: [DefinitionType] {
 		switch self {
