@@ -51,7 +51,7 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 				case 1:
 					return [ (symbol: branches[0].0, type: recur.map(Recur.init), value: transform(branches[0].1.value(recur).map(Recur.init))) ]
 				default:
-					return [ (symbol: branches[0].0, type: recur.map(Recur.init), value: .Product(.Boolean(true), Recur(transform(branches[0].1.value(recur).map(Recur.init))))) ]
+					return [ (symbol: branches[0].0, type: recur.map(Recur.init), value: transform(.Product(.Boolean(true), Recur(branches[0].1.value(recur).map(Recur.init))))) ]
 						+ definitions(Array(branches.dropFirst()), transform: transform >>> { .Product(.Boolean(false), Recur($0)) })
 				}
 			}
