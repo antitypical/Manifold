@@ -46,7 +46,7 @@ private let selfModule = Module<Term>([], [
 
 private let oneConstructorWithArgumentModule = Module<Term>([], [
 	Declaration.Datatype("A", [
-		"a": .Argument(.BooleanType, id)
+		"a": .Argument(.BooleanType, id),
 	])
 ])
 
