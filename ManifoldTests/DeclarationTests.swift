@@ -42,7 +42,7 @@ final class DeclarationTests: XCTestCase {
 		assert(multipleConstructorsWithArgumentsModule.environment["c"].map(Term.init), ==, Term.lambda(.BooleanType, { .Product(false, .Product(false, $0)) }))
 	}
 
-	func testDatatypeConstructorsWithRecursiveReferencesProduceReferencesToTheirType() {
+	func testDatatypeConstructorsWithRecursiveReferencesProduceValuesEmbeddingReferencesToTheirType() {
 		assert(naturalModule.environment["successor"].map(Term.init), ==, Term.lambda("Natural") { .Product(false, $0) })
 	}
 
