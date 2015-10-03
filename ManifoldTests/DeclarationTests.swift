@@ -45,6 +45,18 @@ final class DeclarationTests: XCTestCase {
 	func testDatatypeConstructorsWithRecursiveReferencesProduceReferencesToTheirType() {
 		assert(naturalModule.environment["successor"].map(Term.init), ==, Term.lambda("Natural") { .Product(false, $0) })
 	}
+
+	func testDatatypeConstructorsWithMultipleArgumentsHaveFunctionTypes() {
+		assert(multipleConstructorsWithMultipleArgumentsModule.context["a"].map(Term.init), ==, Term.lambda(.BooleanType, .BooleanType, const("A")))
+		assert(multipleConstructorsWithMultipleArgumentsModule.context["b"].map(Term.init), ==, Term.lambda(.BooleanType, .BooleanType, const("A")))
+		assert(multipleConstructorsWithMultipleArgumentsModule.context["c"].map(Term.init), ==, Term.lambda(.BooleanType, .BooleanType, const("A")))
+	}
+
+	func testDatatypeConstructorsWithMultipleArgumentsProduceFunctionsReturningRightNestedValues() {
+		assert(multipleConstructorsWithArgumentsModule.environment["a"].map(Term.init), ==, Term.lambda(.BooleanType, .BooleanType, { .Product(true, .Product($0, $1)) }))
+		assert(multipleConstructorsWithArgumentsModule.environment["b"].map(Term.init), ==, Term.lambda(.BooleanType, .BooleanType, { .Product(false, .Product(true, .Product($0, $1))) }))
+		assert(multipleConstructorsWithArgumentsModule.environment["c"].map(Term.init), ==, Term.lambda(.BooleanType, .BooleanType, { .Product(false, .Product(false, .Product($0, $1))) }))
+	}
 }
 
 
@@ -75,6 +87,14 @@ private let multipleConstructorsWithArgumentsModule = Module<Term>([], [
 		"a": .Argument(.BooleanType, id),
 		"b": .Argument(.BooleanType, id),
 		"c": .Argument(.BooleanType, id),
+	])
+])
+
+private let multipleConstructorsWithMultipleArgumentsModule = Module<Term>([], [
+	Declaration.Datatype("A", [
+		"a": Description.Argument(.BooleanType) { a in Description.Argument(.BooleanType) { b in .Product(a, b)  } },
+		"b": Description.Argument(.BooleanType) { a in Description.Argument(.BooleanType) { b in .Product(a, b)  } },
+		"c": Description.Argument(.BooleanType) { a in Description.Argument(.BooleanType) { b in .Product(a, b)  } },
 	])
 ])
 
