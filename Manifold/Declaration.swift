@@ -45,13 +45,30 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 			let description = Description(datatype: datatype)
 
 			func definitions(branches: [(String, Description)], transform: Expression<Recur> -> Expression<Recur>) -> [DefinitionType] {
+				func type(description: Description) -> Expression<Description> {
+					switch description {
+					case .End:
+						return recur
+					case .Recursive:
+						return recur
+					case let .Pure(a):
+						return a()
+					case let .Argument(type, continuation):
+						var variable: Expression<Description> = 0
+						let body = continuation(Description { variable })
+						let n = body.out.maxBoundVariable + 1
+						variable = recur
+						return .Lambda(n, type, body)
+					}
+				}
+
 				switch branches.count {
 				case 0:
 					return []
 				case 1:
-					return [ (symbol: branches[0].0, type: recur.map(Recur.init), value: transform(branches[0].1.value(recur).map(Recur.init))) ]
+					return [ (symbol: branches[0].0, type: type(branches[0].1).map(Recur.init), value: transform(branches[0].1.value(recur).map(Recur.init))) ]
 				default:
-					return [ (symbol: branches[0].0, type: recur.map(Recur.init), value: transform(.Product(.Boolean(true), Recur(branches[0].1.value(recur).map(Recur.init))))) ]
+					return [ (symbol: branches[0].0, type: type(branches[0].1).map(Recur.init), value: transform(.Product(.Boolean(true), Recur(branches[0].1.value(recur).map(Recur.init))))) ]
 						+ definitions(Array(branches.dropFirst()), transform: transform >>> { .Product(.Boolean(false), Recur($0)) })
 				}
 			}
