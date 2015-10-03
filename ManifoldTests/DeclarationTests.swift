@@ -22,11 +22,11 @@ final class DeclarationTests: XCTestCase {
 		assert(selfModule.environment["I"].map(Term.init), ==, Term.Product(false, .Product(false, .Unit)))
 	}
 
-	func testDatatypeConstructorsWithArgumentsHaveFunctionType() {
+	func testDatatypeConstructorWithArgumentsHasFunctionType() {
 		assert(oneConstructorWithArgumentModule.context["a"].map(Term.init), ==, Term.lambda(.BooleanType, const("A")))
 	}
 
-	func testDatatypeConstructorsWithArgumentsProduceFunctions() {
+	func testDatatypeConstructorWithArgumentsProducesFunction() {
 		assert(oneConstructorWithArgumentModule.environment["a"].map(Term.init), ==, Term.lambda(.BooleanType, id))
 	}
 
