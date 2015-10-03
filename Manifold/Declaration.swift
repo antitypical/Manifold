@@ -43,8 +43,21 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 		case let .Datatype(symbol, datatype):
 			let recur: Expression<Description> = .Variable(.Global(symbol))
 			let description = Description(datatype: datatype)
+
+			func definitions(branches: [(String, Description)], transform: Expression<Recur> -> Expression<Recur>) -> [DefinitionType] {
+				switch branches.count {
+				case 0:
+					return []
+				case 1:
+					return [ (symbol: branches[0].0, type: recur.map(Recur.init), value: transform(branches[0].1.value(recur).map(Recur.init))) ]
+				default:
+					return [ (symbol: branches[0].0, type: recur.map(Recur.init), value: .Product(.Boolean(true), Recur(transform(branches[0].1.value(recur).map(Recur.init))))) ]
+						+ definitions(Array(branches.dropFirst()), transform: transform >>> { .Product(.Boolean(false), Recur($0)) })
+				}
+			}
+
 			return [ (symbol, .Type(0), description.type(recur).map(Recur.init)) ]
-				+ datatype.branches.map { ($0, recur.map(Recur.init), $1.value(recur).map(Recur.init)) }
+				+ definitions(datatype.branches, transform: id)
 		}
 	}
 
@@ -103,3 +116,4 @@ public struct Datatype: DictionaryLiteralConvertible {
 
 
 import Either
+import Prelude
