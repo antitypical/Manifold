@@ -17,6 +17,20 @@ public enum Description: CustomDebugStringConvertible, DictionaryLiteralConverti
 	}
 
 
+	public func type(recur: Expression<Description>) -> Expression<Description> {
+		switch self {
+		case .End:
+			return .UnitType
+		case let .Pure(a):
+			return a()
+		case .Recursive:
+			return recur
+		case let .Argument(x, continuation):
+			return .lambda(x, continuation)
+		}
+	}
+
+
 	// MARK: CustomDebugStringConvertible
 
 	public var debugDescription: String {
@@ -44,19 +58,6 @@ public enum Description: CustomDebugStringConvertible, DictionaryLiteralConverti
 
 	public init(_ expression: () -> Expression<Description>) {
 		self = .Pure(expression)
-	}
-
-	public func type(recur: Expression<Description>) -> Expression<Description> {
-		switch self {
-		case .End:
-			return .UnitType
-		case let .Pure(a):
-			return a()
-		case .Recursive:
-			return recur
-		case let .Argument(x, continuation):
-			return .lambda(x, continuation)
-		}
 	}
 
 	public var out: Expression<Description> {
