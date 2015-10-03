@@ -46,7 +46,7 @@ public enum Description: CustomDebugStringConvertible, DictionaryLiteralConverti
 		self = .Pure(expression)
 	}
 
-	public func out(recur: Expression<Description>) -> Expression<Description> {
+	public func type(recur: Expression<Description>) -> Expression<Description> {
 		switch self {
 		case .End:
 			return .UnitType
@@ -66,7 +66,7 @@ public enum Description: CustomDebugStringConvertible, DictionaryLiteralConverti
 		case let .Pure(a):
 			return a()
 		case .Recursive:
-			return .lambda(.Type, { Description(self.out($0.out)) })
+			return .lambda(.Type, { Description(self.type($0.out)) })
 		case let .Argument(x, continuation):
 			return .lambda(x, continuation)
 		}

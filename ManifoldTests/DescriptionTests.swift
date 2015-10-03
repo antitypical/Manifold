@@ -24,7 +24,7 @@ final class DescriptionTests: XCTestCase {
 
 	func testNaturalDescriptionProducesRecursiveSumType() {
 		func toTerm(description: Description) -> Term {
-			return Term(description.out("Natural").map(toTerm))
+			return Term(description.type("Natural").map(toTerm))
 		}
 		assert(toTerm(NaturalDescription), ==, Term.lambda(.BooleanType) { .If($0, .UnitType, .lambda(.Variable("Natural"), id)) })
 	}

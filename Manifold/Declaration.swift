@@ -29,7 +29,7 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 		case let .Definition(_, _, value):
 			return value
 		case let .Datatype(_, datatype):
-			return Description(branches: datatype.branches).out(.Variable(.Global(symbol))).map(Recur.init)
+			return Description(branches: datatype.branches).type(.Variable(.Global(symbol))).map(Recur.init)
 		}
 	}
 
@@ -40,8 +40,8 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 		case let .Datatype(symbol, datatype):
 			let recur: Expression<Description> = .Variable(.Global(symbol))
 			return [
-				(symbol, .Type(0), Description(branches: datatype.branches).out(recur).map(Recur.init))
-			] + datatype.branches.map { ($0, .Variable(.Global(symbol)), $1.out(recur).map(Recur.init)) }
+				(symbol, .Type(0), Description(branches: datatype.branches).type(recur).map(Recur.init))
+			] + datatype.branches.map { ($0, .Variable(.Global(symbol)), $1.type(recur).map(Recur.init)) }
 		}
 	}
 

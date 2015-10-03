@@ -10,6 +10,11 @@ final class DeclarationTests: XCTestCase {
 		XCTAssertEqual(booleanModule.context["true"].map(Term.init), Term.Variable("Boolean"))
 		XCTAssertEqual(booleanModule.context["false"].map(Term.init), Term.Variable("Boolean"))
 	}
+
+	func testDatatypeDeclarationsAddDataConstructorsToEnvironment() {
+		XCTAssertEqual(booleanModule.environment["true"].map(Term.init), Term.lambda(.BooleanType, const(.Unit)))
+		XCTAssertEqual(booleanModule.environment["false"].map(Term.init), Term.lambda(.BooleanType, const(.Unit)))
+	}
 }
 
 
@@ -22,4 +27,5 @@ private let booleanModule = Module<Term>([], [
 
 
 @testable import Manifold
+import Prelude
 import XCTest
