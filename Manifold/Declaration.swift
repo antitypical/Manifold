@@ -33,7 +33,10 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 		}
 	}
 
-	public var definitions: [(String, Expression<Recur>, Expression<Recur>)] {
+
+	public typealias DefinitionType = (String, Expression<Recur>, Expression<Recur>)
+
+	public var definitions: [DefinitionType] {
 		switch self {
 		case let .Definition(symbol, type, value):
 			return [ (symbol, type, value) ]
