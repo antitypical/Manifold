@@ -52,12 +52,12 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 					return recur
 				case let .Pure(a):
 					return a()
-				case let .Argument(type, continuation):
+				case let .Argument(t, continuation):
 					var variable: Expression<Description> = 0
 					let body = continuation(Description { variable })
-					let n = body.out.maxBoundVariable + 1
+					let n = type(body).maxBoundVariable + 1
 					variable = recur
-					return .Lambda(n, type, body)
+					return .Lambda(n, t, body)
 				}
 			}
 
