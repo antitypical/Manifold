@@ -35,6 +35,10 @@ final class DeclarationTests: XCTestCase {
 		assert(multipleConstructorsWithArgumentsModule.environment["b"].map(Term.init), ==, Term.lambda(.BooleanType, { .Product(false, .Product(true, $0)) }))
 		assert(multipleConstructorsWithArgumentsModule.environment["c"].map(Term.init), ==, Term.lambda(.BooleanType, { .Product(false, .Product(false, $0)) }))
 	}
+
+	func testDatatypeConstructorsWithRecursiveReferencesProduceReferencesToTheirType() {
+		assert(naturalModule.environment["successor"].map(Term.init), ==, Term.lambda("Natural") { .Product(false, $0) })
+	}
 }
 
 
@@ -65,6 +69,13 @@ private let multipleConstructorsWithArgumentsModule = Module<Term>([], [
 		"a": .Argument(.BooleanType, id),
 		"b": .Argument(.BooleanType, id),
 		"c": .Argument(.BooleanType, id),
+	])
+])
+
+private let naturalModule = Module<Term>([], [
+	Declaration.Datatype("Natural", [
+		"zero": .End,
+		"successor": .Argument(.Recursive, id)
 	])
 ])
 
