@@ -25,6 +25,12 @@ final class DeclarationTests: XCTestCase {
 	func testDatatypeConstructorsWithArgumentsProduceFunctions() {
 		assert(oneConstructorWithArgumentModule.environment["a"].map(Term.init), ==, Term.lambda(.BooleanType, id))
 	}
+
+	func testDatatypeConstructorsWithArgumentsProduceFunctionsReturningRightNestedValues() {
+		assert(multipleConstructorsWithArgumentsModule.environment["a"].map(Term.init), ==, Term.lambda(.BooleanType, { .Product(true, $0) }))
+		assert(multipleConstructorsWithArgumentsModule.environment["b"].map(Term.init), ==, Term.lambda(.BooleanType, { .Product(false, .Product(true, $0)) }))
+		assert(multipleConstructorsWithArgumentsModule.environment["c"].map(Term.init), ==, Term.lambda(.BooleanType, { .Product(false, .Product(false, $0)) }))
+	}
 }
 
 
@@ -47,6 +53,14 @@ private let selfModule = Module<Term>([], [
 private let oneConstructorWithArgumentModule = Module<Term>([], [
 	Declaration.Datatype("A", [
 		"a": .Argument(.BooleanType, id),
+	])
+])
+
+private let multipleConstructorsWithArgumentsModule = Module<Term>([], [
+	Declaration.Datatype("A", [
+		"a": .Argument(.BooleanType, id),
+		"b": .Argument(.BooleanType, id),
+		"c": .Argument(.BooleanType, id),
 	])
 ])
 
