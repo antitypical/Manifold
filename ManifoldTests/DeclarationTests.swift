@@ -12,8 +12,8 @@ final class DeclarationTests: XCTestCase {
 	}
 
 	func testDatatypeDeclarationsAddDataConstructorsToEnvironment() {
-		XCTAssertEqual(booleanModule.environment["true"].map(Term.init), Term.lambda(.BooleanType, const(.Unit)))
-		XCTAssertEqual(booleanModule.environment["false"].map(Term.init), Term.lambda(.BooleanType, const(.Unit)))
+		XCTAssertEqual(booleanModule.environment["true"].map(Term.init), Term.Product(.Boolean(true), .Unit))
+		XCTAssertEqual(booleanModule.environment["false"].map(Term.init), Term.Product(.Boolean(false), .Unit))
 	}
 }
 
