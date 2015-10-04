@@ -16,7 +16,7 @@ public enum Description: CustomDebugStringConvertible, DictionaryLiteralConverti
 		}
 	}
 
-	public init(datatype: Datatype) {
+	public init(datatype: DatatypeHelper) {
 		self.init(branches: datatype.branches)
 	}
 

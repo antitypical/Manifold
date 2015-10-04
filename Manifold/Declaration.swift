@@ -101,7 +101,7 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 
 
 	case Definition(String, Expression<Recur>, Expression<Recur>)
-	case Datatype(String, Manifold.Datatype)
+	case Datatype(String, DatatypeHelper)
 }
 
 extension Declaration where Recur: TermType {
@@ -119,7 +119,7 @@ extension Declaration where Recur: TermType {
 }
 
 /// Helper type to enable construction of datatype Declarations with a dictionary literal.
-public struct Datatype: DictionaryLiteralConvertible {
+public struct DatatypeHelper: DictionaryLiteralConvertible {
 	public init(branches: [(String, Description)]) {
 		self.branches = branches
 	}
