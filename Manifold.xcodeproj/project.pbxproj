@@ -11,6 +11,7 @@
 		D4012F981B753A2A0070B636 /* Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4012F971B753A2A0070B636 /* Tag.swift */; };
 		D415A09B1B51EFDE001C15E5 /* TermType+Construction.swift in Sources */ = {isa = PBXBuildFile; fileRef = D415A09A1B51EFDE001C15E5 /* TermType+Construction.swift */; };
 		D43AC8831BC1824D008762B7 /* Telescope.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43AC8821BC1824D008762B7 /* Telescope.swift */; };
+		D43AC8851BC18291008762B7 /* Datatype.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43AC8841BC18291008762B7 /* Datatype.swift */; };
 		D440FCBD1B6BBE1400C56B19 /* Expression+Evaluation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCBC1B6BBE1400C56B19 /* Expression+Evaluation.swift */; };
 		D440FCBF1B6BBE7300C56B19 /* Expression+Substitution.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCBE1B6BBE7300C56B19 /* Expression+Substitution.swift */; };
 		D440FCC11B6BBF0D00C56B19 /* Expression+Inference.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCC01B6BBF0D00C56B19 /* Expression+Inference.swift */; };
@@ -73,6 +74,7 @@
 		D4012F971B753A2A0070B636 /* Tag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tag.swift; sourceTree = "<group>"; };
 		D415A09A1B51EFDE001C15E5 /* TermType+Construction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermType+Construction.swift"; sourceTree = "<group>"; };
 		D43AC8821BC1824D008762B7 /* Telescope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Telescope.swift; sourceTree = "<group>"; };
+		D43AC8841BC18291008762B7 /* Datatype.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Datatype.swift; sourceTree = "<group>"; };
 		D440FCBC1B6BBE1400C56B19 /* Expression+Evaluation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+Evaluation.swift"; sourceTree = "<group>"; };
 		D440FCBE1B6BBE7300C56B19 /* Expression+Substitution.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+Substitution.swift"; sourceTree = "<group>"; };
 		D440FCC01B6BBF0D00C56B19 /* Expression+Inference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+Inference.swift"; sourceTree = "<group>"; };
@@ -185,6 +187,7 @@
 				D4012F971B753A2A0070B636 /* Tag.swift */,
 				D4E49E601B4B6384002273A3 /* Description.swift */,
 				D43AC8821BC1824D008762B7 /* Telescope.swift */,
+				D43AC8841BC18291008762B7 /* Datatype.swift */,
 				D4B3FBEE1A83515800DA2AC3 /* Supporting Files */,
 			);
 			path = Manifold;
@@ -363,6 +366,7 @@
 				D440FCC71B6C1D2500C56B19 /* Either.swift in Sources */,
 				D415A09B1B51EFDE001C15E5 /* TermType+Construction.swift in Sources */,
 				D440FCBD1B6BBE1400C56B19 /* Expression+Evaluation.swift in Sources */,
+				D43AC8851BC18291008762B7 /* Datatype.swift in Sources */,
 				D4E289A21B641B0B0070389F /* Comparable.swift in Sources */,
 				D4E289A41B641FDA0070389F /* String.swift in Sources */,
 				D4E49E611B4B6384002273A3 /* Description.swift in Sources */,
