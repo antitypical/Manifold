@@ -29,6 +29,10 @@ final class TelescopeTests: XCTestCase {
 	func testRecursiveDataConstructorHasLambdaValueReturningProductValue() {
 		assert(Telescope.Recursive(.End).value("A"), ==, .lambda("A", { .Product($0, .Unit) }))
 	}
+
+	func testMultiplyRecursiveDataConstructorHasLambdaValueReturningProductValue() {
+		assert(Telescope.Recursive(.Recursive(.End)).value("A"), ==, .lambda("A", "A", { .Product($0, .Product($1, .Unit)) }))
+	}
 }
 
 
