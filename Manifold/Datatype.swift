@@ -12,7 +12,7 @@ public struct Datatype: DictionaryLiteralConvertible {
 	public let constructors: [(String, Telescope)]
 
 	public func value(recur: Term) -> Term {
-		return .UnitType
+		return value(recur, constructors: constructors[constructors.indices])
 	}
 
 	private func value<C: CollectionType where C.SubSequence == C, C.Generator.Element == (String, Telescope)>(recur: Term, constructors: C, transform: Term -> Term = id) -> Term {
