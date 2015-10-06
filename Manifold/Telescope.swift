@@ -16,12 +16,12 @@ public enum Telescope {
 		}
 	}
 
-	public func value(recur: Term) -> Term {
+	public func value(recur: Term, transform: Term -> Term = id) -> Term {
 		switch self {
 		case .End:
-			return .Unit
+			return transform(.Unit)
 		case let .Recursive(rest):
-			return .Product(recur, rest.value(recur))
+			return .lambda(recur, { v in rest.value(recur, transform: { .Product(v, $0) } >>> transform) })
 		case let .Argument(t, continuation):
 			return .lambda(t, { continuation($0).value(recur) })
 		}
