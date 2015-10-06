@@ -14,4 +14,22 @@ public struct Datatype: DictionaryLiteralConvertible {
 	public func value(recur: Term) -> Term {
 		return .UnitType
 	}
+
+	private func value<C: CollectionType where C.SubSequence == C, C.Generator.Element == (String, Telescope)>(recur: Term, constructors: C, transform: Term -> Term = id) -> Term {
+		switch constructors.count {
+		case 0:
+			return .UnitType
+		case 1:
+			return constructors.first!.1.type(recur)
+		default:
+			return Term.lambda(Term.BooleanType, {
+				.If($0,
+					constructors.first!.1.type(recur),
+					self.value(recur, constructors: constructors.dropFirst(), transform: { $0 } >>> transform))
+			})
+		}
+	}
 }
+
+
+import Prelude
