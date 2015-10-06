@@ -10,4 +10,8 @@ public struct Datatype: DictionaryLiteralConvertible {
 	}
 
 	public let constructors: [(String, Telescope)]
+
+	public func value(recur: Term) -> Term {
+		return .UnitType
+	}
 }
