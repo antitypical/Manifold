@@ -15,4 +15,15 @@ public enum Telescope {
 			return .lambda(t, { continuation($0).type(recur) })
 		}
 	}
+
+	public func value(recur: Term) -> Term {
+		switch self {
+		case .End:
+			return .Unit
+		case let .Recursive(rest):
+			return .Product(recur, rest.value(recur))
+		case let .Argument(t, continuation):
+			return .lambda(t, { continuation($0).value(recur) })
+		}
+	}
 }
