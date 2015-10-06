@@ -12,6 +12,7 @@
 		D415A09B1B51EFDE001C15E5 /* TermType+Construction.swift in Sources */ = {isa = PBXBuildFile; fileRef = D415A09A1B51EFDE001C15E5 /* TermType+Construction.swift */; };
 		D43AC8831BC1824D008762B7 /* Telescope.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43AC8821BC1824D008762B7 /* Telescope.swift */; };
 		D43AC8851BC18291008762B7 /* Datatype.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43AC8841BC18291008762B7 /* Datatype.swift */; };
+		D43AC8871BC1831F008762B7 /* TelescopeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43AC8861BC1831F008762B7 /* TelescopeTests.swift */; };
 		D440FCBD1B6BBE1400C56B19 /* Expression+Evaluation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCBC1B6BBE1400C56B19 /* Expression+Evaluation.swift */; };
 		D440FCBF1B6BBE7300C56B19 /* Expression+Substitution.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCBE1B6BBE7300C56B19 /* Expression+Substitution.swift */; };
 		D440FCC11B6BBF0D00C56B19 /* Expression+Inference.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCC01B6BBF0D00C56B19 /* Expression+Inference.swift */; };
@@ -75,6 +76,7 @@
 		D415A09A1B51EFDE001C15E5 /* TermType+Construction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermType+Construction.swift"; sourceTree = "<group>"; };
 		D43AC8821BC1824D008762B7 /* Telescope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Telescope.swift; sourceTree = "<group>"; };
 		D43AC8841BC18291008762B7 /* Datatype.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Datatype.swift; sourceTree = "<group>"; };
+		D43AC8861BC1831F008762B7 /* TelescopeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TelescopeTests.swift; sourceTree = "<group>"; };
 		D440FCBC1B6BBE1400C56B19 /* Expression+Evaluation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+Evaluation.swift"; sourceTree = "<group>"; };
 		D440FCBE1B6BBE7300C56B19 /* Expression+Substitution.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+Substitution.swift"; sourceTree = "<group>"; };
 		D440FCC01B6BBF0D00C56B19 /* Expression+Inference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+Inference.swift"; sourceTree = "<group>"; };
@@ -229,6 +231,7 @@
 				D4012F951B7486020070B636 /* DescriptionTests.swift */,
 				D4F969971B98F3220069F481 /* Term+Arbitrary.swift */,
 				D4FC2FDD1BAF564F005F3B26 /* DeclarationTests.swift */,
+				D43AC8861BC1831F008762B7 /* TelescopeTests.swift */,
 				D4B3FC001A83515800DA2AC3 /* Supporting Files */,
 			);
 			path = ManifoldTests;
@@ -404,6 +407,7 @@
 				D4E01E441B5BF3A1003BAB46 /* TagTests.swift in Sources */,
 				D4F1B8591B470E8E0065BF22 /* DoubleExtensionTests.swift in Sources */,
 				D4809FBD1AF6BD400084B8FE /* ExpressionTests.swift in Sources */,
+				D43AC8871BC1831F008762B7 /* TelescopeTests.swift in Sources */,
 				D4DF44501B2DB043008DCA5D /* TypecheckingTests.swift in Sources */,
 				D4012F961B7486020070B636 /* DescriptionTests.swift in Sources */,
 				D4F1B8531B46FD4F0065BF22 /* LazyScanSequenceTests.swift in Sources */,
