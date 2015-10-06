@@ -10,7 +10,7 @@ public enum Telescope {
 		case .End:
 			return .UnitType
 		case let .Recursive(rest):
-			return .lambda(recur, { _ in rest.type(recur) })
+			return .lambda(recur, const(rest.type(recur)))
 		case let .Argument(t, continuation):
 			return .lambda(t, { continuation($0).type(recur) })
 		}
@@ -27,3 +27,6 @@ public enum Telescope {
 		}
 	}
 }
+
+
+import Prelude
