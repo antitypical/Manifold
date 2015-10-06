@@ -23,7 +23,7 @@ public enum Telescope {
 		case let .Recursive(rest):
 			return .lambda(recur, { v in rest.value(recur, transform: { .Product(v, $0) } >>> transform) })
 		case let .Argument(t, continuation):
-			return .lambda(t, { continuation($0).value(recur) })
+			return .lambda(t, { v in continuation(v).value(recur, transform: { .Product(v, $0) } >>> transform) })
 		}
 	}
 }
