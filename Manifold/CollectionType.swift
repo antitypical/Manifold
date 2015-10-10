@@ -26,3 +26,12 @@ extension CollectionType where SubSequence: CollectionType, SubSequence.SubSeque
 		}
 	}
 }
+
+
+extension CollectionType where SubSequence == Self {
+	func fold<Out>(initial: Out, @noescape combine: (Generator.Element, Out) -> Out) -> Out {
+		return first.map {
+			combine($0, dropFirst().fold(initial, combine: combine))
+		} ?? initial
+	}
+}
