@@ -17,7 +17,7 @@ public struct Datatype<Recur: TermType>: DictionaryLiteralConvertible {
 			let value = into.definitions.count > 0
 				? .Product(true, each.1.value(recur))
 				: each.1.value(recur)
-			return (into.definitions + [ (symbol: each.0, type: each.1.type(recur).out, value: value.out) ], into.transform)
+			return (into.definitions + [ (symbol: each.0, type: each.1.type(recur).out, value: into.transform(value).out) ], into.transform)
 		}.definitions
 	}
 
