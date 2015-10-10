@@ -6,7 +6,7 @@ final class DatatypeTests: XCTestCase {
 	}
 
 	func testDatatypeWithOneConstructorIsTypeOfConstructedValue() {
-		assert(Datatype(constructors: [ ("a", .Argument(.BooleanType, const(.End))) ]).value("A"), ==, .lambda(.BooleanType, const(.Product(.BooleanType, .UnitType))))
+		assert(Datatype(constructors: [ ("a", .Argument(.BooleanType, const(.End))) ]).value("A"), ==, .Product(.BooleanType, .UnitType))
 	}
 }
 
