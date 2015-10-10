@@ -25,6 +25,10 @@ extension CollectionType where SubSequence: CollectionType, SubSequence.SubSeque
 			return next
 		}
 	}
+
+	public func fold<Out>(initial: Out, @noescape combine: (SubSequence._Element, Out) -> Out) -> Out {
+		return self[indices].fold(initial, combine: combine)
+	}
 }
 
 
