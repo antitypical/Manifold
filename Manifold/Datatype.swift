@@ -1,21 +1,21 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public struct Datatype: DictionaryLiteralConvertible {
-	public init(constructors: [(String, Telescope)]) {
+	public init(constructors: [(String, Telescope<Term>)]) {
 		self.constructors = constructors
 	}
 
-	public init(dictionaryLiteral: (String, Telescope)...) {
+	public init(dictionaryLiteral: (String, Telescope<Term>)...) {
 		self.init(constructors: dictionaryLiteral)
 	}
 
-	public let constructors: [(String, Telescope)]
+	public let constructors: [(String, Telescope<Term>)]
 
 	public func value(recur: Term) -> Term {
 		return value(recur, constructors: constructors[constructors.indices])
 	}
 
-	private func value<C: CollectionType where C.SubSequence == C, C.Generator.Element == (String, Telescope)>(recur: Term, constructors: C, transform: Term -> Term = id) -> Term {
+	private func value<C: CollectionType where C.SubSequence == C, C.Generator.Element == (String, Telescope<Term>)>(recur: Term, constructors: C, transform: Term -> Term = id) -> Term {
 		switch constructors.count {
 		case 0:
 			return .UnitType

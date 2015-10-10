@@ -1,11 +1,11 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Telescope {
+public enum Telescope<Recur: TermType> {
 	case End
 	indirect case Recursive(Telescope)
-	indirect case Argument(Term, Term -> Telescope)
+	indirect case Argument(Recur, Recur -> Telescope)
 
-	public func type(recur: Term, transform: Term -> Term = id) -> Term {
+	public func type(recur: Recur, transform: Recur -> Recur = id) -> Recur {
 		switch self {
 		case .End:
 			return transform(.UnitType)
@@ -16,7 +16,7 @@ public enum Telescope {
 		}
 	}
 
-	public func constructedType(recur: Term) -> Term {
+	public func constructedType(recur: Recur) -> Recur {
 		switch self {
 		case .End:
 			return .UnitType
@@ -27,7 +27,7 @@ public enum Telescope {
 		}
 	}
 
-	public func value(recur: Term, transform: Term -> Term = id) -> Term {
+	public func value(recur: Recur, transform: Recur -> Recur = id) -> Recur {
 		switch self {
 		case .End:
 			return transform(.Unit)
