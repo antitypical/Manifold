@@ -16,6 +16,17 @@ public enum Telescope {
 		}
 	}
 
+	public func constructedType(recur: Term) -> Term {
+		switch self {
+		case .End:
+			return .UnitType
+		case let .Recursive(rest):
+			return .Product(recur, rest.constructedType(recur))
+		case let .Argument(t, continuation):
+			return .Product(t, continuation(.Unit).constructedType(recur))
+		}
+	}
+
 	public func value(recur: Term, transform: Term -> Term = id) -> Term {
 		switch self {
 		case .End:
