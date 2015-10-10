@@ -1,36 +1,41 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public struct Datatype<Recur: TermType>: DictionaryLiteralConvertible {
+public enum Datatype<Recur: TermType>: DictionaryLiteralConvertible {
+	indirect case Constructor(String, Telescope<Recur>, Datatype)
+	case End
+
 	public init(constructors: [(String, Telescope<Recur>)]) {
-		self.constructors = constructors
+		self = constructors[constructors.indices].fold(.End) { .Constructor($0.0, $0.1, $1) }
 	}
 
 	public init(dictionaryLiteral: (String, Telescope<Recur>)...) {
 		self.init(constructors: dictionaryLiteral)
 	}
 
-	public let constructors: [(String, Telescope<Recur>)]
 
-
-	public func definitions(recur: Recur) -> [Declaration<Recur>.DefinitionType] {
-		return constructors[constructors.indices].fold((definitions: [], transform: id)) {
-			($1.definitions + [ ($0.0, $0.1.type(recur).out, $1.transform($1.definitions.count > 0
-				? .Product(true, $0.1.value(recur))
-				: $0.1.value(recur)).out) ], $1.transform)
-		}.definitions
+	public func definitions(recur: Recur, transform: Recur -> Recur = id) -> [Declaration<Recur>.DefinitionType] {
+		switch self {
+		case .End:
+			return []
+		case let .Constructor(name, telescope, .End):
+			return [ (name, telescope.type(recur).out, transform(telescope.value(recur)).out) ]
+		case let .Constructor(name, telescope, rest):
+			return [ (name, telescope.type(recur).out, transform(.Product(true, telescope.value(recur))).out) ] + rest.definitions(recur, transform: { .Product(false, $0) } >>> transform)
+		}
 	}
 
 
 	public func value(recur: Recur) -> Recur {
-		return constructors[constructors.indices].fold(nil) { each, into in
-			into.map { into in
-				Recur.lambda(.BooleanType) {
-					.If($0,
-						each.1.constructedType(recur),
-						into)
-				}
-			} ?? each.1.constructedType(recur)
-		} ?? .UnitType
+		switch self {
+		case .End:
+			return .UnitType
+		case let .Constructor(_, telescope, .End):
+			return telescope.constructedType(recur)
+		case let .Constructor(_, telescope, rest):
+			return Recur.lambda(.BooleanType) {
+				.If($0, telescope.constructedType(recur), rest.value(recur))
+			}
+		}
 	}
 }
 
