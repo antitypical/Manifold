@@ -41,11 +41,7 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 		case let .Definition(symbol, type, value):
 			return [ (symbol, type, value) ]
 		case let .Datatype(symbol, datatype):
-			let recur = Recur.Variable(.Global(symbol))
-			return [ (symbol, type, value) ]
-				+ datatype.constructors.map {
-					($0, $1.type(recur).out, $1.value(recur).out)
-				}
+			return [ (symbol, type, value) ] + datatype.definitions(.Variable(.Global(symbol)))
 		}
 	}
 
