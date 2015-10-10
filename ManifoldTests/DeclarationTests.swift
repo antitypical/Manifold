@@ -42,7 +42,7 @@ final class DeclarationTests: XCTestCase {
 	}
 
 	func testDatatypeConstructorsWithRecursiveReferencesProduceValuesEmbeddingReferencesToTheirType() {
-		assert(naturalModule.environment["successor"], ==, Expression.lambda("Natural") { .Product(false, .Product($0, .Unit)) })
+		assert(Expression<Term>.natural.environment["successor"], ==, Expression.lambda("Natural") { .Product(false, .Product($0, .Unit)) })
 	}
 
 	func testDatatypeConstructorsWithMultipleArgumentsHaveFunctionTypes() {
@@ -86,13 +86,6 @@ private let multipleConstructorsWithMultipleArgumentsModule = Module<Term>([], [
 		"a": Telescope.Argument(.BooleanType) { a in .Argument(.BooleanType, const(.End)) },
 		"b": Telescope.Argument(.BooleanType) { a in .Argument(.BooleanType, const(.End)) },
 		"c": Telescope.Argument(.BooleanType) { a in .Argument(.BooleanType, const(.End)) },
-	])
-])
-
-private let naturalModule = Module<Term>([], [
-	Declaration.Datatype("Natural", [
-		"zero": .End,
-		"successor": .Argument("Natural", const(.End))
 	])
 ])
 
