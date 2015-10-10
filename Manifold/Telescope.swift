@@ -5,14 +5,14 @@ public enum Telescope<Recur: TermType> {
 	indirect case Recursive(Telescope)
 	indirect case Argument(Recur, Recur -> Telescope)
 
-	public func type(recur: Recur, transform: Recur -> Recur = id) -> Recur {
+	public func type(recur: Recur) -> Recur {
 		switch self {
 		case .End:
-			return transform(recur)
+			return recur
 		case let .Recursive(rest):
-			return .lambda(recur, const(rest.type(recur, transform: { .Product(recur, $0) } >>> transform)))
+			return .lambda(recur, const(rest.type(recur)))
 		case let .Argument(t, continuation):
-			return .lambda(t, { continuation($0).type(recur, transform: { .Product(t, $0) } >>> transform) })
+			return .lambda(t, { continuation($0).type(recur) })
 		}
 	}
 
