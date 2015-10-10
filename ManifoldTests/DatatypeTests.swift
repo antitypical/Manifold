@@ -2,11 +2,11 @@
 
 final class DatatypeTests: XCTestCase {
 	func testDatatypeWithZeroConstructorsIsUnitType() {
-		assert(Datatype(constructors: []).value("A"), ==, .UnitType)
+		assert(Datatype<Term>(constructors: []).value("A"), ==, .UnitType)
 	}
 
 	func testDatatypeWithOneConstructorIsTypeOfConstructedValue() {
-		assert(Datatype(constructors: [ ("a", .Argument(.BooleanType, const(.End))) ]).value("A"), ==, .Product(.BooleanType, .UnitType))
+		assert(Datatype<Term>(constructors: [ ("a", .Argument(.BooleanType, const(.End))) ]).value("A"), ==, .Product(.BooleanType, .UnitType))
 	}
 
 	func testDatatypeWithTwoConstructorsIsFunctionFromBooleanToTypesOfConstructedValues() {
