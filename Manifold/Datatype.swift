@@ -20,11 +20,7 @@ public struct Datatype<Recur: TermType>: DictionaryLiteralConvertible {
 
 
 	public func value(recur: Recur) -> Recur {
-		return value(recur, constructors: constructors[constructors.indices])
-	}
-
-	private func value<C: CollectionType where C.SubSequence == C, C.Generator.Element == (String, Telescope<Recur>)>(recur: Recur, constructors: C, transform: Recur -> Recur = id) -> Recur {
-		return constructors.fold(nil) { each, into in
+		return constructors[constructors.indices].fold(nil) { each, into in
 			into.map { into in
 				Recur.lambda(Recur.BooleanType) {
 					.If($0,
