@@ -36,7 +36,6 @@
 		D4E101BA1B484611001A7E55 /* Expression+Natural.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E101B91B484611001A7E55 /* Expression+Natural.swift */; };
 		D4E289A21B641B0B0070389F /* Comparable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E289A11B641B0B0070389F /* Comparable.swift */; };
 		D4E289A41B641FDA0070389F /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E289A31B641FDA0070389F /* String.swift */; };
-		D4E49E611B4B6384002273A3 /* Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E49E601B4B6384002273A3 /* Description.swift */; };
 		D4E8289D1B5202BB00713E60 /* StringLiteralConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E8289C1B5202BB00713E60 /* StringLiteralConvertible.swift */; };
 		D4E829171B521B3400713E60 /* Module.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E829161B521B3400713E60 /* Module.swift */; };
 		D4E829191B521BFC00713E60 /* Declaration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E829181B521BFC00713E60 /* Declaration.swift */; };
@@ -103,7 +102,6 @@
 		D4E101B91B484611001A7E55 /* Expression+Natural.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Expression+Natural.swift"; sourceTree = "<group>"; };
 		D4E289A11B641B0B0070389F /* Comparable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comparable.swift; sourceTree = "<group>"; };
 		D4E289A31B641FDA0070389F /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
-		D4E49E601B4B6384002273A3 /* Description.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Description.swift; sourceTree = "<group>"; };
 		D4E8289C1B5202BB00713E60 /* StringLiteralConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringLiteralConvertible.swift; sourceTree = "<group>"; };
 		D4E829161B521B3400713E60 /* Module.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Module.swift; sourceTree = "<group>"; };
 		D4E829181B521BFC00713E60 /* Declaration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Declaration.swift; sourceTree = "<group>"; };
@@ -187,7 +185,6 @@
 				D4E829161B521B3400713E60 /* Module.swift */,
 				D4E829181B521BFC00713E60 /* Declaration.swift */,
 				D4012F971B753A2A0070B636 /* Tag.swift */,
-				D4E49E601B4B6384002273A3 /* Description.swift */,
 				D43AC8821BC1824D008762B7 /* Telescope.swift */,
 				D43AC8841BC18291008762B7 /* Datatype.swift */,
 				D4B3FBEE1A83515800DA2AC3 /* Supporting Files */,
@@ -372,7 +369,6 @@
 				D43AC8851BC18291008762B7 /* Datatype.swift in Sources */,
 				D4E289A21B641B0B0070389F /* Comparable.swift in Sources */,
 				D4E289A41B641FDA0070389F /* String.swift in Sources */,
-				D4E49E611B4B6384002273A3 /* Description.swift in Sources */,
 				D4E01E461B5BF5F7003BAB46 /* CollectionType.swift in Sources */,
 				D4F1B8511B46EBE10065BF22 /* LazyScanSequence.swift in Sources */,
 				D440FCBF1B6BBE7300C56B19 /* Expression+Substitution.swift in Sources */,
