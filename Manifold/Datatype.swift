@@ -11,6 +11,12 @@ public struct Datatype<Recur: TermType>: DictionaryLiteralConvertible {
 
 	public let constructors: [(String, Telescope<Recur>)]
 
+
+	public func definitions(recur: Recur) -> [Declaration<Recur>.DefinitionType] {
+		return []
+	}
+
+
 	public func value(recur: Recur) -> Recur {
 		return value(recur, constructors: constructors[constructors.indices])
 	}
