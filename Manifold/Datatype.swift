@@ -24,18 +24,15 @@ public struct Datatype<Recur: TermType>: DictionaryLiteralConvertible {
 	}
 
 	private func value<C: CollectionType where C.SubSequence == C, C.Generator.Element == (String, Telescope<Recur>)>(recur: Recur, constructors: C, transform: Recur -> Recur = id) -> Recur {
-		switch constructors.count {
-		case 0:
-			return .UnitType
-		case 1:
-			return constructors.first!.1.constructedType(recur)
-		default:
-			return Recur.lambda(Recur.BooleanType, {
-				.If($0,
-					constructors.first!.1.constructedType(recur),
-					self.value(recur, constructors: constructors.dropFirst(), transform: { $0 } >>> transform))
-			})
-		}
+		return constructors.fold(nil) { each, into in
+			into.map { into in
+				Recur.lambda(Recur.BooleanType) {
+					.If($0,
+						each.1.constructedType(recur),
+						into)
+				}
+			} ?? each.1.constructedType(recur)
+		} ?? .UnitType
 	}
 }
 
