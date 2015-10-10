@@ -20,11 +20,11 @@ public struct Datatype: DictionaryLiteralConvertible {
 		case 0:
 			return .UnitType
 		case 1:
-			return constructors.first!.1.type(recur)
+			return constructors.first!.1.constructedType(recur)
 		default:
 			return Term.lambda(Term.BooleanType, {
 				.If($0,
-					constructors.first!.1.type(recur),
+					constructors.first!.1.constructedType(recur),
 					self.value(recur, constructors: constructors.dropFirst(), transform: { $0 } >>> transform))
 			})
 		}
