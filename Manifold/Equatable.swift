@@ -107,19 +107,3 @@ public func == (left: Name, right: Name) -> Bool {
 public func == <Fix: TermType> (left: Fix, right: Fix) -> Bool {
 	return left.out == right.out
 }
-
-
-// MARK: Tag
-
-public func == (left: Tag, right: Tag) -> Bool {
-	switch (left, right) {
-	case let (.Here(x, xs), .Here(y, ys)):
-		return x == y && xs == ys
-
-	case let (.There(x, xs), .There(y, ys)):
-		return x == y && xs == ys
-
-	default:
-		return false
-	}
-}
