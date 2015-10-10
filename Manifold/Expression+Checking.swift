@@ -26,7 +26,7 @@ extension Expression where Recur: TermType, Recur: Equatable {
 				.flatMap { inferred in
 					Expression.alphaEquivalent(inferred, against, environment)
 						? Either.right(inferred)
-						: Either.left("Type mismatch: expected \(self) to be of type \(against), but it was actually of type \(inferred) in context \(Expression.toString(context))")
+						: Either.left("Type mismatch: expected '\(self)' to be of type '\(against)', but it was actually of type '\(inferred)' in context \(Expression.toString(context))")
 				})
 		}
 	}
