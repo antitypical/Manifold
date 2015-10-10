@@ -13,7 +13,9 @@ public struct Datatype<Recur: TermType>: DictionaryLiteralConvertible {
 
 
 	public func definitions(recur: Recur) -> [Declaration<Recur>.DefinitionType] {
-		return []
+		return constructors.map {
+			($0, $1.type(recur).out, $1.value(recur).out)
+		}
 	}
 
 
