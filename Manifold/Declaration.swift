@@ -89,19 +89,6 @@ extension Declaration where Recur: TermType {
 	}
 }
 
-/// Helper type to enable construction of datatype Declarations with a dictionary literal.
-public struct DatatypeHelper: DictionaryLiteralConvertible {
-	public init(branches: [(String, Description)]) {
-		self.branches = branches
-	}
-
-	public init(dictionaryLiteral elements: (String, Description)...) {
-		self.init(branches: elements)
-	}
-
-	public let branches: [(String, Description)]
-}
-
 
 import Either
 import Prelude
