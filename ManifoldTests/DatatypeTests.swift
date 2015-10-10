@@ -10,7 +10,7 @@ final class DatatypeTests: XCTestCase {
 	}
 
 	func testDatatypeWithTwoConstructorsIsFunctionFromBooleanToTypesOfConstructedValues() {
-		let List: Datatype = [
+		let List: Datatype<Term> = [
 			"nil": .End,
 			"cons": .Argument(.BooleanType, const(.Recursive(.End)))
 		]
