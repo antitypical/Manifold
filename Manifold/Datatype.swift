@@ -13,10 +13,10 @@ public struct Datatype<Recur: TermType>: DictionaryLiteralConvertible {
 
 
 	public func definitions(recur: Recur) -> [Declaration<Recur>.DefinitionType] {
-		return constructors[constructors.indices].fold((definitions: [], transform: id)) { each, into in
-			(into.definitions + [ (symbol: each.0, type: each.1.type(recur).out, value: into.transform(into.definitions.count > 0
-				? .Product(true, each.1.value(recur))
-				: each.1.value(recur)).out) ], into.transform)
+		return constructors[constructors.indices].fold((definitions: [], transform: id)) {
+			($1.definitions + [ (symbol: $0.0, type: $0.1.type(recur).out, value: $1.transform($1.definitions.count > 0
+				? .Product(true, $0.1.value(recur))
+				: $0.1.value(recur)).out) ], $1.transform)
 		}.definitions
 	}
 
