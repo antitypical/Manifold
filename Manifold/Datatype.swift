@@ -14,10 +14,10 @@ public struct Datatype<Recur: TermType>: DictionaryLiteralConvertible {
 
 	public func definitions(recur: Recur) -> [Declaration<Recur>.DefinitionType] {
 		return constructors[constructors.indices].fold((definitions: [], transform: id)) { (each: (String, Telescope<Recur>), into: (definitions: [Declaration<Recur>.DefinitionType], transform: Recur -> Recur)) in
-			let value: Expression<Recur> = into.definitions.count > 0
-				? Expression<Recur>.Product(true, each.1.value(recur))
-				: each.1.value(recur).out
-			return (into.definitions + [ (symbol: each.0, type: each.1.type(recur).out, value: value) ], into.transform)
+			let value = into.definitions.count > 0
+				? .Product(true, each.1.value(recur))
+				: each.1.value(recur)
+			return (into.definitions + [ (symbol: each.0, type: each.1.type(recur).out, value: value.out) ], into.transform)
 		}.definitions
 	}
 
