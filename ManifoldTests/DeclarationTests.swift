@@ -2,17 +2,17 @@
 
 final class DeclarationTests: XCTestCase {
 	func testDatatypeDeclarationsAddTypesToContext() {
-		assert(booleanModule.context["Boolean"], ==, .Type(0))
+		assert(Expression<Term>.boolean.context["Boolean"], ==, .Type(0))
 	}
 
 	func testDatatypeDeclarationsAddDataConstructorsToContext() {
-		assert(booleanModule.context["true"], ==, .Variable("Boolean"))
-		assert(booleanModule.context["false"], ==, .Variable("Boolean"))
+		assert(Expression<Term>.boolean.context["true"], ==, .Variable("Boolean"))
+		assert(Expression<Term>.boolean.context["false"], ==, .Variable("Boolean"))
 	}
 
 	func testDatatypeDeclarationsAddDataConstructorsToEnvironment() {
-		assert(booleanModule.environment["true"], ==, .Product(true, .Unit))
-		assert(booleanModule.environment["false"], ==, .Product(false, .Unit))
+		assert(Expression<Term>.boolean.environment["true"], ==, .Product(true, .Unit))
+		assert(Expression<Term>.boolean.environment["false"], ==, .Product(false, .Unit))
 	}
 
 	func testDatatypeConstructorsProduceRightNestedValues() {
@@ -57,14 +57,6 @@ final class DeclarationTests: XCTestCase {
 		assert(multipleConstructorsWithMultipleArgumentsModule.environment["c"], ==, .lambda(.BooleanType, .BooleanType, { .Product(false, .Product(false, .Product($0, .Product($1, .Unit)))) }))
 	}
 }
-
-
-private let booleanModule = Module<Term>([], [
-	Declaration.Datatype("Boolean", [
-		"true": .End,
-		"false": .End,
-	])
-])
 
 
 private let selfModule = Module<Term>([], [
