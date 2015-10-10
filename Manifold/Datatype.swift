@@ -24,7 +24,7 @@ public struct Datatype<Recur: TermType>: DictionaryLiteralConvertible {
 	public func value(recur: Recur) -> Recur {
 		return constructors[constructors.indices].fold(nil) { each, into in
 			into.map { into in
-				Recur.lambda(Recur.BooleanType) {
+				Recur.lambda(.BooleanType) {
 					.If($0,
 						each.1.constructedType(recur),
 						into)
