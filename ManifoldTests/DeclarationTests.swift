@@ -78,30 +78,30 @@ private let selfModule = Module<Term>([], [
 
 private let oneConstructorWithArgumentModule = Module<Term>([], [
 	Declaration.Datatype("A", [
-		"a": .Argument(.BooleanType, id),
+		"a": .Argument(.BooleanType, const(.End)),
 	])
 ])
 
 private let multipleConstructorsWithArgumentsModule = Module<Term>([], [
 	Declaration.Datatype("A", [
-		"a": .Argument(.BooleanType, id),
-		"b": .Argument(.BooleanType, id),
-		"c": .Argument(.BooleanType, id),
+		"a": .Argument(.BooleanType, const(.End)),
+		"b": .Argument(.BooleanType, const(.End)),
+		"c": .Argument(.BooleanType, const(.End)),
 	])
 ])
 
 private let multipleConstructorsWithMultipleArgumentsModule = Module<Term>([], [
 	Declaration.Datatype("A", [
-		"a": Description.Argument(.BooleanType) { a in Description.Argument(.BooleanType) { b in .Product(a, b)  } },
-		"b": Description.Argument(.BooleanType) { a in Description.Argument(.BooleanType) { b in .Product(a, b)  } },
-		"c": Description.Argument(.BooleanType) { a in Description.Argument(.BooleanType) { b in .Product(a, b)  } },
+		"a": Telescope.Argument(.BooleanType) { a in .Argument(.BooleanType, const(.End)) },
+		"b": Telescope.Argument(.BooleanType) { a in .Argument(.BooleanType, const(.End)) },
+		"c": Telescope.Argument(.BooleanType) { a in .Argument(.BooleanType, const(.End)) },
 	])
 ])
 
 private let naturalModule = Module<Term>([], [
 	Declaration.Datatype("Natural", [
 		"zero": .End,
-		"successor": .Argument(.Recursive, id)
+		"successor": .Argument("Natural", const(.End))
 	])
 ])
 
