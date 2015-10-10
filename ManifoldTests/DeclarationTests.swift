@@ -2,8 +2,7 @@
 
 final class DeclarationTests: XCTestCase {
 	func testDatatypeDeclarationsAddTypesToContext() {
-		let expected: Term = .Type
-		assert(booleanModule.context["Boolean"].map(Term.init), ==, expected)
+		assert(booleanModule.context["Boolean"].map(Term.init), ==, .Type)
 	}
 
 	func testDatatypeDeclarationsAddDataConstructorsToContext() {
