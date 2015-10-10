@@ -4,19 +4,19 @@ final class TelescopeTests: XCTestCase {
 	// MARK: Types
 
 	func testEmptyDataConstructorHasUnitType() {
-		assert(Telescope.End.type("A"), ==, .UnitType)
+		assert(Telescope.End.type("A"), ==, "A")
 	}
 
 	func testRecursiveDataConstructorHasFunctionType() {
-		assert(Telescope.Recursive(.End).type("A"), ==, .lambda("A", const(.Product("A", .UnitType))))
+		assert(Telescope.Recursive(.End).type("A"), ==, .lambda("A", const(.Product("A", "A"))))
 	}
 
 	func testMultiplyRecursiveDataConstructorHasFunctionType() {
-		assert(Telescope.Recursive(.Recursive(.End)).type("A"), ==, .lambda("A", const(.lambda("A", const(.Product("A", .Product("A", .UnitType)))))))
+		assert(Telescope.Recursive(.Recursive(.End)).type("A"), ==, .lambda("A", const(.lambda("A", const(.Product("A", .Product("A", "A")))))))
 	}
 
 	func testArgumentDataConstructorHasFunctionType() {
-		assert(Telescope.Argument("B", const(.Recursive(.End))).type("A"), ==, .lambda("B", const(.lambda("A", const(.Product("B", .Product("A", .UnitType)))))))
+		assert(Telescope.Argument("B", const(.Recursive(.End))).type("A"), ==, .lambda("B", const(.lambda("A", const(.Product("B", .Product("A", "A")))))))
 	}
 
 

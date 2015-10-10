@@ -8,7 +8,7 @@ public enum Telescope<Recur: TermType> {
 	public func type(recur: Recur, transform: Recur -> Recur = id) -> Recur {
 		switch self {
 		case .End:
-			return transform(.UnitType)
+			return transform(recur)
 		case let .Recursive(rest):
 			return .lambda(recur, const(rest.type(recur, transform: { .Product(recur, $0) } >>> transform)))
 		case let .Argument(t, continuation):
