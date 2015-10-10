@@ -26,7 +26,7 @@ final class DeclarationTests: XCTestCase {
 	}
 
 	func testDatatypeConstructorWithArgumentsProducesFunction() {
-		assert(oneConstructorWithArgumentModule.environment["a"], ==, .lambda(.BooleanType, id))
+		assert(oneConstructorWithArgumentModule.environment["a"], ==, .lambda(.BooleanType, { .Product($0, .Unit) }))
 	}
 
 	func testDatatypeConstructorsWithArgumentsHaveFunctionTypes() {
@@ -36,13 +36,13 @@ final class DeclarationTests: XCTestCase {
 	}
 
 	func testDatatypeConstructorsWithArgumentsProduceFunctionsReturningRightNestedValues() {
-		assert(multipleConstructorsWithArgumentsModule.environment["a"], ==, .lambda(.BooleanType, { .Product(true, $0) }))
-		assert(multipleConstructorsWithArgumentsModule.environment["b"], ==, .lambda(.BooleanType, { .Product(false, .Product(true, $0)) }))
-		assert(multipleConstructorsWithArgumentsModule.environment["c"], ==, .lambda(.BooleanType, { .Product(false, .Product(false, $0)) }))
+		assert(multipleConstructorsWithArgumentsModule.environment["a"], ==, .lambda(.BooleanType, { .Product(true, .Product($0, .Unit)) }))
+		assert(multipleConstructorsWithArgumentsModule.environment["b"], ==, .lambda(.BooleanType, { .Product(false, .Product(true, .Product($0, .Unit))) }))
+		assert(multipleConstructorsWithArgumentsModule.environment["c"], ==, .lambda(.BooleanType, { .Product(false, .Product(false, .Product($0, .Unit))) }))
 	}
 
 	func testDatatypeConstructorsWithRecursiveReferencesProduceValuesEmbeddingReferencesToTheirType() {
-		assert(naturalModule.environment["successor"], ==, Expression.lambda("Natural") { .Product(false, $0) })
+		assert(naturalModule.environment["successor"], ==, Expression.lambda("Natural") { .Product(false, .Product($0, .Unit)) })
 	}
 
 	func testDatatypeConstructorsWithMultipleArgumentsHaveFunctionTypes() {
@@ -52,9 +52,9 @@ final class DeclarationTests: XCTestCase {
 	}
 
 	func testDatatypeConstructorsWithMultipleArgumentsProduceFunctionsReturningRightNestedValues() {
-		assert(multipleConstructorsWithArgumentsModule.environment["a"], ==, .lambda(.BooleanType, .BooleanType, { .Product(true, .Product($0, $1)) }))
-		assert(multipleConstructorsWithArgumentsModule.environment["b"], ==, .lambda(.BooleanType, .BooleanType, { .Product(false, .Product(true, .Product($0, $1))) }))
-		assert(multipleConstructorsWithArgumentsModule.environment["c"], ==, .lambda(.BooleanType, .BooleanType, { .Product(false, .Product(false, .Product($0, $1))) }))
+		assert(multipleConstructorsWithArgumentsModule.environment["a"], ==, .lambda(.BooleanType, .BooleanType, { .Product(true, .Product($0, .Product($1, .Unit))) }))
+		assert(multipleConstructorsWithArgumentsModule.environment["b"], ==, .lambda(.BooleanType, .BooleanType, { .Product(false, .Product(true, .Product($0, .Product($1, .Unit)))) }))
+		assert(multipleConstructorsWithArgumentsModule.environment["c"], ==, .lambda(.BooleanType, .BooleanType, { .Product(false, .Product(false, .Product($0, .Product($1, .Unit)))) }))
 	}
 }
 
