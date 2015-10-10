@@ -13,8 +13,11 @@ public struct Datatype<Recur: TermType>: DictionaryLiteralConvertible {
 
 
 	public func definitions(recur: Recur) -> [Declaration<Recur>.DefinitionType] {
-		return constructors.map {
-			($0, $1.type(recur).out, $1.value(recur).out)
+		return constructors[constructors.indices].fold([]) { (each: (String, Telescope<Recur>), into: [Declaration<Recur>.DefinitionType]) in
+			let value: Expression<Recur> = into.count > 0
+				? Expression<Recur>.Product(true, each.1.value(recur))
+				: each.1.value(recur).out
+			return into + [ (symbol: each.0, type: each.1.type(recur).out, value: value) ]
 		}
 	}
 
