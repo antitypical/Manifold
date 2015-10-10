@@ -8,15 +8,15 @@ final class TelescopeTests: XCTestCase {
 	}
 
 	func testRecursiveDataConstructorHasFunctionType() {
-		assert(Telescope.Recursive(.End).type("A"), ==, .lambda("A", const(.Product("A", "A"))))
+		assert(Telescope.Recursive(.End).type("A"), ==, .lambda("A", const("A")))
 	}
 
 	func testMultiplyRecursiveDataConstructorHasFunctionType() {
-		assert(Telescope.Recursive(.Recursive(.End)).type("A"), ==, .lambda("A", const(.lambda("A", const(.Product("A", .Product("A", "A")))))))
+		assert(Telescope.Recursive(.Recursive(.End)).type("A"), ==, .lambda("A", const(.lambda("A", const("A")))))
 	}
 
 	func testArgumentDataConstructorHasFunctionType() {
-		assert(Telescope.Argument("B", const(.Recursive(.End))).type("A"), ==, .lambda("B", const(.lambda("A", const(.Product("B", .Product("A", "A")))))))
+		assert(Telescope.Argument("B", const(.Recursive(.End))).type("A"), ==, .lambda("B", const(.lambda("A", const("A")))))
 	}
 
 
