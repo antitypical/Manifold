@@ -16,11 +16,6 @@ public enum Description: CustomDebugStringConvertible, DictionaryLiteralConverti
 		}
 	}
 
-	public init(datatype: Datatype) {
-		self.init(branches: datatype.branches)
-	}
-
-
 	public func type(recur: Expression<Description>) -> Expression<Description> {
 		switch self {
 		case .End:

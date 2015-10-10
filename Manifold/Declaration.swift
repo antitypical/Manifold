@@ -29,7 +29,7 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 		case let .Definition(_, _, value):
 			return value
 		case let .Datatype(_, datatype):
-			return Description(branches: datatype.branches).type(.Variable(.Global(symbol))).map(Recur.init)
+			return datatype.value(.Variable(.Global(symbol))).out
 		}
 	}
 
@@ -41,40 +41,7 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 		case let .Definition(symbol, type, value):
 			return [ (symbol, type, value) ]
 		case let .Datatype(symbol, datatype):
-			let recur: Expression<Description> = .Variable(.Global(symbol))
-			let description = Description(datatype: datatype)
-
-			func type(description: Description) -> Expression<Description> {
-				switch description {
-				case .End:
-					return recur
-				case .Recursive:
-					return recur
-				case let .Pure(a):
-					return a()
-				case let .Argument(t, continuation):
-					var variable: Expression<Description> = 0
-					let body = continuation(Description { variable })
-					let n = type(body).maxBoundVariable + 1
-					variable = recur
-					return .Lambda(n, t, body)
-				}
-			}
-
-			func definitions(branches: [(String, Description)], transform: Expression<Recur> -> Expression<Recur>) -> [DefinitionType] {
-				switch branches.count {
-				case 0:
-					return []
-				case 1:
-					return [ (symbol: branches[0].0, type: type(branches[0].1).map(Recur.init), value: transform(branches[0].1.value(recur).map(Recur.init))) ]
-				default:
-					return [ (symbol: branches[0].0, type: type(branches[0].1).map(Recur.init), value: transform(.Product(.Boolean(true), Recur(branches[0].1.value(recur).map(Recur.init))))) ]
-						+ definitions(Array(branches.dropFirst()), transform: transform >>> { .Product(.Boolean(false), Recur($0)) })
-				}
-			}
-
-			return [ (symbol, .Type(0), description.type(recur).map(Recur.init)) ]
-				+ definitions(datatype.branches, transform: id)
+			return [ (symbol, type, value) ] + datatype.definitions(.Variable(.Global(symbol)))
 		}
 	}
 
@@ -101,7 +68,7 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 
 
 	case Definition(String, Expression<Recur>, Expression<Recur>)
-	case Datatype(String, Manifold.Datatype)
+	case Datatype(String, Manifold.Datatype<Recur>)
 }
 
 extension Declaration where Recur: TermType {
@@ -116,19 +83,6 @@ extension Declaration where Recur: TermType {
 					ifLeft: { Either.left($0.map { "\(self.symbol)\n\t: \(self.type)\n\t= \(self.value)\n: " + $0 }) },
 					ifRight: Either.right)
 	}
-}
-
-/// Helper type to enable construction of datatype Declarations with a dictionary literal.
-public struct Datatype: DictionaryLiteralConvertible {
-	public init(branches: [(String, Description)]) {
-		self.branches = branches
-	}
-
-	public init(dictionaryLiteral elements: (String, Description)...) {
-		self.init(branches: elements)
-	}
-
-	public let branches: [(String, Description)]
 }
 
 

@@ -2,60 +2,59 @@
 
 final class DeclarationTests: XCTestCase {
 	func testDatatypeDeclarationsAddTypesToContext() {
-		let expected: Term = .Type
-		assert(booleanModule.context["Boolean"].map(Term.init), ==, expected)
+		assert(booleanModule.context["Boolean"], ==, .Type(0))
 	}
 
 	func testDatatypeDeclarationsAddDataConstructorsToContext() {
-		assert(booleanModule.context["true"].map(Term.init), ==, Term.Variable("Boolean"))
-		assert(booleanModule.context["false"].map(Term.init), ==, Term.Variable("Boolean"))
+		assert(booleanModule.context["true"], ==, .Variable("Boolean"))
+		assert(booleanModule.context["false"], ==, .Variable("Boolean"))
 	}
 
 	func testDatatypeDeclarationsAddDataConstructorsToEnvironment() {
-		assert(booleanModule.environment["true"].map(Term.init), ==, Term.Product(true, .Unit))
-		assert(booleanModule.environment["false"].map(Term.init), ==, Term.Product(false, .Unit))
+		assert(booleanModule.environment["true"], ==, .Product(true, .Unit))
+		assert(booleanModule.environment["false"], ==, .Product(false, .Unit))
 	}
 
 	func testDatatypeConstructorsProduceRightNestedValues() {
-		assert(selfModule.environment["me"].map(Term.init), ==, Term.Product(true, .Unit))
-		assert(selfModule.environment["myself"].map(Term.init), ==, Term.Product(false, .Product(true, .Unit)))
-		assert(selfModule.environment["I"].map(Term.init), ==, Term.Product(false, .Product(false, .Unit)))
+		assert(selfModule.environment["me"], ==, .Product(true, .Unit))
+		assert(selfModule.environment["myself"], ==, .Product(false, .Product(true, .Unit)))
+		assert(selfModule.environment["I"], ==, .Product(false, .Product(false, .Unit)))
 	}
 
 	func testDatatypeConstructorWithArgumentsHasFunctionType() {
-		assert(oneConstructorWithArgumentModule.context["a"].map(Term.init), ==, Term.lambda(.BooleanType, const("A")))
+		assert(oneConstructorWithArgumentModule.context["a"], ==, .lambda(.BooleanType, const("A")))
 	}
 
 	func testDatatypeConstructorWithArgumentsProducesFunction() {
-		assert(oneConstructorWithArgumentModule.environment["a"].map(Term.init), ==, Term.lambda(.BooleanType, id))
+		assert(oneConstructorWithArgumentModule.environment["a"], ==, .lambda(.BooleanType, { .Product($0, .Unit) }))
 	}
 
 	func testDatatypeConstructorsWithArgumentsHaveFunctionTypes() {
-		assert(multipleConstructorsWithArgumentsModule.context["a"].map(Term.init), ==, Term.lambda(.BooleanType, const("A")))
-		assert(multipleConstructorsWithArgumentsModule.context["b"].map(Term.init), ==, Term.lambda(.BooleanType, const("A")))
-		assert(multipleConstructorsWithArgumentsModule.context["c"].map(Term.init), ==, Term.lambda(.BooleanType, const("A")))
+		assert(multipleConstructorsWithArgumentsModule.context["a"], ==, .lambda(.BooleanType, const("A")))
+		assert(multipleConstructorsWithArgumentsModule.context["b"], ==, .lambda(.BooleanType, const("A")))
+		assert(multipleConstructorsWithArgumentsModule.context["c"], ==, .lambda(.BooleanType, const("A")))
 	}
 
 	func testDatatypeConstructorsWithArgumentsProduceFunctionsReturningRightNestedValues() {
-		assert(multipleConstructorsWithArgumentsModule.environment["a"].map(Term.init), ==, Term.lambda(.BooleanType, { .Product(true, $0) }))
-		assert(multipleConstructorsWithArgumentsModule.environment["b"].map(Term.init), ==, Term.lambda(.BooleanType, { .Product(false, .Product(true, $0)) }))
-		assert(multipleConstructorsWithArgumentsModule.environment["c"].map(Term.init), ==, Term.lambda(.BooleanType, { .Product(false, .Product(false, $0)) }))
+		assert(multipleConstructorsWithArgumentsModule.environment["a"], ==, .lambda(.BooleanType, { .Product(true, .Product($0, .Unit)) }))
+		assert(multipleConstructorsWithArgumentsModule.environment["b"], ==, .lambda(.BooleanType, { .Product(false, .Product(true, .Product($0, .Unit))) }))
+		assert(multipleConstructorsWithArgumentsModule.environment["c"], ==, .lambda(.BooleanType, { .Product(false, .Product(false, .Product($0, .Unit))) }))
 	}
 
 	func testDatatypeConstructorsWithRecursiveReferencesProduceValuesEmbeddingReferencesToTheirType() {
-		assert(naturalModule.environment["successor"].map(Term.init), ==, Term.lambda("Natural") { .Product(false, $0) })
+		assert(naturalModule.environment["successor"], ==, Expression.lambda("Natural") { .Product(false, .Product($0, .Unit)) })
 	}
 
 	func testDatatypeConstructorsWithMultipleArgumentsHaveFunctionTypes() {
-		assert(multipleConstructorsWithMultipleArgumentsModule.context["a"].map(Term.init), ==, Term.lambda(.BooleanType, .BooleanType, const("A")))
-		assert(multipleConstructorsWithMultipleArgumentsModule.context["b"].map(Term.init), ==, Term.lambda(.BooleanType, .BooleanType, const("A")))
-		assert(multipleConstructorsWithMultipleArgumentsModule.context["c"].map(Term.init), ==, Term.lambda(.BooleanType, .BooleanType, const("A")))
+		assert(multipleConstructorsWithMultipleArgumentsModule.context["a"], ==, .lambda(.BooleanType, .BooleanType, const("A")))
+		assert(multipleConstructorsWithMultipleArgumentsModule.context["b"], ==, .lambda(.BooleanType, .BooleanType, const("A")))
+		assert(multipleConstructorsWithMultipleArgumentsModule.context["c"], ==, .lambda(.BooleanType, .BooleanType, const("A")))
 	}
 
 	func testDatatypeConstructorsWithMultipleArgumentsProduceFunctionsReturningRightNestedValues() {
-		assert(multipleConstructorsWithArgumentsModule.environment["a"].map(Term.init), ==, Term.lambda(.BooleanType, .BooleanType, { .Product(true, .Product($0, $1)) }))
-		assert(multipleConstructorsWithArgumentsModule.environment["b"].map(Term.init), ==, Term.lambda(.BooleanType, .BooleanType, { .Product(false, .Product(true, .Product($0, $1))) }))
-		assert(multipleConstructorsWithArgumentsModule.environment["c"].map(Term.init), ==, Term.lambda(.BooleanType, .BooleanType, { .Product(false, .Product(false, .Product($0, $1))) }))
+		assert(multipleConstructorsWithMultipleArgumentsModule.environment["a"], ==, .lambda(.BooleanType, .BooleanType, { .Product(true, .Product($0, .Product($1, .Unit))) }))
+		assert(multipleConstructorsWithMultipleArgumentsModule.environment["b"], ==, .lambda(.BooleanType, .BooleanType, { .Product(false, .Product(true, .Product($0, .Product($1, .Unit)))) }))
+		assert(multipleConstructorsWithMultipleArgumentsModule.environment["c"], ==, .lambda(.BooleanType, .BooleanType, { .Product(false, .Product(false, .Product($0, .Product($1, .Unit)))) }))
 	}
 }
 
@@ -78,30 +77,30 @@ private let selfModule = Module<Term>([], [
 
 private let oneConstructorWithArgumentModule = Module<Term>([], [
 	Declaration.Datatype("A", [
-		"a": .Argument(.BooleanType, id),
+		"a": .Argument(.BooleanType, const(.End)),
 	])
 ])
 
 private let multipleConstructorsWithArgumentsModule = Module<Term>([], [
 	Declaration.Datatype("A", [
-		"a": .Argument(.BooleanType, id),
-		"b": .Argument(.BooleanType, id),
-		"c": .Argument(.BooleanType, id),
+		"a": .Argument(.BooleanType, const(.End)),
+		"b": .Argument(.BooleanType, const(.End)),
+		"c": .Argument(.BooleanType, const(.End)),
 	])
 ])
 
 private let multipleConstructorsWithMultipleArgumentsModule = Module<Term>([], [
 	Declaration.Datatype("A", [
-		"a": Description.Argument(.BooleanType) { a in Description.Argument(.BooleanType) { b in .Product(a, b)  } },
-		"b": Description.Argument(.BooleanType) { a in Description.Argument(.BooleanType) { b in .Product(a, b)  } },
-		"c": Description.Argument(.BooleanType) { a in Description.Argument(.BooleanType) { b in .Product(a, b)  } },
+		"a": Telescope.Argument(.BooleanType) { a in .Argument(.BooleanType, const(.End)) },
+		"b": Telescope.Argument(.BooleanType) { a in .Argument(.BooleanType, const(.End)) },
+		"c": Telescope.Argument(.BooleanType) { a in .Argument(.BooleanType, const(.End)) },
 	])
 ])
 
 private let naturalModule = Module<Term>([], [
 	Declaration.Datatype("Natural", [
 		"zero": .End,
-		"successor": .Argument(.Recursive, id)
+		"successor": .Argument("Natural", const(.End))
 	])
 ])
 
