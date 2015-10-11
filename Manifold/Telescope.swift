@@ -25,7 +25,12 @@ public enum Telescope<Recur: TermType> {
 		case let .Recursive(rest):
 			return .Product(recur, rest.constructedType(recur))
 		case let .Argument(t, continuation):
-			return .Product(t, continuation(.Unit).constructedType(recur))
+			switch continuation(0) {
+			case .End:
+				return t
+			case let a:
+				return .Product(t, a.constructedType(recur))
+			}
 		}
 	}
 
