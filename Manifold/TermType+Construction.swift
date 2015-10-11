@@ -98,7 +98,7 @@ extension TermType {
 	}
 
 	public static func lambda(type1: Self, _ type2: Self, _ body: (Self, Self) -> Self) -> Self {
-		return Self(.lambda(type1, type2, body))
+		return lambda(type1) { a in lambda(type2) { b in body(a, b) } }
 	}
 
 	public static func lambda(type1: Self, _ type2: Self, _ type3: Self, _ body: (Self, Self, Self) -> Self) -> Self {
