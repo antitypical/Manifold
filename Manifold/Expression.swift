@@ -267,20 +267,12 @@ extension Expression where Recur: TermType {
 		return map { $0.out }
 	}
 
-	public var isType: Bool {
-		return analysis(ifType: const(true), otherwise: { returnType?.out.isType ?? false })
-	}
-
 	public var lambda: (Int, Recur, Recur)? {
 		return analysis(ifLambda: Optional.Some, otherwise: const(nil))
 	}
 
 	public var parameterType: Recur? {
 		return lambda?.1
-	}
-
-	public var returnType: Recur? {
-		return inferType([:], [:]).right?.lambda?.2
 	}
 
 	public var product: (Recur, Recur)? {
