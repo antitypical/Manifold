@@ -14,7 +14,14 @@ public struct Term: CustomDebugStringConvertible, CustomStringConvertible, TermT
 	// MARK: CustomStringConvertible
 
 	public var description: String {
-		return out.description
+		switch out {
+		case let .Lambda(i, type, body):
+			if body.out.freeVariables.contains(i) { fallthrough }
+
+			return "\(type) → \(body)"
+		default:
+			return out.description
+		}
 	}
 
 
