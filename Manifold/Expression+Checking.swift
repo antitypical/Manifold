@@ -6,10 +6,7 @@ extension Expression where Recur: TermType, Recur: Equatable {
 	}
 
 	public func checkType(against: Expression, _ environment: Environment = [:], _ context: Context = [:]) -> Either<Error, Expression> {
-		return checkTypeUnannotated(against, environment, context)
-			.either(
-				ifLeft: { $0.map { "\($0)\nin: \(self) ⇐ \(against)" } } >>> Either.Left,
-				ifRight: Either.Right)
+		return annotate(checkTypeUnannotated(against, environment, context), against)
 	}
 
 	private func checkTypeUnannotated(against: Expression, _ environment: Environment = [:], _ context: Context = [:]) -> Either<Error, Expression> {
@@ -63,8 +60,10 @@ extension Expression where Recur: TermType, Recur: Equatable {
 		return "[\n\t\(formattedContext)\n]"
 	}
 
-	func annotate<T>(either: Either<Error, T>) -> Either<Error, T> {
-		return either.either(ifLeft: { $0.map { "\($0)\nin: \(self)" } } >>> Either.left, ifRight: Either.right)
+	func annotate<T>(either: Either<Error, T>, _ against: Expression? = nil) -> Either<Error, T> {
+		return either.either(
+			ifLeft: { $0.map { "\($0)\nin: \(self)" + (against.map { " ⇐ \($0)" } ?? "") } } >>> Either.Left,
+			ifRight: Either.Right)
 	}
 }
 
