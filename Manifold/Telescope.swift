@@ -20,10 +20,17 @@ public enum Telescope<Recur: TermType> {
 		switch self {
 		case .End:
 			return .UnitType
+		case .Recursive(.End):
+			return recur
 		case let .Recursive(rest):
 			return .Product(recur, rest.constructedType(recur))
 		case let .Argument(t, continuation):
-			return .Product(t, continuation(.Unit).constructedType(recur))
+			switch continuation(0) {
+			case .End:
+				return t
+			case let a:
+				return .Product(t, a.constructedType(recur))
+			}
 		}
 	}
 
@@ -31,10 +38,19 @@ public enum Telescope<Recur: TermType> {
 		switch self {
 		case .End:
 			return transform(.Unit)
+		case .Recursive(.End):
+			return .lambda(recur, transform)
 		case let .Recursive(rest):
 			return .lambda(recur, { v in rest.value(recur, transform: { .Product(v, $0) } >>> transform) })
 		case let .Argument(t, continuation):
-			return .lambda(t, { v in continuation(v).value(recur, transform: { .Product(v, $0) } >>> transform) })
+			return .lambda(t, { v in
+				switch continuation(v) {
+				case .End:
+					return transform(v)
+				case let a:
+					return a.value(recur, transform: { .Product(v, $0) } >>> transform)
+				}
+			})
 		}
 	}
 }

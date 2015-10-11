@@ -6,7 +6,7 @@ final class DatatypeTests: XCTestCase {
 	}
 
 	func testDatatypeWithOneConstructorIsTypeOfConstructedValue() {
-		assert(Datatype<Term>(constructors: [ ("a", .Argument(.BooleanType, const(.End))) ]).value("A"), ==, .Product(.BooleanType, .UnitType))
+		assert(Datatype<Term>(constructors: [ ("a", .Argument(.BooleanType, const(.End))) ]).value("A"), ==, .BooleanType)
 	}
 
 	func testDatatypeWithTwoConstructorsIsFunctionFromBooleanToTypesOfConstructedValues() {
@@ -14,7 +14,7 @@ final class DatatypeTests: XCTestCase {
 			"nil": .End,
 			"cons": .Argument(.BooleanType, const(.Recursive(.End)))
 		]
-		assert(List.value("List"), ==, .lambda(.BooleanType, { .If($0, .UnitType, .Product(.BooleanType, .Product("List", .UnitType))) }))
+		assert(List.value("List"), ==, .lambda(.BooleanType, { .If($0, .UnitType, .Product(.BooleanType, "List")) }))
 	}
 }
 
