@@ -220,7 +220,7 @@ extension Expression where Recur: TermType {
 	public static func lambda(type: Recur, _ f: Recur -> Recur) -> Expression {
 		var n = 0
 		let body = f(Recur { .Variable(.Local(n)) })
-		n = body.out.maxBoundVariable + 1
+		n = body.maxBoundVariable + 1
 		return .Lambda(n, type, body)
 	}
 
@@ -238,19 +238,6 @@ extension Expression where Recur: TermType {
 
 
 	// MARK: Variables
-
-	var maxBoundVariable: Int {
-		return cata {
-			$0.analysis(
-				ifApplication: max,
-				ifLambda: { max($0.0, $0.1) },
-				ifProjection: { $0.0 },
-				ifProduct: max,
-				ifIf: { max($0, $1, $2) },
-				ifAnnotation: max,
-				otherwise: const(-1))
-		} (Recur(self))
-	}
 
 	public var freeVariables: Set<Int> {
 		return cata {
