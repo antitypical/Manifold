@@ -57,7 +57,7 @@ extension TermType {
 
 
 	public static func FunctionType(a: Self, _ b: Self) -> Self {
-		return Self(.FunctionType(a, b))
+		return .Lambda(-1, a, b)
 	}
 
 	public static func FunctionType(a: Self, _ b: Self, _ c: Self) -> Self {
