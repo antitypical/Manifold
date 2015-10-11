@@ -8,7 +8,7 @@ extension Expression where Recur: TermType, Recur: Equatable {
 	public func checkType(against: Expression, _ environment: Environment = [:], _ context: Context = [:]) -> Either<Error, Expression> {
 		return checkTypeUnannotated(against, environment, context)
 			.either(
-				ifLeft: { $0.map { "\($0)\nin: \(self) : \(against)" } } >>> Either.Left,
+				ifLeft: { $0.map { "\($0)\nin: \(self) ⇐ \(against)" } } >>> Either.Left,
 				ifRight: Either.Right)
 	}
 
