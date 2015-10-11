@@ -4,12 +4,12 @@ extension TermType {
 	public typealias Environment = [Name:Self]
 	public typealias Context = [Name:Self]
 
-	public func weakHeadNormalForm(environment: Environment, shouldRecur: Bool = true) -> Self {
+	public func weakHeadNormalForm(environment: [Name:Self], shouldRecur: Bool = true) -> Self {
 		var visited: Set<Name> = []
 		return weakHeadNormalForm(environment, shouldRecur: shouldRecur, visited: &visited)
 	}
 
-	private func weakHeadNormalForm(environment: Environment, shouldRecur: Bool = true, inout visited: Set<Name>) -> Self {
+	private func weakHeadNormalForm(environment: [Name:Self], shouldRecur: Bool = true, inout visited: Set<Name>) -> Self {
 		let unfold: Self -> Self = {
 			$0.weakHeadNormalForm(environment, shouldRecur: shouldRecur, visited: &visited)
 		}
