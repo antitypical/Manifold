@@ -1,6 +1,8 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 extension Expression where Recur: TermType, Recur: Equatable {
+	public typealias Context = [Name:Expression]
+
 	public func checkIsType(environment: Environment, _ context: Context) -> Either<Error, Expression> {
 		return checkType(.Type(0), environment, context)
 	}
@@ -42,12 +44,7 @@ extension Expression where Recur: TermType, Recur: Equatable {
 					.map(const(against)))
 
 		default:
-			return inferType(environment, context)
-				.flatMap { inferred in
-					Expression.alphaEquivalent(inferred, against, environment)
-						? Either.right(inferred)
-						: Either.left("Type mismatch: expected '\(self)' to be of type '\(against)', but it was actually of type '\(inferred)' in context \(Expression.toString(context))")
-				}
+			return Either.left("Type mismatch: expected '\(self)' to be of type '\(against)' in context \(Expression.toString(context))")
 		}
 	}
 
