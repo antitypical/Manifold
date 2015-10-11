@@ -214,29 +214,6 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomDebugStringConve
 	case Annotation(Recur, Recur)
 }
 
-extension Expression where Recur: TermType {
-	// MARK: Higher-order construction
-
-	public static func lambda(type: Recur, _ f: Recur -> Recur) -> Expression {
-		var n = 0
-		let body = f(Recur { .Variable(.Local(n)) })
-		n = body.maxBoundVariable + 1
-		return .Lambda(n, type, body)
-	}
-
-	public static func lambda(type1: Recur, _ type2: Recur, _ f: (Recur, Recur) -> Recur) -> Expression {
-		return lambda(type1) { a in Recur.lambda(type2) { b in f(a, b) } }
-	}
-
-	public static func lambda(type1: Recur, _ type2: Recur, _ type3: Recur, _ f: (Recur, Recur, Recur) -> Recur) -> Expression {
-		return lambda(type1) { a in Recur.lambda(type2) { b in Recur.lambda(type3) { c in f(a, b, c) } } }
-	}
-
-	public static func lambda(type1: Recur, _ type2: Recur, _ type3: Recur, _ type4: Recur, _ f: (Recur, Recur, Recur, Recur) -> Recur) -> Expression {
-		return lambda(type1) { a in Recur.lambda(type2) { b in Recur.lambda(type3) { c in Recur.lambda(type4) { d in f(a, b, c, d) } } } }
-	}
-}
-
 
 public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Recur>) -> Bool {
 	switch (left, right) {
