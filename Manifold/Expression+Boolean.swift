@@ -3,7 +3,7 @@
 extension Expression where Recur: TermType {
 	public static var boolean: Module<Recur> {
 		return Module([
-			.Datatype("Boolean", [
+			.Datatype("Boolean", .Type(0), [
 				"true": .End,
 				"false": .End
 			])

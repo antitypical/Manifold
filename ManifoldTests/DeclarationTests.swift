@@ -60,7 +60,7 @@ final class DeclarationTests: XCTestCase {
 
 
 private let selfModule = Module<Term>([], [
-	Declaration.Datatype("Self", [
+	Declaration.Datatype("Self", .Type(0), [
 		"me": .End,
 		"myself": .End,
 		"I": .End,
@@ -68,13 +68,13 @@ private let selfModule = Module<Term>([], [
 ])
 
 private let oneConstructorWithArgumentModule = Module<Term>([], [
-	Declaration.Datatype("A", [
+	Declaration.Datatype("A", .Type(0), [
 		"a": .Argument(.BooleanType, const(.End)),
 	])
 ])
 
 private let multipleConstructorsWithArgumentsModule = Module<Term>([], [
-	Declaration.Datatype("A", [
+	Declaration.Datatype("A", .Type(0), [
 		"a": .Argument(.BooleanType, const(.End)),
 		"b": .Argument(.BooleanType, const(.End)),
 		"c": .Argument(.BooleanType, const(.End)),
@@ -82,7 +82,7 @@ private let multipleConstructorsWithArgumentsModule = Module<Term>([], [
 ])
 
 private let multipleConstructorsWithMultipleArgumentsModule = Module<Term>([], [
-	Declaration.Datatype("A", [
+	Declaration.Datatype("A", .Type(0), [
 		"a": Telescope.Argument(.BooleanType) { a in .Argument(.BooleanType, const(.End)) },
 		"b": Telescope.Argument(.BooleanType) { a in .Argument(.BooleanType, const(.End)) },
 		"c": Telescope.Argument(.BooleanType) { a in .Argument(.BooleanType, const(.End)) },
