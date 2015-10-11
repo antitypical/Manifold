@@ -15,39 +15,39 @@ extension Expression where Recur: TermType, Recur: Equatable {
 			return .Right(against)
 
 		case let (.Lambda(i, type, body), .Type):
-			return annotate(type.checkIsType(environment, context)
+			return type.checkIsType(environment, context)
 				>> body.checkType(against, environment, context + [ Name.Local(i) : type ])
-					.map(const(against)))
+					.map(const(against))
 
 		case let (.If(condition, then, otherwise), _):
-			return annotate((condition.checkType(.BooleanType, environment, context)
+			return (condition.checkType(.BooleanType, environment, context)
 				>> then.checkType(against, environment, context))
 				>> otherwise.checkType(against, environment, context)
-					.map(const(against)))
+					.map(const(against))
 
 		case let (.Product(a, b), .Type):
-			return annotate(a.checkIsType(environment, context)
+			return a.checkIsType(environment, context)
 				>> b.checkIsType(environment, context)
-					.map(const(against)))
+					.map(const(against))
 
 		case let (.Product(a, b), .Product(A, B)):
-			return annotate(a.checkType(A, environment, context)
+			return a.checkType(A, environment, context)
 				>> b.checkType(B, environment, context)
-					.map(const(against)))
+					.map(const(against))
 
 		case let (.Product(tag, payload), .Lambda(i, tagType, body)):
-			return annotate(tagType.checkIsType(environment, context)
+			return tagType.checkIsType(environment, context)
 				>> (tag.checkType(tagType, environment, context)
 				>> payload.checkType(body.substitute(i, tag).weakHeadNormalForm(environment), environment, context)
-					.map(const(against))))
+					.map(const(against)))
 
 		default:
-			return annotate(inferType(environment, context)
+			return inferType(environment, context)
 				.flatMap { inferred in
 					Expression.alphaEquivalent(inferred, against, environment)
 						? Either.right(inferred)
 						: Either.left("Type mismatch: expected '\(self)' to be of type '\(against)', but it was actually of type '\(inferred)' in context \(Expression.toString(context))")
-				})
+				}
 		}
 	}
 
