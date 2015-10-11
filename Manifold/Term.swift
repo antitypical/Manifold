@@ -1,7 +1,7 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public struct Term: CustomDebugStringConvertible, CustomStringConvertible, TermType {
-	private var expression: () -> Expression<Term>
+public enum Term: CustomDebugStringConvertible, CustomStringConvertible, TermType {
+	case In(() -> Expression<Term>)
 
 
 	// MARK: CustomDebugStringConvertible
@@ -28,11 +28,14 @@ public struct Term: CustomDebugStringConvertible, CustomStringConvertible, TermT
 	// MARK: TermType
 
 	public init(_ expression: () -> Expression<Term>) {
-		self.expression = expression
+		self = .In(expression)
 	}
 
 	public var out: Expression<Term> {
-		return expression()
+		switch self {
+		case let .In(f):
+			return f()
+		}
 	}
 }
 
