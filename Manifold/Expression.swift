@@ -406,55 +406,6 @@ public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Re
 	}
 }
 
-extension Expression where Recur: TermType {
-	public static func alphaEquivalent(left: Expression, _ right: Expression, _ environment: [Name:Expression], var _ visited: Set<Name> = []) -> Bool {
-		let recur: (Expression, Expression) -> Bool = {
-			alphaEquivalent($0, $1, environment, visited)
-		}
-
-		let normalize: (Expression, Set<Name>) -> (Expression, Set<Name>) = { (expression, var visited) in
-			(expression.weakHeadNormalForm(environment, shouldRecur: false, visited: &visited), visited)
-		}
-
-		let (left, lnames) = normalize(left, visited)
-		let (right, rnames) = normalize(right, visited)
-		visited.unionInPlace(lnames)
-		visited.unionInPlace(rnames)
-
-		switch (left.destructured, right.destructured) {
-		case (.Type, .Type), (.Unit, .Unit), (.UnitType, .UnitType), (.BooleanType, .BooleanType):
-			return true
-
-		case let (.Variable(a), .Variable(b)):
-			return a == b
-
-		case let (.Application(a1, a2), .Application(b1, b2)):
-			return recur(a1, b1) && recur(a2, b2)
-
-		case let (.Lambda(_, a1, a2), .Lambda(_, b1, b2)):
-			return recur(a1, b1) && recur(a2, b2)
-
-		case let (.Projection(a1, a2), .Projection(b1, b2)):
-			return recur(a1, b1) && a2 == b2
-
-		case let (.Product(a1, a2), .Product(b1, b2)):
-			return recur(a1, b1) && recur(a2, b2)
-
-		case let (.Boolean(a), .Boolean(b)):
-			return a == b
-
-		case let (.If(a1, a2, a3), .If(b1, b2, b3)):
-			return recur(a1, b1) && recur(a2, b2) && recur(a3, b3)
-
-		case let (.Annotation(a1, a2), .Annotation(b1, b2)):
-			return recur(a1, b1) && recur(a2, b2)
-
-		default:
-			return false
-		}
-	}
-}
-
 
 private func atModular<C: CollectionType>(collection: C, offset: C.Index.Distance) -> C.Generator.Element {
 	return collection[collection.startIndex.advancedBy(offset % collection.startIndex.distanceTo(collection.endIndex), limit: collection.endIndex)]
