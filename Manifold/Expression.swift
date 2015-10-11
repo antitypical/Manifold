@@ -324,6 +324,8 @@ extension Expression where Recur: TermType {
 
 	// MARK: Weak-head normal form
 
+	public typealias Environment = [Name:Expression]
+
 	public func weakHeadNormalForm(environment: Environment, shouldRecur: Bool = true) -> Expression {
 		var visited: Set<Name> = []
 		return weakHeadNormalForm(environment, shouldRecur: shouldRecur, visited: &visited)
