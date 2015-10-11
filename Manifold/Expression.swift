@@ -235,23 +235,6 @@ extension Expression where Recur: TermType {
 	public static func lambda(type1: Recur, _ type2: Recur, _ type3: Recur, _ type4: Recur, _ f: (Recur, Recur, Recur, Recur) -> Recur) -> Expression {
 		return lambda(type1) { a in Recur.lambda(type2) { b in Recur.lambda(type3) { c in Recur.lambda(type4) { d in f(a, b, c, d) } } } }
 	}
-
-
-	// MARK: Variables
-
-	public var freeVariables: Set<Int> {
-		return cata {
-			$0.analysis(
-				ifVariable: { $0.local.map { [ $0 ] } ?? Set() },
-				ifApplication: uncurry(Set.union),
-				ifLambda: { $1.union($2.subtract([ $0 ])) },
-				ifProjection: { $0.0 },
-				ifProduct: uncurry(Set.union),
-				ifIf: { $0.union($1).union($2) },
-				ifAnnotation: uncurry(Set.union),
-				otherwise: const(Set()))
-		} (Recur(self))
-	}
 }
 
 

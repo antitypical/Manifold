@@ -16,7 +16,7 @@ public enum Term: CustomDebugStringConvertible, CustomStringConvertible, TermTyp
 	public var description: String {
 		switch out {
 		case let .Lambda(i, type, body):
-			if body.out.freeVariables.contains(i) { fallthrough }
+			if body.freeVariables.contains(i) { fallthrough }
 
 			return "\(type) → \(body)"
 		default:
