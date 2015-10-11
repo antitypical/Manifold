@@ -42,7 +42,7 @@ final class DeclarationTests: XCTestCase {
 	}
 
 	func testDatatypeConstructorsWithRecursiveReferencesProduceValuesEmbeddingReferencesToTheirType() {
-		assert(Expression<Term>.natural.environment["successor"], ==, Expression.lambda("Natural") { .Annotation(.Product(false, $0), "Natural") })
+		assert(Expression<Term>.natural.environment["successor"], ==, Term.lambda("Natural") { .Annotation(.Product(false, $0), "Natural") })
 	}
 
 	func testDatatypeConstructorsWithMultipleArgumentsHaveFunctionTypes() {
