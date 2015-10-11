@@ -318,12 +318,12 @@ extension Expression where Recur: TermType {
 
 	public typealias Environment = [Name:Expression]
 
-	public func weakHeadNormalForm(environment: Environment, shouldRecur: Bool = true) -> Expression {
+	public func weakHeadNormalForm(environment: [Name:Expression], shouldRecur: Bool = true) -> Expression {
 		var visited: Set<Name> = []
 		return weakHeadNormalForm(environment, shouldRecur: shouldRecur, visited: &visited)
 	}
 
-	public func weakHeadNormalForm(environment: Environment, shouldRecur: Bool = true, inout visited: Set<Name>) -> Expression {
+	public func weakHeadNormalForm(environment: [Name:Expression], shouldRecur: Bool = true, inout visited: Set<Name>) -> Expression {
 		let unfold: Expression -> Expression = {
 			$0.weakHeadNormalForm(environment, shouldRecur: shouldRecur, visited: &visited)
 		}
@@ -409,7 +409,7 @@ public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Re
 }
 
 extension Expression where Recur: TermType {
-	public static func alphaEquivalent(left: Expression, _ right: Expression, _ environment: Environment, var _ visited: Set<Name> = []) -> Bool {
+	public static func alphaEquivalent(left: Expression, _ right: Expression, _ environment: [Name:Expression], var _ visited: Set<Name> = []) -> Bool {
 		let recur: (Expression, Expression) -> Bool = {
 			alphaEquivalent($0, $1, environment, visited)
 		}
