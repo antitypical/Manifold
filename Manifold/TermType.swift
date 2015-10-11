@@ -16,6 +16,11 @@ extension TermType {
 }
 
 
+public func == <Fix: TermType> (left: Fix, right: Fix) -> Bool {
+	return left.out == right.out
+}
+
+
 // MARK: - Fix: TermType over Expression<Fix>
 
 public func cata<T, Fix: TermType>(f: Expression<T> -> T)(_ term: Fix) -> T {

@@ -79,6 +79,19 @@ public enum Name: Comparable, CustomDebugStringConvertible, CustomStringConverti
 	case Local(Int)
 }
 
+
+public func == (left: Name, right: Name) -> Bool {
+	switch (left, right) {
+	case let (.Global(x), .Global(y)):
+		return x == y
+	case let (.Local(x), .Local(y)):
+		return x == y
+	default:
+		return false
+	}
+}
+
+
 public func < (left: Name, right: Name) -> Bool {
 	switch (left, right) {
 	case let (.Local(a), .Local(b)):

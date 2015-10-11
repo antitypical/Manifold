@@ -80,6 +80,13 @@ public enum Error: Equatable, CustomStringConvertible, StringInterpolationConver
 }
 
 
+public func == (left: Error, right: Error) -> Bool {
+	return zip(left.errors, right.errors)
+		.lazy
+		.map(==).reduce(true) { $0 && $1 }
+}
+
+
 /// Constructs a composite error.
 public func + (left: Error, right: Error) -> Error {
 	return Error.Branch(left.errors + right.errors)
@@ -94,8 +101,6 @@ public func &&& <T, U> (a: Either<Error, T>, b: Either<Error, U>) -> Either<Erro
 	return (right ?? lefts ?? left)!
 }
 
-
-// MARK: - Imports
 
 import Either
 import Prelude
