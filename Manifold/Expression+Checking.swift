@@ -6,6 +6,10 @@ extension Expression where Recur: TermType, Recur: Equatable {
 	}
 
 	public func checkType(against: Expression, _ environment: Environment = [:], _ context: Context = [:]) -> Either<Error, Expression> {
+		return checkTypeUnannotated(against, environment, context)
+	}
+
+	private func checkTypeUnannotated(against: Expression, _ environment: Environment = [:], _ context: Context = [:]) -> Either<Error, Expression> {
 		switch (destructured, against.weakHeadNormalForm(environment).destructured) {
 		case (.Type, .Type):
 			return .Right(against)
