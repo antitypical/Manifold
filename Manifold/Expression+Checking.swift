@@ -21,6 +21,11 @@ extension Expression where Recur: TermType, Recur: Equatable {
 				>> otherwise.checkType(against, environment, context)
 					.map(const(against)))
 
+		case let (.Product(a, b), .Type):
+			return annotate(a.checkIsType(environment, context)
+				>> b.checkIsType(environment, context)
+					.map(const(against)))
+
 		case let (.Product(tag, payload), .Lambda(i, tagType, body)):
 			return annotate(tagType.checkIsType(environment, context)
 				>> (tag.checkType(tagType, environment, context)
