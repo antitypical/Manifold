@@ -49,8 +49,7 @@ extension Module where Recur: TermType {
 		let context = self.context
 		return declarations
 			.lazy
-			.map { $0.typecheck(environment, context) }
-			.reduce([]) { $0 + ($1.left.map { [ $0 ] } ?? []) }
+			.flatMap { $0.typecheck(environment, context) }
 	}
 }
 

@@ -76,12 +76,8 @@ extension Declaration where Recur: TermType {
 		return .Variable(Name.Global(symbol))
 	}
 
-	public func typecheck(environment: Expression<Recur>.Environment, _ context: Expression<Recur>.Context) -> Either<Error, Expression<Recur>> {
-		return type.checkIsType(environment, context)
-			>> value.checkType(type.evaluate(environment), environment, context)
-				.either(
-					ifLeft: { Either.left($0.map { "\(self.symbol)\n\t: \(self.type)\n\t= \(self.value)\n: " + $0 }) },
-					ifRight: Either.right)
+	public func typecheck(environment: Expression<Recur>.Environment, _ context: Expression<Recur>.Context) -> [Error] {
+		return definitions.flatMap { $2.checkType($1, environment, context).left }
 	}
 }
 
