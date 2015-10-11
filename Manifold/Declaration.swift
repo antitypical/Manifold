@@ -64,8 +64,8 @@ extension Declaration where Recur: TermType {
 		return .Variable(Name.Global(symbol))
 	}
 
-	public func typecheck(environment: Expression<Recur>.Environment, _ context: Expression<Recur>.Context) -> [Error] {
-		return definitions.flatMap { $2.checkType($1, environment, context).left }
+	public func typecheck(environment: [Name:Recur], _ context: [Name:Recur]) -> [Error] {
+		return definitions.flatMap { Recur($2).checkType(Recur($1), environment, context).left }
 	}
 }
 

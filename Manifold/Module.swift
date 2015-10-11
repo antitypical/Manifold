@@ -47,9 +47,12 @@ extension Module where Recur: TermType {
 	public func typecheck() -> [Error] {
 		let environment = self.environment
 		let context = self.context
+		func promote(d: [Name:Expression<Recur>]) -> [Name:Recur] {
+			return Dictionary(d.map { ($0, Recur($1)) })
+		}
 		return declarations
 			.lazy
-			.flatMap { $0.typecheck(environment, context) }
+			.flatMap { $0.typecheck(promote(environment), promote(context)) }
 	}
 }
 
