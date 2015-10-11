@@ -38,6 +38,8 @@ public enum Telescope<Recur: TermType> {
 		switch self {
 		case .End:
 			return transform(.Unit)
+		case .Recursive(.End):
+			return .lambda(recur, transform)
 		case let .Recursive(rest):
 			return .lambda(recur, { v in rest.value(recur, transform: { .Product(v, $0) } >>> transform) })
 		case let .Argument(t, continuation):
