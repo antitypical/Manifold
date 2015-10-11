@@ -1,14 +1,7 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Term: CustomDebugStringConvertible, CustomStringConvertible, TermType {
+public enum Term: CustomStringConvertible, TermType {
 	case In(() -> Expression<Term>)
-
-
-	// MARK: CustomDebugStringConvertible
-
-	public var debugDescription: String {
-		return out.debugDescription
-	}
 
 
 	// MARK: CustomStringConvertible
