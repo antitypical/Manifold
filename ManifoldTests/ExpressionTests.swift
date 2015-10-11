@@ -44,7 +44,7 @@ final class ExpressionTests: XCTestCase {
 	}
 
 	func testSubstitution() {
-		assert(Expression<Term>.Lambda(0, 1, 0).substitute(1, .Unit), ==, .Lambda(0, .Unit, 0))
+		assert(Term.Lambda(0, 1, 0).substitute(1, .Unit), ==, .Lambda(0, .Unit, 0))
 	}
 }
 
