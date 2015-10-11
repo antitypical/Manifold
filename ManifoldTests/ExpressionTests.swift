@@ -15,7 +15,7 @@ final class ExpressionTests: XCTestCase {
 	}
 
 	func testGlobalsPrintTheirNames() {
-		assert(Expression<Term>.Variable("Global").description, ==, "Global")
+		assert(Term.Variable("Global").description, ==, "Global")
 	}
 
 

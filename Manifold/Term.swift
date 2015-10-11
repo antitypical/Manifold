@@ -1,21 +1,7 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Term: CustomStringConvertible, TermType {
+public enum Term: TermType {
 	case In(() -> Expression<Term>)
-
-
-	// MARK: CustomStringConvertible
-
-	public var description: String {
-		switch out {
-		case let .Lambda(i, type, body):
-			if body.freeVariables.contains(i) { fallthrough }
-
-			return "\(type) → \(body)"
-		default:
-			return out.description
-		}
-	}
 
 
 	// MARK: TermType
