@@ -6,7 +6,7 @@ extension TermType {
 			n.digits(alphabet.characters.count).lazy.map { String(atModular(alphabet.characters, offset: $0)) }.joinWithSeparator("")
 		}
 		let alphabet = "abcdefghijklmnopqrstuvwxyz"
-		return cata {
+		return para {
 			switch $0 {
 			case .Unit:
 				return "()"
@@ -24,18 +24,18 @@ extension TermType {
 					ifGlobal: id,
 					ifLocal: { renderNumerals($0, alphabet) })
 
-			case let .Application(a, b):
+			case let .Application((_, a), (_, b)):
 				return "(\(a) \(b))"
 
-			case let .Lambda(variable, type, body):
+			case let .Lambda(variable, (_, type), (_, body)):
 				return variable < 0
 					? "\(type) → \(body)"
 					: "λ \(renderNumerals(variable, alphabet)) : \(type) . \(body)"
 
-			case let .Projection(term, branch):
+			case let .Projection((_, term), branch):
 				return "\(term).\(branch ? 1 : 0)"
 
-			case let .Product(a, b):
+			case let .Product((_, a), (_, b)):
 				return "(\(a) × \(b))"
 
 			case .BooleanType:
@@ -43,10 +43,10 @@ extension TermType {
 			case let .Boolean(b):
 				return String(b)
 
-			case let .If(condition, then, `else`):
+			case let .If((_, condition), (_, then), (_, `else`)):
 				return "if \(condition) then \(then) else \(`else`)"
 
-			case let .Annotation(term, type):
+			case let .Annotation((_, term), (_, type)):
 				return "(\(term) : \(type))"
 			}
 		} (self)
