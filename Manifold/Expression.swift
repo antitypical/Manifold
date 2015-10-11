@@ -261,29 +261,6 @@ extension Expression where Recur: TermType {
 	}
 
 
-	// MARK: Destructuring accessors
-
-	var destructured: Expression<Expression<Recur>> {
-		return map { $0.out }
-	}
-
-	public var lambda: (Int, Recur, Recur)? {
-		return analysis(ifLambda: Optional.Some, otherwise: const(nil))
-	}
-
-	public var parameterType: Recur? {
-		return lambda?.1
-	}
-
-	public var product: (Recur, Recur)? {
-		return analysis(ifProduct: Optional.Some, ifAnnotation: { $0.0.out.product }, otherwise: const(nil))
-	}
-
-	public var boolean: Bool? {
-		return analysis(ifBoolean: Optional.Some, otherwise: const(nil))
-	}
-
-
 	// MARK: Variables
 
 	var maxBoundVariable: Int {
