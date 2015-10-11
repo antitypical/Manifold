@@ -1,17 +1,17 @@
-//  Copyright (c) 2015 Rob Rix. All rights reserved.
+//  Copyright © 2015 Rob Rix. All rights reserved.
 
 final class ExpressionTests: XCTestCase {
 	func testLambdaTypeDescription() {
 		assert(identity.description, ==, "λ b : Type . λ a : b . a")
-		assert(identity.typecheck().right?.description, ==, "λ b : Type . λ a : b . b")
+		assert(identity.out.inferType().right?.description, ==, "λ b : Type . λ a : b . b")
 	}
 
 	func testProductDescription() {
-		assert(Expression.Product(Term(.Unit), Term(.Unit)).description, ==, "(() × ())")
+		assert(Term.Product(.Unit, .Unit).description, ==, "(() × ())")
 	}
 
 	func testProductTypeDescription() {
-		assert(Expression.Product(Term(.Unit), Term(.Unit)).typecheck().right?.description, ==, "λ a : Unit . Unit")
+		assert(Term.Product(.Unit, .Unit).out.inferType().right?.description, ==, "λ a : Unit . Unit")
 	}
 
 	func testGlobalsPrintTheirNames() {
@@ -24,27 +24,33 @@ final class ExpressionTests: XCTestCase {
 	}
 
 	func testUnarySumsAreTheIdentityConstructor() {
-		assert(Expression.Sum([ Term(.BooleanType) ]), ==, .BooleanType)
+		assert(Expression.Sum([ Term.BooleanType ]), ==, .BooleanType)
 	}
 
 	func testNArySumsAreProducts() {
-		assert(Expression.Sum([ Term(.BooleanType), Term(.BooleanType) ]), ==, Expression.Lambda(0, Term(.BooleanType), Term(.If(Term(0), Term(.BooleanType), Term(.BooleanType)))))
+		assert(Expression.Sum([ Term.BooleanType, Term.BooleanType ]), ==, Expression.Lambda(0, .BooleanType, .If(0, .BooleanType, .BooleanType)))
 	}
 
 	func testHigherOrderConstruction() {
-		assert(Expression.lambda(Term(.UnitType), id), ==, .Lambda(0, Term(.UnitType), Term(0)))
-		assert(identity, ==, .Lambda(1, Term(.Type(0)), Term(.Lambda(0, Term(1), Term(0)))))
-		assert(constant, ==, .Lambda(3, Term(.Type(0)), Term(.Lambda(2, Term(.Type(0)), Term(.Lambda(1, Term(3), Term(.Lambda(0, Term(2), Term(1)))))))))
+		assert(Term.lambda(.UnitType, id), ==, .Lambda(0, .UnitType, 0))
+		assert(identity, ==, .Lambda(1, .Type, .Lambda(0, 1, 0)))
+		assert(constant, ==, .Lambda(3, .Type, .Lambda(2, .Type, .Lambda(1, 3, .Lambda(0, 2, 1)))))
+	}
+
+	func testFunctionTypeConstruction() {
+		let expected = Term.lambda(.Type) { A in .lambda(.FunctionType(A, A), A, const(A)) }
+		let actual = Term.Lambda(2, .Type, .Lambda(1, .Lambda(-1, 2, 2), .Lambda(0, 2, 2)))
+		assert(expected, ==, actual)
 	}
 
 	func testSubstitution() {
-		assert(Expression.Lambda(0, Term(1), Term(0)).substitute(1, .Unit), ==, .Lambda(0, Term(.Unit), Term(0)))
+		assert(Expression<Term>.Lambda(0, 1, 0).substitute(1, .Unit), ==, .Lambda(0, .Unit, 0))
 	}
 }
 
 
-let identity = Expression.lambda(Term(.Type(0))) { A in Term(.lambda(A, id)) }
-let constant = Expression.lambda(Term(.Type(0))) { A in Term(Expression.lambda(Term(.Type(0))) { B in Term(Expression.lambda(A) { a in Term(Expression.lambda(B, const(a))) }) }) }
+let identity = Term.lambda(.Type) { A in .lambda(A, id) }
+let constant = Term.lambda(.Type) { A in Term.lambda(.Type) { B in Term.lambda(A) { a in .lambda(B, const(a)) } } }
 
 
 import Assertions

@@ -2,7 +2,8 @@
 
 extension Int {
 	public func digits(base: Int) -> [Int] {
-		return lazy(stride(from: 0, to: self == 0 ? 0 : Int(Double(self).log(Double(base))), by: 1))
+		return 0.stride(to: self == 0 ? 0 : Int(Double(self).log(Double(base))), by: 1)
+			.lazy
 			.scan(self) { into, _ in
 				into / base
 			}

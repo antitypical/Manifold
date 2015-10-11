@@ -1,4 +1,4 @@
-//  Copyright (c) 2015 Rob Rix. All rights reserved.
+//  Copyright © 2015 Rob Rix. All rights reserved.
 
 public enum Error: Equatable, CustomStringConvertible, StringInterpolationConvertible, StringLiteralConvertible {
 	public init(reason: String) {
@@ -17,13 +17,20 @@ public enum Error: Equatable, CustomStringConvertible, StringInterpolationConver
 	}
 
 
-	public func analysis<T>(ifLeaf ifLeaf: String -> T, ifBranch: [Error] -> T) -> T {
+	public func analysis<T>(@noescape ifLeaf ifLeaf: String -> T, @noescape ifBranch: [Error] -> T) -> T {
 		switch self {
 		case let Leaf(string):
 			return ifLeaf(string)
 		case let Branch(errors):
 			return ifBranch(errors)
 		}
+	}
+
+
+	public func map(transform: String -> String) -> Error {
+		return analysis(
+			ifLeaf: transform >>> Error.Leaf,
+			ifBranch: { Error.Branch($0.map { $0.map(transform) }) })
 	}
 
 
@@ -39,7 +46,7 @@ public enum Error: Equatable, CustomStringConvertible, StringInterpolationConver
 	public var description: String {
 		return analysis(
 			ifLeaf: id,
-			ifBranch: { "\n".join(lazy($0).map { String($0) }) })
+			ifBranch: { $0.lazy.map { String($0) }.joinWithSeparator("\n") })
 	}
 
 
@@ -73,6 +80,13 @@ public enum Error: Equatable, CustomStringConvertible, StringInterpolationConver
 }
 
 
+public func == (left: Error, right: Error) -> Bool {
+	return zip(left.errors, right.errors)
+		.lazy
+		.map(==).reduce(true) { $0 && $1 }
+}
+
+
 /// Constructs a composite error.
 public func + (left: Error, right: Error) -> Error {
 	return Error.Branch(left.errors + right.errors)
@@ -87,8 +101,6 @@ public func &&& <T, U> (a: Either<Error, T>, b: Either<Error, U>) -> Either<Erro
 	return (right ?? lefts ?? left)!
 }
 
-
-// MARK: - Imports
 
 import Either
 import Prelude

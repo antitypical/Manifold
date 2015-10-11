@@ -1,13 +1,13 @@
-//  Copyright (c) 2015 Rob Rix. All rights reserved.
+//  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Name: CustomDebugStringConvertible, CustomStringConvertible, Hashable, IntegerLiteralConvertible, StringLiteralConvertible {
+public enum Name: Comparable, CustomDebugStringConvertible, CustomStringConvertible, Hashable, IntegerLiteralConvertible, StringLiteralConvertible {
 	// MARK: Destructors
 
 	public var global: String? {
 		return analysis(ifGlobal: Optional.Some, ifLocal: const(nil))
 	}
 
-	public var value: Int? {
+	public var local: Int? {
 		return analysis(ifGlobal: const(nil), ifLocal: Optional.Some)
 	}
 
@@ -30,8 +30,8 @@ public enum Name: CustomDebugStringConvertible, CustomStringConvertible, Hashabl
 
 	public var debugDescription: String {
 		return analysis(
-			ifGlobal: { "Global(\($0))" },
-			ifLocal: { "Local(\($0))" })
+			ifGlobal: { ".Global(\($0))" },
+			ifLocal: { ".Local(\($0))" })
 	}
 
 
@@ -77,6 +77,32 @@ public enum Name: CustomDebugStringConvertible, CustomStringConvertible, Hashabl
 
 	case Global(String)
 	case Local(Int)
+}
+
+
+public func == (left: Name, right: Name) -> Bool {
+	switch (left, right) {
+	case let (.Global(x), .Global(y)):
+		return x == y
+	case let (.Local(x), .Local(y)):
+		return x == y
+	default:
+		return false
+	}
+}
+
+
+public func < (left: Name, right: Name) -> Bool {
+	switch (left, right) {
+	case let (.Local(a), .Local(b)):
+		return a < b
+	case let (.Global(a), .Global(b)):
+		return a < b
+	case (.Local, .Global):
+		return true
+	case (.Global, .Local):
+		return false
+	}
 }
 
 

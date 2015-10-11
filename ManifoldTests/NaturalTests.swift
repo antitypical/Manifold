@@ -1,18 +1,26 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 final class NaturalTests: XCTestCase {
+	func testModuleTypechecks() {
+		module.typecheck().forEach { XCTFail($0.description) }
+	}
+
 	func testZeroTypechecksAsNatural() {
-		assert(zero.typecheck(Expression<Term>.naturalContext).right, ==, .Variable("Natural"))
+		assert(zero.out.checkType("Natural", environment, context), ==, "Natural")
+		assert(zero.out.inferType(environment, context), ==, "Natural")
 	}
 
 	func testSuccessorOfZeroTypechecksAsNatural() {
-		let typechecked = Term(.Application(Term(.Variable("successor")), Term(.Variable("zero")))).out.typecheck(Expression<Term>.naturalContext)
-		assert(typechecked.right, ==, .Variable("Natural"))
+		assert(successor[zero].out.inferType(environment, context), ==, "Natural")
 	}
 }
 
+private let module = Expression<Term>.natural
+private let environment = module.environment
+private let context = module.context
 
-let zero: Expression<Term> = .Variable("zero")
+private let successor: Term = "successor"
+private let zero: Term = "zero"
 
 
 import Assertions

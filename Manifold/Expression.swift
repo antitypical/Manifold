@@ -1,6 +1,6 @@
-//  Copyright (c) 2015 Rob Rix. All rights reserved.
+//  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertible, IntegerLiteralConvertible {
+public enum Expression<Recur>: BooleanLiteralConvertible, CustomDebugStringConvertible, CustomStringConvertible, IntegerLiteralConvertible, StringLiteralConvertible {
 	// MARK: Analyses
 
 	public func analysis<T>(
@@ -81,13 +81,13 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 			ifUnit: const(.Unit),
 			ifUnitType: const(.UnitType),
 			ifType: { .Type($0) },
-			ifVariable: { .Variable($0) },
+			ifVariable: Expression<T>.Variable,
 			ifApplication: { .Application(transform($0), transform($1)) },
 			ifLambda: { .Lambda($0, transform($1), transform($2)) },
 			ifProjection: { .Projection(transform($0), $1) },
 			ifProduct: { .Product(transform($0), transform($1)) },
 			ifBooleanType: const(.BooleanType),
-			ifBoolean: { .Boolean($0) },
+			ifBoolean: Expression<T>.Boolean,
 			ifIf: { .If(transform($0), transform($1), transform($2)) },
 			ifAnnotation: { .Annotation(transform($0), transform($1)) })
 	}
@@ -100,11 +100,43 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 	}
 
 
+	// MARK: CustomDebugStringConvertible
+
+	public var debugDescription: String {
+		switch self {
+		case .Unit:
+			return ".Unit"
+		case .UnitType:
+			return ".UnitType"
+		case let .Type(n):
+			return ".Type(\(n))"
+		case let .Variable(n):
+			return ".Variable(\(String(reflecting: n)))"
+		case let .Application(a, b):
+			return ".Application(\(String(reflecting: a)), \(String(reflecting: b)))"
+		case let .Lambda(i, a, b):
+			return ".Lambda(\(i), \(String(reflecting: a)), \(String(reflecting: b)))"
+		case let .Projection(a, field):
+			return ".Projection(\(String(reflecting: a)), \(field))"
+		case let .Product(a, b):
+			return ".Product(\(String(reflecting: a)), \(String(reflecting: b)))"
+		case .BooleanType:
+			return ".BooleanType"
+		case let .Boolean(a):
+			return ".Boolean(\(a))"
+		case let .If(a, b, c):
+			return ".If(\(String(reflecting: a)), \(String(reflecting: b)), \(String(reflecting: c)))"
+		case let .Annotation(a, b):
+			return ".Annotation(\(String(reflecting: a)), \(String(reflecting: b)))"
+		}
+	}
+
+
 	// MARK: CustomStringConvertible
 
 	public var description: String {
 		let renderNumerals: (Int, String) -> String = { n, alphabet in
-			"".join(lazy(n.digits(alphabet.characters.count)).map { String(atModular(alphabet.characters, offset: $0)) })
+			n.digits(alphabet.characters.count).lazy.map { String(atModular(alphabet.characters, offset: $0)) }.joinWithSeparator("")
 		}
 		let alphabet = "abcdefghijklmnopqrstuvwxyz"
 		switch self {
@@ -128,7 +160,9 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 			return "(\(a) \(b))"
 
 		case let .Lambda(variable, type, body):
-			return "λ \(renderNumerals(variable, alphabet)) : \(type) . \(body)"
+			return variable < 0
+				? "λ _ : \(type) . \(body)"
+				: "λ \(renderNumerals(variable, alphabet)) : \(type) . \(body)"
 
 		case let .Projection(term, branch):
 			return "\(term).\(branch ? 1 : 0)"
@@ -145,7 +179,7 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 			return "if \(condition) then \(then) else \(`else`)"
 
 		case let .Annotation(term, type):
-			return "\(term) : \(type)"
+			return "(\(term) : \(type))"
 		}
 	}
 
@@ -154,6 +188,13 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 
 	public init(integerLiteral value: Int) {
 		self = .Variable(.Local(value))
+	}
+
+
+	// MARK: StringLiteralConvertible
+
+	public init(stringLiteral: String) {
+		self = .Variable(.Global(stringLiteral))
 	}
 
 
@@ -173,21 +214,28 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomStringConvertibl
 	case Annotation(Recur, Recur)
 }
 
-extension Expression where Recur: FixpointType {
+extension Expression where Recur: TermType {
 	// MARK: First-order construction
 
 	/// Constructs a sum type of the elements in `terms`.
 	public static func Sum(terms: [Recur]) -> Expression {
-		switch terms.first.map({ ($0, dropFirst(terms)) }) {
-		case .None:
-			return .UnitType
-		case let .Some(first, rest) where rest.isEmpty:
-			return first.out
-		case let .Some(first, rest):
-			return Expression.lambda(Recur(.BooleanType)) {
-				Recur(.If($0, first, Recur(.Sum(Array(rest)))))
-			}
-		}
+		return terms.uncons.map { first, rest in
+			rest.isEmpty
+				? first.out
+				: Expression.lambda(.BooleanType) {
+					.If($0, first, Recur(.Sum(Array(rest))))
+				}
+		} ?? .UnitType
+	}
+
+	/// Constructs a (non-dependent) function type from `A` to `B`.
+	public static func FunctionType(a: Recur, _ b: Recur) -> Expression {
+		return .Lambda(-1, a, b)
+	}
+
+	/// Constructs a (non-dependent) function type from `A` to `B` to `C`.
+	public static func FunctionType(a: Recur, _ b: Recur, _ c: Recur) -> Expression {
+		return .FunctionType(a, .FunctionType(b, c))
 	}
 
 
@@ -200,6 +248,18 @@ extension Expression where Recur: FixpointType {
 		return .Lambda(n, type, body)
 	}
 
+	public static func lambda(type1: Recur, _ type2: Recur, _ f: (Recur, Recur) -> Recur) -> Expression {
+		return lambda(type1) { a in Recur.lambda(type2) { b in f(a, b) } }
+	}
+
+	public static func lambda(type1: Recur, _ type2: Recur, _ type3: Recur, _ f: (Recur, Recur, Recur) -> Recur) -> Expression {
+		return lambda(type1) { a in Recur.lambda(type2) { b in Recur.lambda(type3) { c in f(a, b, c) } } }
+	}
+
+	public static func lambda(type1: Recur, _ type2: Recur, _ type3: Recur, _ type4: Recur, _ f: (Recur, Recur, Recur, Recur) -> Recur) -> Expression {
+		return lambda(type1) { a in Recur.lambda(type2) { b in Recur.lambda(type3) { c in Recur.lambda(type4) { d in f(a, b, c, d) } } } }
+	}
+
 
 	// MARK: Destructuring accessors
 
@@ -208,7 +268,7 @@ extension Expression where Recur: FixpointType {
 	}
 
 	public var isType: Bool {
-		return analysis(ifType: const(true), otherwise: { self.returnType?.out.isType ?? false })
+		return analysis(ifType: const(true), otherwise: { returnType?.out.isType ?? false })
 	}
 
 	public var lambda: (Int, Recur, Recur)? {
@@ -220,11 +280,11 @@ extension Expression where Recur: FixpointType {
 	}
 
 	public var returnType: Recur? {
-		return typecheck().right?.lambda?.2
+		return inferType([:], [:]).right?.lambda?.2
 	}
 
 	public var product: (Recur, Recur)? {
-		return analysis(ifProduct: Optional.Some, otherwise: const(nil))
+		return analysis(ifProduct: Optional.Some, ifAnnotation: { $0.0.out.product }, otherwise: const(nil))
 	}
 
 	public var boolean: Bool? {
@@ -232,49 +292,7 @@ extension Expression where Recur: FixpointType {
 	}
 
 
-	// MARK: Evaluation
-
-	public func evaluate(environment: [Name: Expression] = [:]) -> Expression {
-		switch destructured {
-		case let .Variable(i):
-			return environment[i] ?? self
-		case let .Application(a, b):
-			return a.evaluate(environment).lambda.map { i, _, body in body.out.substitute(i, b.evaluate(environment)) }!
-		case let .Projection(a, b):
-			return a.evaluate(environment).product.map { b ? $1 : $0 }.map { $0.out }!
-		case let .If(condition, then, `else`):
-			return condition.evaluate(environment).boolean!
-				? then.evaluate(environment)
-				: `else`.evaluate(environment)
-		case let .Annotation(term, _):
-			return term.evaluate(environment)
-		default:
-			return self
-		}
-	}
-
-
-	// MARK: Substitution
-
-	func substitute(i: Int, _ expression: Expression) -> Expression {
-		return cata { t in
-			Recur(t.analysis(
-				ifVariable: {
-					$0.analysis(
-						ifGlobal: const(t),
-						ifLocal: { $0 == i ? expression : t })
-				},
-				ifApplication: Expression.Application,
-				ifLambda: Expression.Lambda,
-				ifProjection: Expression.Projection,
-				ifProduct: Expression.Product,
-				ifIf: Expression.If,
-				otherwise: const(t)))
-		} (Recur(self)).out
-	}
-
-
-	// MARK: Bound variables
+	// MARK: Variables
 
 	var maxBoundVariable: Int {
 		return cata {
@@ -289,129 +307,166 @@ extension Expression where Recur: FixpointType {
 		} (Recur(self))
 	}
 
-
-	// MARK: Hashable
-
-	var hashValue: Int {
+	public var freeVariables: Set<Int> {
 		return cata {
-			$0.map { $0.hashValue }.analysis(
-				ifUnit: { 1 },
-				ifUnitType: { 2 },
-				ifType: { 3 ^ $0 },
-				ifVariable: { 5 ^ $0.hashValue },
-				ifApplication: { 7 ^ $0 ^ $1 },
-				ifLambda: { 11 ^ $0 ^ $1 ^ $2 },
-				ifProjection: { 13 ^ $0 ^ $1.hashValue },
-				ifProduct: { 17 ^ $0 ^ $1 },
-				ifBooleanType: { 19 },
-				ifBoolean: { 23 ^ $0.hashValue },
-				ifIf: { 29 ^ $0 ^ $1 ^ $2 },
-				ifAnnotation: { 31 ^ $0 ^ $1 })
+			$0.analysis(
+				ifVariable: { $0.local.map { [ $0 ] } ?? Set() },
+				ifApplication: uncurry(Set.union),
+				ifLambda: { $1.union($2.subtract([ $0 ])) },
+				ifProjection: { $0.0 },
+				ifProduct: uncurry(Set.union),
+				ifIf: { $0.union($1).union($2) },
+				ifAnnotation: uncurry(Set.union),
+				otherwise: const(Set()))
 		} (Recur(self))
+	}
+
+
+	// MARK: Weak-head normal form
+
+	public func weakHeadNormalForm(environment: Environment, shouldRecur: Bool = true) -> Expression {
+		var visited: Set<Name> = []
+		return weakHeadNormalForm(environment, shouldRecur: shouldRecur, visited: &visited)
+	}
+
+	public func weakHeadNormalForm(environment: Environment, shouldRecur: Bool = true, inout visited: Set<Name>) -> Expression {
+		let unfold: Expression -> Expression = {
+			$0.weakHeadNormalForm(environment, shouldRecur: shouldRecur, visited: &visited)
+		}
+		let done: Expression -> Expression = {
+			$0.weakHeadNormalForm(environment, shouldRecur: false, visited: &visited)
+		}
+		switch destructured {
+		case let .Variable(name) where shouldRecur && !visited.contains(name):
+			visited.insert(name)
+			return environment[name].map(done) ?? self
+
+		case let .Variable(name) where !visited.contains(name):
+			visited.insert(name)
+			return environment[name] ?? self
+
+		case let .Application(t1, t2):
+			let t1 = unfold(t1)
+			switch t1 {
+			case let .Lambda(i, _, body):
+				return unfold(body.out.substitute(i, t2))
+
+			case let .Variable(name) where shouldRecur:
+				visited.insert(name)
+				let t2 = unfold(t2)
+				return environment[name].map { .Application(Recur($0), Recur(t2)) }.map(done) ?? .Application(Recur(t1), Recur(t2))
+
+			default:
+				return .Application(Recur(t1), Recur(t2))
+			}
+
+		case let .Projection(a, b):
+			let a = unfold(a)
+			switch a {
+			case let .Product(t1, t2):
+				return unfold(b ? t1.out : t2.out)
+
+			default:
+				return .Projection(Recur(a), b)
+			}
+
+		case let .If(condition, then, `else`):
+			let condition = unfold(condition)
+			switch condition {
+			case let .Boolean(flag):
+				return unfold(flag ? then : `else`)
+
+			default:
+				return .If(Recur(condition), Recur(then), Recur(`else`))
+			}
+
+		default:
+			return self
+		}
 	}
 }
 
-extension Expression where Recur: FixpointType, Recur: Equatable {
-	// MARK: Typechecking
 
-	public func typecheck(context: [Name: Expression] = [:]) -> Either<Error, Expression> {
-		switch destructured {
-		case .Unit:
-			return .right(.UnitType)
-		case .Boolean:
-			return .right(.BooleanType)
-
-		case let .If(condition, then, `else`):
-			return condition.typecheck(context, against: .BooleanType)
-				.flatMap { _ in
-					(then.typecheck(context) &&& `else`.typecheck(context))
-						.map { a, b in
-							a == b
-								? a
-								: Expression.lambda(Recur(.BooleanType)) { Recur(.If($0, Recur(a), Recur(b))) }
-						}
-				}
-
-		case .UnitType, .BooleanType:
-			return .right(.Type(0))
-		case let .Type(n):
-			return .right(.Type(n + 1))
-
-		case let .Variable(i):
-			return context[i].map(Either.Right) ?? Either.Left("Unexpectedly free variable \(i)")
-
-		case let .Lambda(i, type, body):
-			return type.typecheck(context, against: .Type(0))
-				.flatMap { _ in
-					body.typecheck(context + [ .Local(i): type ])
-						.map { Expression.lambda(Recur(type), const(Recur($0))) }
-				}
-
-		case let .Product(a, b):
-			return (a.typecheck(context) &&& b.typecheck(context))
-				.map { A, B in Expression.lambda(Recur(A), const(Recur(B))) }
-
-		case let .Application(a, b):
-			return a.typecheck(context)
-				.flatMap { A in
-					A.analysis(
-						ifLambda: { i, type, body in
-							b.typecheck(context, against: type.out).map { body.out.substitute(i, $0) }
-						},
-						otherwise: const(Either.Left("illegal application of \(a) : \(A) to \(b)")))
-				}
-
-		case let .Projection(term, branch):
-			return term.typecheck(context)
-				.flatMap { type in
-					type.analysis(
-						ifLambda: { i, A, B in
-							Either.Right(branch ? B.out.substitute(i, A.out) : A.out)
-						},
-						otherwise: const(Either.Left("illegal projection of field \(branch ? 1 : 0) of non-product value \(term) of type \(type)")))
-				}
-
-		case let .Annotation(term, type):
-			return term.typecheck(context, against: type)
-				.map(const(type))
-		}
+public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Recur>) -> Bool {
+	switch (left, right) {
+	case (.Unit, .Unit), (.UnitType, .UnitType), (.BooleanType, .BooleanType):
+		return true
+	case let (.Type(i), .Type(j)):
+		return i == j
+	case let (.Variable(m), .Variable(n)):
+		return m == n
+	case let (.Application(t1, t2), .Application(u1, u2)):
+		return t1 == u1 && t2 == u2
+	case let (.Lambda(i, t, a), .Lambda(j, u, b)):
+		return i == j && t == u && a == b
+	case let (.Projection(p, f), .Projection(q, g)):
+		return p == q && f == g
+	case let (.Product(t, a), .Product(u, b)):
+		return t == u && a == b
+	case let (.Boolean(a), .Boolean(b)):
+		return a == b
+	case let (.If(a1, b1, c1), .If(a2, b2, c2)):
+		return a1 == a2 && b1 == b2 && c1 == c2
+	case let (.Annotation(term1, type1), .Annotation(term2, type2)):
+		return term1 == term2 && type1 == type2
+	default:
+		return false
 	}
+}
 
-	public func typecheck(context: [Name: Expression], against: Expression) -> Either<Error, Expression> {
-		return (against.isType
-				? Either.Right(against)
-				: against.typecheck(context, against: .Type(0)))
-			.map { _ in against.evaluate() }
-			.flatMap { against in
-				typecheck(context)
-					.map { $0.evaluate() }
-					.flatMap { (type: Expression) -> Either<Error, Expression> in
-						if case let (.Product(tag, payload), .Lambda(i, tagType, body)) = (self, against) {
-							return tagType.out.typecheck(context, against: .Type(0))
-								.flatMap { _ in
-									tag.out.typecheck(context, against: tagType.out)
-										.flatMap { _ in
-											payload.out.typecheck(context, against: body.out.substitute(i, tag.out))
-												.map(const(type))
-										}
-								}
-						}
+extension Expression where Recur: TermType {
+	public static func alphaEquivalent(left: Expression, _ right: Expression, _ environment: Environment, var _ visited: Set<Name> = []) -> Bool {
+		let recur: (Expression, Expression) -> Bool = {
+			alphaEquivalent($0, $1, environment, visited)
+		}
 
-						if type == against || against == .Type(0) && type.isType {
-							return .Right(type)
-						}
+		let normalize: (Expression, Set<Name>) -> (Expression, Set<Name>) = { (expression, var visited) in
+			(expression.weakHeadNormalForm(environment, shouldRecur: false, visited: &visited), visited)
+		}
 
-						return .Left("Type mismatch: expected \(String(reflecting: self)) to be of type \(String(reflecting: against)), but it was actually of type \(String(reflecting: type)) in environment \(context)")
-					}
-			}
+		let (left, lnames) = normalize(left, visited)
+		let (right, rnames) = normalize(right, visited)
+		visited.unionInPlace(lnames)
+		visited.unionInPlace(rnames)
+
+		switch (left.destructured, right.destructured) {
+		case (.Type, .Type), (.Unit, .Unit), (.UnitType, .UnitType), (.BooleanType, .BooleanType):
+			return true
+
+		case let (.Variable(a), .Variable(b)):
+			return a == b
+
+		case let (.Application(a1, a2), .Application(b1, b2)):
+			return recur(a1, b1) && recur(a2, b2)
+
+		case let (.Lambda(_, a1, a2), .Lambda(_, b1, b2)):
+			return recur(a1, b1) && recur(a2, b2)
+
+		case let (.Projection(a1, a2), .Projection(b1, b2)):
+			return recur(a1, b1) && a2 == b2
+
+		case let (.Product(a1, a2), .Product(b1, b2)):
+			return recur(a1, b1) && recur(a2, b2)
+
+		case let (.Boolean(a), .Boolean(b)):
+			return a == b
+
+		case let (.If(a1, a2, a3), .If(b1, b2, b3)):
+			return recur(a1, b1) && recur(a2, b2) && recur(a3, b3)
+
+		case let (.Annotation(a1, a2), .Annotation(b1, b2)):
+			return recur(a1, b1) && recur(a2, b2)
+
+		default:
+			return false
+		}
 	}
 }
 
 
 private func atModular<C: CollectionType>(collection: C, offset: C.Index.Distance) -> C.Generator.Element {
-	return collection[advance(collection.startIndex, offset % distance(collection.startIndex, collection.endIndex), collection.endIndex)]
+	return collection[collection.startIndex.advancedBy(offset % collection.startIndex.distanceTo(collection.endIndex), limit: collection.endIndex)]
 }
 
 
-import Either
 import Prelude
