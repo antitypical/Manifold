@@ -29,7 +29,7 @@ extension TermType {
 
 			case let .Lambda(variable, type, body):
 				return variable < 0
-					? "λ _ : \(type) . \(body)"
+					? "\(type) → \(body)"
 					: "λ \(renderNumerals(variable, alphabet)) : \(type) . \(body)"
 
 			case let .Projection(term, branch):
