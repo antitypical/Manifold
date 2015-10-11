@@ -215,20 +215,6 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomDebugStringConve
 }
 
 extension Expression where Recur: TermType {
-	// MARK: First-order construction
-
-	/// Constructs a sum type of the elements in `terms`.
-	public static func Sum(terms: [Recur]) -> Expression {
-		return terms.uncons.map { first, rest in
-			rest.isEmpty
-				? first.out
-				: Expression.lambda(.BooleanType) {
-					.If($0, first, Recur(.Sum(Array(rest))))
-				}
-		} ?? .UnitType
-	}
-
-
 	// MARK: Higher-order construction
 
 	public static func lambda(type: Recur, _ f: Recur -> Recur) -> Expression {
