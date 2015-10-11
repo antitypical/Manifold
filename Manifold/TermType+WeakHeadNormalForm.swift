@@ -1,9 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 extension TermType {
-	public typealias Environment = [Name:Self]
-	public typealias Context = [Name:Self]
-
 	public func weakHeadNormalForm(environment: [Name:Self], shouldRecur: Bool = true) -> Self {
 		var visited: Set<Name> = []
 		return weakHeadNormalForm(environment, shouldRecur: shouldRecur, visited: &visited)
