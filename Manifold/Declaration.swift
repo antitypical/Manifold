@@ -1,7 +1,7 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomStringConvertible {
-	public init(_ symbol: String, type: Expression<Recur>, value: Expression<Recur>) {
+	public init(_ symbol: String, type: Recur, value: Recur) {
 		self = .Definition(symbol, type, value)
 	}
 
@@ -16,7 +16,7 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 	}
 
 
-	public typealias DefinitionType = (symbol: String, type: Expression<Recur>, value: Expression<Recur>)
+	public typealias DefinitionType = (symbol: String, type: Recur, value: Recur)
 
 	public var definitions: [DefinitionType] {
 		switch self {
@@ -24,7 +24,7 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 			return [ (symbol, type, value) ]
 		case let .Datatype(symbol, type, datatype):
 			let recur = Recur.Variable(.Global(symbol))
-			return [ (symbol, type, datatype.value(recur).out) ] + datatype.definitions(recur)
+			return [ (symbol, type, datatype.value(recur)) ] + datatype.definitions(recur)
 		}
 	}
 
@@ -50,8 +50,8 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 	}
 
 
-	case Definition(String, Expression<Recur>, Expression<Recur>)
-	case Datatype(String, Expression<Recur>, Manifold.Datatype<Recur>)
+	case Definition(String, Recur, Recur)
+	case Datatype(String, Recur, Manifold.Datatype<Recur>)
 
 
 	public static func Data(symbol: String, _ a: Recur, _ construct: Recur -> Manifold.Datatype<Recur>) -> Declaration {
@@ -65,7 +65,7 @@ extension Declaration where Recur: TermType {
 	}
 
 	public func typecheck(environment: [Name:Recur], _ context: [Name:Recur]) -> [Error] {
-		return definitions.flatMap { Recur($2).checkType(Recur($1), environment, context).left }
+		return definitions.flatMap { $2.checkType($1, environment, context).left }
 	}
 }
 

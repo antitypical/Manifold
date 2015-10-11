@@ -19,9 +19,9 @@ public enum Datatype<Recur: TermType>: DictionaryLiteralConvertible {
 		case .End:
 			return []
 		case let .Constructor(name, telescope, .End):
-			return [ (name, telescope.type(recur).out, telescope.value(recur, transform: transform >>> annotate).out) ]
+			return [ (name, telescope.type(recur), telescope.value(recur, transform: transform >>> annotate)) ]
 		case let .Constructor(name, telescope, rest):
-			return [ (name, telescope.type(recur).out, telescope.value(recur, transform: { .Product(true, $0) } >>> transform >>> annotate).out) ] + rest.definitions(recur, transform: { .Product(false, $0) } >>> transform)
+			return [ (name, telescope.type(recur), telescope.value(recur, transform: { .Product(true, $0) } >>> transform >>> annotate)) ] + rest.definitions(recur, transform: { .Product(false, $0) } >>> transform)
 		}
 	}
 

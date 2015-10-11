@@ -1,8 +1,8 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public struct Module<Recur: TermType> {
-	public typealias Environment = [Name:Expression<Recur>]
-	public typealias Context = [Name:Expression<Recur>]
+	public typealias Environment = [Name:Recur]
+	public typealias Context = [Name:Recur]
 
 	public init<D: SequenceType, S: SequenceType where D.Generator.Element == Module, S.Generator.Element == Declaration<Recur>>(_ dependencies: D, _ declarations: S) {
 		self.dependencies = Array(dependencies)
@@ -16,7 +16,7 @@ public struct Module<Recur: TermType> {
 	public let dependencies: [Module]
 	public let declarations: [Declaration<Recur>]
 
-	private var definitions: AnySequence<(Name, Expression<Recur>, Expression<Recur>)> {
+	private var definitions: AnySequence<(Name, Recur, Recur)> {
 		return AnySequence(declarations
 			.lazy
 			.flatMap {
@@ -47,12 +47,9 @@ extension Module where Recur: TermType {
 	public func typecheck() -> [Error] {
 		let environment = self.environment
 		let context = self.context
-		func promote(d: [Name:Expression<Recur>]) -> [Name:Recur] {
-			return Dictionary(d.map { ($0, Recur($1)) })
-		}
 		return declarations
 			.lazy
-			.flatMap { $0.typecheck(promote(environment), promote(context)) }
+			.flatMap { $0.typecheck(environment, context) }
 	}
 }
 
