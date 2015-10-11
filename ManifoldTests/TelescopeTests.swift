@@ -27,15 +27,15 @@ final class TelescopeTests: XCTestCase {
 	}
 
 	func testRecursiveDataConstructorHasLambdaValueReturningProductValue() {
-		assert(Telescope<Term>.Recursive(.End).value("A"), ==, .lambda("A", { .Product($0, .Unit) }))
+		assert(Telescope<Term>.Recursive(.End).value("A"), ==, .lambda("A", id))
 	}
 
 	func testMultiplyRecursiveDataConstructorHasLambdaValueReturningProductValue() {
-		assert(Telescope<Term>.Recursive(.Recursive(.End)).value("A"), ==, .lambda("A", "A", { .Product($0, .Product($1, .Unit)) }))
+		assert(Telescope<Term>.Recursive(.Recursive(.End)).value("A"), ==, .lambda("A", "A", Term.Product))
 	}
 
 	func testArgumentDataConstructorHasLambdaValueReturningProductValue() {
-		assert(Telescope<Term>.Argument("B", const(.Recursive(.End))).value("A"), ==, .lambda("B", "A", { .Product($0, .Product($1, .Unit)) }))
+		assert(Telescope<Term>.Argument("B", const(.Recursive(.End))).value("A"), ==, .lambda("B", "A", Term.Product))
 	}
 }
 
