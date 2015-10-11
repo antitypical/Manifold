@@ -11,7 +11,7 @@ final class ExpressionTests: XCTestCase {
 	}
 
 	func testProductTypeDescription() {
-		assert(Term.Product(.Unit, .Unit).inferType().right?.description, ==, "λ a : Unit . Unit")
+		assert(Term.Product(.Unit, .Unit).inferType().right?.description, ==, "Unit → Unit")
 	}
 
 	func testGlobalsPrintTheirNames() {
