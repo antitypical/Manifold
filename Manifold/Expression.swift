@@ -179,7 +179,7 @@ public enum Expression<Recur>: BooleanLiteralConvertible, CustomDebugStringConve
 			return "if \(condition) then \(then) else \(`else`)"
 
 		case let .Annotation(term, type):
-			return "(\(term)) : \(type)"
+			return "(\(term) : \(type))"
 		}
 	}
 
