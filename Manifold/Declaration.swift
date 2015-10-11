@@ -15,24 +15,6 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 		}
 	}
 
-	public var type: Expression<Recur> {
-		switch self {
-		case let .Definition(_, type, _):
-			return type
-		case .Datatype:
-			return .Type(0)
-		}
-	}
-
-	public var value: Expression<Recur> {
-		switch self {
-		case let .Definition(_, _, value):
-			return value
-		case let .Datatype(_, datatype):
-			return datatype.value(.Variable(.Global(symbol))).out
-		}
-	}
-
 
 	public typealias DefinitionType = (symbol: String, type: Expression<Recur>, value: Expression<Recur>)
 
