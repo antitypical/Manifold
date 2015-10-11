@@ -6,7 +6,7 @@ extension TermType {
 		return weakHeadNormalForm(environment, shouldRecur: shouldRecur, visited: &visited)
 	}
 
-	private func weakHeadNormalForm(environment: [Name:Self], shouldRecur: Bool = true, inout visited: Set<Name>) -> Self {
+	func weakHeadNormalForm(environment: [Name:Self], shouldRecur: Bool = true, inout visited: Set<Name>) -> Self {
 		let unfold: Self -> Self = {
 			$0.weakHeadNormalForm(environment, shouldRecur: shouldRecur, visited: &visited)
 		}
