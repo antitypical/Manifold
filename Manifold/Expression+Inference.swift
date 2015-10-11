@@ -4,7 +4,7 @@ extension Expression where Recur: TermType, Recur: Equatable {
 	public typealias Context = [Name: Expression]
 
 	public func inferType(environment: Environment = [:], _ context: Context = [:]) -> Either<Error, Expression> {
-		return inferTypeUnannotated(environment, context)
+		return annotate(inferTypeUnannotated(environment, context))
 	}
 
 	public func inferTypeUnannotated(environment: Environment = [:], _ context: Context = [:]) -> Either<Error, Expression> {
