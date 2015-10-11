@@ -20,6 +20,8 @@ public enum Telescope<Recur: TermType> {
 		switch self {
 		case .End:
 			return .UnitType
+		case .Recursive(.End):
+			return recur
 		case let .Recursive(rest):
 			return .Product(recur, rest.constructedType(recur))
 		case let .Argument(t, continuation):
