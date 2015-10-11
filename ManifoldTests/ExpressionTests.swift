@@ -3,7 +3,7 @@
 final class ExpressionTests: XCTestCase {
 	func testLambdaTypeDescription() {
 		assert(identity.description, ==, "λ b : Type . λ a : b . a")
-		assert(identity.out.inferType().right?.description, ==, "λ b : Type . λ a : b . b")
+		assert(identity.out.inferType().right?.description, ==, "λ b : Type . b → b")
 	}
 
 	func testProductDescription() {
