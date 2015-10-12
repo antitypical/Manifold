@@ -58,8 +58,9 @@ extension TermType {
 	}
 }
 
-private func atModular<C: CollectionType>(collection: C, offset: C.Index.Distance) -> C.Generator.Element {
-	return collection[collection.startIndex.advancedBy(offset % collection.startIndex.distanceTo(collection.endIndex), limit: collection.endIndex)]
+private func atModular<C: CollectionType where C.Index: BidirectionalIndexType>(collection: C, offset: C.Index.Distance) -> C.Generator.Element {
+	let max = collection.startIndex.distanceTo(collection.endIndex)
+	return collection[(offset >= 0 ? collection.startIndex : collection.endIndex).advancedBy(offset % max, limit: offset >= 0 ? collection.endIndex : collection.startIndex)]
 }
 
 

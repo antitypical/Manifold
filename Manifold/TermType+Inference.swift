@@ -27,16 +27,16 @@ extension TermType {
 			return .right(.Type(n + 1))
 
 		case let .Variable(i):
-			return context[i].map(Either.Right) ?? Either.Left("Unexpectedly free variable \(i) in context: \(Self.toString(context)), environment: \(Self.toString(environment))")
+			return context[i].map(Either.Right) ?? Either.Left("Unexpectedly free variable \(Self.describe(i)) in context: \(Self.toString(context)), environment: \(Self.toString(environment))")
 
 		case let .Lambda(i, type, body):
 			return type.checkIsType(environment, context)
 				>> body.inferType(environment, context + [ .Local(i): type ])
-					.map { Self.lambda(type, const($0)) }
+					.map { b in .lambda(type, { b.substitute(i, $0) }) }
 
 		case let .Product(a, b):
 			return (a.inferType(environment, context) &&& b.inferType(environment, context))
-				.map { A, B in Self.lambda(A, const(B)) }
+				.map { A, B in .lambda(A, const(B)) }
 
 		case let .Application(a, b):
 			return a.inferType(environment, context)
