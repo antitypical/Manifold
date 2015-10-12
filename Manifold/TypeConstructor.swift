@@ -16,7 +16,7 @@ public enum TypeConstructor<Recur: TermType>: DictionaryLiteralConvertible {
 			return continuation(0).definitions(recur, abstract: abstract >>> { f in { recur in Recur.lambda(type, { f(.Application(recur, $0)) }) } })
 		case let .End(datatype):
 			return datatype.definitions(recur).map { symbol, type, value in
-				(symbol, type(recur), value)
+				(symbol, abstract(type)(recur), value)
 			}
 		}
 	}
