@@ -20,6 +20,18 @@ public enum TypeConstructor<Recur: TermType>: DictionaryLiteralConvertible {
 	}
 
 
+	public func type(recur: Recur) -> Recur {
+		switch self {
+		case let .Argument(type, rest):
+			return Recur.lambda(type) {
+				rest.type(.Application(recur, $0))
+			}
+		case .End:
+			return .Type
+		}
+	}
+
+
 	public func value(recur: Recur) -> Recur {
 		switch self {
 		case let .Argument(type, rest):
