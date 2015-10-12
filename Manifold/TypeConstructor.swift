@@ -13,7 +13,15 @@ public enum TypeConstructor<Recur: TermType>: DictionaryLiteralConvertible {
 	public func definitions(recur: Recur, abstract: (Recur -> Recur) -> Recur -> Recur = { f in { f($0) } }) -> [Declaration<Recur>.DefinitionType] {
 		switch self {
 		case let .Argument(type, continuation):
-			return continuation(0).definitions(recur, abstract: abstract >>> { f in { recur in Recur.lambda(type, { f(.Application(recur, $0)) }) } })
+			var parameter = Recur.Variable(.Local(-1))
+			return continuation(Recur { parameter.out }).definitions(recur, abstract: abstract >>> { f in
+				{ recur in
+					Recur.lambda(type, {
+						parameter = $0
+						return f(.Application(recur, $0))
+					})
+				}
+			})
 		case let .End(datatype):
 			return datatype.definitions(recur).map { symbol, type, value in
 				(symbol, abstract(type)(recur), abstract(value)(recur))
