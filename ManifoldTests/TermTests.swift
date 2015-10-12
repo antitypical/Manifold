@@ -46,6 +46,10 @@ final class TermTests: XCTestCase {
 	func testSubstitution() {
 		assert(Term.Lambda(0, 1, 0).substitute(1, .Unit), ==, .Lambda(0, .Unit, 0))
 	}
+
+	func testFreeVariablesDoNotIncludeThoseBoundByLambdas() {
+		assert(Term.Lambda(1, .UnitType, 1).freeVariables, ==, [])
+	}
 }
 
 
