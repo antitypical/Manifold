@@ -51,11 +51,11 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 
 
 	case Definition(String, Recur, Recur)
-	case Datatype(String, Recur, Manifold.Datatype<Recur>)
+	case Datatype(String, Recur, TypeConstructor<Recur>)
 
 
 	public static func Data(symbol: String, _ a: Recur, _ construct: Recur -> Manifold.Datatype<Recur>) -> Declaration {
-		return .Datatype(symbol, .FunctionType(a, .Type), construct(0))
+		return .Datatype(symbol, .FunctionType(a, .Type), .End(construct(0)))
 	}
 }
 
