@@ -1,11 +1,18 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 extension TermType {
-	public var description: String {
-		let renderNumerals: (Int, String) -> String = { n, alphabet in
-			n.digits(alphabet.characters.count).lazy.map { String(atModular(alphabet.characters, offset: $0)) }.joinWithSeparator("")
-		}
+	public static func describe(name: Name) -> String {
 		let alphabet = "abcdefghijklmnopqrstuvwxyz"
+		return name.analysis(
+			ifGlobal: id,
+			ifLocal: { renderNumerals($0, alphabet) })
+	}
+
+	private static func renderNumerals(n: Int, _ alphabet: String) -> String {
+		return n.digits(alphabet.characters.count).lazy.map { String(atModular(alphabet.characters, offset: $0)) }.joinWithSeparator("")
+	}
+
+	public var description: String {
 		let subscripts = "₀₁₂₃₄₅₆₇₈₉"
 		return para {
 			switch $0 {
@@ -17,19 +24,17 @@ extension TermType {
 			case let .Type(n) where n == 0:
 				return "Type"
 			case let .Type(n):
-				return "Type" + renderNumerals(n, subscripts)
+				return "Type" + Self.renderNumerals(n, subscripts)
 
 			case let .Variable(name):
-				return name.analysis(
-					ifGlobal: id,
-					ifLocal: { renderNumerals($0, alphabet) })
+				return Self.describe(name)
 
 			case let .Application((_, a), (_, b)):
 				return "(\(a) \(b))"
 
 			case let .Lambda(variable, (_, type), (b, body)):
 				return b.freeVariables.contains(variable)
-					? "λ \(renderNumerals(variable, alphabet)) : \(type) . \(body)"
+					? "λ \(Self.describe(.Local(variable))) : \(type) . \(body)"
 					: "\(type) → \(body)"
 
 			case let .Projection((_, term), branch):
