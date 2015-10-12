@@ -11,7 +11,12 @@ public enum TypeConstructor<Recur: TermType>: DictionaryLiteralConvertible {
 
 
 	public func definitions(recur: Recur, transform: Recur -> Recur = id) -> [Declaration<Recur>.DefinitionType] {
-		return []
+		switch self {
+		case let .Argument(type, rest):
+			return rest.definitions(recur, transform: transform)
+		case let .End(datatype):
+			return datatype.definitions(recur, transform: transform)
+		}
 	}
 
 
