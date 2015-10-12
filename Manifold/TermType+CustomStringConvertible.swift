@@ -6,6 +6,7 @@ extension TermType {
 			n.digits(alphabet.characters.count).lazy.map { String(atModular(alphabet.characters, offset: $0)) }.joinWithSeparator("")
 		}
 		let alphabet = "abcdefghijklmnopqrstuvwxyz"
+		let subscripts = "₀₁₂₃₄₅₆₇₈₉"
 		return para {
 			switch $0 {
 			case .Unit:
@@ -16,7 +17,6 @@ extension TermType {
 			case let .Type(n) where n == 0:
 				return "Type"
 			case let .Type(n):
-				let subscripts = "₀₁₂₃₄₅₆₇₈₉"
 				return "Type" + renderNumerals(n, subscripts)
 
 			case let .Variable(name):
