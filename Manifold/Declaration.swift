@@ -10,7 +10,7 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 		switch self {
 		case let .Definition(symbol, _, _):
 			return symbol
-		case let .Datatype(symbol, _, _):
+		case let .Datatype(symbol, _):
 			return symbol
 		}
 	}
@@ -22,7 +22,7 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 		switch self {
 		case let .Definition(symbol, type, value):
 			return [ (symbol, type, value) ]
-		case let .Datatype(symbol, type, datatype):
+		case let .Datatype(symbol, datatype):
 			let recur = Recur.Variable(.Global(symbol))
 			return [ (symbol, datatype.type(recur), datatype.value(recur)) ] + datatype.definitions(recur)
 		}
@@ -34,7 +34,7 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 		case let .Definition(symbol, type, value):
 			return "\(symbol) : \(String(reflecting: type))\n"
 				+ "\(symbol) = \(String(reflecting: value))"
-		case let .Datatype(symbol, type, datatype):
+		case let .Datatype(symbol, datatype):
 			return "data \(symbol) = \(String(reflecting: datatype))"
 		}
 	}
@@ -44,7 +44,7 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 		case let .Definition(symbol, type, value):
 			return "\(symbol) : \(type)\n"
 				+ "\(symbol) = \(value)"
-		case let .Datatype(symbol, type, datatype):
+		case let .Datatype(symbol, datatype):
 			let recur = Recur.Variable(.Global(symbol))
 			return "data \(symbol) : \(datatype.type(recur)) = \(datatype.value(recur))"
 		}
@@ -52,11 +52,11 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 
 
 	case Definition(String, Recur, Recur)
-	case Datatype(String, Recur, TypeConstructor<Recur>)
+	case Datatype(String, TypeConstructor<Recur>)
 
 
 	public static func Data(symbol: String, _ a: Recur, _ construct: Recur -> Manifold.Datatype<Recur>) -> Declaration {
-		return .Datatype(symbol, .FunctionType(a, .Type), .Argument(a, .End(construct(0))))
+		return .Datatype(symbol, .Argument(a, .End(construct(0))))
 	}
 }
 

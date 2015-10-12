@@ -3,7 +3,7 @@
 extension Expression where Recur: TermType {
 	public static var unit: Module<Recur> {
 		return Module([
-			.Datatype("Unit", .Type(0), [ "unit": .End ]),
+			.Datatype("Unit", [ "unit": .End ]),
 		])
 	}
 }

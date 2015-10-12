@@ -3,7 +3,7 @@
 extension Expression where Recur: TermType {
 	public static var natural: Module<Recur> {
 		return Module([
-			.Datatype("Natural", .Type(0), [
+			.Datatype("Natural", [
 				"zero": .End,
 				"successor": .Recursive(.End)
 			])
