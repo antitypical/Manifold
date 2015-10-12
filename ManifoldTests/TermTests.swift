@@ -54,6 +54,10 @@ final class TermTests: XCTestCase {
 	func testLambdasDoNotShadowFreeVariablesInTheirTypes() {
 		assert(Term.Lambda(1, 1, 1).freeVariables, ==, [ 1 ])
 	}
+
+	func testLambdasBindVariablesDeeply() {
+		assert(Term.Lambda(2, .Type, .Lambda(1, 2, .Lambda(0, .UnitType, .Product(2, .Product(1, 0))))).freeVariables, ==, [])
+	}
 }
 
 
