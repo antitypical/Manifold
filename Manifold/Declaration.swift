@@ -61,7 +61,10 @@ extension Declaration where Recur: TermType {
 	}
 
 	public func typecheck(environment: [Name:Recur], _ context: [Name:Recur]) -> [Error] {
-		return definitions.flatMap { $2.checkType($1, environment, context).left }
+		let symbol = self.symbol
+		return definitions
+			.flatMap { $2.checkType($1, environment, context).left }
+			.map { $0.map { "\(symbol): \($0)" } }
 	}
 }
 
