@@ -34,8 +34,8 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 		case let .Definition(symbol, type, value):
 			return "\(symbol) : \(String(reflecting: type))\n"
 				+ "\(symbol) = \(String(reflecting: value))"
-		case let .Datatype(symbol, type, branches):
-			return "data \(symbol) : \(String(reflecting: type)) = \(String(reflecting: branches))"
+		case let .Datatype(symbol, type, datatype):
+			return "data \(symbol) = \(String(reflecting: datatype))"
 		}
 	}
 
