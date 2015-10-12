@@ -94,7 +94,7 @@ extension TermType {
 	// MARK: Higher-order construction
 
 	public static func lambda(type: Self, _ body: Self -> Self) -> Self {
-		var n = 0
+		var n = -1
 		let body = body(Self { .Variable(.Local(n)) })
 		n = body.maxBoundVariable + 1
 		return .Lambda(n, type, body)
