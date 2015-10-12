@@ -27,7 +27,7 @@ extension TermType {
 			return .right(.Type(n + 1))
 
 		case let .Variable(i):
-			return context[i].map(Either.Right) ?? Either.Left("Unexpectedly free variable \(i)")
+			return context[i].map(Either.Right) ?? Either.Left("Unexpectedly free variable \(i) in context: \(Self.toString(context)), environment: \(Self.toString(environment))")
 
 		case let .Lambda(i, type, body):
 			return type.checkIsType(environment, context)
@@ -46,7 +46,7 @@ extension TermType {
 							b.checkType(type, environment, context)
 								.map { _ in body.substitute(i, b) }
 						},
-						otherwise: const(Either.Left("illegal application of \(a) : \(A) to \(b)")))
+						otherwise: const(Either.Left("Illegal application of \(a) : \(A) to \(b) in context: \(Self.toString(context)), environment: \(Self.toString(environment))")))
 			}
 
 		case let .Projection(term, branch):
@@ -56,7 +56,7 @@ extension TermType {
 						ifLambda: { i, A, B in
 							Either.Right(branch ? B.substitute(i, A) : A)
 						},
-						otherwise: const(Either.Left("illegal projection of field \(branch ? 1 : 0) of non-product value \(term) of type \(type)")))
+						otherwise: const(Either.Left("Illegal projection of field \(branch ? 1 : 0) of non-product value \(term) of type \(type) in context: \(Self.toString(context)), environment: \(Self.toString(environment))")))
 			}
 
 		case let .Annotation(term, type):
