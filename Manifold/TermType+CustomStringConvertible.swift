@@ -27,10 +27,10 @@ extension TermType {
 			case let .Application((_, a), (_, b)):
 				return "(\(a) \(b))"
 
-			case let .Lambda(variable, (_, type), (_, body)):
-				return variable < 0
-					? "\(type) → \(body)"
-					: "λ \(renderNumerals(variable, alphabet)) : \(type) . \(body)"
+			case let .Lambda(variable, (_, type), (b, body)):
+				return b.freeVariables.contains(variable)
+					? "λ \(renderNumerals(variable, alphabet)) : \(type) . \(body)"
+					: "\(type) → \(body)"
 
 			case let .Projection((_, term), branch):
 				return "\(term).\(branch ? 1 : 0)"
