@@ -14,14 +14,14 @@ public enum Datatype<Recur: TermType>: DictionaryLiteralConvertible {
 
 
 	public func definitions(recur: Recur, transform: Recur -> Recur = id) -> [(symbol: String, type: Recur -> Recur, value: Recur -> Recur)] {
-		let annotate: Recur -> Recur = { .Annotation($0, recur) }
+		let annotate: Recur -> Recur -> Recur = { recur in { .Annotation($0, recur) } }
 		switch self {
 		case .End:
 			return []
 		case let .Constructor(name, telescope, .End):
-			return [ (name, telescope.type, { telescope.value($0, transform: transform >>> annotate) }) ]
+			return [ (name, telescope.type, { telescope.value($0, transform: transform >>> annotate($0)) }) ]
 		case let .Constructor(name, telescope, rest):
-			return [ (name, telescope.type, { telescope.value($0, transform: { .Product(true, $0) } >>> transform >>> annotate) }) ] + rest.definitions(recur, transform: { .Product(false, $0) } >>> transform)
+			return [ (name, telescope.type, { telescope.value($0, transform: { .Product(true, $0) } >>> transform >>> annotate($0)) }) ] + rest.definitions(recur, transform: { .Product(false, $0) } >>> transform)
 		}
 	}
 
