@@ -24,7 +24,7 @@ final class TypecheckingTests: XCTestCase {
 	}
 
 	func testAbstractedAbstractionTypechecks() {
-		assert(identity.inferType(), ==, .Lambda(1, .Type, .Lambda(0, 1, 1)))
+		assert(identity.inferType(), ==, .Lambda(0, .Type, .Lambda(-1, 0, 0)))
 	}
 
 	func testProjectionTypechecksToTypeOfProjectedField() {
