@@ -55,7 +55,7 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 
 
 	public static func Data(symbol: String, _ a: Recur, _ construct: Recur -> Manifold.Datatype<Recur>) -> Declaration {
-		return .Datatype(symbol, .FunctionType(a, .Type), .End(construct(0)))
+		return .Datatype(symbol, .FunctionType(a, .Type), .Argument(a, .End(construct(0))))
 	}
 }
 
