@@ -10,10 +10,10 @@ public enum TypeConstructor<Recur: TermType>: DictionaryLiteralConvertible {
 	}
 
 
-	public func definitions(recur: Recur, transform: Recur -> Recur = id) -> [Declaration<Recur>.DefinitionType] {
+	public func definitions(recur: Recur, abstract: (Recur -> Recur) -> Recur -> Recur = { f in { f($0) } }) -> [Declaration<Recur>.DefinitionType] {
 		switch self {
 		case let .Argument(type, continuation):
-			return continuation(0).definitions(recur, transform: transform)
+			return continuation(0).definitions(recur, abstract: abstract >>> { f in { recur in Recur.lambda(type, { f(.Application(recur, $0)) }) } })
 		case let .End(datatype):
 			return datatype.definitions(recur).map { symbol, type, value in
 				(symbol, type(recur), value)
