@@ -1,7 +1,7 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomStringConvertible {
-	public init(_ symbol: String, type: Expression<Recur>, value: Expression<Recur>) {
+	public init(_ symbol: String, type: Recur, value: Recur) {
 		self = .Definition(symbol, type, value)
 	}
 
@@ -16,7 +16,7 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 	}
 
 
-	public typealias DefinitionType = (symbol: String, type: Expression<Recur>, value: Expression<Recur>)
+	public typealias DefinitionType = (symbol: String, type: Recur, value: Recur)
 
 	public var definitions: [DefinitionType] {
 		switch self {
@@ -24,7 +24,7 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 			return [ (symbol, type, value) ]
 		case let .Datatype(symbol, datatype):
 			let recur = Recur.Variable(.Global(symbol))
-			return [ (symbol, .Type(0), datatype.value(recur).out) ] + datatype.definitions(recur)
+			return [ (symbol, datatype.type(recur), datatype.value(recur)) ] + datatype.definitions(recur)
 		}
 	}
 
@@ -34,8 +34,8 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 		case let .Definition(symbol, type, value):
 			return "\(symbol) : \(String(reflecting: type))\n"
 				+ "\(symbol) = \(String(reflecting: value))"
-		case let .Datatype(symbol, branches):
-			return "data \(symbol) = \(String(reflecting: branches))"
+		case let .Datatype(symbol, datatype):
+			return "data \(symbol) = \(String(reflecting: datatype))"
 		}
 	}
 
@@ -44,14 +44,15 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 		case let .Definition(symbol, type, value):
 			return "\(symbol) : \(type)\n"
 				+ "\(symbol) = \(value)"
-		case let .Datatype(symbol, branches):
-			return "data \(symbol) = \(branches)"
+		case let .Datatype(symbol, datatype):
+			let recur = Recur.Variable(.Global(symbol))
+			return "data \(symbol) : \(datatype.type(recur)) = \(datatype.value(recur))"
 		}
 	}
 
 
-	case Definition(String, Expression<Recur>, Expression<Recur>)
-	case Datatype(String, Manifold.Datatype<Recur>)
+	case Definition(String, Recur, Recur)
+	case Datatype(String, TypeConstructor<Recur>)
 }
 
 extension Declaration where Recur: TermType {
@@ -59,7 +60,7 @@ extension Declaration where Recur: TermType {
 		return .Variable(Name.Global(symbol))
 	}
 
-	public func typecheck(environment: Expression<Recur>.Environment, _ context: Expression<Recur>.Context) -> [Error] {
+	public func typecheck(environment: [Name:Recur], _ context: [Name:Recur]) -> [Error] {
 		return definitions.flatMap { $2.checkType($1, environment, context).left }
 	}
 }

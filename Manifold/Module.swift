@@ -1,8 +1,8 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public struct Module<Recur: TermType> {
-	public typealias Environment = Expression<Recur>.Environment
-	public typealias Context = Expression<Recur>.Context
+	public typealias Environment = [Name:Recur]
+	public typealias Context = [Name:Recur]
 
 	public init<D: SequenceType, S: SequenceType where D.Generator.Element == Module, S.Generator.Element == Declaration<Recur>>(_ dependencies: D, _ declarations: S) {
 		self.dependencies = Array(dependencies)
@@ -16,7 +16,7 @@ public struct Module<Recur: TermType> {
 	public let dependencies: [Module]
 	public let declarations: [Declaration<Recur>]
 
-	private var definitions: AnySequence<(Name, Expression<Recur>, Expression<Recur>)> {
+	private var definitions: AnySequence<(Name, Recur, Recur)> {
 		return AnySequence(declarations
 			.lazy
 			.flatMap {

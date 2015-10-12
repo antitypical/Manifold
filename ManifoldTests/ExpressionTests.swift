@@ -3,7 +3,7 @@
 final class ExpressionTests: XCTestCase {
 	func testLambdaTypeDescription() {
 		assert(identity.description, ==, "λ b : Type . λ a : b . a")
-		assert(identity.out.inferType().right?.description, ==, "λ b : Type . λ a : b . b")
+		assert(identity.inferType().right?.description, ==, "λ b : Type . b → b")
 	}
 
 	func testProductDescription() {
@@ -11,24 +11,24 @@ final class ExpressionTests: XCTestCase {
 	}
 
 	func testProductTypeDescription() {
-		assert(Term.Product(.Unit, .Unit).out.inferType().right?.description, ==, "λ a : Unit . Unit")
+		assert(Term.Product(.Unit, .Unit).inferType().right?.description, ==, "Unit → Unit")
 	}
 
 	func testGlobalsPrintTheirNames() {
-		assert(Expression<Term>.Variable("Global").description, ==, "Global")
+		assert(Term.Variable("Global").description, ==, "Global")
 	}
 
 
 	func testNullarySumsAreUnitType() {
-		assert(Expression<Term>.Sum([]), ==, .UnitType)
+		assert(Term.Sum([]), ==, .UnitType)
 	}
 
 	func testUnarySumsAreTheIdentityConstructor() {
-		assert(Expression.Sum([ Term.BooleanType ]), ==, .BooleanType)
+		assert(Term.Sum([ .BooleanType ]), ==, .BooleanType)
 	}
 
 	func testNArySumsAreProducts() {
-		assert(Expression.Sum([ Term.BooleanType, Term.BooleanType ]), ==, Expression.Lambda(0, .BooleanType, .If(0, .BooleanType, .BooleanType)))
+		assert(Term.Sum([ .BooleanType, .BooleanType ]), ==, Term.Lambda(0, .BooleanType, .If(0, .BooleanType, .BooleanType)))
 	}
 
 	func testHigherOrderConstruction() {
@@ -44,7 +44,7 @@ final class ExpressionTests: XCTestCase {
 	}
 
 	func testSubstitution() {
-		assert(Expression<Term>.Lambda(0, 1, 0).substitute(1, .Unit), ==, .Lambda(0, .Unit, 0))
+		assert(Term.Lambda(0, 1, 0).substitute(1, .Unit), ==, .Lambda(0, .Unit, 0))
 	}
 }
 

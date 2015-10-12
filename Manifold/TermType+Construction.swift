@@ -57,11 +57,23 @@ extension TermType {
 
 
 	public static func FunctionType(a: Self, _ b: Self) -> Self {
-		return Self(.FunctionType(a, b))
+		return .Lambda(-1, a, b)
 	}
 
 	public static func FunctionType(a: Self, _ b: Self, _ c: Self) -> Self {
 		return FunctionType(a, FunctionType(b, c))
+	}
+
+
+	/// Constructs a sum type of the elements in `terms`.
+	public static func Sum(terms: [Self]) -> Self {
+		return terms.uncons.map { first, rest in
+			rest.isEmpty
+				? first
+				: Self.lambda(.BooleanType) {
+					.If($0, first, .Sum(Array(rest)))
+				}
+		} ?? .UnitType
 	}
 
 
@@ -82,19 +94,22 @@ extension TermType {
 	// MARK: Higher-order construction
 
 	public static func lambda(type: Self, _ body: Self -> Self) -> Self {
-		return Self(.lambda(type, body))
+		var n = 0
+		let body = body(Self { .Variable(.Local(n)) })
+		n = body.maxBoundVariable + 1
+		return .Lambda(n, type, body)
 	}
 
 	public static func lambda(type1: Self, _ type2: Self, _ body: (Self, Self) -> Self) -> Self {
-		return Self(.lambda(type1, type2, body))
+		return lambda(type1) { a in lambda(type2) { b in body(a, b) } }
 	}
 
 	public static func lambda(type1: Self, _ type2: Self, _ type3: Self, _ body: (Self, Self, Self) -> Self) -> Self {
-		return Self(.lambda(type1, type2, type3, body))
+		return lambda(type1) { a in lambda(type2) { b in lambda(type3) { c in body(a, b, c) } } }
 	}
 
 	public static func lambda(type1: Self, _ type2: Self, _ type3: Self, _ type4: Self, _ body: (Self, Self, Self, Self) -> Self) -> Self {
-		return Self(.lambda(type1, type2, type3, type4, body))
+		return lambda(type1) { a in lambda(type2) { b in lambda(type3) { c in lambda(type4) { d in body(a, b, c, d) } } } }
 	}
 
 
@@ -127,6 +142,36 @@ extension TermType {
 
 	public init(extendedGraphemeClusterLiteral: Self.StringLiteralType) {
 		self.init(stringLiteral: extendedGraphemeClusterLiteral)
+	}
+
+
+	// MARK: Variables
+
+	var maxBoundVariable: Int {
+		return cata {
+			$0.analysis(
+				ifApplication: max,
+				ifLambda: { max($0.0, $0.1) },
+				ifProjection: { $0.0 },
+				ifProduct: max,
+				ifIf: { max($0, $1, $2) },
+				ifAnnotation: max,
+				otherwise: const(-1))
+		} (self)
+	}
+
+	public var freeVariables: Set<Int> {
+		return cata {
+			$0.analysis(
+				ifVariable: { $0.local.map { [ $0 ] } ?? Set() },
+				ifApplication: uncurry(Set.union),
+				ifLambda: { $1.union($2.subtract([ $0 ])) },
+				ifProjection: { $0.0 },
+				ifProduct: uncurry(Set.union),
+				ifIf: { $0.union($1).union($2) },
+				ifAnnotation: uncurry(Set.union),
+				otherwise: const(Set()))
+		} (self)
 	}
 }
 
