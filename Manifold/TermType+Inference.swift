@@ -32,7 +32,7 @@ extension TermType {
 		case let .Lambda(i, type, body):
 			return type.checkIsType(environment, context)
 				>> body.inferType(environment, context + [ .Local(i): type ])
-					.map { Self.lambda(type, const($0)) }
+					.map { b in .lambda(type, { b.substitute(i, $0) }) }
 
 		case let .Product(a, b):
 			return (a.inferType(environment, context) &&& b.inferType(environment, context))
