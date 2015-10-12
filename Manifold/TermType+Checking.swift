@@ -14,9 +14,9 @@ extension TermType {
 		case (.Type, .Type):
 			return .Right(against)
 
-		case let (.Lambda(i, type, body), .Lambda(_, Self(.Type(0)), bodyType)):
+		case let (.Lambda(i, type, body), .Lambda(j, Self(.Type(0)), bodyType)):
 			return type.checkIsType(environment, context)
-				>> body.checkType(bodyType, environment, context + [ Name.Local(i) : type ])
+				>> body.checkType(bodyType.substitute(j, .Variable(.Local(i))), environment, context + [ Name.Local(i) : type ])
 					.map(const(against))
 
 		case let (.Lambda(i, type, body), .Type):
