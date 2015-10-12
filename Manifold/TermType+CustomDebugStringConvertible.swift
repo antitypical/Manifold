@@ -11,23 +11,23 @@ extension TermType {
 			case let .Type(n):
 				return ".Type(\(n))"
 			case let .Variable(n):
-				return ".Variable(\(String(reflecting: n)))"
+				return ".Variable(\(n))"
 			case let .Application(a, b):
-				return ".Application(\(String(reflecting: a)), \(String(reflecting: b)))"
+				return ".Application(\(a), \(b))"
 			case let .Lambda(i, a, b):
-				return ".Lambda(\(i), \(String(reflecting: a)), \(String(reflecting: b)))"
+				return ".Lambda(\(i), \(a), \(b))"
 			case let .Projection(a, field):
-				return ".Projection(\(String(reflecting: a)), \(field))"
+				return ".Projection(\(a), \(field))"
 			case let .Product(a, b):
-				return ".Product(\(String(reflecting: a)), \(String(reflecting: b)))"
+				return ".Product(\(a), \(b))"
 			case .BooleanType:
 				return ".BooleanType"
 			case let .Boolean(a):
 				return ".Boolean(\(a))"
 			case let .If(a, b, c):
-				return ".If(\(String(reflecting: a)), \(String(reflecting: b)), \(String(reflecting: c)))"
+				return ".If(\(a), \(b), \(c))"
 			case let .Annotation(a, b):
-				return ".Annotation(\(String(reflecting: a)), \(String(reflecting: b)))"
+				return ".Annotation(\(a), \(b))"
 			}
 		} (self)
 	}
