@@ -1,7 +1,7 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public enum TypeConstructor<Recur: TermType>: DictionaryLiteralConvertible {
-	indirect case Argument(Recur, TypeConstructor)
+	indirect case Argument(Recur, Recur -> TypeConstructor)
 	case End(Datatype<Recur>)
 
 
@@ -12,8 +12,8 @@ public enum TypeConstructor<Recur: TermType>: DictionaryLiteralConvertible {
 
 	public func definitions(recur: Recur, transform: Recur -> Recur = id) -> [Declaration<Recur>.DefinitionType] {
 		switch self {
-		case let .Argument(type, rest):
-			return rest.definitions(recur, transform: transform)
+		case let .Argument(type, continuation):
+			return continuation(0).definitions(recur, transform: transform)
 		case let .End(datatype):
 			return datatype.definitions(recur, transform: transform)
 		}
@@ -22,9 +22,9 @@ public enum TypeConstructor<Recur: TermType>: DictionaryLiteralConvertible {
 
 	public func type(recur: Recur) -> Recur {
 		switch self {
-		case let .Argument(type, rest):
+		case let .Argument(type, continuation):
 			return Recur.lambda(type) {
-				rest.type(.Application(recur, $0))
+				continuation($0).type(.Application(recur, $0))
 			}
 		case .End:
 			return .Type
@@ -34,9 +34,9 @@ public enum TypeConstructor<Recur: TermType>: DictionaryLiteralConvertible {
 
 	public func value(recur: Recur) -> Recur {
 		switch self {
-		case let .Argument(type, rest):
+		case let .Argument(type, continuation):
 			return Recur.lambda(type) {
-				rest.value(.Application(recur, $0))
+				continuation($0).value(.Application(recur, $0))
 			}
 		case let .End(datatype):
 			return datatype.value(recur)
