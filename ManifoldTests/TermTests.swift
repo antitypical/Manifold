@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-final class ExpressionTests: XCTestCase {
+final class TermTests: XCTestCase {
 	func testLambdaTypeDescription() {
 		assert(identity.description, ==, "λ b : Type . λ a : b . a")
 		assert(identity.inferType().right?.description, ==, "λ b : Type . b → b")
