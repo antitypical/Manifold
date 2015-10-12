@@ -56,7 +56,7 @@ extension TermType {
 		}
 	}
 
-	private static func toString(context: [Name:Self]) -> String {
+	static func toString(context: [Name:Self]) -> String {
 		let keys = context.keys.sort().lazy
 		let maxLength: Int = keys.maxElement { $0.description.characters.count < $1.description.characters.count }?.description.characters.count ?? 0
 		let padding: Character = " "
