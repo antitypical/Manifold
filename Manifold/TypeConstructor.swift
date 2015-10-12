@@ -8,4 +8,16 @@ public enum TypeConstructor<Recur: TermType>: DictionaryLiteralConvertible {
 	public init(dictionaryLiteral: (String, Telescope<Recur>)...) {
 		self = .End(Datatype(constructors: dictionaryLiteral))
 	}
+
+
+	public func value(recur: Recur) -> Recur {
+		switch self {
+		case let .Argument(type, continuation):
+			return Recur.lambda(type) {
+				continuation($0).value(recur)
+			}
+		case let .End(datatype):
+			return datatype.value(recur)
+		}
+	}
 }
