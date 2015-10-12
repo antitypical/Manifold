@@ -13,15 +13,15 @@ public enum Datatype<Recur: TermType>: DictionaryLiteralConvertible {
 	}
 
 
-	public func definitions(recur: Recur, transform: Recur -> Recur = id) -> [Declaration<Recur>.DefinitionType] {
+	public func definitions(recur: Recur, transform: Recur -> Recur = id) -> [(symbol: String, type: Recur -> Recur, value: Recur)] {
 		let annotate: Recur -> Recur = { .Annotation($0, recur) }
 		switch self {
 		case .End:
 			return []
 		case let .Constructor(name, telescope, .End):
-			return [ (name, telescope.type(recur), telescope.value(recur, transform: transform >>> annotate)) ]
+			return [ (name, telescope.type, telescope.value(recur, transform: transform >>> annotate)) ]
 		case let .Constructor(name, telescope, rest):
-			return [ (name, telescope.type(recur), telescope.value(recur, transform: { .Product(true, $0) } >>> transform >>> annotate)) ] + rest.definitions(recur, transform: { .Product(false, $0) } >>> transform)
+			return [ (name, telescope.type, telescope.value(recur, transform: { .Product(true, $0) } >>> transform >>> annotate)) ] + rest.definitions(recur, transform: { .Product(false, $0) } >>> transform)
 		}
 	}
 
