@@ -53,11 +53,6 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 
 	case Definition(String, Recur, Recur)
 	case Datatype(String, TypeConstructor<Recur>)
-
-
-	public static func Data(symbol: String, _ a: Recur, _ construct: Recur -> Manifold.Datatype<Recur>) -> Declaration {
-		return .Datatype(symbol, .Argument(a, { .End(construct($0)) }))
-	}
 }
 
 extension Declaration where Recur: TermType {
