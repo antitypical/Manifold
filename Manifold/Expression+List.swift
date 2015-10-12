@@ -3,12 +3,12 @@
 extension Expression where Recur: TermType {
 	public static var list: Module<Recur> {
 		return Module([
-			Declaration.Data("List", .Type, {
-				[
+			Declaration.Datatype("List", .Argument(.Type, {
+				.End([
 					"nil": .End,
 					"cons": .Argument($0, const(.Recursive(.End)))
-				]
-			})
+				])
+			}))
 		])
 	}
 }
