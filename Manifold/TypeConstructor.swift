@@ -1,7 +1,7 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public enum TypeConstructor<Recur: TermType>: DictionaryLiteralConvertible {
-	case Argument(Recur, Recur -> TypeConstructor)
+	indirect case Argument(Recur, TypeConstructor)
 	case End(Datatype<Recur>)
 
 
@@ -17,9 +17,9 @@ public enum TypeConstructor<Recur: TermType>: DictionaryLiteralConvertible {
 
 	public func value(recur: Recur) -> Recur {
 		switch self {
-		case let .Argument(type, continuation):
+		case let .Argument(type, rest):
 			return Recur.lambda(type) {
-				continuation($0).value(.Application(recur, $0))
+				rest.value(.Application(recur, $0))
 			}
 		case let .End(datatype):
 			return datatype.value(recur)
