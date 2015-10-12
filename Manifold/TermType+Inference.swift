@@ -36,7 +36,7 @@ extension TermType {
 
 		case let .Product(a, b):
 			return (a.inferType(environment, context) &&& b.inferType(environment, context))
-				.map { A, B in Self.lambda(A, const(B)) }
+				.map { A, B in .lambda(A, const(B)) }
 
 		case let .Application(a, b):
 			return a.inferType(environment, context)
