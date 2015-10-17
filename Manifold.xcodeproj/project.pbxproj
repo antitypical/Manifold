@@ -160,6 +160,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		D463F6D31BD2A8FF00BA0628 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				D4E101B71B484606001A7E55 /* NaturalTests.swift */,
+				D4FB02DA1B71D1F10090E764 /* BooleanTests.swift */,
+				D445417D1BCAB11100F2946D /* UnitTests.swift */,
+				D44541811BCAE3CD00F2946D /* ListTests.swift */,
+			);
+			name = Modules;
+			sourceTree = "<group>";
+		};
 		D4B3FBE11A83515800DA2AC3 = {
 			isa = PBXGroup;
 			children = (
@@ -234,12 +245,9 @@
 				D484903B1B2A40E800F249F7 /* EvaluationTests.swift */,
 				D4809FBC1AF6BD400084B8FE /* TermTests.swift */,
 				D4F1B8541B470B430065BF22 /* IntExtensionTests.swift */,
-				D4E101B71B484606001A7E55 /* NaturalTests.swift */,
+				D463F6D31BD2A8FF00BA0628 /* Modules */,
 				D4F1B8521B46FD4F0065BF22 /* LazyScanSequenceTests.swift */,
 				D4DF444F1B2DB043008DCA5D /* TypecheckingTests.swift */,
-				D4FB02DA1B71D1F10090E764 /* BooleanTests.swift */,
-				D445417D1BCAB11100F2946D /* UnitTests.swift */,
-				D44541811BCAE3CD00F2946D /* ListTests.swift */,
 				D4F969971B98F3220069F481 /* Term+Arbitrary.swift */,
 				D4FC2FDD1BAF564F005F3B26 /* DeclarationTests.swift */,
 				D43AC8861BC1831F008762B7 /* TelescopeTests.swift */,
