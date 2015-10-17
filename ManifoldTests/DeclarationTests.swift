@@ -2,17 +2,17 @@
 
 final class DeclarationTests: XCTestCase {
 	func testDatatypeDeclarationsAddTypesToContext() {
-		assert(Expression<Term>.boolean.context["Boolean"], ==, .Type(0))
+		assert(Module<Term>.boolean.context["Boolean"], ==, .Type(0))
 	}
 
 	func testDatatypeDeclarationsAddDataConstructorsToContext() {
-		assert(Expression<Term>.boolean.context["true"], ==, .Variable("Boolean"))
-		assert(Expression<Term>.boolean.context["false"], ==, .Variable("Boolean"))
+		assert(Module<Term>.boolean.context["true"], ==, .Variable("Boolean"))
+		assert(Module<Term>.boolean.context["false"], ==, .Variable("Boolean"))
 	}
 
 	func testDatatypeDeclarationsAddDataConstructorsToEnvironment() {
-		assert(Expression<Term>.boolean.environment["true"], ==, .Annotation(.Product(true, .Unit), "Boolean"))
-		assert(Expression<Term>.boolean.environment["false"], ==, .Annotation(.Product(false, .Unit), "Boolean"))
+		assert(Module<Term>.boolean.environment["true"], ==, .Annotation(.Product(true, .Unit), "Boolean"))
+		assert(Module<Term>.boolean.environment["false"], ==, .Annotation(.Product(false, .Unit), "Boolean"))
 	}
 
 	func testDatatypeConstructorsProduceRightNestedValues() {
