@@ -1,0 +1,14 @@
+//  Copyright © 2015 Rob Rix. All rights reserved.
+
+final class MaybeTests: XCTestCase {
+	func testModuleTypechecks() {
+		module.typecheck().forEach { XCTFail($0.description) }
+	}
+}
+
+
+private let module = Module<Term>.maybe
+
+
+import Manifold
+import XCTest
