@@ -1,7 +1,7 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 extension Module {
-	public static var boolean: Module<Recur> {
+	public static var boolean: Module {
 		return Module([
 			.Datatype("Boolean", [
 				"true": .End,
