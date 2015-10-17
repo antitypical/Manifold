@@ -7,7 +7,7 @@ final class BooleanTests: XCTestCase {
 }
 
 
-private let module = Expression<Term>.boolean
+private let module = Module<Term>.boolean
 
 
 import Manifold
