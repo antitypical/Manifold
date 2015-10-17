@@ -4,10 +4,10 @@ extension Module {
 	public static var list: Module<Recur> {
 		return Module([
 			Declaration.Datatype("List", .Argument(.Type, {
-				.End([
+				[
 					"nil": .End,
 					"cons": .Argument($0, const(.Recursive(.End)))
-				])
+				]
 			}))
 		])
 	}
