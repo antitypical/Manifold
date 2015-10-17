@@ -10,7 +10,7 @@ final class ListTests: XCTestCase {
 	}
 }
 
-private let module = Expression<Term>.list
+private let module = Module<Term>.list
 
 
 import Assertions
