@@ -4,6 +4,13 @@ public protocol TermContainerType: Equatable {
 	var out: Expression<Self> { get }
 }
 
+extension TermContainerType {
+	public static func out(fixpoint: Self) -> Expression<Self> {
+		return fixpoint.out
+	}
+}
+
+
 public protocol TermType: BooleanLiteralConvertible, CustomDebugStringConvertible, CustomStringConvertible, IntegerLiteralConvertible, StringLiteralConvertible, TermContainerType {
 	init(_: () -> Expression<Self>)
 }
@@ -11,10 +18,6 @@ public protocol TermType: BooleanLiteralConvertible, CustomDebugStringConvertibl
 extension TermType {
 	public init(_ expression: Expression<Self>) {
 		self.init { expression }
-	}
-
-	public static func out(fixpoint: Self) -> Expression<Self> {
-		return fixpoint.out
 	}
 }
 
