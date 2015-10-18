@@ -8,12 +8,6 @@ extension CollectionType {
 		}
 		return nil
 	}
-
-	public var rest: SubSequence {
-		return isEmpty
-			? self[startIndex..<endIndex]
-			: dropFirst()
-	}
 }
 
 extension CollectionType where SubSequence == Self {
