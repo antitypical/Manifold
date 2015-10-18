@@ -30,7 +30,11 @@ extension Module {
 			type: Recur.FunctionType(Boolean.ref, Boolean.ref, Boolean.ref),
 			value: Recur.lambda(Boolean.ref, Boolean.ref) { p, q in p[Boolean.ref, `true`.ref, q] })
 
-		return Module([ Boolean, `true`, `false`, not, `if`, and, or ])
+		let xor = Declaration("xor",
+			type: Recur.FunctionType(Boolean.ref, Boolean.ref, Boolean.ref),
+			value: Recur.lambda(Boolean.ref, Boolean.ref, { p, q in p[Boolean.ref, not.ref[q], q] }))
+
+		return Module([ Boolean, `true`, `false`, not, `if`, and, or, xor ])
 	}
 }
 
