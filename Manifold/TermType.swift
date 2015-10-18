@@ -49,7 +49,7 @@ public func apo<A>(f: A -> Expression<Either<Term, A>>)(_ seed: A) -> Term {
 
 // MARK: - Implementation details
 
-private func map<A, B>(transform: A -> B)(_ expression: Expression<A>) -> Expression<B> {
+private func map<A, B>(@noescape transform: A -> B)(_ expression: Expression<A>) -> Expression<B> {
 	return Expression.map(expression)(transform)
 }
 
