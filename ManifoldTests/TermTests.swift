@@ -43,9 +43,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testFunctionTypeConstruction() {
-		let expected = Term.lambda(.Type) { A in .lambda(.FunctionType(A, A), A, const(A)) }
-		let actual = Term.Lambda(0, .Type, .Lambda(-1, .Lambda(-1, 0, 0), .Lambda(-1, 0, 0)))
-		assert(expected, ==, actual)
+		assert(Term.lambda(.Type) { A in .lambda(.FunctionType(A, A), A, const(A)) }, ==, .Lambda(0, .Type, .Lambda(-1, .Lambda(-1, 0, 0), .Lambda(-1, 0, 0))))
 	}
 
 	func testSubstitution() {
