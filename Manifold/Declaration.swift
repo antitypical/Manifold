@@ -5,6 +5,18 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 		self = .Definition(symbol, type, value)
 	}
 
+	public init(_ symbol: String, _ datatype: TypeConstructor<Recur>) {
+		self = .Datatype(symbol, datatype)
+	}
+
+	public init(_ symbol: String, _ type: Recur, _ constructor: Recur -> TypeConstructor<Recur>) {
+		self.init(symbol, .Argument(type, constructor))
+	}
+
+	public init(_ symbol: String, _ type1: Recur, _ type2: Recur, _ constructor: (Recur, Recur) -> TypeConstructor<Recur>) {
+		self.init(symbol, .Argument(type1, { a in .Argument(type2, { b in constructor(a, b) }) }))
+	}
+
 
 	public var symbol: String {
 		switch self {
