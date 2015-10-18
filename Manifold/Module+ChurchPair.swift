@@ -10,7 +10,11 @@ extension Module {
 			type: Pair.ref,
 			value: Recur.lambda(.Type, .Type, .Type) { A, B, Result in Recur.lambda(A, B, .FunctionType(A, B, Result)) { a, b, f in f[a, b] } })
 
-		return Module("ChurchPair", [ churchBoolean ], [ Pair, pair ])
+		let first = Declaration("first",
+			type: Recur.lambda(.Type, .Type) { A, B in Recur.FunctionType(Pair.ref[A, B], A) },
+			value: Recur.lambda(.Type, .Type) { A, B in Recur.lambda(Pair.ref[A, B]) { pair in pair[A, Recur.lambda(A, B) { a, _ in a }] } })
+
+		return Module("ChurchPair", [ churchBoolean ], [ Pair, pair, first ])
 	}
 }
 
