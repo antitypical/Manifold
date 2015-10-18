@@ -2,6 +2,6 @@
 
 extension Module {
 	public static var churchPair: Module {
-		return Module([])
+		return Module([ churchBoolean ], [])
 	}
 }
