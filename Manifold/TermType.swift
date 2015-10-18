@@ -27,20 +27,20 @@ public func == <Term: TermContainerType> (left: Term, right: Term) -> Bool {
 }
 
 
-// MARK: - Fix: TermType over Expression<Fix>
+// MARK: - Term: TermType over Expression<Term>
 
-public func cata<T, Fix: TermType>(f: Expression<T> -> T)(_ term: Fix) -> T {
-	return term |> (Fix.out >>> (map <| cata(f)) >>> f)
+public func cata<T, Term: TermType>(f: Expression<T> -> T)(_ term: Term) -> T {
+	return term |> (Term.out >>> (map <| cata(f)) >>> f)
 }
 
-public func para<T, Fix: TermType>(f: Expression<(Fix, T)> -> T)(_ term: Fix) -> T {
+public func para<T, Term: TermType>(f: Expression<(Term, T)> -> T)(_ term: Term) -> T {
 	let fanout = { ($0, para(f)($0)) }
-	return term |> (Fix.out >>> (map <| fanout) >>> f)
+	return term |> (Term.out >>> (map <| fanout) >>> f)
 }
 
 
-public func ana<T, Fix: TermType>(f: T -> Expression<T>)(_ seed: T) -> Fix {
-	return seed |> (Fix.init <<< (map <| ana(f)) <<< f)
+public func ana<T, Term: TermType>(f: T -> Expression<T>)(_ seed: T) -> Term {
+	return seed |> (Term.init <<< (map <| ana(f)) <<< f)
 }
 
 
