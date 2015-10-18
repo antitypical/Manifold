@@ -1,13 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public enum Name: Comparable, CustomDebugStringConvertible, CustomStringConvertible, Hashable, IntegerLiteralConvertible, StringLiteralConvertible {
-	// MARK: Destructors
-
-	public var local: Int? {
-		return analysis(ifGlobal: const(nil), ifLocal: Optional.Some)
-	}
-
-
 	// MARK: Analysis
 
 	public func analysis<T>(
