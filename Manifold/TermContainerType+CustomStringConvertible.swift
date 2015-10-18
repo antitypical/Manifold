@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-extension TermType {
+extension TermContainerType {
 	public static func describe(name: Name) -> String {
 		let alphabet = "abcdefghijklmnopqrstuvwxyz"
 		return name.analysis(

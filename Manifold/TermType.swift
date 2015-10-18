@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public protocol TermContainerType: Equatable {
+public protocol TermContainerType: Equatable, CustomStringConvertible {
 	var out: Expression<Self> { get }
 }
 
@@ -11,7 +11,7 @@ extension TermContainerType {
 }
 
 
-public protocol TermType: BooleanLiteralConvertible, CustomDebugStringConvertible, CustomStringConvertible, IntegerLiteralConvertible, StringLiteralConvertible, TermContainerType {
+public protocol TermType: BooleanLiteralConvertible, CustomDebugStringConvertible, IntegerLiteralConvertible, StringLiteralConvertible, TermContainerType {
 	init(_: () -> Expression<Self>)
 }
 
