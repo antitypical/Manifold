@@ -29,29 +29,29 @@ public func == <Term: TermContainerType> (left: Term, right: Term) -> Bool {
 
 // MARK: - Term: TermType over Expression<Term>
 
-public func cata<T, Term: TermType>(f: Expression<T> -> T)(_ term: Term) -> T {
+public func cata<A, Term: TermType>(f: Expression<A> -> A)(_ term: Term) -> A {
 	return term |> (Term.out >>> (map <| cata(f)) >>> f)
 }
 
-public func para<T, Term: TermType>(f: Expression<(Term, T)> -> T)(_ term: Term) -> T {
+public func para<A, Term: TermType>(f: Expression<(Term, A)> -> A)(_ term: Term) -> A {
 	let fanout = { ($0, para(f)($0)) }
 	return term |> (Term.out >>> (map <| fanout) >>> f)
 }
 
 
-public func ana<T, Term: TermType>(f: T -> Expression<T>)(_ seed: T) -> Term {
+public func ana<A, Term: TermType>(f: A -> Expression<A>)(_ seed: A) -> Term {
 	return seed |> (Term.init <<< (map <| ana(f)) <<< f)
 }
 
 
-public func apo<T>(f: T -> Expression<Either<Term, T>>)(_ seed: T) -> Term {
+public func apo<A>(f: A -> Expression<Either<Term, A>>)(_ seed: A) -> Term {
 	return seed |> (Term.init <<< (map { $0.either(ifLeft: id, ifRight: apo(f)) }) <<< f)
 }
 
 
 // MARK: - Implementation details
 
-private func map<T, U>(f: T -> U)(_ c: Expression<T>) -> Expression<U> {
+private func map<A, B>(f: A -> B)(_ c: Expression<A>) -> Expression<B> {
 	return Expression.map(c)(f)
 }
 
