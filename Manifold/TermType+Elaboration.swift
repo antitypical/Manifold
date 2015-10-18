@@ -13,6 +13,9 @@ extension TermType {
 			case .UnitType, .BooleanType:
 				return .Right(assign(.Type)(self))
 
+			case .Unit:
+				return .Right(assign(.UnitType)(self))
+
 			default:
 				return .Left("unimplemented")
 			}
