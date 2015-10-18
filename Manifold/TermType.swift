@@ -8,6 +8,10 @@ extension TermContainerType {
 	public static func out(container: Self) -> Expression<Self> {
 		return container.out
 	}
+
+	public static func cata<Result>(transform: Expression<Result> -> Result) -> Self -> Result {
+		return Self.out >>> map(cata(transform)) >>> transform
+	}
 }
 
 
