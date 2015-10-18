@@ -65,18 +65,6 @@ extension TermType {
 	}
 
 
-	/// Constructs a sum type of the elements in `terms`.
-	public static func Sum(terms: [Self]) -> Self {
-		return terms.uncons.map { first, rest in
-			rest.isEmpty
-				? first
-				: Self.lambda(.BooleanType) {
-					.If($0, first, .Sum(Array(rest)))
-				}
-		} ?? .UnitType
-	}
-
-
 	public subscript (operands: Self...) -> Self {
 		return operands.reduce(self, combine: Self.Application)
 	}
