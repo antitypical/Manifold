@@ -10,7 +10,11 @@ extension Module {
 			type: Boolean.ref,
 			value: Recur.lambda(.Type) { A in Recur.lambda(A, A, { a, _ in a }) })
 
-		return Module([ Boolean, `true` ])
+		let `false` = Declaration("false",
+			type: Boolean.ref,
+			value: Recur.lambda(.Type) { A in Recur.lambda(A, A, { _, b in b }) })
+
+		return Module([ Boolean, `true`, `false` ])
 	}
 }
 
