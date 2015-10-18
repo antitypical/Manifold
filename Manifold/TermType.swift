@@ -5,8 +5,8 @@ public protocol TermContainerType: Equatable {
 }
 
 extension TermContainerType {
-	public static func out(fixpoint: Self) -> Expression<Self> {
-		return fixpoint.out
+	public static func out(container: Self) -> Expression<Self> {
+		return container.out
 	}
 }
 
