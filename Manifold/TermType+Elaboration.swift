@@ -18,9 +18,9 @@ extension TermType {
 				return .Right(assign(.BooleanType)(self))
 
 			case let .Variable(name):
-				return context[name].map {
-					Either.Right(assign($0)(self))
-				} ?? Either.Left("Unexpectedly free variable \(Self.describe(name)) in context: \(Self.toString(context: context)), environment: \(Self.toString(environment: environment))")
+				return context[name]
+					.map { Either.Right(assign($0)(self)) }
+					?? Either.Left("Unexpectedly free variable \(Self.describe(name)) in context: \(Self.toString(context: context)), environment: \(Self.toString(environment: environment))")
 
 			default:
 				return .Left("unimplemented")
