@@ -9,7 +9,6 @@ extension TermType {
 			switch $0 {
 			case let .Type(n):
 				return .Right(assign(.Type(n + 1))(self))
-
 			case .UnitType, .BooleanType:
 				return .Right(assign(.Type)(self))
 
