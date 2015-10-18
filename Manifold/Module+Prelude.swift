@@ -6,7 +6,11 @@ extension Module {
 			type: Recur.lambda(.Type) { A in Recur.FunctionType(A, A) },
 			value: Recur.lambda(.Type) { A in Recur.lambda(A, id) })
 
-		return Module("Prelude", [ identity ])
+		let constant = Declaration("constant",
+			type: Recur.lambda(.Type, .Type) { A, B in Recur.FunctionType(A, B, A) },
+			value: Recur.lambda(.Type, .Type) { A, B in Recur.lambda(A) { Recur.lambda(B, const($0)) } })
+
+		return Module("Prelude", [ identity, constant ])
 	}
 }
 
