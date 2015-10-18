@@ -14,7 +14,7 @@ extension Module {
 			type: Recur.lambda(.Type, .Type) { A, B in Recur.FunctionType(Pair.ref[A, B], A) },
 			value: Recur.lambda(.Type, .Type) { A, B in Recur.lambda(Pair.ref[A, B]) { pair in pair[A, Recur.lambda(A, B) { a, _ in a }] } })
 
-		return Module("ChurchPair", [ churchBoolean ], [ Pair, pair, first ])
+		return Module("ChurchPair", [ Pair, pair, first ])
 	}
 }
 
