@@ -152,7 +152,7 @@ extension TermType {
 		return cata {
 			$0.analysis(
 				ifApplication: max,
-				ifLambda: { max($0.0, $0.1) },
+				ifLambda: { $0 < 0 ? max($1, $2) : max($0, $1) },
 				ifProjection: { $0.0 },
 				ifProduct: max,
 				ifIf: { max($0, $1, $2) },
