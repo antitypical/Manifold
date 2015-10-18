@@ -2,4 +2,11 @@
 
 public enum Elaborated<Term: TermType> {
 	indirect case Unroll(Term, Expression<Elaborated>)
+
+	public var type: Term {
+		switch self {
+		case let .Unroll(type, _):
+			return type
+		}
+	}
 }
