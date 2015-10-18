@@ -1,17 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public enum Name: Comparable, CustomDebugStringConvertible, CustomStringConvertible, Hashable, IntegerLiteralConvertible, StringLiteralConvertible {
-	// MARK: Destructors
-
-	public var global: String? {
-		return analysis(ifGlobal: Optional.Some, ifLocal: const(nil))
-	}
-
-	public var local: Int? {
-		return analysis(ifGlobal: const(nil), ifLocal: Optional.Some)
-	}
-
-
 	// MARK: Analysis
 
 	public func analysis<T>(
@@ -61,14 +50,6 @@ public enum Name: Comparable, CustomDebugStringConvertible, CustomStringConverti
 	// MARK: StringLiteralConvertible
 
 	public init(stringLiteral value: String) {
-		self = Global(value)
-	}
-
-	public init(unicodeScalarLiteral value: String) {
-		self = Global(value)
-	}
-
-	public init(extendedGraphemeClusterLiteral value: String) {
 		self = Global(value)
 	}
 

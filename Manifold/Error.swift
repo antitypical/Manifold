@@ -34,13 +34,6 @@ public enum Error: Equatable, CustomStringConvertible, StringInterpolationConver
 	}
 
 
-	// MARK: ExtendedGraphemeClusterLiteralConvertible
-
-	public init(extendedGraphemeClusterLiteral value: String) {
-		self.init(reason: value)
-	}
-
-
 	// MARK: Printable
 
 	public var description: String {
@@ -68,13 +61,6 @@ public enum Error: Equatable, CustomStringConvertible, StringInterpolationConver
 	// MARK: StringLiteralConvertible
 
 	public init(stringLiteral value: StringLiteralType) {
-		self.init(reason: value)
-	}
-
-
-	// MARK: UnicodeScalarLiteral
-
-	public init(unicodeScalarLiteral value: String) {
 		self.init(reason: value)
 	}
 }

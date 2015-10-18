@@ -5,7 +5,7 @@ public enum Datatype<Recur: TermType>: DictionaryLiteralConvertible {
 	case End
 
 	public init(constructors: [(String, Telescope<Recur>)]) {
-		self = constructors[constructors.indices].fold(.End) { .Constructor($0.0, $0.1, $1) }
+		self = constructors[constructors.indices].reverse().reduce(.End) { .Constructor($1.0, $1.1, $0) }
 	}
 
 	public init(dictionaryLiteral: (String, Telescope<Recur>)...) {

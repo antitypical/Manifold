@@ -65,18 +65,6 @@ extension TermType {
 	}
 
 
-	/// Constructs a sum type of the elements in `terms`.
-	public static func Sum(terms: [Self]) -> Self {
-		return terms.uncons.map { first, rest in
-			rest.isEmpty
-				? first
-				: Self.lambda(.BooleanType) {
-					.If($0, first, .Sum(Array(rest)))
-				}
-		} ?? .UnitType
-	}
-
-
 	public subscript (operands: Self...) -> Self {
 		return operands.reduce(self, combine: Self.Application)
 	}
@@ -164,7 +152,7 @@ extension TermType {
 	public var freeVariables: Set<Int> {
 		return cata {
 			$0.analysis(
-				ifVariable: { $0.local.map { [ $0 ] } ?? Set() },
+				ifVariable: { $0.analysis(ifGlobal: const(Set()), ifLocal: { [ $0 ] }) },
 				ifApplication: uncurry(Set.union),
 				ifLambda: { $1.union($2.subtract([ $0 ])) },
 				ifProjection: { $0.0 },
