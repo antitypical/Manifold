@@ -26,8 +26,8 @@
 		D44541901BCB028A00F2946D /* TermType+CustomDebugStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D445418F1BCB028A00F2946D /* TermType+CustomDebugStringConvertible.swift */; };
 		D44541921BCB030F00F2946D /* TermContainerType+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44541911BCB030F00F2946D /* TermContainerType+CustomStringConvertible.swift */; };
 		D44541941BCB389400F2946D /* TypeConstructor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44541931BCB389400F2946D /* TypeConstructor.swift */; };
-		D463F6D21BD2A83E00BA0628 /* Module+Maybe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D463F6D11BD2A83E00BA0628 /* Module+Maybe.swift */; settings = {ASSET_TAGS = (); }; };
-		D463F6D51BD2A91200BA0628 /* MaybeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D463F6D41BD2A91200BA0628 /* MaybeTests.swift */; settings = {ASSET_TAGS = (); }; };
+		D463F6D21BD2A83E00BA0628 /* Module+Maybe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D463F6D11BD2A83E00BA0628 /* Module+Maybe.swift */; };
+		D463F6D51BD2A91200BA0628 /* MaybeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D463F6D41BD2A91200BA0628 /* MaybeTests.swift */; };
 		D4809FBD1AF6BD400084B8FE /* TermTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4809FBC1AF6BD400084B8FE /* TermTests.swift */; };
 		D48404B81BC36F88006EABAC /* DatatypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D48404B71BC36F88006EABAC /* DatatypeTests.swift */; };
 		D484903C1B2A40E800F249F7 /* EvaluationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D484903B1B2A40E800F249F7 /* EvaluationTests.swift */; };
@@ -48,11 +48,11 @@
 		D4E829171B521B3400713E60 /* Module.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E829161B521B3400713E60 /* Module.swift */; };
 		D4E829191B521BFC00713E60 /* Declaration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E829181B521BFC00713E60 /* Declaration.swift */; };
 		D4E8291B1B521F1100713E60 /* LazyConcatSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E8291A1B521F1100713E60 /* LazyConcatSequence.swift */; };
-		D4E9901C1BD3431D00F00CA7 /* Module+Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E9901B1BD3431D00F00CA7 /* Module+Either.swift */; settings = {ASSET_TAGS = (); }; };
-		D4E9901E1BD343AE00F00CA7 /* EitherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E9901D1BD343AE00F00CA7 /* EitherTests.swift */; settings = {ASSET_TAGS = (); }; };
-		D4E990201BD347CF00F00CA7 /* Module+ChurchBoolean.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E9901F1BD347CF00F00CA7 /* Module+ChurchBoolean.swift */; settings = {ASSET_TAGS = (); }; };
-		D4E990221BD349EF00F00CA7 /* ChurchBooleanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E990211BD349EF00F00CA7 /* ChurchBooleanTests.swift */; settings = {ASSET_TAGS = (); }; };
-		D4E990241BD3EE5300F00CA7 /* Elaborated.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E990231BD3EE5300F00CA7 /* Elaborated.swift */; settings = {ASSET_TAGS = (); }; };
+		D4E9901C1BD3431D00F00CA7 /* Module+Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E9901B1BD3431D00F00CA7 /* Module+Either.swift */; };
+		D4E9901E1BD343AE00F00CA7 /* EitherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E9901D1BD343AE00F00CA7 /* EitherTests.swift */; };
+		D4E990201BD347CF00F00CA7 /* Module+ChurchBoolean.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E9901F1BD347CF00F00CA7 /* Module+ChurchBoolean.swift */; };
+		D4E990221BD349EF00F00CA7 /* ChurchBooleanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E990211BD349EF00F00CA7 /* ChurchBooleanTests.swift */; };
+		D4E990241BD3EE5300F00CA7 /* Elaborated.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E990231BD3EE5300F00CA7 /* Elaborated.swift */; };
 		D4EDEF571AFEDEC5001B9A1D /* Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EDEF561AFEDEC5001B9A1D /* Name.swift */; };
 		D4F1B84F1B46E2F40065BF22 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F1B84E1B46E2F40065BF22 /* Int.swift */; };
 		D4F1B8511B46EBE10065BF22 /* LazyScanSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F1B8501B46EBE10065BF22 /* LazyScanSequence.swift */; };
