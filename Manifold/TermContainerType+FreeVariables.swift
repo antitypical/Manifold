@@ -3,7 +3,7 @@
 extension TermContainerType {
 	// MARK: Variables
 
-	var maxBoundVariable: Int {
+	public var maxBoundVariable: Int {
 		return cata {
 			$0.analysis(
 				ifApplication: max,
