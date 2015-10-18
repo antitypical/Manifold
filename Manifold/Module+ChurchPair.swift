@@ -2,6 +2,12 @@
 
 extension Module {
 	public static var churchPair: Module {
-		return Module([ churchBoolean ], [])
+		let Pair = Declaration("Pair",
+			type: Recur.lambda(.Type, .Type, .Type) { A, B, Result in Recur.lambda(A, B, Recur.FunctionType(A, B, Result), const(Result)) },
+			value: Recur.lambda(.Type, .Type, .Type) { A, B, Result in Recur.lambda(A, B, .FunctionType(A, B, Result)) { a, b, f in f[a, b] } })
+		return Module([ churchBoolean ], [ Pair ])
 	}
 }
+
+
+import Prelude
