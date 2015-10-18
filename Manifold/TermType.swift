@@ -18,6 +18,10 @@ extension TermContainerType {
 	}
 }
 
+public func == <Term: TermContainerType> (left: Term, right: Term) -> Bool {
+	return left.out == right.out
+}
+
 
 public protocol TermType: BooleanLiteralConvertible, IntegerLiteralConvertible, StringLiteralConvertible, TermContainerType {
 	init(_: () -> Expression<Self>)
@@ -27,11 +31,6 @@ extension TermType {
 	public init(_ expression: Expression<Self>) {
 		self.init { expression }
 	}
-}
-
-
-public func == <Term: TermContainerType> (left: Term, right: Term) -> Bool {
-	return left.out == right.out
 }
 
 
