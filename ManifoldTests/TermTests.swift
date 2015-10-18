@@ -19,18 +19,6 @@ final class TermTests: XCTestCase {
 	}
 
 
-	func testNullarySumsAreUnitType() {
-		assert(Term.Sum([]), ==, .UnitType)
-	}
-
-	func testUnarySumsAreTheIdentityConstructor() {
-		assert(Term.Sum([ .BooleanType ]), ==, .BooleanType)
-	}
-
-	func testNArySumsAreProducts() {
-		assert(Term.Sum([ .BooleanType, .BooleanType ]), ==, Term.Lambda(0, .BooleanType, .If(0, .BooleanType, .BooleanType)))
-	}
-
 	func testHigherOrderConstruction() {
 		assert(Term.lambda(.UnitType, id), ==, .Lambda(0, .UnitType, 0))
 		assert(identity, ==, .Lambda(1, .Type, .Lambda(0, 1, 0)))

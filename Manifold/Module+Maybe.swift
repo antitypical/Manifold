@@ -2,7 +2,7 @@
 
 extension Module {
 	public static var maybe: Module {
-		return Module([
+		return Module("Maybe", [
 			Declaration.Datatype("Maybe", .Argument(.Type, {
 				[
 					"just": .Argument($0, const(.End)),

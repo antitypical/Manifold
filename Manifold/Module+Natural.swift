@@ -2,7 +2,7 @@
 
 extension Module {
 	public static var natural: Module {
-		return Module([
+		return Module("Natural", [
 			.Datatype("Natural", [
 				"zero": .End,
 				"successor": .Recursive(.End)

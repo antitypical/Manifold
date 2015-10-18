@@ -19,7 +19,7 @@ extension TermContainerType {
 	public var freeVariables: Set<Int> {
 		return cata {
 			$0.analysis(
-				ifVariable: { $0.local.map { [ $0 ] } ?? Set() },
+				ifVariable: { $0.analysis(ifGlobal: const(Set()), ifLocal: { [ $0 ] }) },
 				ifApplication: uncurry(Set.union),
 				ifLambda: { $1.union($2.subtract([ $0 ])) },
 				ifProjection: { $0.0 },

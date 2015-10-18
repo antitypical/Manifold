@@ -2,7 +2,7 @@
 
 extension Module {
 	public static var either: Module {
-		return Module([
+		return Module("Either", [
 			Declaration("Either", .Type, .Type) {
 				[
 					"left": .Argument($0, const(.End)),
