@@ -12,6 +12,10 @@ extension TermContainerType {
 	public func cata<Result>(transform: Expression<Result> -> Result) -> Result {
 		return (Self.out >>> map { $0.cata(transform) } >>> transform)(self)
 	}
+
+	public func para<Result>(transform: Expression<(Self, Result)> -> Result) -> Result {
+		return (Self.out >>> map { ($0, $0.para(transform)) } >>> transform)(self)
+	}
 }
 
 
@@ -32,11 +36,6 @@ public func == <Term: TermContainerType> (left: Term, right: Term) -> Bool {
 
 
 // MARK: - Term: TermType over Expression<Term>
-
-public func para<A, Term: TermContainerType>(f: Expression<(Term, A)> -> A)(_ term: Term) -> A {
-	return term |> (Term.out >>> map { ($0, para(f)($0)) } >>> f)
-}
-
 
 public func ana<A, Term: TermType>(f: A -> Expression<A>)(_ seed: A) -> Term {
 	return seed |> (Term.init <<< map(ana(f)) <<< f)

@@ -54,7 +54,7 @@ extension TermContainerType {
 			case let .Annotation((_, term), (_, type)):
 				return "(\(term) : \(type))"
 			}
-		} (self)
+		}
 	}
 }
 
