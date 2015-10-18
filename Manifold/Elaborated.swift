@@ -3,6 +3,11 @@
 public enum Elaborated<Term: TermType> {
 	indirect case Unroll(Term, Expression<Elaborated>)
 
+	/// Construct an elaborated term by coiteration.
+	public static func coiterate(elaborate: Term -> Expression<Term>)(_ seed: Term) -> Elaborated {
+		return .Unroll(seed, elaborate(seed).map(coiterate(elaborate)))
+	}
+
 	public var type: Term {
 		switch self {
 		case let .Unroll(type, _):
