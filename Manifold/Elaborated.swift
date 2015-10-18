@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Elaborated<Term: TermType> {
+public enum Elaborated<Term: TermType>: TermContainerType {
 	indirect case Unroll(Term, Expression<Elaborated>)
 
 	/// Construct an elaborated term by coiteration.
@@ -21,4 +21,9 @@ public enum Elaborated<Term: TermType> {
 			return term
 		}
 	}
+
+
+	// MARK: TermContainerType
+
+	public var out: Expression<Elaborated> { return term }
 }
