@@ -19,7 +19,7 @@ extension TermType {
 }
 
 
-public func == <Fix: TermType> (left: Fix, right: Fix) -> Bool {
+public func == <Term: TermType> (left: Term, right: Term) -> Bool {
 	return left.out == right.out
 }
 
