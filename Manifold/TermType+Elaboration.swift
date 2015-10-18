@@ -8,7 +8,7 @@ extension TermType {
 		return cata {
 			switch $0 {
 			case let .Type(n):
-				return .Right(.Unroll(.Type(n + 1), .Type(n)))
+				return .Right(assign(.Type(n + 1))(self))
 
 			case .UnitType, .BooleanType:
 				return .Right(assign(.Type)(self))
