@@ -2,7 +2,7 @@
 
 extension Module {
 	public static var unit: Module {
-		return Module([
+		return Module("Unit", [
 			.Datatype("Unit", [ "unit": .End ]),
 		])
 	}

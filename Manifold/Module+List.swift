@@ -2,7 +2,7 @@
 
 extension Module {
 	public static var list: Module {
-		return Module([
+		return Module("List", [
 			Declaration.Datatype("List", .Argument(.Type, {
 				[
 					"nil": .End,
