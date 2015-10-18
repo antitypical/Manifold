@@ -10,6 +10,9 @@ extension TermType {
 			case let .Type(n):
 				return .Right(.Unroll(.Type(n + 1), .Type(n)))
 
+			case .UnitType, .BooleanType:
+				return .Right(assign(.Type)(self))
+
 			default:
 				return .Left("unimplemented")
 			}
