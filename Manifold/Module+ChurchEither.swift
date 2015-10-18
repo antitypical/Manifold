@@ -6,6 +6,10 @@ extension Module {
 			type: Recur.FunctionType(.Type, .Type, .Type),
 			value: Recur.lambda(.Type, .Type, .Type) { L, R, Result in Recur.FunctionType(.FunctionType(L, Result), .FunctionType(R, Result), Result) })
 
-		return Module("ChurchEither", [ Either ])
+		let left = Declaration("left",
+			type: Recur.lambda(.Type, .Type) { L, R in .FunctionType(L, Either.ref[L, R]) },
+			value: Recur.lambda(.Type, .Type) { L, R in Recur.lambda(L, .Type) { l, Result in Recur.lambda(.FunctionType(L, Result), .FunctionType(R, Result)) { ifL, _ in ifL[l] } } })
+
+		return Module("ChurchEither", [ Either, left ])
 	}
 }
