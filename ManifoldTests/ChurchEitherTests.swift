@@ -1,12 +1,12 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-final class ChurchSumTests: XCTestCase {
+final class ChurchEitherTests: XCTestCase {
 	func testModuleTypechecks() {
 		module.typecheck().forEach { XCTFail($0.description) }
 	}
 }
 
-private let module = Module<Term>.churchSum
+private let module = Module<Term>.churchEither
 
 
 import Manifold
