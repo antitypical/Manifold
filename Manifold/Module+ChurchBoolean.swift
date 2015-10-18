@@ -20,7 +20,7 @@ extension Module {
 
 		let `if` = Declaration("if",
 			type: Recur.lambda(.Type, Boolean.ref) { A, condition in Recur.lambda(A, A, const(A)) },
-			value: Recur.lambda(.Type, Boolean.ref) { A, condition in Recur.lambda(A, A) { condition[$0, $1] } })
+			value: Recur.lambda(.Type, Boolean.ref) { A, condition in Recur.lambda(A, A) { condition[A, $0, $1] } })
 
 		let and = Declaration("and",
 			type: Recur.FunctionType(Boolean.ref, Boolean.ref, Boolean.ref),
