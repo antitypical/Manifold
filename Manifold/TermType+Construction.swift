@@ -102,11 +102,11 @@ extension TermType {
 	}
 
 
-	public init<T: TermType>(term: T) {
-		self.init(term.out.map { Self(term: $0) })
+	public init<T: TermContainerType>(term: T) {
+		self.init(expression: term.out)
 	}
 
-	public init<T: TermType>(expression: Expression<T>) {
+	public init<T: TermContainerType>(expression: Expression<T>) {
 		self.init(expression.map { Self(term: $0) })
 	}
 
