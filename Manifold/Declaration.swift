@@ -5,6 +5,10 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 		self = .Definition(symbol, type, value)
 	}
 
+	public init(_ symbol: String, _ datatype: TypeConstructor<Recur>) {
+		self = .Datatype(symbol, datatype)
+	}
+
 
 	public var symbol: String {
 		switch self {
