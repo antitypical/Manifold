@@ -16,18 +16,6 @@ extension CollectionType {
 	}
 }
 
-extension CollectionType where SubSequence: CollectionType, SubSequence.SubSequence == SubSequence {
-	public var conses: AnyGenerator<(first: SubSequence._Element, rest: SubSequence)> {
-		var current = uncons
-		return anyGenerator {
-			let next = current
-			current = current?.rest.uncons
-			return next
-		}
-	}
-}
-
-
 extension CollectionType where SubSequence == Self {
 	public func fold<Out>(initial: Out, @noescape combine: (Generator.Element, Out) -> Out) -> Out {
 		return first.map {
