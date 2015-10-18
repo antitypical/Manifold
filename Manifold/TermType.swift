@@ -1,8 +1,11 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public protocol TermType: BooleanLiteralConvertible, CustomDebugStringConvertible, CustomStringConvertible, Equatable, IntegerLiteralConvertible, StringLiteralConvertible {
-	init(_: () -> Expression<Self>)
+public protocol TermContainerType {
 	var out: Expression<Self> { get }
+}
+
+public protocol TermType: BooleanLiteralConvertible, CustomDebugStringConvertible, CustomStringConvertible, Equatable, IntegerLiteralConvertible, StringLiteralConvertible, TermContainerType {
+	init(_: () -> Expression<Self>)
 }
 
 extension TermType {
