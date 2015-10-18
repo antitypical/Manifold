@@ -52,7 +52,7 @@ extension Module where Recur: TermType {
 		let context = self.context
 		return declarations
 			.lazy
-			.flatMap { $0.typecheck(environment, context) }
+			.flatMap { $0.typecheck(environment, context).map { $0.map { "\(self.name): \($0)" } } }
 	}
 }
 
