@@ -30,17 +30,16 @@ public func == <Term: TermContainerType> (left: Term, right: Term) -> Bool {
 // MARK: - Term: TermType over Expression<Term>
 
 public func cata<A, Term: TermContainerType>(f: Expression<A> -> A)(_ term: Term) -> A {
-	return term |> (Term.out >>> (map <| cata(f)) >>> f)
+	return term |> (Term.out >>> map(cata(f)) >>> f)
 }
 
 public func para<A, Term: TermContainerType>(f: Expression<(Term, A)> -> A)(_ term: Term) -> A {
-	let fanout = { ($0, para(f)($0)) }
-	return term |> (Term.out >>> (map <| fanout) >>> f)
+	return term |> (Term.out >>> map { ($0, para(f)($0)) } >>> f)
 }
 
 
 public func ana<A, Term: TermType>(f: A -> Expression<A>)(_ seed: A) -> Term {
-	return seed |> (Term.init <<< (map <| ana(f)) <<< f)
+	return seed |> (Term.init <<< map(ana(f)) <<< f)
 }
 
 
