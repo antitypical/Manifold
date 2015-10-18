@@ -59,7 +59,7 @@ final class DeclarationTests: XCTestCase {
 }
 
 
-private let selfModule = Module<Term>([], [
+private let selfModule = Module<Term>("Self", [], [
 	Declaration.Datatype("Self", [
 		"me": .End,
 		"myself": .End,
@@ -67,13 +67,13 @@ private let selfModule = Module<Term>([], [
 	])
 ])
 
-private let oneConstructorWithArgumentModule = Module<Term>([], [
+private let oneConstructorWithArgumentModule = Module<Term>("A", [], [
 	Declaration.Datatype("A", [
 		"a": .Argument(.BooleanType, const(.End)),
 	])
 ])
 
-private let multipleConstructorsWithArgumentsModule = Module<Term>([], [
+private let multipleConstructorsWithArgumentsModule = Module<Term>("A", [], [
 	Declaration.Datatype("A", [
 		"a": .Argument(.BooleanType, const(.End)),
 		"b": .Argument(.BooleanType, const(.End)),
@@ -81,7 +81,7 @@ private let multipleConstructorsWithArgumentsModule = Module<Term>([], [
 	])
 ])
 
-private let multipleConstructorsWithMultipleArgumentsModule = Module<Term>([], [
+private let multipleConstructorsWithMultipleArgumentsModule = Module<Term>("A", [], [
 	Declaration.Datatype("A", [
 		"a": Telescope.Argument(.BooleanType) { a in .Argument(.BooleanType, const(.End)) },
 		"b": Telescope.Argument(.BooleanType) { a in .Argument(.BooleanType, const(.End)) },

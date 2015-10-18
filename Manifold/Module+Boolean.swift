@@ -2,7 +2,7 @@
 
 extension Module {
 	public static var boolean: Module {
-		return Module([
+		return Module("Boolean", [
 			.Datatype("Boolean", [
 				"true": .End,
 				"false": .End
