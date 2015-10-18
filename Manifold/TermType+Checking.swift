@@ -51,12 +51,20 @@ extension TermType {
 				.flatMap { inferred in
 					Self.alphaEquivalent(inferred, against, environment)
 						? Either.Right(inferred)
-						: Either.Left("Type mismatch: expected '\(self)' to be of type '\(against)', but it was actually of type '\(inferred)' in context: \(Self.toString(context)), environment: \(Self.toString(environment))")
+						: Either.Left("Type mismatch: expected '\(self)' to be of type '\(against)', but it was actually of type '\(inferred)' in context: \(Self.toString(context: context)), environment: \(Self.toString(environment: environment))")
 			}
 		}
 	}
 
-	static func toString(table: [Name:Self]) -> String {
+	static func toString(context context: [Name:Self]) -> String {
+		return toString(context, separator: ":")
+	}
+
+	static func toString(environment environment: [Name:Self]) -> String {
+		return toString(environment, separator: "=")
+	}
+
+	static func toString(table: [Name:Self], separator: String) -> String {
 		let keys = table.keys.sort().lazy
 		let maxLength: Int = keys.maxElement { $0.description.characters.count < $1.description.characters.count }?.description.characters.count ?? 0
 		let padding: Character = " "
