@@ -9,12 +9,8 @@ extension TermContainerType {
 		return container.out
 	}
 
-	public static func cata<Result>(transform: Expression<Result> -> Result) -> Self -> Result {
-		return Self.out >>> map(cata(transform)) >>> transform
-	}
-
 	public func cata<Result>(transform: Expression<Result> -> Result) -> Result {
-		return Self.cata(transform)(self)
+		return (Self.out >>> map { $0.cata(transform) } >>> transform)(self)
 	}
 }
 
