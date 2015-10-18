@@ -3,10 +3,6 @@
 public enum Name: Comparable, CustomDebugStringConvertible, CustomStringConvertible, Hashable, IntegerLiteralConvertible, StringLiteralConvertible {
 	// MARK: Destructors
 
-	public var global: String? {
-		return analysis(ifGlobal: Optional.Some, ifLocal: const(nil))
-	}
-
 	public var local: Int? {
 		return analysis(ifGlobal: const(nil), ifLocal: Optional.Some)
 	}
