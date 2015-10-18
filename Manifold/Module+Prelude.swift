@@ -10,7 +10,11 @@ extension Module {
 			type: Recur.lambda(.Type, .Type) { A, B in Recur.FunctionType(A, B, A) },
 			value: Recur.lambda(.Type, .Type) { A, B in Recur.lambda(A) { Recur.lambda(B, const($0)) } })
 
-		return Module("Prelude", [ identity, constant ])
+		let flip = Declaration("flip",
+			type: Recur.lambda(.Type, .Type, .Type) { A, B, C in Recur.FunctionType(Recur.FunctionType(A, B, C), Recur.FunctionType(B, A, C)) },
+			value: Recur.lambda(.Type, .Type, .Type) { A, B, C in Recur.lambda(Recur.FunctionType(A, B, C)) { f in Recur.lambda(B, A) { b, a in f[a, b] } } })
+
+		return Module("Prelude", [ identity, constant, flip ])
 	}
 }
 
