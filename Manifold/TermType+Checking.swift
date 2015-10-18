@@ -56,11 +56,11 @@ extension TermType {
 		}
 	}
 
-	static func toString(context: [Name:Self]) -> String {
-		let keys = context.keys.sort().lazy
+	static func toString(table: [Name:Self]) -> String {
+		let keys = table.keys.sort().lazy
 		let maxLength: Int = keys.maxElement { $0.description.characters.count < $1.description.characters.count }?.description.characters.count ?? 0
 		let padding: Character = " "
-		let formattedContext = keys.map { "\(String(Self.describe($0), paddedTo: maxLength, with: padding)) : \(context[$0]!)" }.joinWithSeparator(",\n\t")
+		let formattedContext = keys.map { "\(String(Self.describe($0), paddedTo: maxLength, with: padding)) : \(table[$0]!)" }.joinWithSeparator(",\n\t")
 
 		return "[\n\t\(formattedContext)\n]"
 	}
