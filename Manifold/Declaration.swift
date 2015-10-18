@@ -78,8 +78,7 @@ extension Declaration where Recur: TermType {
 			return value.checkType(type, environment, context).left.map { [ $0.map { "\(symbol): \($0)" } ] } ?? []
 		case let .Datatype(symbol, _):
 			return definitions
-				.flatMap { symbol, type, value in value.checkType(type, environment, context).left.map { $0.map { "\(symbol): \($0)" } } }
-				.map { $0.map { "\(symbol): \($0)" } }
+				.flatMap { definition, type, value in value.checkType(type, environment, context).left.map { $0.map { "\(symbol).\(definition): \($0)" } } }
 		}
 	}
 }

@@ -4,14 +4,17 @@ public struct Module<Recur: TermType> {
 	public typealias Environment = [Name:Recur]
 	public typealias Context = [Name:Recur]
 
-	public init<D: SequenceType, S: SequenceType where D.Generator.Element == Module, S.Generator.Element == Declaration<Recur>>(_ dependencies: D, _ declarations: S) {
+	public init<D: SequenceType, S: SequenceType where D.Generator.Element == Module, S.Generator.Element == Declaration<Recur>>(_ name: String, _ dependencies: D, _ declarations: S) {
+		self.name = name
 		self.dependencies = Array(dependencies)
 		self.declarations = Array(declarations)
 	}
 
-	public init<S: SequenceType where S.Generator.Element == Declaration<Recur>>(_ declarations: S) {
-		self.init([], declarations)
+	public init<S: SequenceType where S.Generator.Element == Declaration<Recur>>(_ name: String, _ declarations: S) {
+		self.init(name, [], declarations)
 	}
+
+	public let name: String
 
 	public let dependencies: [Module]
 	public let declarations: [Declaration<Recur>]
