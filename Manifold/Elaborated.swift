@@ -15,11 +15,8 @@ public enum Elaborated<Term: TermType>: TermContainerType {
 		}
 	}
 
-	public var term: Expression<Elaborated> {
-		switch self {
-		case let .Unroll(_, term):
-			return term
-		}
+	public var term: Term {
+		return Term(term: self)
 	}
 
 
