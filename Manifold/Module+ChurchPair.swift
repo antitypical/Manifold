@@ -7,7 +7,7 @@ extension Module {
 			value: Recur.lambda(.Type, .Type, .Type) { A, B, Result in .lambda(.FunctionType(A, B, Result), const(Result)) })
 
 		let pair = Declaration("pair",
-			type: Pair.ref,
+			type: Recur.lambda(.Type, .Type) { A, B in .FunctionType(A, B, Pair.ref[A, B]) },
 			value: Recur.lambda(.Type, .Type, .Type) { A, B, Result in Recur.lambda(A, B, .FunctionType(A, B, Result)) { a, b, f in f[a, b] } })
 
 		let first = Declaration("first",
