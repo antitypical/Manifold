@@ -24,7 +24,7 @@
 		D445418C1BCAF3ED00F2946D /* TermType+AlphaEquivalence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D445418B1BCAF3ED00F2946D /* TermType+AlphaEquivalence.swift */; };
 		D445418E1BCAF57D00F2946D /* TermType+Evaluation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D445418D1BCAF57D00F2946D /* TermType+Evaluation.swift */; };
 		D44541901BCB028A00F2946D /* TermType+CustomDebugStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D445418F1BCB028A00F2946D /* TermType+CustomDebugStringConvertible.swift */; };
-		D44541921BCB030F00F2946D /* TermType+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44541911BCB030F00F2946D /* TermType+CustomStringConvertible.swift */; };
+		D44541921BCB030F00F2946D /* TermContainerType+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44541911BCB030F00F2946D /* TermContainerType+CustomStringConvertible.swift */; };
 		D44541941BCB389400F2946D /* TypeConstructor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44541931BCB389400F2946D /* TypeConstructor.swift */; };
 		D463F6D21BD2A83E00BA0628 /* Module+Maybe.swift in Sources */ = {isa = PBXBuildFile; fileRef = D463F6D11BD2A83E00BA0628 /* Module+Maybe.swift */; };
 		D463F6D51BD2A91200BA0628 /* MaybeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D463F6D41BD2A91200BA0628 /* MaybeTests.swift */; };
@@ -104,7 +104,7 @@
 		D445418B1BCAF3ED00F2946D /* TermType+AlphaEquivalence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermType+AlphaEquivalence.swift"; sourceTree = "<group>"; };
 		D445418D1BCAF57D00F2946D /* TermType+Evaluation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermType+Evaluation.swift"; sourceTree = "<group>"; };
 		D445418F1BCB028A00F2946D /* TermType+CustomDebugStringConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermType+CustomDebugStringConvertible.swift"; sourceTree = "<group>"; };
-		D44541911BCB030F00F2946D /* TermType+CustomStringConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermType+CustomStringConvertible.swift"; sourceTree = "<group>"; };
+		D44541911BCB030F00F2946D /* TermContainerType+CustomStringConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermContainerType+CustomStringConvertible.swift"; sourceTree = "<group>"; };
 		D44541931BCB389400F2946D /* TypeConstructor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypeConstructor.swift; sourceTree = "<group>"; };
 		D463F6D11BD2A83E00BA0628 /* Module+Maybe.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Module+Maybe.swift"; sourceTree = "<group>"; };
 		D463F6D41BD2A91200BA0628 /* MaybeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaybeTests.swift; sourceTree = "<group>"; };
@@ -235,7 +235,7 @@
 				D445418B1BCAF3ED00F2946D /* TermType+AlphaEquivalence.swift */,
 				D415A09A1B51EFDE001C15E5 /* TermType+Construction.swift */,
 				D445418F1BCB028A00F2946D /* TermType+CustomDebugStringConvertible.swift */,
-				D44541911BCB030F00F2946D /* TermType+CustomStringConvertible.swift */,
+				D44541911BCB030F00F2946D /* TermContainerType+CustomStringConvertible.swift */,
 				D4E1F7121BD4176100FCA0B4 /* TermContainerType+FreeVariables.swift */,
 				D4EDEF561AFEDEC5001B9A1D /* Name.swift */,
 				D4E829161B521B3400713E60 /* Module.swift */,
@@ -454,7 +454,7 @@
 				D4E8291B1B521F1100713E60 /* LazyConcatSequence.swift in Sources */,
 				D4F9F86E1A84977400B7071E /* Error.swift in Sources */,
 				D4FB02D91B71D06A0090E764 /* Module+Boolean.swift in Sources */,
-				D44541921BCB030F00F2946D /* TermType+CustomStringConvertible.swift in Sources */,
+				D44541921BCB030F00F2946D /* TermContainerType+CustomStringConvertible.swift in Sources */,
 				D4E829171B521B3400713E60 /* Module.swift in Sources */,
 				D4F1B8571B470E800065BF22 /* Double.swift in Sources */,
 				D4F1B84F1B46E2F40065BF22 /* Int.swift in Sources */,
