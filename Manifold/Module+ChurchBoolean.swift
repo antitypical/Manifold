@@ -8,11 +8,11 @@ extension Module {
 
 		let `true` = Declaration("true",
 			type: Boolean.ref,
-			value: Recur.lambda(.Type) { A in Recur.lambda(A, A, { a, _ in a }) })
+			value: Recur.lambda(.Type) { A in Recur.lambda(A, A) { a, _ in a } })
 
 		let `false` = Declaration("false",
 			type: Boolean.ref,
-			value: Recur.lambda(.Type) { A in Recur.lambda(A, A, { _, b in b }) })
+			value: Recur.lambda(.Type) { A in Recur.lambda(A, A) { _, b in b } })
 
 		let not = Declaration("not",
 			type: Recur.FunctionType(Boolean.ref, Boolean.ref),
