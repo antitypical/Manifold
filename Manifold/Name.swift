@@ -53,14 +53,6 @@ public enum Name: Comparable, CustomDebugStringConvertible, CustomStringConverti
 		self = Global(value)
 	}
 
-	public init(unicodeScalarLiteral value: String) {
-		self = Global(value)
-	}
-
-	public init(extendedGraphemeClusterLiteral value: String) {
-		self = Global(value)
-	}
-
 
 	// MARK: Cases
 
