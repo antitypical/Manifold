@@ -2,7 +2,7 @@
 
 extension TermContainerType {
 	public var debugDescription: String {
-		return cata {
+		return Self.cata {
 			switch $0 {
 			case .Unit:
 				return ".Unit"

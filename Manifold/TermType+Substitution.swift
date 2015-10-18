@@ -2,7 +2,7 @@
 
 extension TermType {
 	func substitute(i: Int, _ expression: Self) -> Self {
-		return cata { (t: Expression<Self>) in
+		return Self.cata { (t: Expression<Self>) in
 			t.analysis(
 				ifVariable: {
 					$0.analysis(
