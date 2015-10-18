@@ -1,10 +1,10 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public protocol TermContainerType {
+public protocol TermContainerType: Equatable {
 	var out: Expression<Self> { get }
 }
 
-public protocol TermType: BooleanLiteralConvertible, CustomDebugStringConvertible, CustomStringConvertible, Equatable, IntegerLiteralConvertible, StringLiteralConvertible, TermContainerType {
+public protocol TermType: BooleanLiteralConvertible, CustomDebugStringConvertible, CustomStringConvertible, IntegerLiteralConvertible, StringLiteralConvertible, TermContainerType {
 	init(_: () -> Expression<Self>)
 }
 
@@ -19,7 +19,7 @@ extension TermType {
 }
 
 
-public func == <Term: TermType> (left: Term, right: Term) -> Bool {
+public func == <Term: TermContainerType> (left: Term, right: Term) -> Bool {
 	return left.out == right.out
 }
 
