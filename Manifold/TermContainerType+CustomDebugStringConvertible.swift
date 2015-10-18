@@ -2,7 +2,7 @@
 
 extension TermContainerType {
 	public var debugDescription: String {
-		return Self.cata {
+		return cata {
 			switch $0 {
 			case .Unit:
 				return ".Unit"
@@ -29,6 +29,6 @@ extension TermContainerType {
 			case let .Annotation(a, b):
 				return ".Annotation(\(a), \(b))"
 			}
-		} (self)
+		}
 	}
 }
