@@ -33,10 +33,6 @@ public func == <Term: TermContainerType> (left: Term, right: Term) -> Bool {
 
 // MARK: - Term: TermType over Expression<Term>
 
-public func cata<A, Term: TermContainerType>(f: Expression<A> -> A)(_ term: Term) -> A {
-	return term |> (Term.out >>> map(cata(f)) >>> f)
-}
-
 public func para<A, Term: TermContainerType>(f: Expression<(Term, A)> -> A)(_ term: Term) -> A {
 	return term |> (Term.out >>> map { ($0, para(f)($0)) } >>> f)
 }
