@@ -29,11 +29,11 @@ public func == <Term: TermContainerType> (left: Term, right: Term) -> Bool {
 
 // MARK: - Term: TermType over Expression<Term>
 
-public func cata<A, Term: TermType>(f: Expression<A> -> A)(_ term: Term) -> A {
+public func cata<A, Term: TermContainerType>(f: Expression<A> -> A)(_ term: Term) -> A {
 	return term |> (Term.out >>> (map <| cata(f)) >>> f)
 }
 
-public func para<A, Term: TermType>(f: Expression<(Term, A)> -> A)(_ term: Term) -> A {
+public func para<A, Term: TermContainerType>(f: Expression<(Term, A)> -> A)(_ term: Term) -> A {
 	let fanout = { ($0, para(f)($0)) }
 	return term |> (Term.out >>> (map <| fanout) >>> f)
 }
