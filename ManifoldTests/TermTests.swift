@@ -37,6 +37,11 @@ final class TermTests: XCTestCase {
 		assert(constant, ==, .Lambda(2, .Type, .Lambda(1, .Type, .Lambda(0, 2, .Lambda(-1, 1, 0)))))
 	}
 
+	func testChurchEncodedBooleanConstruction() {
+		assert(Term.lambda(.Type) { A in Term.lambda(A, A) { a, _ in a } }, ==, Term.Lambda(1, .Type, .Lambda(0, 1, .Lambda(-1, 1, 0))))
+		assert(Term.lambda(.Type) { A in Term.lambda(A, A) { _, b in b } }, ==, Term.Lambda(1, .Type, .Lambda(-1, 1, .Lambda(0, 1, 0))))
+	}
+
 	func testFunctionTypeConstruction() {
 		let expected = Term.lambda(.Type) { A in .lambda(.FunctionType(A, A), A, const(A)) }
 		let actual = Term.Lambda(0, .Type, .Lambda(-1, .Lambda(-1, 0, 0), .Lambda(-1, 0, 0)))
