@@ -9,4 +9,11 @@ public enum Elaborated<Term: TermType> {
 			return type
 		}
 	}
+
+	public var term: Expression<Elaborated> {
+		switch self {
+		case let .Unroll(_, term):
+			return term
+		}
+	}
 }
