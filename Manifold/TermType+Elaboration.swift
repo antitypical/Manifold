@@ -2,7 +2,12 @@
 
 extension TermType {
 	public func elaborate(environment: [Name:Self], _ context: [Name:Self]) -> Either<Error, Elaborated<Self>> {
-		return .Left("unimplemented")
+		return cata {
+			switch $0 {
+			default:
+				return .Left("unimplemented")
+			}
+		}
 	}
 }
 
