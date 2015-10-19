@@ -35,7 +35,7 @@ extension TermType {
 			case let .Lambda(variable, (_, type), (b, body)):
 				return b.freeVariables.contains(variable)
 					? "λ \(Self.describe(.Local(variable))) : \(type) . \(body)"
-					: "\(type) → \(body)"
+					: "(\(type)) → \(body)"
 
 			case let .Projection((_, term), branch):
 				return "\(term).\(branch ? 1 : 0)"
