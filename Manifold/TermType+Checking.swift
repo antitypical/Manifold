@@ -46,7 +46,7 @@ extension TermType {
 					Self.alphaEquivalent(inferred, against, environment)
 						? Either.Right(inferred)
 						: Either.Left("Type mismatch: expected '\(self)' to be of type '\(against)', but it was actually of type '\(inferred)' in context: \(Self.toString(context: context)), environment: \(Self.toString(environment: environment))")
-			}
+				}
 		}
 	}
 
