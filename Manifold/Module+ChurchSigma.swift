@@ -10,6 +10,13 @@ extension Module {
 			type: Recur.lambda(.Type) { A in Recur.lambda(.FunctionType(A, .Type), A) { B, x in .FunctionType(B[x], Sigma.ref[A, Recur.lambda(A) { B[$0] }]) } },
 			value: Recur.lambda(.Type) { A in Recur.lambda(.FunctionType(A, .Type), A) { B, x in Recur.lambda(B[x], .Type) { y, C in Recur.lambda(Recur.lambda(A) { xʹ in .FunctionType(B[xʹ], C) }) { f in f[x, y] } } } })
 
-		return Module("ChurchSigma", [ Sigma, sigma ])
+		let first = Declaration("first",
+			type: Recur.lambda(.Type) { A in Recur.lambda(A --> .Type) { B in Sigma.ref[A, Recur.lambda(A) { x in B[x] }] --> A } },
+			value: .Type => { A in (A --> .Type) => { B in Sigma.ref[A, A => { x in B[x] }] => { v in v[A, A => { x in B[x] => const(x) }] } } })
+
+		return Module("ChurchSigma", [ Sigma, sigma, first ])
 	}
 }
+
+
+import Prelude
