@@ -65,9 +65,8 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 
 	case Definition(String, Recur, Recur)
 	case Datatype(String, TypeConstructor<Recur>)
-}
 
-extension Declaration {
+
 	public var ref: Recur {
 		return .Variable(Name.Global(symbol))
 	}
