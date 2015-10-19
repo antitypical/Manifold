@@ -15,7 +15,7 @@ extension Module {
 			value: .Type => { A in (A --> .Type) => { B in Sigma.ref[A, A => { x in B[x] }] => { v in v[A, A => { x in B[x] => const(x) }] } } })
 
 		let second = Declaration("second",
-			type: .Type => { A in (A --> .Type) => { B in Sigma.ref[A, A => { x in B[x] }] => { (v: Recur) in B[first.ref[v]] } } },
+			type: .Type => { A in (A --> .Type) => { B in Sigma.ref[A, A => { x in B[x] }] => { v in B[first.ref[A, v]] } } },
 			value: .Type => { A in (A --> .Type) => { B in Sigma.ref[A, A => { x in B[x] }] => { v in v[A, A => { x in B[x] => id }] } } })
 
 		return Module("ChurchSigma", [ Sigma, sigma, first, second ])
