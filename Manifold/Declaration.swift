@@ -74,7 +74,8 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 	public func typecheck(environment: [Name:Recur], _ context: [Name:Recur]) -> [Error] {
 		switch self {
 		case let .Definition(symbol, type, value):
-			return value.checkType(type, environment, context).left.map { [ $0.map { "\(symbol): \($0)" } ] } ?? []
+			return (type.checkIsType(environment, context).left.map { [ $0.map { "\(symbol) : 𝜏 ⇐ Type: \($0)" } ] } ?? [])
+				+ (value.checkType(type, environment, context).left.map { [ $0.map { "\(symbol) ⇐ \(type): \($0)" } ] } ?? [])
 		case let .Datatype(symbol, _):
 			return definitions
 				.flatMap { definition, type, value in value.checkType(type, environment, context).left.map { $0.map { "\(symbol).\(definition): \($0)" } } }
