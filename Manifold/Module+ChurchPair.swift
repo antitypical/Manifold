@@ -3,7 +3,7 @@
 extension Module {
 	public static var churchPair: Module {
 		let Pair = Declaration("Pair",
-			type: Recur.lambda(.Type, .Type, const(.Type)),
+			type: Recur.FunctionType(.Type, .Type, .Type),
 			value: Recur.lambda(.Type, .Type, .Type) { A, B, Result in .lambda(.FunctionType(A, B, Result), const(Result)) })
 
 		let pair = Declaration("pair",
