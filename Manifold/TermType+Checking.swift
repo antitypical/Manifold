@@ -21,7 +21,7 @@ extension TermType {
 
 		case let (.Lambda(i, type, body), .Type):
 			return type.checkIsType(environment, context)
-				>> body.checkType(against, environment, context + [ Name.Local(i) : type ])
+				>> body.checkIsType(environment, context + [ Name.Local(i) : type ])
 					.map(const(against))
 
 		case let (.If(condition, then, otherwise), _):
