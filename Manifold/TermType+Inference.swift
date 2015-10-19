@@ -61,7 +61,6 @@ extension TermType {
 
 		case let .Annotation(term, type):
 			return term.checkType(type, environment, context)
-				.map(const(type))
 		}
 	}
 }
