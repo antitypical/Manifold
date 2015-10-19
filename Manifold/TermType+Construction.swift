@@ -165,4 +165,9 @@ extension TermType {
 }
 
 
+infix operator --> {
+	associativity right
+	precedence 120
+}
+
 import Prelude
