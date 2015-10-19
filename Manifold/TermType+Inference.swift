@@ -19,7 +19,7 @@ extension TermType {
 						a == b
 							? a
 							: Self.lambda(.BooleanType) { .If($0, a, b) }
-			}
+					}
 
 		case .UnitType, .BooleanType:
 			return .right(.Type(0))
@@ -47,7 +47,7 @@ extension TermType {
 								.map { _ in body.substitute(i, b) }
 						},
 						otherwise: const(Either.Left("Illegal application of \(a) : \(A) to \(b) in context: \(Self.toString(context: context)), environment: \(Self.toString(environment: environment))")))
-			}
+				}
 
 		case let .Projection(term, branch):
 			return term.inferType(environment, context)
@@ -57,7 +57,7 @@ extension TermType {
 							Either.Right(branch ? B.substitute(i, A) : A)
 						},
 						otherwise: const(Either.Left("Illegal projection of field \(branch ? 1 : 0) of non-product value \(term) of type \(type) in context: \(Self.toString(context: context)), environment: \(Self.toString(environment: environment))")))
-			}
+				}
 
 		case let .Annotation(term, type):
 			return term.checkType(type, environment, context)
