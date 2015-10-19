@@ -170,6 +170,11 @@ infix operator --> {
 	precedence 120
 }
 
+infix operator => {
+	associativity right
+	precedence 120
+}
+
 public func --> <Term: TermType> (left: Term, right: Term) -> Term {
 	return .FunctionType(left, right)
 }
