@@ -179,4 +179,9 @@ public func --> <Term: TermType> (left: Term, right: Term) -> Term {
 	return .FunctionType(left, right)
 }
 
+public func => <Term: TermType> (left: Term, right: Term -> Term) -> Term {
+	return .lambda(left, right)
+}
+
+
 import Prelude
