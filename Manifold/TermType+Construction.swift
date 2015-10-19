@@ -183,5 +183,9 @@ public func => <Term: TermType> (left: Term, right: Term -> Term) -> Term {
 	return .lambda(left, right)
 }
 
+public func => <Term: TermType> (left: (Term, Term), right: (Term, Term) -> Term) -> Term {
+	return .lambda(left.0, left.1, right)
+}
+
 
 import Prelude
