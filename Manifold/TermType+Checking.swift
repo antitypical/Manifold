@@ -14,7 +14,7 @@ extension TermType {
 		case (.Type, .Type):
 			return .Right(against)
 
-		case let (.Lambda(i, type1, body), .Lambda(j, type2, bodyType)) where Self.alphaEquivalent(type1, type2, environment):
+		case let (.Lambda(i, type1, body), .Lambda(j, type2, bodyType)) where Self.equate(type1, type2, environment):
 			return type1.checkIsType(environment, context)
 				>> body.checkType(bodyType.substitute(j, .Variable(.Local(i))), environment, context + [ Name.Local(i) : type1 ])
 
@@ -43,7 +43,7 @@ extension TermType {
 		default:
 			return inferType(environment, context)
 				.flatMap { inferred in
-					Self.alphaEquivalent(inferred, against, environment)
+					Self.equate(inferred, against, environment)
 						? Either.Right(inferred)
 						: Either.Left("Type mismatch: expected '\(self)' to be of type '\(against)', but it was actually of type '\(inferred)' in context: \(Self.toString(context: context)), environment: \(Self.toString(environment: environment))")
 				}

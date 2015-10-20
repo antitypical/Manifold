@@ -1,11 +1,11 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 extension TermType {
-	public static func alphaEquivalent(left: Self, _ right: Self, _ environment: [Name:Self], var _ visited: Set<Name> = []) -> Bool {
+	public static func equate(left: Self, _ right: Self, _ environment: [Name:Self], var _ visited: Set<Name> = []) -> Bool {
 		if left == right { return true }
 
 		let recur: (Self, Self) -> Bool = {
-			alphaEquivalent($0, $1, environment, visited)
+			equate($0, $1, environment, visited)
 		}
 
 		let normalize: (Self, Set<Name>) -> (Self, Set<Name>) = { (term, var visited) in
