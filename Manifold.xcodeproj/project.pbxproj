@@ -21,7 +21,7 @@
 		D44541861BCAEF1000F2946D /* TermType+Substitution.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44541851BCAEF1000F2946D /* TermType+Substitution.swift */; };
 		D44541881BCAF0DF00F2946D /* TermType+Checking.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44541871BCAF0DF00F2946D /* TermType+Checking.swift */; };
 		D445418A1BCAF12900F2946D /* TermType+Inference.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44541891BCAF12900F2946D /* TermType+Inference.swift */; };
-		D445418C1BCAF3ED00F2946D /* TermType+AlphaEquivalence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D445418B1BCAF3ED00F2946D /* TermType+AlphaEquivalence.swift */; };
+		D445418C1BCAF3ED00F2946D /* TermType+DefinitionalEquality.swift in Sources */ = {isa = PBXBuildFile; fileRef = D445418B1BCAF3ED00F2946D /* TermType+DefinitionalEquality.swift */; };
 		D445418E1BCAF57D00F2946D /* TermType+Evaluation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D445418D1BCAF57D00F2946D /* TermType+Evaluation.swift */; };
 		D44541901BCB028A00F2946D /* TermType+CustomDebugStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D445418F1BCB028A00F2946D /* TermType+CustomDebugStringConvertible.swift */; };
 		D44541921BCB030F00F2946D /* TermType+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44541911BCB030F00F2946D /* TermType+CustomStringConvertible.swift */; };
@@ -102,7 +102,7 @@
 		D44541851BCAEF1000F2946D /* TermType+Substitution.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermType+Substitution.swift"; sourceTree = "<group>"; };
 		D44541871BCAF0DF00F2946D /* TermType+Checking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermType+Checking.swift"; sourceTree = "<group>"; };
 		D44541891BCAF12900F2946D /* TermType+Inference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermType+Inference.swift"; sourceTree = "<group>"; };
-		D445418B1BCAF3ED00F2946D /* TermType+AlphaEquivalence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermType+AlphaEquivalence.swift"; sourceTree = "<group>"; };
+		D445418B1BCAF3ED00F2946D /* TermType+DefinitionalEquality.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermType+DefinitionalEquality.swift"; sourceTree = "<group>"; };
 		D445418D1BCAF57D00F2946D /* TermType+Evaluation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermType+Evaluation.swift"; sourceTree = "<group>"; };
 		D445418F1BCB028A00F2946D /* TermType+CustomDebugStringConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermType+CustomDebugStringConvertible.swift"; sourceTree = "<group>"; };
 		D44541911BCB030F00F2946D /* TermType+CustomStringConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermType+CustomStringConvertible.swift"; sourceTree = "<group>"; };
@@ -235,7 +235,7 @@
 				D44541871BCAF0DF00F2946D /* TermType+Checking.swift */,
 				D44541891BCAF12900F2946D /* TermType+Inference.swift */,
 				D44541851BCAEF1000F2946D /* TermType+Substitution.swift */,
-				D445418B1BCAF3ED00F2946D /* TermType+AlphaEquivalence.swift */,
+				D445418B1BCAF3ED00F2946D /* TermType+DefinitionalEquality.swift */,
 				D415A09A1B51EFDE001C15E5 /* TermType+Construction.swift */,
 				D445418F1BCB028A00F2946D /* TermType+CustomDebugStringConvertible.swift */,
 				D44541911BCB030F00F2946D /* TermType+CustomStringConvertible.swift */,
@@ -451,7 +451,7 @@
 				D4E829191B521BFC00713E60 /* Declaration.swift in Sources */,
 				D4D0FC021BD4276B0010F243 /* Module+ChurchPair.swift in Sources */,
 				D445418A1BCAF12900F2946D /* TermType+Inference.swift in Sources */,
-				D445418C1BCAF3ED00F2946D /* TermType+AlphaEquivalence.swift in Sources */,
+				D445418C1BCAF3ED00F2946D /* TermType+DefinitionalEquality.swift in Sources */,
 				D4DE7E731AF66E25004D0CB9 /* Term.swift in Sources */,
 				D44541941BCB389400F2946D /* TypeConstructor.swift in Sources */,
 				D4E8291B1B521F1100713E60 /* LazyConcatSequence.swift in Sources */,
