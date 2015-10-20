@@ -2,6 +2,8 @@
 
 extension TermType {
 	public static func alphaEquivalent(left: Self, _ right: Self, _ environment: [Name:Self], var _ visited: Set<Name> = []) -> Bool {
+		if left == right { return true }
+
 		let recur: (Self, Self) -> Bool = {
 			alphaEquivalent($0, $1, environment, visited)
 		}
