@@ -7,11 +7,16 @@ final class TermTests: XCTestCase {
 	}
 
 	func testProductDescription() {
-		assert(Term.Product(.Unit, .Unit).description, ==, "(() × ())")
+		assert(Term.Product(.Unit, .Unit).description, ==, "() × ()")
 	}
 
-	func testProductTypeDescription() {
-		assert(Term.Product(.Unit, .Unit).inferType().right?.description, ==, "(Unit) → Unit")
+	func testRightNestedFunctionTypesAreNotParenthesized() {
+		assert(Term.FunctionType(.UnitType, .UnitType).description, ==, "Unit → Unit")
+		assert(Term.FunctionType(.UnitType, .UnitType, .UnitType).description, ==, "Unit → Unit → Unit")
+	}
+
+	func testLeftNestedFunctionTypesAreParenthesized() {
+		assert(Term.FunctionType(.FunctionType(.UnitType, .UnitType), .UnitType).description, ==, "(Unit → Unit) → Unit")
 	}
 
 	func testGlobalsPrintTheirNames() {

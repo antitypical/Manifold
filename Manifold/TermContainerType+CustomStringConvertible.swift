@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-extension TermType {
+extension TermContainerType {
 	public static func describe(name: Name) -> String {
 		let alphabet = "abcdefghijklmnopqrstuvwxyz"
 		return name.analysis(
@@ -14,47 +14,53 @@ extension TermType {
 
 	public var description: String {
 		let subscripts = "₀₁₂₃₄₅₆₇₈₉"
-		return para {
+		func wrap(string: String, _ needsParentheses: Bool) -> String {
+			return needsParentheses
+				? "(\(string))"
+				: string
+		}
+		let (out, _): (String, Bool) = para {
 			switch $0 {
 			case .Unit:
-				return "()"
+				return ("()", false)
 			case .UnitType:
-				return "Unit"
+				return ("Unit", false)
 
 			case let .Type(n) where n == 0:
-				return "Type"
+				return ("Type", false)
 			case let .Type(n):
-				return "Type" + Self.renderNumerals(n, subscripts)
+				return ("Type" + Self.renderNumerals(n, subscripts), false)
 
 			case let .Variable(name):
-				return Self.describe(name)
+				return (Self.describe(name), false)
 
-			case let .Application((_, a), (_, b)):
-				return "(\(a) \(b))"
+			case let .Application((_, (a, _)), (_, b)):
+				return ("\(a) \(wrap(b))", true)
 
-			case let .Lambda(variable, (_, type), (b, body)):
-				return b.freeVariables.contains(variable)
-					? "λ \(Self.describe(.Local(variable))) : \(type) . \(body)"
-					: "(\(type)) → \(body)"
+			case let .Lambda(variable, (_, type), (b, (body, _))):
+				return (b.freeVariables.contains(variable)
+					? "λ \(Self.describe(.Local(variable))) : \(type.0) . \(body)"
+					: "\(wrap(type)) → \(body)", true)
 
-			case let .Projection((_, term), branch):
-				return "\(term).\(branch ? 1 : 0)"
+			case let .Projection((_, (term, _)), branch):
+				return ("\(term).\(branch ? 1 : 0)", false)
 
-			case let .Product((_, a), (_, b)):
-				return "(\(a) × \(b))"
+			case let .Product((_, a), (_, (b, _))):
+				return ("\(wrap(a)) × \(b)", true)
 
 			case .BooleanType:
-				return "Boolean"
+				return ("Boolean", false)
 			case let .Boolean(b):
-				return String(b)
+				return (String(b), false)
 
 			case let .If((_, condition), (_, then), (_, `else`)):
-				return "if \(condition) then \(then) else \(`else`)"
+				return ("if \(wrap(condition)) then \(wrap(then)) else \(wrap(`else`))", true)
 
-			case let .Annotation((_, term), (_, type)):
-				return "(\(term) : \(type))"
+			case let .Annotation((_, (term, _)), (_, type)):
+				return ("\(term) : \(wrap(type))", true)
 			}
-		} (self)
+		}
+		return out
 	}
 }
 

@@ -16,7 +16,7 @@ extension TermType {
 				ifIf: Self.If,
 				ifAnnotation: Self.Annotation,
 				otherwise: const(Self(t)))
-		} (self)
+		}
 	}
 }
 
