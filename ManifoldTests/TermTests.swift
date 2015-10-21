@@ -15,6 +15,10 @@ final class TermTests: XCTestCase {
 		assert(Term.FunctionType(.UnitType, .UnitType, .UnitType).description, ==, "Unit → Unit → Unit")
 	}
 
+	func testLeftNestedFunctionTypesAreParenthesized() {
+		assert(Term.FunctionType(.FunctionType(.UnitType, .UnitType), .UnitType).description, ==, "(Unit → Unit) → Unit")
+	}
+
 	func testGlobalsPrintTheirNames() {
 		assert(Term.Variable("Global").description, ==, "Global")
 	}
