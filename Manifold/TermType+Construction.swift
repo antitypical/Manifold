@@ -102,11 +102,11 @@ extension TermType {
 	}
 
 
-	public init<T: TermType>(term: T) {
-		self.init(term.out.map { Self(term: $0) })
+	public init<T: TermContainerType>(term: T) {
+		self.init(expression: term.out)
 	}
 
-	public init<T: TermType>(expression: Expression<T>) {
+	public init<T: TermContainerType>(expression: Expression<T>) {
 		self.init(expression.map { Self(term: $0) })
 	}
 
@@ -131,36 +131,6 @@ extension TermType {
 
 	public init(extendedGraphemeClusterLiteral: Self.StringLiteralType) {
 		self.init(stringLiteral: extendedGraphemeClusterLiteral)
-	}
-
-
-	// MARK: Variables
-
-	var maxBoundVariable: Int {
-		return cata {
-			$0.analysis(
-				ifApplication: max,
-				ifLambda: { $0 < 0 ? max($1, $2) : max($0, $1) },
-				ifProjection: { $0.0 },
-				ifProduct: max,
-				ifIf: { max($0, $1, $2) },
-				ifAnnotation: max,
-				otherwise: const(-1))
-		} (self)
-	}
-
-	public var freeVariables: Set<Int> {
-		return cata {
-			$0.analysis(
-				ifVariable: { $0.analysis(ifGlobal: const(Set()), ifLocal: { [ $0 ] }) },
-				ifApplication: uncurry(Set.union),
-				ifLambda: { $1.union($2.subtract([ $0 ])) },
-				ifProjection: { $0.0 },
-				ifProduct: uncurry(Set.union),
-				ifIf: { $0.union($1).union($2) },
-				ifAnnotation: uncurry(Set.union),
-				otherwise: const(Set()))
-		} (self)
 	}
 }
 

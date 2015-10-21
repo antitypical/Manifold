@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-extension TermType {
+extension TermContainerType {
 	public static func describe(name: Name) -> String {
 		let alphabet = "abcdefghijklmnopqrstuvwxyz"
 		return name.analysis(
@@ -54,7 +54,7 @@ extension TermType {
 			case let .Annotation((_, term), (_, type)):
 				return "(\(term) : \(type))"
 			}
-		} (self)
+		}
 	}
 }
 

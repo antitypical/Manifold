@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-extension TermType {
+extension TermContainerType {
 	public var debugDescription: String {
 		return cata {
 			switch $0 {
@@ -29,6 +29,6 @@ extension TermType {
 			case let .Annotation(a, b):
 				return ".Annotation(\(a), \(b))"
 			}
-		} (self)
+		}
 	}
 }

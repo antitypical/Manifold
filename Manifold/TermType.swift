@@ -1,52 +1,55 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public protocol TermType: BooleanLiteralConvertible, CustomDebugStringConvertible, CustomStringConvertible, Equatable, IntegerLiteralConvertible, StringLiteralConvertible {
-	init(_: () -> Expression<Self>)
+public protocol TermContainerType: Equatable, CustomDebugStringConvertible, CustomStringConvertible {
 	var out: Expression<Self> { get }
+}
+
+extension TermContainerType {
+	public static func out(container: Self) -> Expression<Self> {
+		return container.out
+	}
+
+	public func cata<Result>(transform: Expression<Result> -> Result) -> Result {
+		return (Self.out >>> map { $0.cata(transform) } >>> transform)(self)
+	}
+
+	public func para<Result>(transform: Expression<(Self, Result)> -> Result) -> Result {
+		return (Self.out >>> map { ($0, $0.para(transform)) } >>> transform)(self)
+	}
+}
+
+public func == <Term: TermContainerType> (left: Term, right: Term) -> Bool {
+	return left.out == right.out
+}
+
+
+public protocol TermType: BooleanLiteralConvertible, IntegerLiteralConvertible, StringLiteralConvertible, TermContainerType {
+	init(_: () -> Expression<Self>)
 }
 
 extension TermType {
 	public init(_ expression: Expression<Self>) {
 		self.init { expression }
 	}
-
-	public static func out(fixpoint: Self) -> Expression<Self> {
-		return fixpoint.out
-	}
 }
 
 
-public func == <Fix: TermType> (left: Fix, right: Fix) -> Bool {
-	return left.out == right.out
+// MARK: - Term: TermType over Expression<Term>
+
+public func ana<A, Term: TermType>(f: A -> Expression<A>)(_ seed: A) -> Term {
+	return seed |> (Term.init <<< map(ana(f)) <<< f)
 }
 
 
-// MARK: - Fix: TermType over Expression<Fix>
-
-public func cata<T, Fix: TermType>(f: Expression<T> -> T)(_ term: Fix) -> T {
-	return term |> (Fix.out >>> (map <| cata(f)) >>> f)
-}
-
-public func para<T, Fix: TermType>(f: Expression<(Fix, T)> -> T)(_ term: Fix) -> T {
-	let fanout = { ($0, para(f)($0)) }
-	return term |> (Fix.out >>> (map <| fanout) >>> f)
-}
-
-
-public func ana<T, Fix: TermType>(f: T -> Expression<T>)(_ seed: T) -> Fix {
-	return seed |> (Fix.init <<< (map <| ana(f)) <<< f)
-}
-
-
-public func apo<T>(f: T -> Expression<Either<Term, T>>)(_ seed: T) -> Term {
+public func apo<A>(f: A -> Expression<Either<Term, A>>)(_ seed: A) -> Term {
 	return seed |> (Term.init <<< (map { $0.either(ifLeft: id, ifRight: apo(f)) }) <<< f)
 }
 
 
 // MARK: - Implementation details
 
-private func map<T, U>(f: T -> U)(_ c: Expression<T>) -> Expression<U> {
-	return Expression.map(c)(f)
+private func map<A, B>(@noescape transform: A -> B)(_ expression: Expression<A>) -> Expression<B> {
+	return Expression.map(expression)(transform)
 }
 
 
