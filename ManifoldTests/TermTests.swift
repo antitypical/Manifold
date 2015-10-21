@@ -10,8 +10,8 @@ final class TermTests: XCTestCase {
 		assert(Term.Product(.Unit, .Unit).description, ==, "() × ()")
 	}
 
-	func testProductTypeDescription() {
-		assert(Term.Product(.Unit, .Unit).inferType().right?.description, ==, "Unit → Unit")
+	func testFunctionTypeDescription() {
+		assert(Term.FunctionType(.UnitType, .UnitType).description, ==, "Unit → Unit")
 	}
 
 	func testGlobalsPrintTheirNames() {
