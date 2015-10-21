@@ -7,7 +7,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testProductDescription() {
-		assert(Term.Product(.Unit, .Unit).description, ==, "(() × ())")
+		assert(Term.Product(.Unit, .Unit).description, ==, "() × ()")
 	}
 
 	func testProductTypeDescription() {
