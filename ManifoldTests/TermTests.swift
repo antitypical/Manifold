@@ -12,6 +12,7 @@ final class TermTests: XCTestCase {
 
 	func testRightNestedFunctionTypesAreNotParenthesized() {
 		assert(Term.FunctionType(.UnitType, .UnitType).description, ==, "Unit → Unit")
+		assert(Term.FunctionType(.UnitType, .UnitType, .UnitType).description, ==, "Unit → Unit → Unit")
 	}
 
 	func testGlobalsPrintTheirNames() {
