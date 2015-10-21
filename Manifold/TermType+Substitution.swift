@@ -1,7 +1,7 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 extension TermType {
-	func substitute(i: Int, _ expression: Self) -> Self {
+	public func substitute(i: Int, _ expression: Self) -> Self {
 		return cata { (t: Expression<Self>) in
 			t.analysis(
 				ifVariable: {

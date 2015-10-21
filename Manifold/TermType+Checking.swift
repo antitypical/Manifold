@@ -6,7 +6,7 @@ extension TermType {
 	}
 
 	public func checkType(against: Self, _ environment: [Name:Self], _ context: [Name:Self]) -> Either<Error, Self> {
-		return annotate(checkTypeUnannotated(against, environment, context), against)
+		return annotate(checkTypeUnannotated(against, environment, context).map(const(against)), against)
 	}
 
 	private func checkTypeUnannotated(against: Self, _ environment: [Name:Self], _ context: [Name:Self]) -> Either<Error, Self> {
@@ -14,45 +14,39 @@ extension TermType {
 		case (.Type, .Type):
 			return .Right(against)
 
-		case let (.Lambda(i, type, body), .Lambda(j, Self(.Type(0)), bodyType)):
-			return type.checkIsType(environment, context)
-				>> body.checkType(bodyType.substitute(j, .Variable(.Local(i))), environment, context + [ Name.Local(i) : type ])
-					.map(const(against))
+		case let (.Lambda(i, type1, body), .Lambda(j, type2, bodyType)) where Self.equate(type1, type2, environment):
+			return type1.checkIsType(environment, context)
+				>> body.checkType(bodyType.substitute(j, .Variable(.Local(i))), environment, context + [ Name.Local(i) : type1 ])
 
 		case let (.Lambda(i, type, body), .Type):
 			return type.checkIsType(environment, context)
-				>> body.checkType(against, environment, context + [ Name.Local(i) : type ])
-					.map(const(against))
+				>> body.checkIsType(environment, context + [ Name.Local(i) : type ])
 
 		case let (.If(condition, then, otherwise), _):
 			return (condition.checkType(.BooleanType, environment, context)
 				>> then.checkType(against, environment, context))
 				>> otherwise.checkType(against, environment, context)
-					.map(const(against))
 
 		case let (.Product(a, b), .Type):
 			return a.checkIsType(environment, context)
 				>> b.checkIsType(environment, context)
-					.map(const(against))
 
 		case let (.Product(a, b), .Product(A, B)):
 			return a.checkType(A, environment, context)
 				>> b.checkType(B, environment, context)
-					.map(const(against))
 
 		case let (.Product(tag, payload), .Lambda(i, tagType, body)):
 			return tagType.checkIsType(environment, context)
 				>> (tag.checkType(tagType, environment, context)
-					>> payload.checkType(body.substitute(i, tag).weakHeadNormalForm(environment), environment, context)
-						.map(const(against)))
+					>> payload.checkType(body.substitute(i, tag).weakHeadNormalForm(environment), environment, context))
 
 		default:
 			return inferType(environment, context)
 				.flatMap { inferred in
-					Self.alphaEquivalent(inferred, against, environment)
+					Self.equate(inferred, against, environment)
 						? Either.Right(inferred)
 						: Either.Left("Type mismatch: expected '\(self)' to be of type '\(against)', but it was actually of type '\(inferred)' in context: \(Self.toString(context: context)), environment: \(Self.toString(environment: environment))")
-			}
+				}
 		}
 	}
 
@@ -75,7 +69,7 @@ extension TermType {
 
 	func annotate<T>(either: Either<Error, T>, _ against: Self? = nil) -> Either<Error, T> {
 		return either.either(
-			ifLeft: { $0.map { "\($0)\nin: \(self)" + (against.map { " ⇐ \($0)" } ?? " ⇒ ?") } } >>> Either.Left,
+			ifLeft: { $0.map { "\($0)\nin: '\(self)'" + (against.map { " ⇐ '\($0)'" } ?? " ⇒ ?") } } >>> Either.Left,
 			ifRight: Either.Right)
 	}
 }

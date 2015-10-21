@@ -135,4 +135,27 @@ extension TermType {
 }
 
 
+infix operator --> {
+	associativity right
+	precedence 120
+}
+
+infix operator => {
+	associativity right
+	precedence 120
+}
+
+public func --> <Term: TermType> (left: Term, right: Term) -> Term {
+	return .FunctionType(left, right)
+}
+
+public func => <Term: TermType> (left: Term, right: Term -> Term) -> Term {
+	return .lambda(left, right)
+}
+
+public func => <Term: TermType> (left: (Term, Term), right: (Term, Term) -> Term) -> Term {
+	return .lambda(left.0, left.1, right)
+}
+
+
 import Prelude

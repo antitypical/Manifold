@@ -21,7 +21,7 @@
 		D44541861BCAEF1000F2946D /* TermType+Substitution.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44541851BCAEF1000F2946D /* TermType+Substitution.swift */; };
 		D44541881BCAF0DF00F2946D /* TermType+Checking.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44541871BCAF0DF00F2946D /* TermType+Checking.swift */; };
 		D445418A1BCAF12900F2946D /* TermType+Inference.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44541891BCAF12900F2946D /* TermType+Inference.swift */; };
-		D445418C1BCAF3ED00F2946D /* TermType+AlphaEquivalence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D445418B1BCAF3ED00F2946D /* TermType+AlphaEquivalence.swift */; };
+		D445418C1BCAF3ED00F2946D /* TermType+DefinitionalEquality.swift in Sources */ = {isa = PBXBuildFile; fileRef = D445418B1BCAF3ED00F2946D /* TermType+DefinitionalEquality.swift */; };
 		D445418E1BCAF57D00F2946D /* TermType+Evaluation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D445418D1BCAF57D00F2946D /* TermType+Evaluation.swift */; };
 		D44541901BCB028A00F2946D /* TermContainerType+CustomDebugStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D445418F1BCB028A00F2946D /* TermContainerType+CustomDebugStringConvertible.swift */; };
 		D44541921BCB030F00F2946D /* TermContainerType+CustomStringConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44541911BCB030F00F2946D /* TermContainerType+CustomStringConvertible.swift */; };
@@ -43,6 +43,8 @@
 		D4D0FC081BD45CD60010F243 /* PreludeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D0FC071BD45CD60010F243 /* PreludeTests.swift */; };
 		D4D0FC0A1BD464350010F243 /* Module+ChurchEither.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D0FC091BD464350010F243 /* Module+ChurchEither.swift */; };
 		D4D0FC0C1BD4647F0010F243 /* ChurchEitherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D0FC0B1BD4647F0010F243 /* ChurchEitherTests.swift */; };
+		D4D0FC0E1BD4A6D80010F243 /* Module+ChurchSigma.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D0FC0D1BD4A6D80010F243 /* Module+ChurchSigma.swift */; };
+		D4D0FC101BD4A7000010F243 /* ChurchSigmaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4D0FC0F1BD4A7000010F243 /* ChurchSigmaTests.swift */; };
 		D4DE7E731AF66E25004D0CB9 /* Term.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DE7E721AF66E25004D0CB9 /* Term.swift */; };
 		D4DF44501B2DB043008DCA5D /* TypecheckingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DF444F1B2DB043008DCA5D /* TypecheckingTests.swift */; };
 		D4E101B81B484606001A7E55 /* NaturalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E101B71B484606001A7E55 /* NaturalTests.swift */; };
@@ -101,7 +103,7 @@
 		D44541851BCAEF1000F2946D /* TermType+Substitution.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermType+Substitution.swift"; sourceTree = "<group>"; };
 		D44541871BCAF0DF00F2946D /* TermType+Checking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermType+Checking.swift"; sourceTree = "<group>"; };
 		D44541891BCAF12900F2946D /* TermType+Inference.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermType+Inference.swift"; sourceTree = "<group>"; };
-		D445418B1BCAF3ED00F2946D /* TermType+AlphaEquivalence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermType+AlphaEquivalence.swift"; sourceTree = "<group>"; };
+		D445418B1BCAF3ED00F2946D /* TermType+DefinitionalEquality.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermType+DefinitionalEquality.swift"; sourceTree = "<group>"; };
 		D445418D1BCAF57D00F2946D /* TermType+Evaluation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermType+Evaluation.swift"; sourceTree = "<group>"; };
 		D445418F1BCB028A00F2946D /* TermContainerType+CustomDebugStringConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermContainerType+CustomDebugStringConvertible.swift"; sourceTree = "<group>"; };
 		D44541911BCB030F00F2946D /* TermContainerType+CustomStringConvertible.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermContainerType+CustomStringConvertible.swift"; sourceTree = "<group>"; };
@@ -126,6 +128,8 @@
 		D4D0FC071BD45CD60010F243 /* PreludeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreludeTests.swift; sourceTree = "<group>"; };
 		D4D0FC091BD464350010F243 /* Module+ChurchEither.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Module+ChurchEither.swift"; sourceTree = "<group>"; };
 		D4D0FC0B1BD4647F0010F243 /* ChurchEitherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChurchEitherTests.swift; sourceTree = "<group>"; };
+		D4D0FC0D1BD4A6D80010F243 /* Module+ChurchSigma.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Module+ChurchSigma.swift"; sourceTree = "<group>"; };
+		D4D0FC0F1BD4A7000010F243 /* ChurchSigmaTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChurchSigmaTests.swift; sourceTree = "<group>"; };
 		D4DE7E721AF66E25004D0CB9 /* Term.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Term.swift; sourceTree = "<group>"; };
 		D4DF444F1B2DB043008DCA5D /* TypecheckingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TypecheckingTests.swift; sourceTree = "<group>"; };
 		D4E101B71B484606001A7E55 /* NaturalTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NaturalTests.swift; sourceTree = "<group>"; };
@@ -190,6 +194,7 @@
 				D4E990211BD349EF00F00CA7 /* ChurchBooleanTests.swift */,
 				D4D0FC031BD427AA0010F243 /* ChurchPairTests.swift */,
 				D4D0FC0B1BD4647F0010F243 /* ChurchEitherTests.swift */,
+				D4D0FC0F1BD4A7000010F243 /* ChurchSigmaTests.swift */,
 				D445417D1BCAB11100F2946D /* UnitTests.swift */,
 				D44541811BCAE3CD00F2946D /* ListTests.swift */,
 				D463F6D41BD2A91200BA0628 /* MaybeTests.swift */,
@@ -232,7 +237,7 @@
 				D44541871BCAF0DF00F2946D /* TermType+Checking.swift */,
 				D44541891BCAF12900F2946D /* TermType+Inference.swift */,
 				D44541851BCAEF1000F2946D /* TermType+Substitution.swift */,
-				D445418B1BCAF3ED00F2946D /* TermType+AlphaEquivalence.swift */,
+				D445418B1BCAF3ED00F2946D /* TermType+DefinitionalEquality.swift */,
 				D415A09A1B51EFDE001C15E5 /* TermType+Construction.swift */,
 				D445418F1BCB028A00F2946D /* TermContainerType+CustomDebugStringConvertible.swift */,
 				D44541911BCB030F00F2946D /* TermContainerType+CustomStringConvertible.swift */,
@@ -309,6 +314,7 @@
 				D4D0FC011BD4276B0010F243 /* Module+ChurchPair.swift */,
 				D4D0FC051BD45CB10010F243 /* Module+Prelude.swift */,
 				D4D0FC091BD464350010F243 /* Module+ChurchEither.swift */,
+				D4D0FC0D1BD4A6D80010F243 /* Module+ChurchSigma.swift */,
 			);
 			name = Modules;
 			sourceTree = "<group>";
@@ -448,7 +454,7 @@
 				D4E829191B521BFC00713E60 /* Declaration.swift in Sources */,
 				D4D0FC021BD4276B0010F243 /* Module+ChurchPair.swift in Sources */,
 				D445418A1BCAF12900F2946D /* TermType+Inference.swift in Sources */,
-				D445418C1BCAF3ED00F2946D /* TermType+AlphaEquivalence.swift in Sources */,
+				D445418C1BCAF3ED00F2946D /* TermType+DefinitionalEquality.swift in Sources */,
 				D4DE7E731AF66E25004D0CB9 /* Term.swift in Sources */,
 				D44541941BCB389400F2946D /* TypeConstructor.swift in Sources */,
 				D4E8291B1B521F1100713E60 /* LazyConcatSequence.swift in Sources */,
@@ -457,6 +463,7 @@
 				D44541921BCB030F00F2946D /* TermContainerType+CustomStringConvertible.swift in Sources */,
 				D4E829171B521B3400713E60 /* Module.swift in Sources */,
 				D4F1B8571B470E800065BF22 /* Double.swift in Sources */,
+				D4D0FC0E1BD4A6D80010F243 /* Module+ChurchSigma.swift in Sources */,
 				D4F1B84F1B46E2F40065BF22 /* Int.swift in Sources */,
 				D4E1F7131BD4176100FCA0B4 /* TermContainerType+FreeVariables.swift in Sources */,
 			);
@@ -478,6 +485,7 @@
 				D43AC8871BC1831F008762B7 /* TelescopeTests.swift in Sources */,
 				D4D0FC041BD427AA0010F243 /* ChurchPairTests.swift in Sources */,
 				D44541821BCAE3CD00F2946D /* ListTests.swift in Sources */,
+				D4D0FC101BD4A7000010F243 /* ChurchSigmaTests.swift in Sources */,
 				D4DF44501B2DB043008DCA5D /* TypecheckingTests.swift in Sources */,
 				D4F1B8531B46FD4F0065BF22 /* LazyScanSequenceTests.swift in Sources */,
 				D4FC2FDE1BAF564F005F3B26 /* DeclarationTests.swift in Sources */,
