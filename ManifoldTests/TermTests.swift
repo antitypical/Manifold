@@ -10,7 +10,7 @@ final class TermTests: XCTestCase {
 		assert(Term.Product(.Unit, .Unit).description, ==, "() × ()")
 	}
 
-	func testFunctionTypeDescription() {
+	func testRightNestedFunctionTypesAreNotParenthesized() {
 		assert(Term.FunctionType(.UnitType, .UnitType).description, ==, "Unit → Unit")
 	}
 
