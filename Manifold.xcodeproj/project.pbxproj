@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D40A5BEF1BD881FC00700A11 /* Module+ChurchList.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40A5BEE1BD881FC00700A11 /* Module+ChurchList.swift */; };
 		D415A09B1B51EFDE001C15E5 /* TermType+Construction.swift in Sources */ = {isa = PBXBuildFile; fileRef = D415A09A1B51EFDE001C15E5 /* TermType+Construction.swift */; };
 		D43AC8831BC1824D008762B7 /* Telescope.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43AC8821BC1824D008762B7 /* Telescope.swift */; };
 		D43AC8851BC18291008762B7 /* Datatype.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43AC8841BC18291008762B7 /* Datatype.swift */; };
@@ -89,6 +90,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D40A5BEE1BD881FC00700A11 /* Module+ChurchList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Module+ChurchList.swift"; sourceTree = "<group>"; };
 		D415A09A1B51EFDE001C15E5 /* TermType+Construction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermType+Construction.swift"; sourceTree = "<group>"; };
 		D43AC8821BC1824D008762B7 /* Telescope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Telescope.swift; sourceTree = "<group>"; };
 		D43AC8841BC18291008762B7 /* Datatype.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Datatype.swift; sourceTree = "<group>"; };
@@ -315,6 +317,7 @@
 				D4D0FC051BD45CB10010F243 /* Module+Prelude.swift */,
 				D4D0FC091BD464350010F243 /* Module+ChurchEither.swift */,
 				D4D0FC0D1BD4A6D80010F243 /* Module+ChurchSigma.swift */,
+				D40A5BEE1BD881FC00700A11 /* Module+ChurchList.swift */,
 			);
 			name = Modules;
 			sourceTree = "<group>";
@@ -431,6 +434,7 @@
 				D445417C1BCAB0C100F2946D /* Module+Unit.swift in Sources */,
 				D4E9901C1BD3431D00F00CA7 /* Module+Either.swift in Sources */,
 				D415A09B1B51EFDE001C15E5 /* TermType+Construction.swift in Sources */,
+				D40A5BEF1BD881FC00700A11 /* Module+ChurchList.swift in Sources */,
 				D44541901BCB028A00F2946D /* TermContainerType+CustomDebugStringConvertible.swift in Sources */,
 				D44541841BCAEDCD00F2946D /* TermType+WeakHeadNormalForm.swift in Sources */,
 				D44541861BCAEF1000F2946D /* TermType+Substitution.swift in Sources */,
