@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D40A5BEF1BD881FC00700A11 /* Module+ChurchList.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40A5BEE1BD881FC00700A11 /* Module+ChurchList.swift */; };
+		D40A5BF11BD8823B00700A11 /* ChurchListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40A5BF01BD8823B00700A11 /* ChurchListTests.swift */; };
 		D415A09B1B51EFDE001C15E5 /* TermType+Construction.swift in Sources */ = {isa = PBXBuildFile; fileRef = D415A09A1B51EFDE001C15E5 /* TermType+Construction.swift */; };
 		D43AC8831BC1824D008762B7 /* Telescope.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43AC8821BC1824D008762B7 /* Telescope.swift */; };
 		D43AC8851BC18291008762B7 /* Datatype.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43AC8841BC18291008762B7 /* Datatype.swift */; };
@@ -91,6 +92,7 @@
 
 /* Begin PBXFileReference section */
 		D40A5BEE1BD881FC00700A11 /* Module+ChurchList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Module+ChurchList.swift"; sourceTree = "<group>"; };
+		D40A5BF01BD8823B00700A11 /* ChurchListTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChurchListTests.swift; sourceTree = "<group>"; };
 		D415A09A1B51EFDE001C15E5 /* TermType+Construction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermType+Construction.swift"; sourceTree = "<group>"; };
 		D43AC8821BC1824D008762B7 /* Telescope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Telescope.swift; sourceTree = "<group>"; };
 		D43AC8841BC18291008762B7 /* Datatype.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Datatype.swift; sourceTree = "<group>"; };
@@ -197,6 +199,7 @@
 				D4D0FC031BD427AA0010F243 /* ChurchPairTests.swift */,
 				D4D0FC0B1BD4647F0010F243 /* ChurchEitherTests.swift */,
 				D4D0FC0F1BD4A7000010F243 /* ChurchSigmaTests.swift */,
+				D40A5BF01BD8823B00700A11 /* ChurchListTests.swift */,
 				D445417D1BCAB11100F2946D /* UnitTests.swift */,
 				D44541811BCAE3CD00F2946D /* ListTests.swift */,
 				D463F6D41BD2A91200BA0628 /* MaybeTests.swift */,
@@ -493,6 +496,7 @@
 				D4DF44501B2DB043008DCA5D /* TypecheckingTests.swift in Sources */,
 				D4F1B8531B46FD4F0065BF22 /* LazyScanSequenceTests.swift in Sources */,
 				D4FC2FDE1BAF564F005F3B26 /* DeclarationTests.swift in Sources */,
+				D40A5BF11BD8823B00700A11 /* ChurchListTests.swift in Sources */,
 				D463F6D51BD2A91200BA0628 /* MaybeTests.swift in Sources */,
 				D484903C1B2A40E800F249F7 /* EvaluationTests.swift in Sources */,
 				D4D0FC0C1BD4647F0010F243 /* ChurchEitherTests.swift in Sources */,
