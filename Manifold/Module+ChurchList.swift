@@ -7,6 +7,10 @@ extension Module {
 			type: .Type --> .Type,
 			value: (.Type, .Type) => { A, B in (A --> List[A] --> B) --> (.UnitType --> B) --> B })
 
-		return Module("ChurchList", [ list ])
+		let cons = Declaration<Recur>("cons",
+			type: .Type => { A in A --> List[A] --> List[A] },
+			value: .Type => { (A: Recur) in (A, List[A], .Type) => { head, tail, B in (A --> List[A] --> B, .UnitType --> B) => { ifCons, _ in ifCons[head, tail] } } })
+
+		return Module("ChurchList", [ list, cons ])
 	}
 }
