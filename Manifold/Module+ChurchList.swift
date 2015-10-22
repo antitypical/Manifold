@@ -11,6 +11,10 @@ extension Module {
 			type: .Type => { A in A --> List[A] --> List[A] },
 			value: .Type => { (A: Recur) in (A, List[A], .Type) => { head, tail, B in (A --> List[A] --> B, .UnitType --> B) => { ifCons, _ in ifCons[head, tail] } } })
 
-		return Module("ChurchList", [ list, cons ])
+		let `nil` = Declaration("nil",
+			type: .Type => { (A: Recur) in List[A] },
+			value: (.Type, .Type) => { A, B in (A --> List[A] --> B, .UnitType --> B) => { _, ifNil in ifNil[Recur.Unit] } })
+
+		return Module("ChurchList", [ list, cons, `nil` ])
 	}
 }
