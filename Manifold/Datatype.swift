@@ -13,10 +13,10 @@ public enum Datatype<Recur: TermType>: DictionaryLiteralConvertible {
 	}
 
 
-	public func mapTelescopes<Out>(@noescape transform: (String, Telescope<Recur>) -> Out) -> [Out] {
+	public func map<Out>(@noescape transform: (String, Telescope<Recur>) -> Out) -> [Out] {
 		switch self {
 		case let .Constructor(symbol, telescope, rest):
-			return [ transform(symbol, telescope) ] + rest.mapTelescopes(transform)
+			return [ transform(symbol, telescope) ] + rest.map(transform)
 		case .End:
 			return []
 		}
