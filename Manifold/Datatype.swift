@@ -1,11 +1,10 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Datatype<Recur: TermType>: DictionaryLiteralConvertible {
-	indirect case Constructor(String, Telescope<Recur>, Datatype)
-	case End
+public struct Datatype<Recur: TermType>: DictionaryLiteralConvertible {
+	public var constructors: [(String, Telescope<Recur>)]
 
 	public init(constructors: [(String, Telescope<Recur>)]) {
-		self = constructors[constructors.indices].reverse().reduce(.End) { .Constructor($1.0, $1.1, $0) }
+		self.constructors = constructors
 	}
 
 	public init(dictionaryLiteral: (String, Telescope<Recur>)...) {
@@ -13,26 +12,8 @@ public enum Datatype<Recur: TermType>: DictionaryLiteralConvertible {
 	}
 
 
-	public func map<Out>(@noescape transform: (String, Telescope<Recur>) -> Out) -> [Out] {
-		switch self {
-		case let .Constructor(symbol, telescope, rest):
-			return [ transform(symbol, telescope) ] + rest.map(transform)
-		case .End:
-			return []
-		}
-	}
-
-
 	public func definitions(transform: Recur -> Recur = id) -> [(symbol: String, type: Recur -> Recur, value: Recur -> Recur)] {
-		let annotate: Recur -> Recur -> Recur = { recur in { .Annotation($0, recur) } }
-		switch self {
-		case .End:
-			return []
-		case let .Constructor(name, telescope, .End):
-			return [ (name, telescope.type, { telescope.value($0, transform: transform >>> annotate($0)) }) ]
-		case let .Constructor(name, telescope, rest):
-			return [ (name, telescope.type, { telescope.value($0, transform: { .Product(true, $0) } >>> transform >>> annotate($0)) }) ] + rest.definitions({ .Product(false, $0) } >>> transform)
-		}
+		return []
 	}
 }
 

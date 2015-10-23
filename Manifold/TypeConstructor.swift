@@ -57,7 +57,7 @@ public enum TypeConstructor<Recur: TermType>: DictionaryLiteralConvertible {
 	public func value(recur: Recur) -> Recur {
 		return withTypeParameters(recur) { recur, datatype in
 			.Type => { motive in
-				datatype.map {
+				datatype.constructors.map {
 					$1.fold(recur, terminal: motive, combine: -->)
 				}.reverse().reduce(motive, combine: -->)
 			}
