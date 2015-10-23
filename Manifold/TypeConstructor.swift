@@ -31,8 +31,8 @@ public enum TypeConstructor<Recur: TermType>: DictionaryLiteralConvertible {
 		}
 	}
 
-	public func withTypeParameters(continuation: (Recur, Datatype<Recur>) -> Recur) -> Recur {
-		return withTypeParameters(.Unit, continuation: continuation)
+	public func withTypeParameters(continuation: Datatype<Recur> -> Recur) -> Recur {
+		return withTypeParameters(.Unit, continuation: { continuation($1) })
 	}
 
 	public func withTypeParameters(recur: Recur, continuation: (Recur, Datatype<Recur>) -> Recur) -> Recur {
