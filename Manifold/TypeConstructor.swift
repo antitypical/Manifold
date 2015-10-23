@@ -49,8 +49,8 @@ public enum TypeConstructor<Recur: TermType>: DictionaryLiteralConvertible {
 		}
 	}
 
-	public func mapTelescopes(datatype: Datatype<Recur>, @noescape transform: Telescope<Recur> -> Recur) -> [Recur] {
-		func mapTelescopes(collected: [Recur], datatype: Datatype<Recur>, @noescape transform: Telescope<Recur> -> Recur) -> [Recur] {
+	public func mapTelescopes<Out>(datatype: Datatype<Recur>, @noescape transform: Telescope<Recur> -> Out) -> [Out] {
+		func mapTelescopes(collected: [Out], datatype: Datatype<Recur>, @noescape transform: Telescope<Recur> -> Out) -> [Out] {
 			switch datatype {
 			case let .Constructor(_, telescope, rest):
 				return mapTelescopes(collected + [ transform(telescope) ], datatype: rest, transform: transform)
