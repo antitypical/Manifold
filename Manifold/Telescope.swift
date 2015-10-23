@@ -5,6 +5,19 @@ public enum Telescope<Recur: TermType> {
 	indirect case Recursive(Telescope)
 	indirect case Argument(Recur, Recur -> Telescope)
 
+
+	public func fold(recur: Recur, terminal: Recur, combine: (Recur, Recur) -> Recur) -> Recur {
+		switch self {
+		case .End:
+			return terminal
+		case let .Recursive(rest):
+			return combine(recur, rest.fold(recur, terminal: terminal, combine: combine))
+		case let .Argument(type, continuation):
+			return type => { continuation($0).fold(recur, terminal: terminal, combine: combine) }
+		}
+	}
+
+
 	public func type(recur: Recur) -> Recur {
 		switch self {
 		case .End:
