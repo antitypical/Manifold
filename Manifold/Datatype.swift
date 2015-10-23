@@ -34,20 +34,6 @@ public enum Datatype<Recur: TermType>: DictionaryLiteralConvertible {
 			return [ (name, telescope.type, { telescope.value($0, transform: { .Product(true, $0) } >>> transform >>> annotate($0)) }) ] + rest.definitions({ .Product(false, $0) } >>> transform)
 		}
 	}
-
-
-	public func value(recur: Recur) -> Recur {
-		switch self {
-		case .End:
-			return .UnitType
-		case let .Constructor(_, telescope, .End):
-			return telescope.constructedType(recur)
-		case let .Constructor(_, telescope, rest):
-			return Recur.lambda(.BooleanType) {
-				.If($0, telescope.constructedType(recur), rest.value(recur))
-			}
-		}
-	}
 }
 
 
