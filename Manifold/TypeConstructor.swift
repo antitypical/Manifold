@@ -100,7 +100,13 @@ public enum TypeConstructor<Recur: TermType>: DictionaryLiteralConvertible {
 
 
 	public func value(recur: Recur) -> Recur {
-		return withTypeParameters(recur) { recur, datatype in .Type => { self.type(datatype, recur, $0) } }
+		return withTypeParameters(recur) { recur, datatype in
+			.Type => { motive in
+				self.withTelescopes(datatype) {
+					self.type($0, recur, motive)
+				}.reverse().reduce(motive, combine: -->)
+			}
+		}
 	}
 }
 
