@@ -70,7 +70,7 @@ public enum TypeConstructor<Recur: TermType>: DictionaryLiteralConvertible {
 		return withTypeParameters(recur) { recur, datatype in
 			.Type => { motive in
 				datatype.map {
-					self.type($1, recur, motive)
+					$1.fold(recur, terminal: motive, combine: -->)
 				}.reverse().reduce(motive, combine: -->)
 			}
 		}
