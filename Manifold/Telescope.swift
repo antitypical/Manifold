@@ -29,24 +29,6 @@ public enum Telescope<Recur: TermType> {
 		}
 	}
 
-	public func constructedType(recur: Recur) -> Recur {
-		switch self {
-		case .End:
-			return .UnitType
-		case .Recursive(.End):
-			return recur
-		case let .Recursive(rest):
-			return .Product(recur, rest.constructedType(recur))
-		case let .Argument(t, continuation):
-			switch continuation(0) {
-			case .End:
-				return t
-			case let a:
-				return .Product(t, a.constructedType(recur))
-			}
-		}
-	}
-
 	public func value(recur: Recur, transform: Recur -> Recur = id) -> Recur {
 		switch self {
 		case .End:
