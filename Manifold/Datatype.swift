@@ -13,6 +13,16 @@ public enum Datatype<Recur: TermType>: DictionaryLiteralConvertible {
 	}
 
 
+	public func mapTelescopes<Out>(@noescape transform: (String, Telescope<Recur>) -> Out) -> [Out] {
+		switch self {
+		case let .Constructor(symbol, telescope, rest):
+			return [ transform(symbol, telescope) ] + rest.mapTelescopes(transform)
+		case .End:
+			return []
+		}
+	}
+
+
 	public func definitions(transform: Recur -> Recur = id) -> [(symbol: String, type: Recur -> Recur, value: Recur -> Recur)] {
 		let annotate: Recur -> Recur -> Recur = { recur in { .Annotation($0, recur) } }
 		switch self {
