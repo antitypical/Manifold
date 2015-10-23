@@ -54,18 +54,6 @@ public enum TypeConstructor<Recur: TermType>: DictionaryLiteralConvertible {
 		return withTypeParameters(const(.Type))
 	}
 
-	func type(telescope: Telescope<Recur>, _ recur: Recur, _ motive: Recur) -> Recur {
-		switch telescope {
-		case let .Recursive(rest):
-			return recur --> type(rest, recur, motive)
-		case let .Argument(type, continuation):
-			return type => { self.type(continuation($0), recur, motive) }
-		case .End:
-			return motive
-		}
-	}
-
-
 	public func value(recur: Recur) -> Recur {
 		return withTypeParameters(recur) { recur, datatype in
 			.Type => { motive in
