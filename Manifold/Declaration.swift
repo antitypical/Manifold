@@ -36,7 +36,7 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 			return [ (symbol, type, value) ]
 		case let .Datatype(symbol, datatype):
 			let recur = Recur.Variable(.Global(symbol))
-			return [ (symbol, datatype.type(recur), datatype.value(recur)) ] + datatype.definitions(recur)
+			return [ (symbol, datatype.type(), datatype.value(recur)) ] + datatype.definitions(recur)
 		}
 	}
 
@@ -57,8 +57,7 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 			return "\(symbol) : \(type)\n"
 				+ "\(symbol) = \(value)"
 		case let .Datatype(symbol, datatype):
-			let recur = Recur.Variable(.Global(symbol))
-			return "data \(symbol) : \(datatype.type(recur)) = \(datatype.value(recur))"
+			return "data \(symbol) : \(datatype.type()) = \(datatype.value(.Variable(.Global(symbol))))"
 		}
 	}
 
