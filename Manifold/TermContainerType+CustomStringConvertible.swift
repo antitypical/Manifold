@@ -8,10 +8,6 @@ extension TermContainerType {
 			ifLocal: { renderNumerals($0, alphabet) })
 	}
 
-	private static func renderNumerals(n: Int, _ alphabet: String) -> String {
-		return n.digits(alphabet.characters.count).lazy.map { String(atModular(alphabet.characters, offset: $0)) }.joinWithSeparator("")
-	}
-
 	public var description: String {
 		let subscripts = "₀₁₂₃₄₅₆₇₈₉"
 		func wrap(string: String, _ needsParentheses: Bool) -> String {
@@ -24,7 +20,7 @@ extension TermContainerType {
 			case let .Type(n) where n == 0:
 				return ("Type", false)
 			case let .Type(n):
-				return ("Type" + Self.renderNumerals(n, subscripts), false)
+				return ("Type" + renderNumerals(n, subscripts), false)
 
 			case let .Variable(name):
 				return (Self.describe(name), false)
@@ -40,6 +36,10 @@ extension TermContainerType {
 		}
 		return out
 	}
+}
+
+private func renderNumerals(n: Int, _ alphabet: String) -> String {
+	return n.digits(alphabet.characters.count).lazy.map { String(atModular(alphabet.characters, offset: $0)) }.joinWithSeparator("")
 }
 
 private func atModular<C: CollectionType where C.Index: BidirectionalIndexType>(collection: C, offset: C.Index.Distance) -> C.Generator.Element {
