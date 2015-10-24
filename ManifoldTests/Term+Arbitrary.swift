@@ -1,6 +1,10 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 final class TermProperties: XCTestCase {
+	override class func setUp() {
+		sranddev()
+	}
+
 	func testEqualityIsReflexive() {
 		property("reflexivity of equality") <- forAll { (term: Term) in
 			term == term
