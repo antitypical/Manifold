@@ -1,11 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public enum Error: Equatable, CustomStringConvertible, StringInterpolationConvertible, StringLiteralConvertible {
-	public init(reason: String) {
-		self = Leaf(reason)
-	}
-
-
 	case Leaf(String)
 	case Branch([Error])
 
