@@ -43,7 +43,14 @@ public enum Datatype<Recur: TermType>: DictionaryLiteralConvertible {
 	}
 
 	public func value(telescope: Telescope<Recur>)(_ recur: Recur) -> Recur {
-		return recur
+		switch telescope {
+		case let .Recursive(rest):
+			return recur --> type(rest)(recur)
+		case let .Argument(type, continuation):
+			return type => { self.value(continuation($0))(recur) }
+		case .End:
+			return recur
+		}
 	}
 
 	public func withTypeParameters(continuation: [(String, Telescope<Recur>)] -> Recur) -> Recur {
