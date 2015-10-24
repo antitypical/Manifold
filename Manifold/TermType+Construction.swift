@@ -31,10 +31,6 @@ extension TermType {
 		return Self(.Lambda(i, type, body))
 	}
 
-	public static func Product(a: Self, _ b: Self) -> Self {
-		return Self(.Product(a, b))
-	}
-
 	public static var BooleanType: Self {
 		return Self(.BooleanType)
 	}

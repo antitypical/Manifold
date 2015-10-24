@@ -11,7 +11,6 @@ extension TermType {
 				},
 				ifApplication: Self.Application,
 				ifLambda: Self.Lambda,
-				ifProduct: Self.Product,
 				ifIf: Self.If,
 				ifAnnotation: Self.Annotation,
 				otherwise: const(Self(t)))

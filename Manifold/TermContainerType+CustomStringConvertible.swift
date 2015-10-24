@@ -42,9 +42,6 @@ extension TermContainerType {
 					? "λ \(Self.describe(.Local(variable))) : \(type.0) . \(body)"
 					: "\(wrap(type)) → \(body)", true)
 
-			case let .Product((_, a), (_, (b, _))):
-				return ("\(wrap(a)) × \(b)", true)
-
 			case .BooleanType:
 				return ("Boolean", false)
 			case let .Boolean(b):

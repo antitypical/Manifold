@@ -6,10 +6,6 @@ final class TermTests: XCTestCase {
 		assert(identity.inferType().right?.description, ==, "λ a : Type . a → a")
 	}
 
-	func testProductDescription() {
-		assert(Term.Product(.Unit, .Unit).description, ==, "() × ()")
-	}
-
 	func testRightNestedFunctionTypesAreNotParenthesized() {
 		assert(Term.FunctionType(.UnitType, .UnitType).description, ==, "Unit → Unit")
 		assert(Term.FunctionType(.UnitType, .UnitType, .UnitType).description, ==, "Unit → Unit → Unit")
@@ -52,7 +48,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testLambdasBindVariablesDeeply() {
-		assert(Term.Lambda(2, .Type, .Lambda(1, 2, .Lambda(0, .UnitType, .Product(2, .Product(1, 0))))).freeVariables, ==, [])
+		assert(Term.Lambda(2, .Type, .Lambda(1, 2, .Lambda(0, .UnitType, .Application(2, .Application(1, 0))))).freeVariables, ==, [])
 	}
 }
 

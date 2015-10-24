@@ -34,16 +34,6 @@ final class TypecheckingTests: XCTestCase {
 	func testIfWithDisjointBranchTypesTypechecksToSumOfBranchTypes() {
 		assert(Term.If(true, .Unit, true).inferType(), ==, Term.lambda(.BooleanType) { .If($0, .UnitType, .BooleanType) })
 	}
-
-	func testProductTypechecksToSigmaType() {
-		assert(Term.Product(.Unit, false).inferType(), ==, Term.lambda(.UnitType, const(.BooleanType)))
-	}
-
-	func testDependentProductTypechecksToSigmaType() {
-		let type = Term.lambda(.BooleanType) { c in .If(c, .UnitType, .BooleanType) }
-		assert(Term.Annotation(.Product(true, .Unit), type).inferType(), ==, type)
-		assert(Term.Annotation(.Product(false, true), type).inferType(), ==, type)
-	}
 }
 
 import Assertions

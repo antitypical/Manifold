@@ -27,19 +27,6 @@ extension TermType {
 				>> then.checkType(against, environment, context))
 				>> otherwise.checkType(against, environment, context)
 
-		case let (.Product(a, b), .Type):
-			return a.checkIsType(environment, context)
-				>> b.checkIsType(environment, context)
-
-		case let (.Product(a, b), .Product(A, B)):
-			return a.checkType(A, environment, context)
-				>> b.checkType(B, environment, context)
-
-		case let (.Product(tag, payload), .Lambda(i, tagType, body)):
-			return tagType.checkIsType(environment, context)
-				>> (tag.checkType(tagType, environment, context)
-					>> payload.checkType(body.substitute(i, tag).weakHeadNormalForm(environment), environment, context))
-
 		default:
 			return inferType(environment, context)
 				.flatMap { inferred in
