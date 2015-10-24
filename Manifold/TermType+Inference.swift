@@ -9,8 +9,6 @@ extension TermType {
 		switch out {
 		case .Unit:
 			return .right(.UnitType)
-		case .Boolean:
-			return .right(.BooleanType)
 
 		case .UnitType, .BooleanType:
 			return .right(.Type(0))

@@ -6,11 +6,11 @@ final class ChurchBooleanTests: XCTestCase {
 	}
 
 	func testTrueReturnsItsFirstTermArgument() {
-		assert(`true`[.Type, .Boolean(true), .Boolean(false)].evaluate(module.environment), ==, true)
+		assert(`true`[.Type, identity, constant].evaluate(module.environment), ==, identity)
 	}
 
 	func testFalseReturnsItsSecondTermArgument() {
-		assert(`false`[.Type, .Boolean(true), .Boolean(false)].evaluate(module.environment), ==, false)
+		assert(`false`[.Type, identity, constant].evaluate(module.environment), ==, constant)
 	}
 }
 

@@ -30,9 +30,6 @@ extension TermType {
 		case let (.Lambda(_, a1, a2), .Lambda(_, b1, b2)):
 			return recur(a1, b1) && recur(a2, b2)
 
-		case let (.Boolean(a), .Boolean(b)):
-			return a == b
-
 		default:
 			return false
 		}

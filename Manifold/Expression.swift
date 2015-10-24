@@ -10,8 +10,7 @@ public enum Expression<Recur> {
 		@noescape ifVariable: Name -> T,
 		@noescape ifApplication: (Recur, Recur) -> T,
 		@noescape ifLambda: (Int, Recur, Recur) -> T,
-		@noescape ifBooleanType: () -> T,
-		@noescape ifBoolean: Bool -> T) -> T {
+		@noescape ifBooleanType: () -> T) -> T {
 		switch self {
 		case .Unit:
 			return ifUnit()
@@ -27,8 +26,6 @@ public enum Expression<Recur> {
 			return ifLambda(i, a, b)
 		case .BooleanType:
 			return ifBooleanType()
-		case let .Boolean(b):
-			return ifBoolean(b)
 		}
 	}
 
@@ -40,7 +37,6 @@ public enum Expression<Recur> {
 		ifApplication: ((Recur, Recur) -> T)? = nil,
 		ifLambda: ((Int, Recur, Recur) -> T)? = nil,
 		ifBooleanType: (() -> T)? = nil,
-		ifBoolean: (Bool -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifUnit: { ifUnit?() ?? otherwise() },
@@ -49,8 +45,7 @@ public enum Expression<Recur> {
 			ifVariable: { ifVariable?($0) ?? otherwise() },
 			ifApplication: { ifApplication?($0) ?? otherwise() },
 			ifLambda: { ifLambda?($0) ?? otherwise() },
-			ifBooleanType: { ifBooleanType?() ?? otherwise() },
-			ifBoolean: { ifBoolean?($0) ?? otherwise() })
+			ifBooleanType: { ifBooleanType?() ?? otherwise() })
 	}
 
 
@@ -64,8 +59,7 @@ public enum Expression<Recur> {
 			ifVariable: Expression<T>.Variable,
 			ifApplication: { .Application(transform($0), transform($1)) },
 			ifLambda: { .Lambda($0, transform($1), transform($2)) },
-			ifBooleanType: const(.BooleanType),
-			ifBoolean: Expression<T>.Boolean)
+			ifBooleanType: const(.BooleanType))
 	}
 
 
@@ -78,7 +72,6 @@ public enum Expression<Recur> {
 	case Application(Recur, Recur)
 	case Lambda(Int, Recur, Recur) // (Πx:A)B where B can depend on x
 	case BooleanType
-	case Boolean(Bool)
 }
 
 
@@ -94,8 +87,6 @@ public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Re
 		return t1 == u1 && t2 == u2
 	case let (.Lambda(i, t, a), .Lambda(j, u, b)):
 		return i == j && t == u && a == b
-	case let (.Boolean(a), .Boolean(b)):
-		return a == b
 	default:
 		return false
 	}

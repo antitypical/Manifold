@@ -35,10 +35,6 @@ extension TermType {
 		return Self(.BooleanType)
 	}
 
-	public static func Boolean(value: Bool) -> Self {
-		return Self(.Boolean(value))
-	}
-
 
 	public static func FunctionType(a: Self, _ b: Self) -> Self {
 		return .Lambda(-1, a, b)
@@ -83,11 +79,6 @@ extension TermType {
 
 	public init<T: TermContainerType>(expression: Expression<T>) {
 		self.init(expression.map { Self(term: $0) })
-	}
-
-
-	public init(booleanLiteral value: Bool) {
-		self.init(.Boolean(value))
 	}
 
 

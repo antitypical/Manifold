@@ -44,8 +44,6 @@ extension TermContainerType {
 
 			case .BooleanType:
 				return ("Boolean", false)
-			case let .Boolean(b):
-				return (String(b), false)
 			}
 		}
 		return out
