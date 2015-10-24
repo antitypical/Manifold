@@ -11,8 +11,8 @@ final class DeclarationTests: XCTestCase {
 	}
 
 	func testDatatypeDeclarationsAddDataConstructorsToEnvironment() {
-		assert(Module<Term>.boolean.environment["true"], ==, .Annotation(.Product(true, .Unit), "Boolean"))
-		assert(Module<Term>.boolean.environment["false"], ==, .Annotation(.Product(false, .Unit), "Boolean"))
+		assert(Module<Term>.boolean.environment["true"], ==, .Type => { A in A => { a in A --> a } })
+		assert(Module<Term>.boolean.environment["false"], ==, .Type => { A in A --> A => id })
 	}
 
 	func testDatatypeConstructorsProduceRightNestedValues() {
