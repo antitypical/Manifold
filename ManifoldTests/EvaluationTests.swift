@@ -26,11 +26,6 @@ final class EvaluationTests: XCTestCase {
 	func testAbstractionsBodiesAreNotNormalized() {
 		assert(identity.evaluate(), ==, identity)
 	}
-
-	func testIfEvaluatesToCorrectBranch() {
-		assert(Term.If(true, true, false).evaluate(), ==, true)
-		assert(Term.If(false, true, false).evaluate(), ==, false)
-	}
 }
 
 import Assertions

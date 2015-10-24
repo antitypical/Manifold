@@ -46,9 +46,6 @@ extension TermContainerType {
 				return ("Boolean", false)
 			case let .Boolean(b):
 				return (String(b), false)
-
-			case let .If((_, condition), (_, then), (_, `else`)):
-				return ("if \(wrap(condition)) then \(wrap(then)) else \(wrap(`else`))", true)
 			}
 		}
 		return out

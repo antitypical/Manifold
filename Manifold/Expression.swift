@@ -11,8 +11,7 @@ public enum Expression<Recur> {
 		@noescape ifApplication: (Recur, Recur) -> T,
 		@noescape ifLambda: (Int, Recur, Recur) -> T,
 		@noescape ifBooleanType: () -> T,
-		@noescape ifBoolean: Bool -> T,
-		@noescape ifIf: (Recur, Recur, Recur) -> T) -> T {
+		@noescape ifBoolean: Bool -> T) -> T {
 		switch self {
 		case .Unit:
 			return ifUnit()
@@ -30,8 +29,6 @@ public enum Expression<Recur> {
 			return ifBooleanType()
 		case let .Boolean(b):
 			return ifBoolean(b)
-		case let .If(a, b, c):
-			return ifIf(a, b, c)
 		}
 	}
 
@@ -44,7 +41,6 @@ public enum Expression<Recur> {
 		ifLambda: ((Int, Recur, Recur) -> T)? = nil,
 		ifBooleanType: (() -> T)? = nil,
 		ifBoolean: (Bool -> T)? = nil,
-		ifIf: ((Recur, Recur, Recur) -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifUnit: { ifUnit?() ?? otherwise() },
@@ -54,8 +50,7 @@ public enum Expression<Recur> {
 			ifApplication: { ifApplication?($0) ?? otherwise() },
 			ifLambda: { ifLambda?($0) ?? otherwise() },
 			ifBooleanType: { ifBooleanType?() ?? otherwise() },
-			ifBoolean: { ifBoolean?($0) ?? otherwise() },
-			ifIf: { ifIf?($0) ?? otherwise() })
+			ifBoolean: { ifBoolean?($0) ?? otherwise() })
 	}
 
 
@@ -70,8 +65,7 @@ public enum Expression<Recur> {
 			ifApplication: { .Application(transform($0), transform($1)) },
 			ifLambda: { .Lambda($0, transform($1), transform($2)) },
 			ifBooleanType: const(.BooleanType),
-			ifBoolean: Expression<T>.Boolean,
-			ifIf: { .If(transform($0), transform($1), transform($2)) })
+			ifBoolean: Expression<T>.Boolean)
 	}
 
 
@@ -85,7 +79,6 @@ public enum Expression<Recur> {
 	case Lambda(Int, Recur, Recur) // (Πx:A)B where B can depend on x
 	case BooleanType
 	case Boolean(Bool)
-	case If(Recur, Recur, Recur)
 }
 
 
@@ -103,8 +96,6 @@ public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Re
 		return i == j && t == u && a == b
 	case let (.Boolean(a), .Boolean(b)):
 		return a == b
-	case let (.If(a1, b1, c1), .If(a2, b2, c2)):
-		return a1 == a2 && b1 == b2 && c1 == c2
 	default:
 		return false
 	}

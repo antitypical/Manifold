@@ -33,9 +33,6 @@ extension TermType {
 		case let (.Boolean(a), .Boolean(b)):
 			return a == b
 
-		case let (.If(a1, a2, a3), .If(b1, b2, b3)):
-			return recur(a1, b1) && recur(a2, b2) && recur(a3, b3)
-
 		default:
 			return false
 		}

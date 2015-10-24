@@ -14,14 +14,6 @@ extension TermType {
 				return body.substitute(i, b.evaluate(environment)).evaluate(environment)
 			}
 			fatalError("Illegal application of non-lambda term \(a) to \(b)")
-		case let .If(condition, then, `else`):
-			let condition = condition.evaluate(environment)
-			if case let .Boolean(boolean) = condition.out {
-				return boolean
-					? then.evaluate(environment)
-					: `else`.evaluate(environment)
-			}
-			fatalError("Illegal branch on non-boolean term \(condition)")
 		default:
 			return self
 		}

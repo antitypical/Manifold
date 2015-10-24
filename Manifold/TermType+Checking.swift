@@ -22,11 +22,6 @@ extension TermType {
 			return type.checkIsType(environment, context)
 				>> body.checkIsType(environment, context + [ Name.Local(i) : type ])
 
-		case let (.If(condition, then, otherwise), _):
-			return (condition.checkType(.BooleanType, environment, context)
-				>> then.checkType(against, environment, context))
-				>> otherwise.checkType(against, environment, context)
-
 		default:
 			return inferType(environment, context)
 				.flatMap { inferred in

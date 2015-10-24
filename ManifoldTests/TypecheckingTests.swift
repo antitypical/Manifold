@@ -26,14 +26,6 @@ final class TypecheckingTests: XCTestCase {
 	func testAbstractedAbstractionTypechecks() {
 		assert(identity.inferType(), ==, .Lambda(0, .Type, .Lambda(-1, 0, 0)))
 	}
-
-	func testIfWithEqualBranchTypesTypechecksToBranchType() {
-		assert(Term.If(true, .Unit, .Unit).inferType(), ==, .UnitType)
-	}
-
-	func testIfWithDisjointBranchTypesTypechecksToSumOfBranchTypes() {
-		assert(Term.If(true, .Unit, true).inferType(), ==, Term.lambda(.BooleanType) { .If($0, .UnitType, .BooleanType) })
-	}
 }
 
 import Assertions

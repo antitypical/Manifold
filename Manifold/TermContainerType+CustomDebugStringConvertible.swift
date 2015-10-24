@@ -20,8 +20,6 @@ extension TermContainerType {
 				return ".BooleanType"
 			case let .Boolean(a):
 				return ".Boolean(\(a))"
-			case let .If(a, b, c):
-				return ".If(\(a), \(b), \(c))"
 			}
 		}
 	}

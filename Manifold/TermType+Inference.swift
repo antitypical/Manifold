@@ -12,15 +12,6 @@ extension TermType {
 		case .Boolean:
 			return .right(.BooleanType)
 
-		case let .If(condition, then, `else`):
-			return condition.checkType(.BooleanType, environment, context)
-				>> (then.inferType(environment, context) &&& `else`.inferType(environment, context))
-					.map { a, b in
-						a == b
-							? a
-							: Self.lambda(.BooleanType) { .If($0, a, b) }
-					}
-
 		case .UnitType, .BooleanType:
 			return .right(.Type(0))
 		case let .Type(n):

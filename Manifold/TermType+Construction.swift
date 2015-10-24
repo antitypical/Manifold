@@ -39,10 +39,6 @@ extension TermType {
 		return Self(.Boolean(value))
 	}
 
-	public static func If(condition: Self, _ then: Self, _ `else`: Self) -> Self {
-		return Self(.If(condition, then, `else`))
-	}
-
 
 	public static func FunctionType(a: Self, _ b: Self) -> Self {
 		return .Lambda(-1, a, b)

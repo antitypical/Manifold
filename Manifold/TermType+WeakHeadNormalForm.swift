@@ -37,16 +37,6 @@ extension TermType {
 				return .Application(t1, t2)
 			}
 
-		case let .If(condition, then, `else`):
-			let condition = unfold(condition)
-			switch condition.out {
-			case let .Boolean(flag):
-				return unfold(flag ? then : `else`)
-
-			default:
-				return .If(condition, then, `else`)
-			}
-
 		default:
 			return self
 		}

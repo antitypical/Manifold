@@ -11,7 +11,6 @@ extension TermType {
 				},
 				ifApplication: Self.Application,
 				ifLambda: Self.Lambda,
-				ifIf: Self.If,
 				otherwise: const(Self(t)))
 		}
 	}
