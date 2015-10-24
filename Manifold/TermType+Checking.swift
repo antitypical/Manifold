@@ -51,7 +51,7 @@ extension TermType {
 
 	func annotate<T>(either: Either<Error, T>, _ against: Self? = nil) -> Either<Error, T> {
 		return either.either(
-			ifLeft: { $0.map { "\($0)\nin: '\(self)'" + (against.map { " ⇐ '\($0)'" } ?? " ⇒ ?") } } >>> Either.Left,
+			ifLeft: { "\($0)\nin: '\(self)'" + (against.map { " ⇐ '\($0)'" } ?? " ⇒ ?") } >>> Either.Left,
 			ifRight: Either.Right)
 	}
 }

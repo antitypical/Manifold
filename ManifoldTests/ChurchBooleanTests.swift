@@ -2,7 +2,7 @@
 
 final class ChurchBooleanTests: XCTestCase {
 	func testModuleTypechecks() {
-		module.typecheck().forEach { XCTFail($0.description) }
+		module.typecheck().forEach { XCTFail($0) }
 	}
 
 	func testTrueReturnsItsFirstTermArgument() {
