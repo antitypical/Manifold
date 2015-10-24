@@ -49,7 +49,15 @@ public enum Datatype<Recur: TermType>: DictionaryLiteralConvertible {
 		case let .Argument(type, continuation):
 			return type => { self.value(symbol, telescope: continuation($0), constructors: constructors, parameters: parameters + [ $0 ])(recur) }
 		case .End:
-			return recur
+			return .Type => { motive in
+				constructors.map {
+					($0, $1.fold(recur, terminal: motive, combine: -->))
+				}.reverse().reduce(motive, combine: { into, each in
+					each.0 == symbol
+						? each.1 => { parameters.reduce($0, combine: { $0[$1] }) }
+						: each.1 --> into
+				})
+			}
 		}
 	}
 
