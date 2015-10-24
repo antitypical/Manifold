@@ -45,18 +45,18 @@ public enum Error: Equatable, CustomStringConvertible, StringInterpolationConver
 	// MARK: StringInterpolationConvertible
 
 	public init(stringInterpolation strings: Error...) {
-		self = Error(reason: strings.lazy.map { String($0) }.reduce("", combine: +))
+		self = Leaf(strings.lazy.map { String($0) }.reduce("", combine: +))
 	}
 
 	public init<T>(stringInterpolationSegment expr: T) {
-		self = Error(reason: String(expr))
+		self = Leaf(String(expr))
 	}
 
 	
 	// MARK: StringLiteralConvertible
 
 	public init(stringLiteral value: StringLiteralType) {
-		self.init(reason: value)
+		self = Leaf(value)
 	}
 }
 
