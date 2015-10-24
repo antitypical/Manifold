@@ -11,10 +11,6 @@ final class ListTests: XCTestCase {
 			assert(module.environment[symbol], ==, value, message: "'\(symbol)' expected '\(value)', actual '\(module.environment[symbol])'")
 		}
 	}
-
-	func testTypeOfConsIsParameterizedByAType() {
-		assert(module.context["cons"], ==, .lambda(.Type, { A in .lambda(A, const(.lambda(.Application("List", A), const(.Application("List", A))))) }))
-	}
 }
 
 private let module = Module<Term>.list
