@@ -89,7 +89,7 @@ public enum Datatype<Recur: TermType>: DictionaryLiteralConvertible {
 			.Type => { motive in
 				constructors.map {
 					$1.fold(recur, terminal: motive, combine: -->)
-				}.reverse().reduce(motive, combine: -->)
+				}.reverse().reduce(motive, combine: flip(-->))
 			}
 		}
 	}
