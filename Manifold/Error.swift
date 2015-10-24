@@ -10,7 +10,7 @@ public enum Error: Equatable, CustomStringConvertible, StringInterpolationConver
 		case .Leaf:
 			return [ self ]
 		case let .Branch(errors):
-			return errors
+			return errors.flatMap { $0.errors }
 		}
 	}
 
