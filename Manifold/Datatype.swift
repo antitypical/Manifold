@@ -52,10 +52,10 @@ public enum Datatype<Recur: TermType>: DictionaryLiteralConvertible {
 			return .Type => { motive in
 				constructors.map {
 					($0, $1.fold(recur, terminal: motive, combine: -->))
-				}.reverse().reduce(motive, combine: { into, each in
+				}.fold(motive, combine: { each, into in
 					each.0 == symbol
 						? each.1 => { parameters.reduce($0, combine: { $0[$1] }) }
-						: each.1 --> into
+						: each.1 --> into()
 				})
 			}
 		}
