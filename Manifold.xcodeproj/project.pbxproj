@@ -11,7 +11,6 @@
 		D40A5BF11BD8823B00700A11 /* ChurchListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40A5BF01BD8823B00700A11 /* ChurchListTests.swift */; };
 		D415A09B1B51EFDE001C15E5 /* TermType+Construction.swift in Sources */ = {isa = PBXBuildFile; fileRef = D415A09A1B51EFDE001C15E5 /* TermType+Construction.swift */; };
 		D43AC8831BC1824D008762B7 /* Telescope.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43AC8821BC1824D008762B7 /* Telescope.swift */; };
-		D43AC8871BC1831F008762B7 /* TelescopeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43AC8861BC1831F008762B7 /* TelescopeTests.swift */; };
 		D440FCC51B6C100500C56B19 /* Assertions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCC41B6C100500C56B19 /* Assertions.swift */; };
 		D440FCC71B6C1D2500C56B19 /* Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = D440FCC61B6C1D2500C56B19 /* Either.swift */; };
 		D445417C1BCAB0C100F2946D /* Module+Unit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D445417B1BCAB0C100F2946D /* Module+Unit.swift */; };
@@ -93,7 +92,6 @@
 		D40A5BF01BD8823B00700A11 /* ChurchListTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChurchListTests.swift; sourceTree = "<group>"; };
 		D415A09A1B51EFDE001C15E5 /* TermType+Construction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermType+Construction.swift"; sourceTree = "<group>"; };
 		D43AC8821BC1824D008762B7 /* Telescope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Telescope.swift; sourceTree = "<group>"; };
-		D43AC8861BC1831F008762B7 /* TelescopeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TelescopeTests.swift; sourceTree = "<group>"; };
 		D440FCC41B6C100500C56B19 /* Assertions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Assertions.swift; sourceTree = "<group>"; };
 		D440FCC61B6C1D2500C56B19 /* Either.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Either.swift; sourceTree = "<group>"; };
 		D445417B1BCAB0C100F2946D /* Module+Unit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Module+Unit.swift"; sourceTree = "<group>"; };
@@ -283,7 +281,6 @@
 				D4DF444F1B2DB043008DCA5D /* TypecheckingTests.swift */,
 				D4F969971B98F3220069F481 /* Term+Arbitrary.swift */,
 				D4FC2FDD1BAF564F005F3B26 /* DeclarationTests.swift */,
-				D43AC8861BC1831F008762B7 /* TelescopeTests.swift */,
 				D4B3FC001A83515800DA2AC3 /* Supporting Files */,
 			);
 			path = ManifoldTests;
@@ -481,7 +478,6 @@
 				D4E9901E1BD343AE00F00CA7 /* EitherTests.swift in Sources */,
 				D4809FBD1AF6BD400084B8FE /* TermTests.swift in Sources */,
 				D4E990221BD349EF00F00CA7 /* ChurchBooleanTests.swift in Sources */,
-				D43AC8871BC1831F008762B7 /* TelescopeTests.swift in Sources */,
 				D4D0FC041BD427AA0010F243 /* ChurchPairTests.swift in Sources */,
 				D44541821BCAE3CD00F2946D /* ListTests.swift in Sources */,
 				D4D0FC101BD4A7000010F243 /* ChurchSigmaTests.swift in Sources */,
