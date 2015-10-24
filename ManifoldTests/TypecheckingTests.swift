@@ -1,10 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 final class TypecheckingTests: XCTestCase {
-	func testUnitTypeTypechecksToType() {
-		assert(Term.UnitType.inferType(), ==, .Type(0))
-	}
-
 	func testTypeTypechecksToNextTypeLevel() {
 		assert(Term(.Type(0)).inferType(), ==, .Type(1))
 	}
@@ -15,8 +11,8 @@ final class TypecheckingTests: XCTestCase {
 	}
 
 	func testSimpleAbstractionTypechecksToAbstractionType() {
-		let identity = Term.lambda(.UnitType, id)
-		assert(identity.inferType(), ==, .lambda(.UnitType, const(.UnitType)))
+		let identity = Term.lambda(.Type, id)
+		assert(identity.inferType(), ==, .lambda(.Type, const(.Type)))
 	}
 
 	func testAbstractedAbstractionTypechecks() {

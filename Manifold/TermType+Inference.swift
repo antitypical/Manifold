@@ -7,8 +7,6 @@ extension TermType {
 
 	public func inferTypeUnannotated(environment: [Name:Self] = [:], _ context: [Name:Self] = [:]) -> Either<Error, Self> {
 		switch out {
-		case .UnitType:
-			return .right(.Type(0))
 		case let .Type(n):
 			return .right(.Type(n + 1))
 

@@ -7,12 +7,12 @@ final class TermTests: XCTestCase {
 	}
 
 	func testRightNestedFunctionTypesAreNotParenthesized() {
-		assert(Term.FunctionType(.UnitType, .UnitType).description, ==, "Unit → Unit")
-		assert(Term.FunctionType(.UnitType, .UnitType, .UnitType).description, ==, "Unit → Unit → Unit")
+		assert(Term.FunctionType(.Type, .Type).description, ==, "Type → Type")
+		assert(Term.FunctionType(.Type, .Type, .Type).description, ==, "Type → Type → Type")
 	}
 
 	func testLeftNestedFunctionTypesAreParenthesized() {
-		assert(Term.FunctionType(.FunctionType(.UnitType, .UnitType), .UnitType).description, ==, "(Unit → Unit) → Unit")
+		assert(Term.FunctionType(.FunctionType(.Type, .Type), .Type).description, ==, "(Type → Type) → Type")
 	}
 
 	func testGlobalsPrintTheirNames() {
@@ -21,7 +21,7 @@ final class TermTests: XCTestCase {
 
 
 	func testHigherOrderConstruction() {
-		assert(Term.lambda(.UnitType, id), ==, .Lambda(0, .UnitType, 0))
+		assert(Term.lambda(.Type, id), ==, .Lambda(0, .Type, 0))
 		assert(identity, ==, .Lambda(1, .Type, .Lambda(0, 1, 0)))
 		assert(constant, ==, .Lambda(2, .Type, .Lambda(1, .Type, .Lambda(0, 2, .Lambda(-1, 1, 0)))))
 	}
@@ -40,7 +40,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testFreeVariablesDoNotIncludeThoseBoundByLambdas() {
-		assert(Term.Lambda(1, .UnitType, 1).freeVariables, ==, [])
+		assert(Term.Lambda(1, .Type, 1).freeVariables, ==, [])
 	}
 
 	func testLambdasDoNotShadowFreeVariablesInTheirTypes() {
@@ -48,7 +48,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testLambdasBindVariablesDeeply() {
-		assert(Term.Lambda(2, .Type, .Lambda(1, 2, .Lambda(0, .UnitType, .Application(2, .Application(1, 0))))).freeVariables, ==, [])
+		assert(Term.Lambda(2, .Type, .Lambda(1, 2, .Lambda(0, .Type, .Application(2, .Application(1, 0))))).freeVariables, ==, [])
 	}
 }
 

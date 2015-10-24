@@ -16,22 +16,22 @@ final class TermProperties: XCTestCase {
 extension Term: Arbitrary {
 	public static var arbitrary: Gen<Term> {
 		func arbitrary(n: Int) -> Gen<Term> {
-			let topLevel: [Gen<Term>] = [
-				Gen.pure(Term.UnitType),
+			let type: [Gen<Term>] = [
 				Bool.arbitrary.fmap { $0 ? .Type : .Type(1) },
+			]
+			let lambdas = [
 				Gen.pure(()).bind {
-					arbitrary(n).bind { a in arbitrary(n).fmap { b in Term.Application(a, b) } }
+					arbitrary(n + 1).bind { a in arbitrary(n + 1).fmap { b in Term.Application(a, b) } }
 				},
 				Gen.pure(()).bind {
-					arbitrary(n).bind { type in arbitrary(n + 1).fmap { body in Term.Lambda(n + 1, type, body) } }
+					arbitrary(n + 1).bind { type in arbitrary(n + 1).fmap { body in Term.Lambda(n + 1, type, body) } }
 				},
 			]
-
-			let inBinder = [
+			let variable = [
 				Int.arbitrary.suchThat { $0 <= n && $0 >= 0 }.fmap { Term.Variable(.Local($0)) },
 			]
 
-			return Gen.oneOf(topLevel + (n >= 0 ? inBinder : []))
+			return Gen.oneOf(type + (n <= 7 ? lambdas : []) + (n >= 0 ? variable : []))
 		}
 		return arbitrary(-1)
 	}

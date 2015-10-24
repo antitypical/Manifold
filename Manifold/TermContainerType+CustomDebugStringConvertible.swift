@@ -4,8 +4,6 @@ extension TermContainerType {
 	public var debugDescription: String {
 		return cata {
 			switch $0 {
-			case .UnitType:
-				return ".UnitType"
 			case let .Type(n):
 				return ".Type(\(n))"
 			case let .Variable(n):

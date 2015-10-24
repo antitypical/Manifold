@@ -1,10 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 final class EvaluationTests: XCTestCase {
-	func testUnitTypeEvaluatesToItself() {
-		assert(Term.UnitType.evaluate(), ==, .UnitType)
-	}
-
 	func testTypeEvaluatesToItself() {
 		assert(Term(.Type(0)).evaluate(), ==, .Type(0))
 	}
@@ -15,7 +11,7 @@ final class EvaluationTests: XCTestCase {
 	}
 
 	func testSimpleAbstractionEvaluatesToItself() {
-		let identity = Term.lambda(.UnitType, id)
+		let identity = Term.lambda(.Type, id)
 		assert(identity.evaluate(), ==, identity)
 	}
 

@@ -21,9 +21,6 @@ extension TermContainerType {
 		}
 		let (out, _): (String, Bool) = para {
 			switch $0 {
-			case .UnitType:
-				return ("Unit", false)
-
 			case let .Type(n) where n == 0:
 				return ("Type", false)
 			case let .Type(n):
