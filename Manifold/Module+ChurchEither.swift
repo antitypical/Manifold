@@ -2,8 +2,8 @@
 
 extension Module {
 	public static var churchEither: Module {
-		let Either = Declaration("Either",
-			type: Recur.FunctionType(.Type, .Type, .Type),
+		let Either = Declaration<Recur>("Either",
+			type: .Type --> .Type --> .Type,
 			value: (.Type, .Type, .Type) => { L, R, Result in (L --> Result) --> (R --> Result) --> Result })
 
 		let left = Declaration("left",
