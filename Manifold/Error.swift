@@ -34,7 +34,7 @@ public enum Error: Equatable, CustomStringConvertible, StringInterpolationConver
 	}
 
 
-	// MARK: Printable
+	// MARK: CustomStringConvertible
 
 	public var description: String {
 		return analysis(
