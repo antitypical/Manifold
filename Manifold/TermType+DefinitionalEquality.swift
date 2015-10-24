@@ -18,7 +18,7 @@ extension TermType {
 		visited.unionInPlace(rnames)
 
 		switch (left.out, right.out) {
-		case (.Type, .Type), (.Unit, .Unit), (.UnitType, .UnitType), (.BooleanType, .BooleanType):
+		case (.Type, .Type), (.Unit, .Unit), (.UnitType, .UnitType):
 			return true
 
 		case let (.Variable(a), .Variable(b)):

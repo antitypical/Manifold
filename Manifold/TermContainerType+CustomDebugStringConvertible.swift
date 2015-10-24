@@ -16,8 +16,6 @@ extension TermContainerType {
 				return ".Application(\(a), \(b))"
 			case let .Lambda(i, a, b):
 				return ".Lambda(\(i), \(a), \(b))"
-			case .BooleanType:
-				return ".BooleanType"
 			}
 		}
 	}

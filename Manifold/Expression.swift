@@ -9,8 +9,7 @@ public enum Expression<Recur> {
 		@noescape ifType: Int -> T,
 		@noescape ifVariable: Name -> T,
 		@noescape ifApplication: (Recur, Recur) -> T,
-		@noescape ifLambda: (Int, Recur, Recur) -> T,
-		@noescape ifBooleanType: () -> T) -> T {
+		@noescape ifLambda: (Int, Recur, Recur) -> T) -> T {
 		switch self {
 		case .Unit:
 			return ifUnit()
@@ -24,8 +23,6 @@ public enum Expression<Recur> {
 			return ifApplication(a, b)
 		case let .Lambda(i, a, b):
 			return ifLambda(i, a, b)
-		case .BooleanType:
-			return ifBooleanType()
 		}
 	}
 
@@ -36,7 +33,6 @@ public enum Expression<Recur> {
 		ifVariable: (Name -> T)? = nil,
 		ifApplication: ((Recur, Recur) -> T)? = nil,
 		ifLambda: ((Int, Recur, Recur) -> T)? = nil,
-		ifBooleanType: (() -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifUnit: { ifUnit?() ?? otherwise() },
@@ -44,8 +40,7 @@ public enum Expression<Recur> {
 			ifType: { ifType?($0) ?? otherwise() },
 			ifVariable: { ifVariable?($0) ?? otherwise() },
 			ifApplication: { ifApplication?($0) ?? otherwise() },
-			ifLambda: { ifLambda?($0) ?? otherwise() },
-			ifBooleanType: { ifBooleanType?() ?? otherwise() })
+			ifLambda: { ifLambda?($0) ?? otherwise() })
 	}
 
 
@@ -58,8 +53,7 @@ public enum Expression<Recur> {
 			ifType: { .Type($0) },
 			ifVariable: Expression<T>.Variable,
 			ifApplication: { .Application(transform($0), transform($1)) },
-			ifLambda: { .Lambda($0, transform($1), transform($2)) },
-			ifBooleanType: const(.BooleanType))
+			ifLambda: { .Lambda($0, transform($1), transform($2)) })
 	}
 
 
@@ -71,13 +65,12 @@ public enum Expression<Recur> {
 	case Variable(Name)
 	case Application(Recur, Recur)
 	case Lambda(Int, Recur, Recur) // (Πx:A)B where B can depend on x
-	case BooleanType
 }
 
 
 public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Recur>) -> Bool {
 	switch (left, right) {
-	case (.Unit, .Unit), (.UnitType, .UnitType), (.BooleanType, .BooleanType):
+	case (.Unit, .Unit), (.UnitType, .UnitType):
 		return true
 	case let (.Type(i), .Type(j)):
 		return i == j

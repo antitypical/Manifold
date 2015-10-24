@@ -10,7 +10,7 @@ extension TermType {
 		case .Unit:
 			return .right(.UnitType)
 
-		case .UnitType, .BooleanType:
+		case .UnitType:
 			return .right(.Type(0))
 		case let .Type(n):
 			return .right(.Type(n + 1))

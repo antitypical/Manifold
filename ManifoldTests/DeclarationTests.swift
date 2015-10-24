@@ -21,21 +21,21 @@ final class DeclarationTests: XCTestCase {
 	}
 
 	func testDatatypeConstructorsWithArgumentsHaveFunctionTypes() {
-		assert(datatype.context["a"], ==, .lambda(.BooleanType, .BooleanType, const("A")))
-		assert(datatype.context["b"], ==, .lambda(.BooleanType, .BooleanType, const("A")))
+		assert(datatype.context["a"], ==, .lambda(.Type, .Type, const("A")))
+		assert(datatype.context["b"], ==, .lambda(.Type, .Type, const("A")))
 	}
 
 	func testDatatypeConstructorsWithArgumentsAreEncodedFunctions() {
-		assert(datatype.environment["a"], ==, (.BooleanType, .BooleanType, .Type) => { a, b, C in (.BooleanType --> .BooleanType --> C) => { (.BooleanType --> .BooleanType --> C) --> $0[a, b] } })
-		assert(datatype.environment["b"], ==, (.BooleanType, .BooleanType, .Type) => { a, b, C in (.BooleanType --> .BooleanType --> C) --> (.BooleanType --> .BooleanType --> C) => { $0[a, b] } })
+		assert(datatype.environment["a"], ==, (.Type, .Type, .Type) => { a, b, C in (.Type --> .Type --> C) => { (.Type --> .Type --> C) --> $0[a, b] } })
+		assert(datatype.environment["b"], ==, (.Type, .Type, .Type) => { a, b, C in (.Type --> .Type --> C) --> (.Type --> .Type --> C) => { $0[a, b] } })
 	}
 }
 
 
 private let datatype = Module<Term>("A", [], [
 	Declaration.Datatype("A", [
-		"a": Telescope.Argument(.BooleanType) { a in .Argument(.BooleanType, const(.End)) },
-		"b": Telescope.Argument(.BooleanType) { a in .Argument(.BooleanType, const(.End)) },
+		"a": Telescope.Argument(.Type) { a in .Argument(.Type, const(.End)) },
+		"b": Telescope.Argument(.Type) { a in .Argument(.Type, const(.End)) },
 	])
 ])
 

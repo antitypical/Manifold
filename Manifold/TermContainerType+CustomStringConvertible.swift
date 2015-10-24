@@ -41,9 +41,6 @@ extension TermContainerType {
 				return (b.freeVariables.contains(variable)
 					? "λ \(Self.describe(.Local(variable))) : \(type.0) . \(body)"
 					: "\(wrap(type)) → \(body)", true)
-
-			case .BooleanType:
-				return ("Boolean", false)
 			}
 		}
 		return out

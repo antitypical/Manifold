@@ -15,7 +15,6 @@ extension Term: Arbitrary {
 			let topLevel: [Gen<Term>] = [
 				Gen.pure(Term.Unit),
 				Gen.pure(Term.UnitType),
-				Gen.pure(Term.BooleanType),
 				Bool.arbitrary.fmap { $0 ? .Type : .Type(1) },
 				Gen.pure(()).bind {
 					arbitrary(n).bind { a in arbitrary(n).fmap { b in Term.Application(a, b) } }
