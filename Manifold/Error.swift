@@ -11,9 +11,12 @@ public enum Error: Equatable, CustomStringConvertible, StringInterpolationConver
 
 
 	public var errors: [Error] {
-		return analysis(
-			ifLeaf: const([ self ]),
-			ifBranch: id)
+		switch self {
+		case .Leaf:
+			return [ self ]
+		case let .Branch(errors):
+			return errors
+		}
 	}
 
 
@@ -28,29 +31,31 @@ public enum Error: Equatable, CustomStringConvertible, StringInterpolationConver
 
 
 	public func map(transform: String -> String) -> Error {
-		return analysis(
-			ifLeaf: transform >>> Error.Leaf,
-			ifBranch: { Error.Branch($0.map { $0.map(transform) }) })
+		switch self {
+		case let .Leaf(reason):
+			return .Leaf(transform(reason))
+		case let .Branch(errors):
+			return .Branch(errors.map { $0.map(transform) })
+		}
 	}
 
 
 	// MARK: CustomStringConvertible
 
 	public var description: String {
-		return analysis(
-			ifLeaf: id,
-			ifBranch: { $0.lazy.map { String($0) }.joinWithSeparator("\n") })
+		switch self {
+		case let .Leaf(reason):
+			return reason
+		case let .Branch(errors):
+			return errors.lazy.map { String($0) }.joinWithSeparator("\n")
+		}
 	}
 
 
 	// MARK: StringInterpolationConvertible
 
 	public init(stringInterpolation strings: Error...) {
-		self = Error(reason: strings.reduce("") {
-			$0 + $1.analysis(
-				ifLeaf: id,
-				ifBranch: const(""))
-		})
+		self = Error(reason: strings.lazy.map { String($0) }.reduce("", combine: +))
 	}
 
 	public init<T>(stringInterpolationSegment expr: T) {
