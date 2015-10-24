@@ -5,8 +5,8 @@ extension Module {
 		return Module("List", [
 			Declaration.Datatype("List", .Argument(.Type, {
 				[
-					"nil": .End,
-					"cons": .Argument($0, const(.Recursive(.End)))
+					"cons": .Argument($0, const(.Recursive(.End))),
+					"nil": .End
 				]
 			}))
 		])
