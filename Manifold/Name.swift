@@ -29,7 +29,7 @@ public enum Name: Comparable, CustomDebugStringConvertible, CustomStringConverti
 	public var description: String {
 		return analysis(
 			ifGlobal: id,
-			ifLocal: { String($0) })
+			ifLocal: { renderNumerals($0, "abcdefghijklmnopqrstuvwxyz") })
 	}
 
 

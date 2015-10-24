@@ -1,13 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 extension TermContainerType {
-	public static func describe(name: Name) -> String {
-		let alphabet = "abcdefghijklmnopqrstuvwxyz"
-		return name.analysis(
-			ifGlobal: id,
-			ifLocal: { renderNumerals($0, alphabet) })
-	}
-
 	public var description: String {
 		func wrap(string: String, _ needsParentheses: Bool) -> String {
 			return needsParentheses
@@ -22,14 +15,14 @@ extension TermContainerType {
 				return ("Type" + renderNumerals(n, "₀₁₂₃₄₅₆₇₈₉"), false)
 
 			case let .Variable(name):
-				return (Self.describe(name), false)
+				return (String(name), false)
 
 			case let .Application((_, (a, _)), (_, b)):
 				return ("\(a) \(wrap(b))", true)
 
 			case let .Lambda(variable, (_, type), (b, (body, _))):
 				return (b.freeVariables.contains(variable)
-					? "λ \(Self.describe(.Local(variable))) : \(type.0) . \(body)"
+					? "λ \(Name.Local(variable)) : \(type.0) . \(body)"
 					: "\(wrap(type)) → \(body)", true)
 			}
 		}

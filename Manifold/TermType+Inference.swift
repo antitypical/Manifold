@@ -11,7 +11,7 @@ extension TermType {
 			return .right(.Type(n + 1))
 
 		case let .Variable(i):
-			return context[i].map(Either.Right) ?? Either.Left("Unexpectedly free variable \(Self.describe(i)) in context: \(Self.toString(context: context)), environment: \(Self.toString(environment: environment))")
+			return context[i].map(Either.Right) ?? Either.Left("Unexpectedly free variable \(i) in context: \(Self.toString(context: context)), environment: \(Self.toString(environment: environment))")
 
 		case let .Lambda(i, type, body):
 			return type.checkIsType(environment, context)
