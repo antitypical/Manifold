@@ -53,9 +53,9 @@ final class DeclarationTests: XCTestCase {
 	}
 
 	func testDatatypeConstructorsWithMultipleArgumentsProduceFunctionsReturningRightNestedValues() {
-		assert(multipleConstructorsWithMultipleArgumentsModule.environment["a"], ==, .lambda(.BooleanType, .BooleanType, { .Annotation(.Product(true, .Product($0, $1)), "A") }))
-		assert(multipleConstructorsWithMultipleArgumentsModule.environment["b"], ==, .lambda(.BooleanType, .BooleanType, { .Annotation(.Product(false, .Product(true, .Product($0, $1))), "A") }))
-		assert(multipleConstructorsWithMultipleArgumentsModule.environment["c"], ==, .lambda(.BooleanType, .BooleanType, { .Annotation(.Product(false, .Product(false, .Product($0, $1))), "A") }))
+		assert(multipleConstructorsWithMultipleArgumentsModule.environment["a"], ==, (.BooleanType, .BooleanType, .Type) => { a, b, C in (.BooleanType --> .BooleanType --> C) => { (.BooleanType --> .BooleanType --> C) --> (.BooleanType --> .BooleanType --> C) --> $0[a, b] } })
+		assert(multipleConstructorsWithMultipleArgumentsModule.environment["b"], ==, (.BooleanType, .BooleanType, .Type) => { a, b, C in (.BooleanType --> .BooleanType --> C) --> (.BooleanType --> .BooleanType --> C) => { (.BooleanType --> .BooleanType --> C) --> $0[a, b] } })
+		assert(multipleConstructorsWithMultipleArgumentsModule.environment["c"], ==, (.BooleanType, .BooleanType, .Type) => { a, b, C in (.BooleanType --> .BooleanType --> C) --> (.BooleanType --> .BooleanType --> C) --> (.BooleanType --> .BooleanType --> C) => { $0[a, b] } })
 	}
 }
 
