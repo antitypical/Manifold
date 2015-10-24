@@ -20,16 +20,6 @@ public enum Error: Equatable, CustomStringConvertible, StringInterpolationConver
 	}
 
 
-	public func analysis<T>(@noescape ifLeaf ifLeaf: String -> T, @noescape ifBranch: [Error] -> T) -> T {
-		switch self {
-		case let Leaf(string):
-			return ifLeaf(string)
-		case let Branch(errors):
-			return ifBranch(errors)
-		}
-	}
-
-
 	public func map(transform: String -> String) -> Error {
 		switch self {
 		case let .Leaf(reason):
