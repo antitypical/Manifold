@@ -8,8 +8,8 @@ final class EitherTests: XCTestCase {
 	func testAutomaticallyEncodedDefinitionsAreEquivalentToHandEncodedDefinitions() {
 		let churchModule = Module<Term>.churchEither
 		module.definitions.forEach { symbol, type, value in
-			assert(churchModule.context[symbol], ==, type)
-			assert(churchModule.environment[symbol], ==, value)
+			assert(churchModule.context[symbol], ==, type, message: "\(symbol)")
+			assert(churchModule.environment[symbol], ==, value, message: "\(symbol)")
 		}
 	}
 }
