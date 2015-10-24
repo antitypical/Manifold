@@ -15,12 +15,6 @@ final class DeclarationTests: XCTestCase {
 		assert(Module<Term>.boolean.environment["false"], ==, .Type => { A in A --> A => id })
 	}
 
-	func testDatatypeConstructorsProduceRightNestedValues() {
-		assert(selfModule.environment["me"], ==, .Annotation(.Product(true, .Unit), "Self"))
-		assert(selfModule.environment["myself"], ==, .Annotation(.Product(false, .Product(true, .Unit)), "Self"))
-		assert(selfModule.environment["I"], ==, .Annotation(.Product(false, .Product(false, .Unit)), "Self"))
-	}
-
 	func testDatatypeConstructorWithArgumentsHasFunctionType() {
 		assert(oneConstructorWithArgumentModule.context["a"], ==, .lambda(.BooleanType, const("A")))
 	}
@@ -33,12 +27,6 @@ final class DeclarationTests: XCTestCase {
 		assert(multipleConstructorsWithArgumentsModule.context["a"], ==, .lambda(.BooleanType, const("A")))
 		assert(multipleConstructorsWithArgumentsModule.context["b"], ==, .lambda(.BooleanType, const("A")))
 		assert(multipleConstructorsWithArgumentsModule.context["c"], ==, .lambda(.BooleanType, const("A")))
-	}
-
-	func testDatatypeConstructorsWithArgumentsProduceFunctionsReturningRightNestedValues() {
-		assert(multipleConstructorsWithArgumentsModule.environment["a"], ==, .lambda(.BooleanType, { .Annotation(.Product(true, $0), "A") }))
-		assert(multipleConstructorsWithArgumentsModule.environment["b"], ==, .lambda(.BooleanType, { .Annotation(.Product(false, .Product(true, $0)), "A") }))
-		assert(multipleConstructorsWithArgumentsModule.environment["c"], ==, .lambda(.BooleanType, { .Annotation(.Product(false, .Product(false, $0)), "A") }))
 	}
 
 	func testDatatypeConstructorsWithRecursiveReferencesProduceValuesEmbeddingReferencesToTheirType() {
