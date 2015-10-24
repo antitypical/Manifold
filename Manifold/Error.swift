@@ -47,7 +47,3 @@ public func == (left: Error, right: Error) -> Bool {
 public func + (left: Error, right: Error) -> Error {
 	return Error(errors: left.errors + right.errors)
 }
-
-
-import Either
-import Prelude
