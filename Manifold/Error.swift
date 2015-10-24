@@ -57,9 +57,7 @@ public enum Error: Equatable, CustomStringConvertible, StringInterpolationConver
 
 
 public func == (left: Error, right: Error) -> Bool {
-	return zip(left.errors, right.errors)
-		.lazy
-		.map(==).reduce(true) { $0 && $1 }
+	return left.errors == right.errors
 }
 
 
