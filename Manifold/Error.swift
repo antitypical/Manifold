@@ -1,69 +1,51 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Error: Equatable, CustomStringConvertible, StringInterpolationConvertible, StringLiteralConvertible {
-	case Leaf(String)
-	case Branch([Error])
-
-
-	public var errors: [Error] {
-		switch self {
-		case .Leaf:
-			return [ self ]
-		case let .Branch(errors):
-			return errors.flatMap { $0.errors }
-		}
+public struct Error: Equatable, CustomStringConvertible, StringInterpolationConvertible, StringLiteralConvertible {
+	public init(errors: [String]) {
+		self.errors = errors
 	}
 
+	public var errors: [String]
 
 	public func map(transform: String -> String) -> Error {
-		switch self {
-		case let .Leaf(reason):
-			return .Leaf(transform(reason))
-		case let .Branch(errors):
-			return .Branch(errors.map { $0.map(transform) })
-		}
+		return Error(errors: errors.map(transform))
 	}
 
 
 	// MARK: CustomStringConvertible
 
 	public var description: String {
-		switch self {
-		case let .Leaf(reason):
-			return reason
-		case let .Branch(errors):
-			return errors.lazy.map { String($0) }.joinWithSeparator("\n")
-		}
+		return errors.lazy.map { String($0) }.joinWithSeparator("\n")
 	}
 
 
 	// MARK: StringInterpolationConvertible
 
 	public init(stringInterpolation strings: Error...) {
-		self = Leaf(strings.lazy.map { String($0) }.reduce("", combine: +))
+		self.init(errors: [ strings.lazy.map { String($0) }.reduce("", combine: +) ])
 	}
 
 	public init<T>(stringInterpolationSegment expr: T) {
-		self = Leaf(String(expr))
+		self.init(errors: [ String(expr) ])
 	}
 
 	
 	// MARK: StringLiteralConvertible
 
-	public init(stringLiteral value: StringLiteralType) {
-		self = Leaf(value)
+	public init(stringLiteral value: String) {
+		self.init(errors: [ value ])
 	}
 }
 
 
 public func == (left: Error, right: Error) -> Bool {
-	return left.errors.map { String($0) } == right.errors.map { String($0) }
+	return left.errors == right.errors
 }
 
 
 /// Constructs a composite error.
 public func + (left: Error, right: Error) -> Error {
-	return Error.Branch(left.errors + right.errors)
+	return Error(errors: left.errors + right.errors)
 }
 
 
