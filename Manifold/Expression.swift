@@ -24,11 +24,16 @@ public enum Expression<Recur> {
 	// MARK: Functor
 
 	public func map<T>(@noescape transform: Recur -> T) -> Expression<T> {
-		return analysis(
-			ifType: { .Type($0) },
-			ifVariable: Expression<T>.Variable,
-			ifApplication: { .Application(transform($0), transform($1)) },
-			ifLambda: { .Lambda($0, transform($1), transform($2)) })
+		switch self {
+		case let .Type(i):
+			return .Type(i)
+		case let .Variable(n):
+			return .Variable(n)
+		case let .Application(a, b):
+			return .Application(transform(a), transform(b))
+		case let .Lambda(i, a, b):
+			return .Lambda(i, transform(a), transform(b))
+		}
 	}
 
 

@@ -5,21 +5,29 @@ extension TermContainerType {
 
 	public var maxBoundVariable: Int {
 		return cata {
-			$0.analysis(
-				ifType: const(-1),
-				ifVariable: const(-1),
-				ifApplication: max,
-				ifLambda: { $0 < 0 ? max($1, $2) : max($0, $1) })
+			switch $0 {
+			case .Type, .Variable:
+				return -1
+			case let .Application(a, b):
+				return max(a, b)
+			case let .Lambda(i, a, b):
+				return i < 0 ? max(a, b) : max(i, a)
+			}
 		}
 	}
 
 	public var freeVariables: Set<Int> {
 		return cata {
-			$0.analysis(
-				ifType: const(Set()),
-				ifVariable: { $0.analysis(ifGlobal: const(Set()), ifLocal: { [ $0 ] }) },
-				ifApplication: uncurry(Set.union),
-				ifLambda: { $1.union($2.subtract([ $0 ])) })
+			switch $0 {
+			case .Type, .Variable(.Global):
+				return []
+			case let .Variable(.Local(i)):
+				return [ i ]
+			case let .Application(a, b):
+				return a.union(b)
+			case let .Lambda(i, a, b):
+				return a.union(b.subtract([ i ]))
+			}
 		}
 	}
 }

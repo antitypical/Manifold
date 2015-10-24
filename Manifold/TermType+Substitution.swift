@@ -3,15 +3,12 @@
 extension TermType {
 	public func substitute(i: Int, _ expression: Self) -> Self {
 		return cata { (t: Expression<Self>) in
-			t.analysis(
-				ifType: const(Self(t)),
-				ifVariable: {
-					$0.analysis(
-						ifGlobal: const(Self(t)),
-						ifLocal: { $0 == i ? expression : Self(t) })
-				},
-				ifApplication: Self.Application,
-				ifLambda: Self.Lambda)
+			switch t {
+			case let .Variable(.Local(j)) where i == j:
+				return expression
+			default:
+				return Self(t)
+			}
 		}
 	}
 }
