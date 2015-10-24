@@ -4,7 +4,7 @@ extension Module {
 	public static var churchEither: Module {
 		let Either = Declaration("Either",
 			type: Recur.FunctionType(.Type, .Type, .Type),
-			value: Recur.lambda(.Type, .Type, .Type) { L, R, Result in Recur.FunctionType(.FunctionType(L, Result), .FunctionType(R, Result), Result) })
+			value: (.Type, .Type, .Type) => { L, R, Result in (L --> Result) --> (R --> Result) --> Result })
 
 		let left = Declaration("left",
 			type: Recur.lambda(.Type, .Type) { L, R in .FunctionType(L, Either.ref[L, R]) },
