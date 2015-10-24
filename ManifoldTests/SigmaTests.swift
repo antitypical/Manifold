@@ -1,12 +1,12 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-final class ChurchSigmaTests: XCTestCase {
+final class SigmaTests: XCTestCase {
 	func testModuleTypechecks() {
 		module.typecheck().forEach { XCTFail($0) }
 	}
 }
 
-private let module = Module<Term>.churchSigma
+private let module = Module<Term>.sigma
 
 
 import Manifold
