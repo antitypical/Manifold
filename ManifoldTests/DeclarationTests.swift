@@ -40,7 +40,7 @@ final class DeclarationTests: XCTestCase {
 		assert(multipleConstructorsWithMultipleArgumentsModule.context["c"], ==, .lambda(.BooleanType, .BooleanType, const("A")))
 	}
 
-	func testDatatypeConstructorsWithMultipleArgumentsProduceFunctionsReturningRightNestedValues() {
+	func testDatatypeConstructorsWithMultipleArgumentsProduceFunctionsWhichTakeAndApplyEliminators() {
 		assert(multipleConstructorsWithMultipleArgumentsModule.environment["a"], ==, (.BooleanType, .BooleanType, .Type) => { a, b, C in (.BooleanType --> .BooleanType --> C) => { (.BooleanType --> .BooleanType --> C) --> (.BooleanType --> .BooleanType --> C) --> $0[a, b] } })
 		assert(multipleConstructorsWithMultipleArgumentsModule.environment["b"], ==, (.BooleanType, .BooleanType, .Type) => { a, b, C in (.BooleanType --> .BooleanType --> C) --> (.BooleanType --> .BooleanType --> C) => { (.BooleanType --> .BooleanType --> C) --> $0[a, b] } })
 		assert(multipleConstructorsWithMultipleArgumentsModule.environment["c"], ==, (.BooleanType, .BooleanType, .Type) => { a, b, C in (.BooleanType --> .BooleanType --> C) --> (.BooleanType --> .BooleanType --> C) --> (.BooleanType --> .BooleanType --> C) => { $0[a, b] } })
