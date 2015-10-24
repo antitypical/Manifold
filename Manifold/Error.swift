@@ -41,9 +41,3 @@ public struct Error: Equatable, CustomStringConvertible, StringInterpolationConv
 public func == (left: Error, right: Error) -> Bool {
 	return left.errors == right.errors
 }
-
-
-/// Constructs a composite error.
-public func + (left: Error, right: Error) -> Error {
-	return Error(errors: left.errors + right.errors)
-}
