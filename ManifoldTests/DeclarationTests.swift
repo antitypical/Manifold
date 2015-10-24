@@ -26,7 +26,7 @@ final class DeclarationTests: XCTestCase {
 	}
 
 	func testDatatypeConstructorWithArgumentsProducesFunction() {
-		assert(oneConstructorWithArgumentModule.environment["a"], ==, .lambda(.BooleanType, { .Annotation($0, "A") }))
+		assert(oneConstructorWithArgumentModule.environment["a"], ==, (.BooleanType, .Type) => { b, A in (.BooleanType --> A) => { $0[b] } })
 	}
 
 	func testDatatypeConstructorsWithArgumentsHaveFunctionTypes() {
