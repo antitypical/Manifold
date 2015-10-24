@@ -2,6 +2,6 @@
 
 extension Module {
 	public static var vector: Module {
-		return Module("Vector", [])
+		return Module("Vector", [ natural ], [])
 	}
 }
