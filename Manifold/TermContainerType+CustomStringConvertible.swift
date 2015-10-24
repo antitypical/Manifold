@@ -9,7 +9,6 @@ extension TermContainerType {
 	}
 
 	public var description: String {
-		let subscripts = "₀₁₂₃₄₅₆₇₈₉"
 		func wrap(string: String, _ needsParentheses: Bool) -> String {
 			return needsParentheses
 				? "(\(string))"
@@ -20,7 +19,7 @@ extension TermContainerType {
 			case let .Type(n) where n == 0:
 				return ("Type", false)
 			case let .Type(n):
-				return ("Type" + renderNumerals(n, subscripts), false)
+				return ("Type" + renderNumerals(n, "₀₁₂₃₄₅₆₇₈₉"), false)
 
 			case let .Variable(name):
 				return (Self.describe(name), false)
