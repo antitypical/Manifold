@@ -5,7 +5,7 @@ extension TermType {
 		return annotate(inferTypeUnannotated(environment, context))
 	}
 
-	public func inferTypeUnannotated(environment: [Name:Self], _ context: [Name:Self]) -> Either<String, Self> {
+	private func inferTypeUnannotated(environment: [Name:Self], _ context: [Name:Self]) -> Either<String, Self> {
 		switch out {
 		case let .Type(n):
 			return .right(.Type(n + 1))
