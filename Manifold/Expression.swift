@@ -20,19 +20,6 @@ public enum Expression<Recur> {
 		}
 	}
 
-	public func analysis<T>(
-		ifType ifType: (Int -> T)? = nil,
-		ifVariable: (Name -> T)? = nil,
-		ifApplication: ((Recur, Recur) -> T)? = nil,
-		ifLambda: ((Int, Recur, Recur) -> T)? = nil,
-		@noescape otherwise: () -> T) -> T {
-		return analysis(
-			ifType: { ifType?($0) ?? otherwise() },
-			ifVariable: { ifVariable?($0) ?? otherwise() },
-			ifApplication: { ifApplication?($0) ?? otherwise() },
-			ifLambda: { ifLambda?($0) ?? otherwise() })
-	}
-
 
 	// MARK: Functor
 
