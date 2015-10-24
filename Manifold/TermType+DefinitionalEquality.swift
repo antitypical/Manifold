@@ -18,7 +18,7 @@ extension TermType {
 		visited.unionInPlace(rnames)
 
 		switch (left.out, right.out) {
-		case (.Type, .Type), (.Unit, .Unit), (.UnitType, .UnitType), (.BooleanType, .BooleanType):
+		case (.Type, .Type):
 			return true
 
 		case let (.Variable(a), .Variable(b)):
@@ -28,21 +28,6 @@ extension TermType {
 			return recur(a1, b1) && recur(a2, b2)
 
 		case let (.Lambda(_, a1, a2), .Lambda(_, b1, b2)):
-			return recur(a1, b1) && recur(a2, b2)
-
-		case let (.Projection(a1, a2), .Projection(b1, b2)):
-			return recur(a1, b1) && a2 == b2
-
-		case let (.Product(a1, a2), .Product(b1, b2)):
-			return recur(a1, b1) && recur(a2, b2)
-
-		case let (.Boolean(a), .Boolean(b)):
-			return a == b
-
-		case let (.If(a1, a2, a3), .If(b1, b2, b3)):
-			return recur(a1, b1) && recur(a2, b2) && recur(a3, b3)
-
-		case let (.Annotation(a1, a2), .Annotation(b1, b2)):
 			return recur(a1, b1) && recur(a2, b2)
 
 		default:

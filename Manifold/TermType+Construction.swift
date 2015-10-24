@@ -3,14 +3,6 @@
 extension TermType {
 	// MARK: First-order construction
 
-	public static var Unit: Self {
-		return Self(.Unit)
-	}
-
-	public static var UnitType: Self {
-		return Self(.UnitType)
-	}
-
 	public static var Type: Self {
 		return Type(0)
 	}
@@ -31,30 +23,6 @@ extension TermType {
 		return Self(.Lambda(i, type, body))
 	}
 
-	public static func Projection(a: Self, _ field: Bool) -> Self {
-		return Self(.Projection(a, field))
-	}
-
-	public static func Product(a: Self, _ b: Self) -> Self {
-		return Self(.Product(a, b))
-	}
-
-	public static var BooleanType: Self {
-		return Self(.BooleanType)
-	}
-
-	public static func Boolean(value: Bool) -> Self {
-		return Self(.Boolean(value))
-	}
-
-	public static func If(condition: Self, _ then: Self, _ `else`: Self) -> Self {
-		return Self(.If(condition, then, `else`))
-	}
-
-	public static func Annotation(term: Self, _ type: Self) -> Self {
-		return Self(.Annotation(term, type))
-	}
-
 
 	public static func FunctionType(a: Self, _ b: Self) -> Self {
 		return .Lambda(-1, a, b)
@@ -67,15 +35,6 @@ extension TermType {
 
 	public subscript (operands: Self...) -> Self {
 		return operands.reduce(self, combine: Self.Application)
-	}
-
-
-	public var first: Self {
-		return .Projection(self, false)
-	}
-
-	public var second: Self {
-		return .Projection(self, true)
 	}
 
 
@@ -108,11 +67,6 @@ extension TermType {
 
 	public init<T: TermContainerType>(expression: Expression<T>) {
 		self.init(expression.map { Self(term: $0) })
-	}
-
-
-	public init(booleanLiteral value: Bool) {
-		self.init(.Boolean(value))
 	}
 
 

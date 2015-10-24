@@ -23,7 +23,7 @@ public func == <Term: TermContainerType> (left: Term, right: Term) -> Bool {
 }
 
 
-public protocol TermType: BooleanLiteralConvertible, IntegerLiteralConvertible, StringLiteralConvertible, TermContainerType {
+public protocol TermType: IntegerLiteralConvertible, StringLiteralConvertible, TermContainerType {
 	init(_: () -> Expression<Self>)
 }
 

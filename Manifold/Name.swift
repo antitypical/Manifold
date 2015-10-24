@@ -1,42 +1,39 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public enum Name: Comparable, CustomDebugStringConvertible, CustomStringConvertible, Hashable, IntegerLiteralConvertible, StringLiteralConvertible {
-	// MARK: Analysis
-
-	public func analysis<T>(
-		@noescape ifGlobal ifGlobal: String -> T,
-		@noescape ifLocal: Int -> T) -> T {
-		switch self {
-		case let .Global(s):
-			return ifGlobal(s)
-		case let .Local(n):
-			return ifLocal(n)
-		}
-	}
-
-
 	// MARK: CustomDebugStringConvertible
 
 	public var debugDescription: String {
-		return analysis(
-			ifGlobal: { ".Global(\($0))" },
-			ifLocal: { ".Local(\($0))" })
+		switch self {
+		case let .Global(name):
+			return ".Global(\(name))"
+		case let .Local(i):
+			return ".Local(\(i))"
+		}
 	}
 
 
 	// MARK: CustomStringConvertible
 
 	public var description: String {
-		return analysis(
-			ifGlobal: id,
-			ifLocal: { String($0) })
+		switch self {
+		case let .Global(name):
+			return name
+		case let .Local(i):
+			return renderNumerals(i, "abcdefghijklmnopqrstuvwxyz")
+		}
 	}
 
 
 	// MARK: Hashable
 
 	public var hashValue: Int {
-		return analysis(ifGlobal: { $0.hashValue }, ifLocal: id)
+		switch self {
+		case let .Global(name):
+			return name.hashValue
+		case let .Local(i):
+			return i
+		}
 	}
 
 

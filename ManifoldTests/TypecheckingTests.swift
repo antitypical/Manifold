@@ -1,54 +1,22 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 final class TypecheckingTests: XCTestCase {
-	func testUnitTermTypechecksToUnitType() {
-		assert(Term.Unit.inferType(), ==, .UnitType)
-	}
-
-	func testUnitTypeTypechecksToType() {
-		assert(Term.UnitType.inferType(), ==, .Type(0))
-	}
-
 	func testTypeTypechecksToNextTypeLevel() {
 		assert(Term(.Type(0)).inferType(), ==, .Type(1))
 	}
 
-	func testApplicationOfIdentityAbstractionToUnitTermTypechecksToUnitType() {
-		let identity = Term.lambda(.UnitType, id)
-		assert(Term.Application(identity, .Unit).inferType(), ==, .UnitType)
+	func testApplicationOfIdentityAbstractionToTermTypechecksToType() {
+		let identity = Term.lambda(.Type(1), id)
+		assert(Term.Application(identity, .Type).inferType(), ==, .Type(1))
 	}
 
 	func testSimpleAbstractionTypechecksToAbstractionType() {
-		let identity = Term.lambda(.UnitType, id)
-		assert(identity.inferType(), ==, .lambda(.UnitType, const(.UnitType)))
+		let identity = Term.lambda(.Type, id)
+		assert(identity.inferType(), ==, .lambda(.Type, const(.Type)))
 	}
 
 	func testAbstractedAbstractionTypechecks() {
 		assert(identity.inferType(), ==, .Lambda(0, .Type, .Lambda(-1, 0, 0)))
-	}
-
-	func testProjectionTypechecksToTypeOfProjectedField() {
-		let product = Term.Product(.Unit, false)
-		assert(Term.Projection(product, false).inferType(), ==, .UnitType)
-		assert(Term.Projection(product, true).inferType(), ==, .BooleanType)
-	}
-
-	func testIfWithEqualBranchTypesTypechecksToBranchType() {
-		assert(Term.If(true, .Unit, .Unit).inferType(), ==, .UnitType)
-	}
-
-	func testIfWithDisjointBranchTypesTypechecksToSumOfBranchTypes() {
-		assert(Term.If(true, .Unit, true).inferType(), ==, Term.lambda(.BooleanType) { .If($0, .UnitType, .BooleanType) })
-	}
-
-	func testProductTypechecksToSigmaType() {
-		assert(Term.Product(.Unit, false).inferType(), ==, Term.lambda(.UnitType, const(.BooleanType)))
-	}
-
-	func testDependentProductTypechecksToSigmaType() {
-		let type = Term.lambda(.BooleanType) { c in .If(c, .UnitType, .BooleanType) }
-		assert(Term.Annotation(.Product(true, .Unit), type).inferType(), ==, type)
-		assert(Term.Annotation(.Product(false, true), type).inferType(), ==, type)
 	}
 }
 
