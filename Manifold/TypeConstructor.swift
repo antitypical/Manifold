@@ -2,11 +2,11 @@
 
 public enum TypeConstructor<Recur: TermType>: DictionaryLiteralConvertible {
 	indirect case Argument(Recur, Recur -> TypeConstructor)
-	case End(Datatype<Recur>)
+	case End([(String, Telescope<Recur>)])
 
 
 	public init(dictionaryLiteral: (String, Telescope<Recur>)...) {
-		self = .End(Datatype(constructors: dictionaryLiteral))
+		self = .End(dictionaryLiteral)
 	}
 
 
@@ -23,29 +23,29 @@ public enum TypeConstructor<Recur: TermType>: DictionaryLiteralConvertible {
 					})
 				}
 			} >>> abstract)
-		case let .End(datatype):
-			return datatype.definitions().map {
+		case .End:
+			return [].map {
 				// Since at this point the type and value both close over the same parameter despite its inevitable use at two different indices, we copy them recursively using `Recur(term:)` to ensure that they’re finished with the shared state by the time they’re returned to the caller.
 				($0, Recur(term: abstract($1)(recur)), Recur(term: abstract($2)(recur)))
 			}
 		}
 	}
 
-	public func withTypeParameters(continuation: Datatype<Recur> -> Recur) -> Recur {
+	public func withTypeParameters(continuation: [(String, Telescope<Recur>)] -> Recur) -> Recur {
 		switch self {
 		case let .Argument(type, rest):
 			return type => { rest($0).withTypeParameters(continuation) }
-		case let .End(datatype):
-			return continuation(datatype)
+		case let .End(constructors):
+			return continuation(constructors)
 		}
 	}
 
-	public func withTypeParameters(recur: Recur, continuation: (Recur, Datatype<Recur>) -> Recur) -> Recur {
+	public func withTypeParameters(recur: Recur, continuation: (Recur, [(String, Telescope<Recur>)]) -> Recur) -> Recur {
 		switch self {
 		case let .Argument(type, rest):
 			return type => { rest($0).withTypeParameters(.Application(recur, $0), continuation: continuation) }
-		case let .End(datatype):
-			return continuation(recur, datatype)
+		case let .End(constructors):
+			return continuation(recur, constructors)
 		}
 	}
 
@@ -55,9 +55,9 @@ public enum TypeConstructor<Recur: TermType>: DictionaryLiteralConvertible {
 	}
 
 	public func value(recur: Recur) -> Recur {
-		return withTypeParameters(recur) { recur, datatype in
+		return withTypeParameters(recur) { recur, constructors in
 			.Type => { motive in
-				datatype.constructors.map {
+				constructors.map {
 					$1.fold(recur, terminal: motive, combine: -->)
 				}.reverse().reduce(motive, combine: -->)
 			}
