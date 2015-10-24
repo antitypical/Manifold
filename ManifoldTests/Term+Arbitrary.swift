@@ -13,7 +13,6 @@ extension Term: Arbitrary {
 	public static var arbitrary: Gen<Term> {
 		func arbitrary(n: Int) -> Gen<Term> {
 			let topLevel: [Gen<Term>] = [
-				Gen.pure(Term.Unit),
 				Gen.pure(Term.UnitType),
 				Bool.arbitrary.fmap { $0 ? .Type : .Type(1) },
 				Gen.pure(()).bind {

@@ -3,10 +3,6 @@
 extension TermType {
 	// MARK: First-order construction
 
-	public static var Unit: Self {
-		return Self(.Unit)
-	}
-
 	public static var UnitType: Self {
 		return Self(.UnitType)
 	}

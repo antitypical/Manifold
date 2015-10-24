@@ -21,8 +21,6 @@ extension TermContainerType {
 		}
 		let (out, _): (String, Bool) = para {
 			switch $0 {
-			case .Unit:
-				return ("()", false)
 			case .UnitType:
 				return ("Unit", false)
 

@@ -4,15 +4,12 @@ public enum Expression<Recur> {
 	// MARK: Analyses
 
 	public func analysis<T>(
-		@noescape ifUnit ifUnit: () -> T,
-		@noescape ifUnitType: () -> T,
+		@noescape ifUnitType ifUnitType: () -> T,
 		@noescape ifType: Int -> T,
 		@noescape ifVariable: Name -> T,
 		@noescape ifApplication: (Recur, Recur) -> T,
 		@noescape ifLambda: (Int, Recur, Recur) -> T) -> T {
 		switch self {
-		case .Unit:
-			return ifUnit()
 		case .UnitType:
 			return ifUnitType()
 		case let .Type(n):
@@ -27,15 +24,13 @@ public enum Expression<Recur> {
 	}
 
 	public func analysis<T>(
-		ifUnit ifUnit: (() -> T)? = nil,
-		ifUnitType: (() -> T)? = nil,
+		ifUnitType ifUnitType: (() -> T)? = nil,
 		ifType: (Int -> T)? = nil,
 		ifVariable: (Name -> T)? = nil,
 		ifApplication: ((Recur, Recur) -> T)? = nil,
 		ifLambda: ((Int, Recur, Recur) -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
-			ifUnit: { ifUnit?() ?? otherwise() },
 			ifUnitType: { ifUnitType?() ?? otherwise() },
 			ifType: { ifType?($0) ?? otherwise() },
 			ifVariable: { ifVariable?($0) ?? otherwise() },
@@ -48,7 +43,6 @@ public enum Expression<Recur> {
 
 	public func map<T>(@noescape transform: Recur -> T) -> Expression<T> {
 		return analysis(
-			ifUnit: const(.Unit),
 			ifUnitType: const(.UnitType),
 			ifType: { .Type($0) },
 			ifVariable: Expression<T>.Variable,
@@ -59,7 +53,6 @@ public enum Expression<Recur> {
 
 	// MARK: Cases
 
-	case Unit
 	case UnitType
 	case Type(Int)
 	case Variable(Name)
@@ -70,7 +63,7 @@ public enum Expression<Recur> {
 
 public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Recur>) -> Bool {
 	switch (left, right) {
-	case (.Unit, .Unit), (.UnitType, .UnitType):
+	case (.UnitType, .UnitType):
 		return true
 	case let (.Type(i), .Type(j)):
 		return i == j
