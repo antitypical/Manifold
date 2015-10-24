@@ -5,15 +5,15 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 		self = .Definition(symbol, type, value)
 	}
 
-	public init(_ symbol: String, _ datatype: TypeConstructor<Recur>) {
+	public init(_ symbol: String, _ datatype: Manifold.Datatype<Recur>) {
 		self = .Datatype(symbol, datatype)
 	}
 
-	public init(_ symbol: String, _ type: Recur, _ constructor: Recur -> TypeConstructor<Recur>) {
+	public init(_ symbol: String, _ type: Recur, _ constructor: Recur -> Manifold.Datatype<Recur>) {
 		self.init(symbol, .Argument(type, constructor))
 	}
 
-	public init(_ symbol: String, _ type1: Recur, _ type2: Recur, _ constructor: (Recur, Recur) -> TypeConstructor<Recur>) {
+	public init(_ symbol: String, _ type1: Recur, _ type2: Recur, _ constructor: (Recur, Recur) -> Manifold.Datatype<Recur>) {
 		self.init(symbol, .Argument(type1, { a in .Argument(type2, { b in constructor(a, b) }) }))
 	}
 
@@ -63,7 +63,7 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 
 
 	case Definition(String, Recur, Recur)
-	case Datatype(String, TypeConstructor<Recur>)
+	case Datatype(String, Manifold.Datatype<Recur>)
 
 
 	public var ref: Recur {

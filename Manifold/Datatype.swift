@@ -1,7 +1,7 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum TypeConstructor<Recur: TermType>: DictionaryLiteralConvertible {
-	indirect case Argument(Recur, Recur -> TypeConstructor)
+public enum Datatype<Recur: TermType>: DictionaryLiteralConvertible {
+	indirect case Argument(Recur, Recur -> Datatype)
 	case End([(String, Telescope<Recur>)])
 
 
