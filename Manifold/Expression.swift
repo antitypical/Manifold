@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Expression<Recur>: StringLiteralConvertible {
+public enum Expression<Recur> {
 	// MARK: Analyses
 
 	public func analysis<T>(
@@ -78,13 +78,6 @@ public enum Expression<Recur>: StringLiteralConvertible {
 			ifBoolean: Expression<T>.Boolean,
 			ifIf: { .If(transform($0), transform($1), transform($2)) },
 			ifAnnotation: { .Annotation(transform($0), transform($1)) })
-	}
-
-
-	// MARK: StringLiteralConvertible
-
-	public init(stringLiteral: String) {
-		self = .Variable(.Global(stringLiteral))
 	}
 
 
