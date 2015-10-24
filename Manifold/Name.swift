@@ -18,25 +18,36 @@ public enum Name: Comparable, CustomDebugStringConvertible, CustomStringConverti
 	// MARK: CustomDebugStringConvertible
 
 	public var debugDescription: String {
-		return analysis(
-			ifGlobal: { ".Global(\($0))" },
-			ifLocal: { ".Local(\($0))" })
+		switch self {
+		case let .Global(name):
+			return ".Global(\(name))"
+		case let .Local(i):
+			return ".Local(\(i))"
+		}
 	}
 
 
 	// MARK: CustomStringConvertible
 
 	public var description: String {
-		return analysis(
-			ifGlobal: id,
-			ifLocal: { renderNumerals($0, "abcdefghijklmnopqrstuvwxyz") })
+		switch self {
+		case let .Global(name):
+			return name
+		case let .Local(i):
+			return renderNumerals(i, "abcdefghijklmnopqrstuvwxyz")
+		}
 	}
 
 
 	// MARK: Hashable
 
 	public var hashValue: Int {
-		return analysis(ifGlobal: { $0.hashValue }, ifLocal: id)
+		switch self {
+		case let .Global(name):
+			return name.hashValue
+		case let .Local(i):
+			return i
+		}
 	}
 
 
