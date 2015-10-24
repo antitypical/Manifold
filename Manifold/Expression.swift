@@ -1,26 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public enum Expression<Recur> {
-	// MARK: Analyses
-
-	public func analysis<T>(
-		@noescape ifType ifType: Int -> T,
-		@noescape ifVariable: Name -> T,
-		@noescape ifApplication: (Recur, Recur) -> T,
-		@noescape ifLambda: (Int, Recur, Recur) -> T) -> T {
-		switch self {
-		case let .Type(n):
-			return ifType(n)
-		case let .Variable(x):
-			return ifVariable(x)
-		case let .Application(a, b):
-			return ifApplication(a, b)
-		case let .Lambda(i, a, b):
-			return ifLambda(i, a, b)
-		}
-	}
-
-
 	// MARK: Functor
 
 	public func map<T>(@noescape transform: Recur -> T) -> Expression<T> {
