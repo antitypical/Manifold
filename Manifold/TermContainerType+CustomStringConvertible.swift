@@ -39,12 +39,11 @@ extension TermContainerType {
 }
 
 private func renderNumerals(n: Int, _ alphabet: String) -> String {
+	func atModular<C: CollectionType where C.Index: BidirectionalIndexType>(collection: C, offset: C.Index.Distance) -> C.Generator.Element {
+		let max = collection.startIndex.distanceTo(collection.endIndex)
+		return collection[(offset >= 0 ? collection.startIndex : collection.endIndex).advancedBy(offset % max, limit: offset >= 0 ? collection.endIndex : collection.startIndex)]
+	}
 	return n.digits(alphabet.characters.count).lazy.map { String(atModular(alphabet.characters, offset: $0)) }.joinWithSeparator("")
-}
-
-private func atModular<C: CollectionType where C.Index: BidirectionalIndexType>(collection: C, offset: C.Index.Distance) -> C.Generator.Element {
-	let max = collection.startIndex.distanceTo(collection.endIndex)
-	return collection[(offset >= 0 ? collection.startIndex : collection.endIndex).advancedBy(offset % max, limit: offset >= 0 ? collection.endIndex : collection.startIndex)]
 }
 
 
