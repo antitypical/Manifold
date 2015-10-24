@@ -42,7 +42,8 @@ final class DeclarationTests: XCTestCase {
 	}
 
 	func testDatatypeConstructorsWithRecursiveReferencesProduceValuesEmbeddingReferencesToTheirType() {
-		assert(Module<Term>.natural.environment["successor"], ==, Term.lambda("Natural") { .Annotation(.Product(false, $0), "Natural") })
+		let Natural: Term = "Natural"
+		assert(Module<Term>.natural.environment["successor"], ==, (Natural, .Type) => { n, A in A --> (Natural --> A) => { $0[n] } })
 	}
 
 	func testDatatypeConstructorsWithMultipleArgumentsHaveFunctionTypes() {
