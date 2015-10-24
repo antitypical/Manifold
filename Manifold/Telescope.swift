@@ -1,9 +1,9 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public enum Telescope<Recur: TermType> {
-	case End
 	indirect case Recursive(Telescope)
 	indirect case Argument(Recur, Recur -> Telescope)
+	case End
 
 
 	public func fold(recur: Recur, terminal: Recur, combine: (Recur, Recur) -> Recur) -> Recur {
