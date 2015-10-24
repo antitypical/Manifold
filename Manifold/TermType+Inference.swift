@@ -11,7 +11,7 @@ extension TermType {
 			return .right(.Type(n + 1))
 
 		case let .Variable(i):
-			return context[i].map(Either.Right) ?? Either.Left("Unexpectedly free variable \(i) in context: \(Self.toString(context: context)), environment: \(Self.toString(environment: environment))")
+			return context[i].map(Either.Right) ?? Either.Left("Unexpectedly free variable \(i) in context: \(Self.toString(context, separator: ":")), environment: \(Self.toString(environment, separator: "="))")
 
 		case let .Lambda(i, type, body):
 			return type.checkIsType(environment, context)
@@ -25,7 +25,7 @@ extension TermType {
 					case let .Lambda(i, type, body):
 						return b.checkType(type, environment, context).map { _ in body.substitute(i, b) }
 					default:
-						return Either.Left("Illegal application of \(a) : \(A) to \(b) in context: \(Self.toString(context: context)), environment: \(Self.toString(environment: environment))")
+						return Either.Left("Illegal application of \(a) : \(A) to \(b) in context: \(Self.toString(context, separator: ":")), environment: \(Self.toString(environment, separator: "="))")
 					}
 				}
 		}
