@@ -21,12 +21,12 @@ extension TermType {
 		case let .Application(a, b):
 			return a.inferType(environment, context)
 				.flatMap { A in
-					A.weakHeadNormalForm(environment).out.analysis(
-						ifLambda: { i, type, body in
-							b.checkType(type, environment, context)
-								.map { _ in body.substitute(i, b) }
-						},
-						otherwise: const(Either.Left("Illegal application of \(a) : \(A) to \(b) in context: \(Self.toString(context: context)), environment: \(Self.toString(environment: environment))")))
+					switch A.weakHeadNormalForm(environment).out {
+					case let .Lambda(i, type, body):
+						return b.checkType(type, environment, context).map { _ in body.substitute(i, b) }
+					default:
+						return Either.Left("Illegal application of \(a) : \(A) to \(b) in context: \(Self.toString(context: context)), environment: \(Self.toString(environment: environment))")
+					}
 				}
 		}
 	}
