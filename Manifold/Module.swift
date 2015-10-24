@@ -19,7 +19,7 @@ public struct Module<Recur: TermType> {
 	public let dependencies: [Module]
 	public let declarations: [Declaration<Recur>]
 
-	private var definitions: AnySequence<(Name, Recur, Recur)> {
+	public var definitions: AnySequence<(Name, Recur, Recur)> {
 		return AnySequence(declarations
 			.lazy
 			.flatMap {
