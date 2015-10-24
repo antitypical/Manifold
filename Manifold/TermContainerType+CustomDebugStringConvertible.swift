@@ -22,8 +22,6 @@ extension TermContainerType {
 				return ".Boolean(\(a))"
 			case let .If(a, b, c):
 				return ".If(\(a), \(b), \(c))"
-			case let .Annotation(a, b):
-				return ".Annotation(\(a), \(b))"
 			}
 		}
 	}

@@ -49,9 +49,6 @@ extension TermContainerType {
 
 			case let .If((_, condition), (_, then), (_, `else`)):
 				return ("if \(wrap(condition)) then \(wrap(then)) else \(wrap(`else`))", true)
-
-			case let .Annotation((_, (term, _)), (_, type)):
-				return ("\(term) : \(wrap(type))", true)
 			}
 		}
 		return out

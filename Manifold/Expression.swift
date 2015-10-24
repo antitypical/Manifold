@@ -12,8 +12,7 @@ public enum Expression<Recur> {
 		@noescape ifLambda: (Int, Recur, Recur) -> T,
 		@noescape ifBooleanType: () -> T,
 		@noescape ifBoolean: Bool -> T,
-		@noescape ifIf: (Recur, Recur, Recur) -> T,
-		@noescape ifAnnotation: (Recur, Recur) -> T) -> T {
+		@noescape ifIf: (Recur, Recur, Recur) -> T) -> T {
 		switch self {
 		case .Unit:
 			return ifUnit()
@@ -33,8 +32,6 @@ public enum Expression<Recur> {
 			return ifBoolean(b)
 		case let .If(a, b, c):
 			return ifIf(a, b, c)
-		case let .Annotation(term, type):
-			return ifAnnotation(term, type)
 		}
 	}
 
@@ -48,7 +45,6 @@ public enum Expression<Recur> {
 		ifBooleanType: (() -> T)? = nil,
 		ifBoolean: (Bool -> T)? = nil,
 		ifIf: ((Recur, Recur, Recur) -> T)? = nil,
-		ifAnnotation: ((Recur, Recur) -> T)? = nil,
 		@noescape otherwise: () -> T) -> T {
 		return analysis(
 			ifUnit: { ifUnit?() ?? otherwise() },
@@ -59,8 +55,7 @@ public enum Expression<Recur> {
 			ifLambda: { ifLambda?($0) ?? otherwise() },
 			ifBooleanType: { ifBooleanType?() ?? otherwise() },
 			ifBoolean: { ifBoolean?($0) ?? otherwise() },
-			ifIf: { ifIf?($0) ?? otherwise() },
-			ifAnnotation: { ifAnnotation?($0) ?? otherwise() })
+			ifIf: { ifIf?($0) ?? otherwise() })
 	}
 
 
@@ -76,8 +71,7 @@ public enum Expression<Recur> {
 			ifLambda: { .Lambda($0, transform($1), transform($2)) },
 			ifBooleanType: const(.BooleanType),
 			ifBoolean: Expression<T>.Boolean,
-			ifIf: { .If(transform($0), transform($1), transform($2)) },
-			ifAnnotation: { .Annotation(transform($0), transform($1)) })
+			ifIf: { .If(transform($0), transform($1), transform($2)) })
 	}
 
 
@@ -92,7 +86,6 @@ public enum Expression<Recur> {
 	case BooleanType
 	case Boolean(Bool)
 	case If(Recur, Recur, Recur)
-	case Annotation(Recur, Recur)
 }
 
 
@@ -112,8 +105,6 @@ public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Re
 		return a == b
 	case let (.If(a1, b1, c1), .If(a2, b2, c2)):
 		return a1 == a2 && b1 == b2 && c1 == c2
-	case let (.Annotation(term1, type1), .Annotation(term2, type2)):
-		return term1 == term2 && type1 == type2
 	default:
 		return false
 	}

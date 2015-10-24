@@ -44,9 +44,6 @@ extension TermType {
 						},
 						otherwise: const(Either.Left("Illegal application of \(a) : \(A) to \(b) in context: \(Self.toString(context: context)), environment: \(Self.toString(environment: environment))")))
 				}
-
-		case let .Annotation(term, type):
-			return term.checkType(type, environment, context)
 		}
 	}
 }

@@ -43,10 +43,6 @@ extension TermType {
 		return Self(.If(condition, then, `else`))
 	}
 
-	public static func Annotation(term: Self, _ type: Self) -> Self {
-		return Self(.Annotation(term, type))
-	}
-
 
 	public static func FunctionType(a: Self, _ b: Self) -> Self {
 		return .Lambda(-1, a, b)

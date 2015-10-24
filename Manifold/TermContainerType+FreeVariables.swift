@@ -9,7 +9,6 @@ extension TermContainerType {
 				ifApplication: max,
 				ifLambda: { $0 < 0 ? max($1, $2) : max($0, $1) },
 				ifIf: { max($0, $1, $2) },
-				ifAnnotation: max,
 				otherwise: const(-1))
 		}
 	}
@@ -21,7 +20,6 @@ extension TermContainerType {
 				ifApplication: uncurry(Set.union),
 				ifLambda: { $1.union($2.subtract([ $0 ])) },
 				ifIf: { $0.union($1).union($2) },
-				ifAnnotation: uncurry(Set.union),
 				otherwise: const(Set()))
 		}
 	}

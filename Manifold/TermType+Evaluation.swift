@@ -22,8 +22,6 @@ extension TermType {
 					: `else`.evaluate(environment)
 			}
 			fatalError("Illegal branch on non-boolean term \(condition)")
-		case let .Annotation(term, _):
-			return term.evaluate(environment)
 		default:
 			return self
 		}
