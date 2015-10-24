@@ -2,6 +2,11 @@
 
 extension Module {
 	public static var vector: Module {
-		return Module("Vector", [ natural ], [])
+		let Natural: Recur = "Natural"
+		let Vector = Declaration("Vector",
+			type: .Type --> Natural --> .Type,
+			value: .Type)
+
+		return Module("Vector", [ natural ], [ Vector ])
 	}
 }
