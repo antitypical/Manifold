@@ -7,12 +7,12 @@ extension Module {
 			value: (.Type, .Type, .Type) => { L, R, Result in (L --> Result) --> (R --> Result) --> Result })
 
 		let left = Declaration("left",
-			type: Recur.lambda(.Type, .Type) { L, R in .FunctionType(L, Either.ref[L, R]) },
-			value: Recur.lambda(.Type, .Type) { L, R in Recur.lambda(L, .Type) { l, Result in Recur.lambda(.FunctionType(L, Result), .FunctionType(R, Result)) { ifL, _ in ifL[l] } } })
+			type: (.Type, .Type) => { L, R in L --> Either.ref[L, R] },
+			value: (.Type, .Type) => { L, R in Recur.lambda(L, .Type) { l, Result in ((L --> Result), (R --> Result)) => { ifL, _ in ifL[l] } } })
 
 		let right = Declaration("right",
-			type: Recur.lambda(.Type, .Type) { L, R in .FunctionType(R, Either.ref[L, R]) },
-			value: Recur.lambda(.Type, .Type) { L, R in Recur.lambda(R, .Type) { r, Result in Recur.lambda(.FunctionType(L, Result), .FunctionType(R, Result)) { _, ifR in ifR[r] } } })
+			type: (.Type, .Type) => { L, R in R --> Either.ref[L, R] },
+			value: (.Type, .Type) => { L, R in Recur.lambda(R, .Type) { r, Result in ((L --> Result), (R --> Result)) => { _, ifR in ifR[r] } } })
 
 		return Module("ChurchEither", [ Either, left, right ])
 	}
