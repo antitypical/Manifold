@@ -27,12 +27,6 @@ final class EvaluationTests: XCTestCase {
 		assert(identity.evaluate(), ==, identity)
 	}
 
-	func testProjectionEvaluatesToProjectedField() {
-		let product = Term.Product(.Unit, false)
-		assert(Term.Projection(product, false).evaluate(), ==, .Unit)
-		assert(Term.Projection(product, true).evaluate(), ==, false)
-	}
-
 	func testIfEvaluatesToCorrectBranch() {
 		assert(Term.If(true, true, false).evaluate(), ==, true)
 		assert(Term.If(false, true, false).evaluate(), ==, false)

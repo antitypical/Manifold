@@ -27,12 +27,6 @@ final class TypecheckingTests: XCTestCase {
 		assert(identity.inferType(), ==, .Lambda(0, .Type, .Lambda(-1, 0, 0)))
 	}
 
-	func testProjectionTypechecksToTypeOfProjectedField() {
-		let product = Term.Product(.Unit, false)
-		assert(Term.Projection(product, false).inferType(), ==, .UnitType)
-		assert(Term.Projection(product, true).inferType(), ==, .BooleanType)
-	}
-
 	func testIfWithEqualBranchTypesTypechecksToBranchType() {
 		assert(Term.If(true, .Unit, .Unit).inferType(), ==, .UnitType)
 	}

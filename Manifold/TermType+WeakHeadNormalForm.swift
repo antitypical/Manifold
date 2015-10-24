@@ -37,16 +37,6 @@ extension TermType {
 				return .Application(t1, t2)
 			}
 
-		case let .Projection(a, b):
-			let a = unfold(a)
-			switch a.out {
-			case let .Product(t1, t2):
-				return unfold(b ? t1 : t2)
-
-			default:
-				return .Projection(a, b)
-			}
-
 		case let .If(condition, then, `else`):
 			let condition = unfold(condition)
 			switch condition.out {

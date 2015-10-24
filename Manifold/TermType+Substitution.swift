@@ -11,7 +11,6 @@ extension TermType {
 				},
 				ifApplication: Self.Application,
 				ifLambda: Self.Lambda,
-				ifProjection: Self.Projection,
 				ifProduct: Self.Product,
 				ifIf: Self.If,
 				ifAnnotation: Self.Annotation,

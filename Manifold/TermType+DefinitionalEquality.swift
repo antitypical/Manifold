@@ -30,9 +30,6 @@ extension TermType {
 		case let (.Lambda(_, a1, a2), .Lambda(_, b1, b2)):
 			return recur(a1, b1) && recur(a2, b2)
 
-		case let (.Projection(a1, a2), .Projection(b1, b2)):
-			return recur(a1, b1) && a2 == b2
-
 		case let (.Product(a1, a2), .Product(b1, b2)):
 			return recur(a1, b1) && recur(a2, b2)
 

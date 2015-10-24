@@ -14,12 +14,6 @@ extension TermType {
 				return body.substitute(i, b.evaluate(environment)).evaluate(environment)
 			}
 			fatalError("Illegal application of non-lambda term \(a) to \(b)")
-		case let .Projection(a, b):
-			let a = a.evaluate(environment)
-			if case let .Product(a0, a1) = a.out {
-				return (b ? a1 : a0)
-			}
-			fatalError("Illegal projection of non-product term \(a) field \(b ? 1 : 0)")
 		case let .If(condition, then, `else`):
 			let condition = condition.evaluate(environment)
 			if case let .Boolean(boolean) = condition.out {

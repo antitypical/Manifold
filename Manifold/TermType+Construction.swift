@@ -31,10 +31,6 @@ extension TermType {
 		return Self(.Lambda(i, type, body))
 	}
 
-	public static func Projection(a: Self, _ field: Bool) -> Self {
-		return Self(.Projection(a, field))
-	}
-
 	public static func Product(a: Self, _ b: Self) -> Self {
 		return Self(.Product(a, b))
 	}

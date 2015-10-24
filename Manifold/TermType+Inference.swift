@@ -49,16 +49,6 @@ extension TermType {
 						otherwise: const(Either.Left("Illegal application of \(a) : \(A) to \(b) in context: \(Self.toString(context: context)), environment: \(Self.toString(environment: environment))")))
 				}
 
-		case let .Projection(term, branch):
-			return term.inferType(environment, context)
-				.flatMap { type in
-					type.out.analysis(
-						ifLambda: { i, A, B in
-							Either.Right(branch ? B.substitute(i, A) : A)
-						},
-						otherwise: const(Either.Left("Illegal projection of field \(branch ? 1 : 0) of non-product value \(term) of type \(type) in context: \(Self.toString(context: context)), environment: \(Self.toString(environment: environment))")))
-				}
-
 		case let .Annotation(term, type):
 			return term.checkType(type, environment, context)
 		}

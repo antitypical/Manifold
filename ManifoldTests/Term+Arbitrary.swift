@@ -22,9 +22,6 @@ extension Term: Arbitrary {
 					arbitrary(n).bind { a in arbitrary(n).fmap { b in Term.Application(a, b) } }
 				},
 				Gen.pure(()).bind {
-					arbitrary(n).bind { a in Bool.arbitrary.fmap { b in Term.Projection(a, b) } }
-				},
-				Gen.pure(()).bind {
 					arbitrary(n).bind { a in arbitrary(n).bind { b in Term.arbitrary.fmap { c in Term.If(a, b, c) } } }
 				},
 				Gen.pure(()).bind {

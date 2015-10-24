@@ -10,7 +10,6 @@ public enum Expression<Recur>: BooleanLiteralConvertible, IntegerLiteralConverti
 		@noescape ifVariable: Name -> T,
 		@noescape ifApplication: (Recur, Recur) -> T,
 		@noescape ifLambda: (Int, Recur, Recur) -> T,
-		@noescape ifProjection: (Recur, Bool) -> T,
 		@noescape ifProduct: (Recur, Recur) -> T,
 		@noescape ifBooleanType: () -> T,
 		@noescape ifBoolean: Bool -> T,
@@ -29,8 +28,6 @@ public enum Expression<Recur>: BooleanLiteralConvertible, IntegerLiteralConverti
 			return ifApplication(a, b)
 		case let .Lambda(i, a, b):
 			return ifLambda(i, a, b)
-		case let .Projection(a, b):
-			return ifProjection(a, b)
 		case let .Product(a, b):
 			return ifProduct(a, b)
 		case .BooleanType:
@@ -51,7 +48,6 @@ public enum Expression<Recur>: BooleanLiteralConvertible, IntegerLiteralConverti
 		ifVariable: (Name -> T)? = nil,
 		ifApplication: ((Recur, Recur) -> T)? = nil,
 		ifLambda: ((Int, Recur, Recur) -> T)? = nil,
-		ifProjection: ((Recur, Bool) -> T)? = nil,
 		ifProduct: ((Recur, Recur) -> T)? = nil,
 		ifBooleanType: (() -> T)? = nil,
 		ifBoolean: (Bool -> T)? = nil,
@@ -65,7 +61,6 @@ public enum Expression<Recur>: BooleanLiteralConvertible, IntegerLiteralConverti
 			ifVariable: { ifVariable?($0) ?? otherwise() },
 			ifApplication: { ifApplication?($0) ?? otherwise() },
 			ifLambda: { ifLambda?($0) ?? otherwise() },
-			ifProjection: { ifProjection?($0) ?? otherwise() },
 			ifProduct: { ifProduct?($0) ?? otherwise() },
 			ifBooleanType: { ifBooleanType?() ?? otherwise() },
 			ifBoolean: { ifBoolean?($0) ?? otherwise() },
@@ -84,7 +79,6 @@ public enum Expression<Recur>: BooleanLiteralConvertible, IntegerLiteralConverti
 			ifVariable: Expression<T>.Variable,
 			ifApplication: { .Application(transform($0), transform($1)) },
 			ifLambda: { .Lambda($0, transform($1), transform($2)) },
-			ifProjection: { .Projection(transform($0), $1) },
 			ifProduct: { .Product(transform($0), transform($1)) },
 			ifBooleanType: const(.BooleanType),
 			ifBoolean: Expression<T>.Boolean,
@@ -122,7 +116,6 @@ public enum Expression<Recur>: BooleanLiteralConvertible, IntegerLiteralConverti
 	case Variable(Name)
 	case Application(Recur, Recur)
 	case Lambda(Int, Recur, Recur) // (Πx:A)B where B can depend on x
-	case Projection(Recur, Bool)
 	case Product(Recur, Recur)
 	case BooleanType
 	case Boolean(Bool)
@@ -143,8 +136,6 @@ public func == <Recur: Equatable> (left: Expression<Recur>, right: Expression<Re
 		return t1 == u1 && t2 == u2
 	case let (.Lambda(i, t, a), .Lambda(j, u, b)):
 		return i == j && t == u && a == b
-	case let (.Projection(p, f), .Projection(q, g)):
-		return p == q && f == g
 	case let (.Product(t, a), .Product(u, b)):
 		return t == u && a == b
 	case let (.Boolean(a), .Boolean(b)):

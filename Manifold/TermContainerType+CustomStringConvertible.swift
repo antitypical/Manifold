@@ -42,9 +42,6 @@ extension TermContainerType {
 					? "λ \(Self.describe(.Local(variable))) : \(type.0) . \(body)"
 					: "\(wrap(type)) → \(body)", true)
 
-			case let .Projection((_, (term, _)), branch):
-				return ("\(term).\(branch ? 1 : 0)", false)
-
 			case let .Product((_, a), (_, (b, _))):
 				return ("\(wrap(a)) × \(b)", true)
 
