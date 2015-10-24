@@ -47,7 +47,7 @@ public struct Module<Recur: TermType> {
 }
 
 extension Module where Recur: TermType {
-	public func typecheck() -> [Error] {
+	public func typecheck() -> [String] {
 		let environment = self.environment
 		let context = self.context
 		return declarations

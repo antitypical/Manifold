@@ -70,7 +70,7 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 		return .Variable(Name.Global(symbol))
 	}
 
-	public func typecheck(environment: [Name:Recur], _ context: [Name:Recur]) -> [Error] {
+	public func typecheck(environment: [Name:Recur], _ context: [Name:Recur]) -> [String] {
 		switch self {
 		case let .Definition(symbol, type, value):
 			return (type.checkIsType(environment, context).left.map { [ "\(symbol) : 𝜏 ⇐ Type: \($0)" ] } ?? [])

@@ -1,15 +1,15 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 extension TermType {
-	public func checkIsType(environment: [Name:Self], _ context: [Name:Self]) -> Either<Error, Self> {
+	public func checkIsType(environment: [Name:Self], _ context: [Name:Self]) -> Either<String, Self> {
 		return checkType(.Type, environment, context)
 	}
 
-	public func checkType(against: Self, _ environment: [Name:Self], _ context: [Name:Self]) -> Either<Error, Self> {
+	public func checkType(against: Self, _ environment: [Name:Self], _ context: [Name:Self]) -> Either<String, Self> {
 		return annotate(checkTypeUnannotated(against, environment, context).map(const(against)), against)
 	}
 
-	private func checkTypeUnannotated(against: Self, _ environment: [Name:Self], _ context: [Name:Self]) -> Either<Error, Self> {
+	private func checkTypeUnannotated(against: Self, _ environment: [Name:Self], _ context: [Name:Self]) -> Either<String, Self> {
 		switch (out, against.weakHeadNormalForm(environment).out) {
 		case (.Type, .Type):
 			return .Right(against)
@@ -49,7 +49,7 @@ extension TermType {
 		return "[\n\t\(formattedContext)\n]"
 	}
 
-	func annotate<T>(either: Either<Error, T>, _ against: Self? = nil) -> Either<Error, T> {
+	func annotate<T>(either: Either<String, T>, _ against: Self? = nil) -> Either<String, T> {
 		return either.either(
 			ifLeft: { "\($0)\nin: '\(self)'" + (against.map { " ⇐ '\($0)'" } ?? " ⇒ ?") } >>> Either.Left,
 			ifRight: Either.Right)

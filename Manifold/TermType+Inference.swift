@@ -1,11 +1,11 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 extension TermType {
-	public func inferType(environment: [Name:Self] = [:], _ context: [Name:Self] = [:]) -> Either<Error, Self> {
+	public func inferType(environment: [Name:Self] = [:], _ context: [Name:Self] = [:]) -> Either<String, Self> {
 		return annotate(inferTypeUnannotated(environment, context))
 	}
 
-	public func inferTypeUnannotated(environment: [Name:Self] = [:], _ context: [Name:Self] = [:]) -> Either<Error, Self> {
+	public func inferTypeUnannotated(environment: [Name:Self] = [:], _ context: [Name:Self] = [:]) -> Either<String, Self> {
 		switch out {
 		case let .Type(n):
 			return .right(.Type(n + 1))
