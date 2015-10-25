@@ -1,5 +1,16 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
+extension Elaborated {
+	private func ensureLambda() throws -> (Int, Elaborated, Elaborated) {
+		switch out {
+		case let .Lambda(i, a, b):
+			return (i, a, b)
+		default:
+			throw "Illegal application of \(term) : \(type)"
+		}
+	}
+}
+
 extension TermType {
 	public func elaborate(environment: [Name:Self], _ context: [Name:Self]) -> Either<String, Elaborated<Self>> {
 		func assign(type: Self)(_ to: Self) -> Elaborated<Self> {
