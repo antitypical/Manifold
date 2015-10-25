@@ -33,11 +33,11 @@ extension TermType {
 	}
 
 	public static func ana<A>(transform: A -> Expression<A>)(_ seed: A) -> Self {
-		return seed |> (Self.init <<< { $0.map(ana(transform)) } <<< transform)
+		return (Self.init <<< { $0.map(ana(transform)) } <<< transform)(seed)
 	}
 
 	public static func apo<A>(transform: A -> Expression<Either<Self, A>>)(_ seed: A) -> Self {
-		return seed |> (Self.init <<< { $0.map { $0.either(ifLeft: id, ifRight: apo(transform)) } } <<< transform)
+		return (Self.init <<< { $0.map { $0.either(ifLeft: { $0 }, ifRight: apo(transform)) } } <<< transform)(seed)
 	}
 }
 
