@@ -19,6 +19,10 @@ public enum Elaborated<Term: TermType>: TermContainerType {
 		return Term(term: self)
 	}
 
+	public var destructure: (Term, Expression<Elaborated>) {
+		return (type, out)
+	}
+
 
 	// MARK: TermContainerType
 
