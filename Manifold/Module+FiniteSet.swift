@@ -8,6 +8,14 @@ extension Module {
 			type: Natural --> .Type,
 			value: (Natural, .Type) => { n, A in n[.Type, A --> A, Natural => { (n: Recur) in (FiniteSet[n] --> A) --> A }] })
 
-		return Module("FiniteSet", [ natural ], [ finiteSet ])
+		let successor: Recur = "successor"
+		let zeroth = Declaration("zeroth",
+			type: Natural => { (n: Recur) in FiniteSet[successor[n]] },
+			value: .Type => { A in A => id })
+
+		return Module("FiniteSet", [ natural ], [ finiteSet, zeroth ])
 	}
 }
+
+
+import Prelude
