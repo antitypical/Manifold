@@ -6,7 +6,7 @@ extension Module {
 		let FiniteSet: Recur = "FiniteSet"
 		let finiteSet = Declaration("FiniteSet",
 			type: Natural --> .Type,
-			value: (Natural, .Type) => { n, A in n[.Type, A --> A, Natural => { (n: Recur) in (FiniteSet[n] --> A) --> A }] })
+			value: Natural => { n in n[.Type, .Type => { $0 --> $0 }, (Natural, .Type) => { (n: Recur, A) in (FiniteSet[n] --> A) --> A }] })
 
 		let successor: Recur = "successor"
 		let zeroth = Declaration("zeroth",
