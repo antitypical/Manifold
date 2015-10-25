@@ -3,12 +3,12 @@
 extension Module {
 	public static var list: Module {
 		return Module("List", [
-			Declaration("List", .Type) {
+			Declaration("List", Datatype(.Type) {
 				[
 					"cons": .Argument($0, const(.Recursive(.End))),
 					"nil": .End
 				]
-			}
+			})
 		])
 	}
 }

@@ -2,9 +2,9 @@
 
 extension Module {
 	public static var pair: Module {
-		let Pair = Declaration<Recur>("Pair", .Type, .Type) {
+		let Pair = Declaration<Recur>("Pair", Datatype(.Type, .Type) {
 			[ "pair": .Argument($0, const(.Argument($1, const(.End)))) ]
-		}
+		})
 
 		let first = Declaration("first",
 			type: Recur.lambda(.Type, .Type) { A, B in Recur.FunctionType(Pair.ref[A, B], A) },

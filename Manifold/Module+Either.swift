@@ -3,12 +3,12 @@
 extension Module {
 	public static var either: Module {
 		return Module("Either", [
-			Declaration("Either", .Type, .Type) {
+			Declaration("Either", Datatype(.Type, .Type) {
 				[
 					"left": .Argument($0, const(.End)),
 					"right": .Argument($1, const(.End))
 				]
-			}
+			})
 		])
 	}
 }
