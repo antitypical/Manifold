@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Elaborated<Term: TermType>: TermContainerType {
+public enum Elaborated<Term: TermType>: Equatable, TermContainerType {
 	indirect case Unroll(Term, Expression<Elaborated>)
 
 	/// Construct an elaborated term by coiteration.
@@ -29,4 +29,8 @@ public enum Elaborated<Term: TermType>: TermContainerType {
 	public var out: Expression<Elaborated> {
 		return destructure.1
 	}
+}
+
+public func == <Term: TermType> (left: Elaborated<Term>, right: Elaborated<Term>) -> Bool {
+	return left.type == right.type && left.out == right.out
 }
