@@ -20,10 +20,10 @@ extension TermType {
 
 		case let .Application(a, b):
 			return a.inferType(environment, context)
-				.flatMap { A in
+				.flatMap { (A: Self) in
 					switch A.weakHeadNormalForm(environment).out {
 					case let .Lambda(i, type, body):
-						return b.checkType(type, environment, context).map { _ in body.substitute(i, b) }
+						return b.checkType(type, environment, context).map { (_: Self) in body.substitute(i, b) }
 					default:
 						return Either.Left("Illegal application of \(a) : \(A) to \(b) in context: \(Self.toString(context, separator: ":")), environment: \(Self.toString(environment, separator: "="))")
 					}
