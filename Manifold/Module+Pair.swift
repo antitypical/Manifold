@@ -1,14 +1,10 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 extension Module {
-	public static var churchPair: Module {
-		let Pair = Declaration("Pair",
-			type: Recur.FunctionType(.Type, .Type, .Type),
-			value: Recur.lambda(.Type, .Type, .Type) { A, B, Result in .lambda(.FunctionType(A, B, Result), const(Result)) })
-
-		let pair = Declaration("pair",
-			type: Recur.lambda(.Type, .Type) { A, B in .FunctionType(A, B, Pair.ref[A, B]) },
-			value: Recur.lambda(.Type, .Type) { A, B in Recur.lambda(A, B, .Type) { a, b, Result in Recur.lambda(.FunctionType(A, B, Result)) { f in f[a, b] } } })
+	public static var pair: Module {
+		let Pair = Declaration<Recur>("Pair", Datatype(.Type, .Type) {
+			[ "pair": .Argument($0, const(.Argument($1, const(.End)))) ]
+		})
 
 		let first = Declaration("first",
 			type: Recur.lambda(.Type, .Type) { A, B in Recur.FunctionType(Pair.ref[A, B], A) },
@@ -18,7 +14,7 @@ extension Module {
 			type: Recur.lambda(.Type, .Type) { A, B in Recur.FunctionType(Pair.ref[A, B], B) },
 			value: Recur.lambda(.Type, .Type) { A, B in Recur.lambda(Pair.ref[A, B]) { pair in pair[B, Recur.lambda(A, B) { _, b in b }] } })
 
-		return Module("ChurchPair", [ Pair, pair, first, second ])
+		return Module("Pair", [ Pair, first, second ])
 	}
 }
 

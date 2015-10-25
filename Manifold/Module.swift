@@ -19,7 +19,7 @@ public struct Module<Recur: TermType> {
 	public let dependencies: [Module]
 	public let declarations: [Declaration<Recur>]
 
-	private var definitions: AnySequence<(Name, Recur, Recur)> {
+	public var definitions: AnySequence<(Name, Recur, Recur)> {
 		return AnySequence(declarations
 			.lazy
 			.flatMap {
@@ -47,12 +47,12 @@ public struct Module<Recur: TermType> {
 }
 
 extension Module where Recur: TermType {
-	public func typecheck() -> [Error] {
+	public func typecheck() -> [String] {
 		let environment = self.environment
 		let context = self.context
 		return declarations
 			.lazy
-			.flatMap { $0.typecheck(environment, context).map { $0.map { "\(self.name).\($0)" } } }
+			.flatMap { $0.typecheck(environment, context).map { "\(self.name).\($0)" } }
 	}
 }
 
