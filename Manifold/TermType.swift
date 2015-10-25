@@ -32,12 +32,12 @@ extension TermType {
 		self.init { expression }
 	}
 
-	public static func ana<A>(f: A -> Expression<A>)(_ seed: A) -> Self {
-		return seed |> (Self.init <<< map(ana(f)) <<< f)
+	public static func ana<A>(transform: A -> Expression<A>)(_ seed: A) -> Self {
+		return seed |> (Self.init <<< map(ana(transform)) <<< transform)
 	}
 
-	public static func apo<A>(f: A -> Expression<Either<Self, A>>)(_ seed: A) -> Self {
-		return seed |> (Self.init <<< (map { $0.either(ifLeft: id, ifRight: apo(f)) }) <<< f)
+	public static func apo<A>(transform: A -> Expression<Either<Self, A>>)(_ seed: A) -> Self {
+		return seed |> (Self.init <<< (map { $0.either(ifLeft: id, ifRight: apo(transform)) }) <<< transform)
 	}
 }
 
