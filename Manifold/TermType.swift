@@ -42,12 +42,5 @@ extension TermType {
 }
 
 
-// MARK: - Implementation details
-
-private func map<A, B>(@noescape transform: A -> B)(_ expression: Expression<A>) -> Expression<B> {
-	return expression.map(transform)
-}
-
-
 import Either
 import Prelude
