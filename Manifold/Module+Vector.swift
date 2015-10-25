@@ -6,7 +6,7 @@ extension Module {
 		let Vector: Recur = "Vector"
 		let vector = Declaration("Vector",
 			type: .Type --> Natural --> .Type,
-			value: (.Type, Natural, .Type) => { A, n, B in (A --> Vector[A, n] --> B) --> B --> B })
+			value: (.Type, Natural, .Type) => { A, n, B in n[.Type, B --> B, Natural => { n in (A --> Vector[A, n] --> B) --> B --> B }] })
 
 		let successor: Recur = "successor"
 		let cons = Declaration("cons",
