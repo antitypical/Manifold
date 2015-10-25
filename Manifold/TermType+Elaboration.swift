@@ -42,6 +42,10 @@ extension TermType {
 			try type1.checkIsTypeElaborated(environment, context)
 			return try body.elaborate(bodyType.substitute(j, .Variable(.Local(i))), environment, context + [ Name.Local(i) : type1 ])
 
+		case let (.Lambda(i, type, body), .Some(.Type)):
+			try type.checkIsTypeElaborated(environment, context)
+			return try body.checkIsTypeElaborated(environment, context + [ Name.Local(i) : type ])
+			
 		case let (_, .Some(b)):
 			let a = try elaborate(nil, environment, context)
 			guard Self.equate(a.type, Self(b), environment) else {
