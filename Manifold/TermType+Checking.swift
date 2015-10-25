@@ -32,15 +32,6 @@ extension TermType {
 		}
 	}
 
-	static func toString(table: [Name:Self], separator: String) -> String {
-		let keys = table.keys.sort().lazy
-		let maxLength: Int = keys.maxElement { $0.description.characters.count < $1.description.characters.count }?.description.characters.count ?? 0
-		let padding: Character = " "
-		let formattedContext = keys.map { "\(String(String($0), paddedTo: maxLength, with: padding)) \(separator) \(table[$0]!)" }.joinWithSeparator(",\n\t")
-
-		return "[\n\t\(formattedContext)\n]"
-	}
-
 	func annotate<T>(either: Either<String, T>, _ against: Self? = nil) -> Either<String, T> {
 		return either.either(
 			ifLeft: { "\($0)\nin: '\(self)'" + (against.map { " ⇐ '\($0)'" } ?? " ⇒ ?") } >>> Either.Left,

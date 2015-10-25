@@ -66,6 +66,15 @@ extension TermType {
 			throw "No rule to infer the type of '\(self)'"
 		}
 	}
+
+	static func toString(table: [Name:Self], separator: String) -> String {
+		let keys = table.keys.sort().lazy
+		let maxLength: Int = keys.maxElement { $0.description.characters.count < $1.description.characters.count }?.description.characters.count ?? 0
+		let padding: Character = " "
+		let formattedContext = keys.map { "\(String(String($0), paddedTo: maxLength, with: padding)) \(separator) \(table[$0]!)" }.joinWithSeparator(",\n\t")
+
+		return "[\n\t\(formattedContext)\n]"
+	}
 }
 
 
