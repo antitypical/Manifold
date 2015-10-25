@@ -14,6 +14,14 @@ extension Elaborated {
 }
 
 extension TermType {
+	public func checkType(against: Self, _ environment: [Name:Self], _ context: [Name:Self]) -> Either<String, Elaborated<Self>> {
+		do {
+			return .Right(try elaborate(against, environment, context))
+		} catch let e {
+			return .Left(String(e))
+		}
+	}
+
 	func checkIsType(environment: [Name:Self], _ context: [Name:Self]) throws -> Elaborated<Self> {
 		return try elaborate(.Type, environment, context)
 	}
