@@ -54,7 +54,7 @@ extension TermType {
 			return a
 
 		default:
-			throw "unimplemented"
+			throw "No rule to infer the type of '\(self)'"
 		}
 	}
 }
