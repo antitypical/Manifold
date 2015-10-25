@@ -14,7 +14,7 @@ extension Elaborated {
 }
 
 extension TermType {
-	private func checkIsTypeElaborated(environment: [Name:Self], _ context: [Name:Self]) throws -> Elaborated<Self> {
+	private func checkIsType(environment: [Name:Self], _ context: [Name:Self]) throws -> Elaborated<Self> {
 		return try elaborate(.Type, environment, context)
 	}
 
@@ -39,12 +39,12 @@ extension TermType {
 			return try elaborate(nil, environment, context)
 
 		case let (.Lambda(i, type1, body), .Some(.Lambda(j, type2, bodyType))) where Self.equate(type1, type2, environment):
-			try type1.checkIsTypeElaborated(environment, context)
+			let _: Elaborated<Self> = try type1.checkIsType(environment, context)
 			return try body.elaborate(bodyType.substitute(j, .Variable(.Local(i))), environment, context + [ Name.Local(i) : type1 ])
 
 		case let (.Lambda(i, type, body), .Some(.Type)):
-			try type.checkIsTypeElaborated(environment, context)
-			return try body.checkIsTypeElaborated(environment, context + [ Name.Local(i) : type ])
+			let _: Elaborated<Self> = try type.checkIsType(environment, context)
+			return try body.checkIsType(environment, context + [ Name.Local(i) : type ])
 			
 		case let (_, .Some(b)):
 			let a = try elaborate(nil, environment, context)
