@@ -16,7 +16,7 @@ extension Module {
 		let zero: Recur = "zero"
 		let `nil` = Declaration("nil",
 			type: .Type => { (A: Recur) in Vector[A, zero] },
-			value: .Type)
+			value: (.Type, Natural, .Type) => { A, n, B in ((A --> Vector[A, n] --> B), B) => { _, other in other } })
 
 		return Module("Vector", [ natural ], [ vector, cons, `nil` ])
 	}
