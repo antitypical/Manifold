@@ -40,11 +40,6 @@ extension TermType {
 
 // MARK: - Term: TermType over Expression<Term>
 
-public func ana<A, Term: TermType>(f: A -> Expression<A>)(_ seed: A) -> Term {
-	return seed |> (Term.init <<< map(ana(f)) <<< f)
-}
-
-
 public func apo<A>(f: A -> Expression<Either<Term, A>>)(_ seed: A) -> Term {
 	return seed |> (Term.init <<< (map { $0.either(ifLeft: id, ifRight: apo(f)) }) <<< f)
 }
