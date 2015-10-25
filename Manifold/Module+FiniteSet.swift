@@ -2,6 +2,11 @@
 
 extension Module {
 	public static var finiteSet: Module {
-		return Module("FiniteSet", [ natural ], [])
+		let Natural: Recur = "Natural"
+		let finiteSet = Declaration("FiniteSet",
+			type: Natural --> .Type,
+			value: .Type)
+
+		return Module("FiniteSet", [ natural ], [ finiteSet ])
 	}
 }
