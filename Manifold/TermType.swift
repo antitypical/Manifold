@@ -45,7 +45,7 @@ extension TermType {
 // MARK: - Implementation details
 
 private func map<A, B>(@noescape transform: A -> B)(_ expression: Expression<A>) -> Expression<B> {
-	return Expression.map(expression)(transform)
+	return expression.map(transform)
 }
 
 
