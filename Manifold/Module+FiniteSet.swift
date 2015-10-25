@@ -15,7 +15,7 @@ extension Module {
 
 		let nextth = Declaration("nextth",
 			type: Natural => { (n: Recur) in FiniteSet[n] --> FiniteSet[successor[n]] },
-			value: .Type)
+			value: (Natural, .Type) => { (n: Recur, A) in FiniteSet[n] => { (a: Recur) in (FiniteSet[n] --> A) => { $0[a] } } })
 
 		return Module("FiniteSet", [ natural ], [ finiteSet, zeroth, nextth ])
 	}
