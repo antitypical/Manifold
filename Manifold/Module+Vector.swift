@@ -17,6 +17,7 @@ extension Module {
 		let `nil` = Declaration("nil",
 			type: .Type => { (A: Recur) in Vector[A, zero] },
 			value: .Type)
+
 		return Module("Vector", [ natural ], [ vector, cons, `nil` ])
 	}
 }
