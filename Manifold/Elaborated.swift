@@ -20,7 +20,10 @@ public enum Elaborated<Term: TermType>: TermContainerType {
 	}
 
 	public var destructure: (Term, Expression<Elaborated>) {
-		return (type, out)
+		switch self {
+		case let .Unroll(all):
+			return all
+		}
 	}
 
 
