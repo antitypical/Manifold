@@ -9,10 +9,7 @@ public enum Elaborated<Term: TermType>: TermContainerType {
 	}
 
 	public var type: Term {
-		switch self {
-		case let .Unroll(type, _):
-			return type
-		}
+		return destructure.0
 	}
 
 	public var term: Term {
