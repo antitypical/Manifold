@@ -10,11 +10,11 @@ extension TermContainerType {
 	}
 
 	public func cata<Result>(transform: Expression<Result> -> Result) -> Result {
-		return (Self.out >>> map { $0.cata(transform) } >>> transform)(self)
+		return (Self.out >>> { $0.map { $0.cata(transform) } } >>> transform)(self)
 	}
 
 	public func para<Result>(transform: Expression<(Self, Result)> -> Result) -> Result {
-		return (Self.out >>> map { ($0, $0.para(transform)) } >>> transform)(self)
+		return (Self.out >>> { $0.map { ($0, $0.para(transform)) } } >>> transform)(self)
 	}
 }
 
@@ -33,11 +33,11 @@ extension TermType {
 	}
 
 	public static func ana<A>(transform: A -> Expression<A>)(_ seed: A) -> Self {
-		return seed |> (Self.init <<< map(ana(transform)) <<< transform)
+		return seed |> (Self.init <<< { $0.map(ana(transform)) } <<< transform)
 	}
 
 	public static func apo<A>(transform: A -> Expression<Either<Self, A>>)(_ seed: A) -> Self {
-		return seed |> (Self.init <<< (map { $0.either(ifLeft: id, ifRight: apo(transform)) }) <<< transform)
+		return seed |> (Self.init <<< { $0.map { $0.either(ifLeft: id, ifRight: apo(transform)) } } <<< transform)
 	}
 }
 
