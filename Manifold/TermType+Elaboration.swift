@@ -14,7 +14,7 @@ extension Elaborated {
 }
 
 extension TermType {
-	private func checkIsType(environment: [Name:Self], _ context: [Name:Self]) throws -> Elaborated<Self> {
+	func checkIsType(environment: [Name:Self], _ context: [Name:Self]) throws -> Elaborated<Self> {
 		return try elaborate(.Type, environment, context)
 	}
 
