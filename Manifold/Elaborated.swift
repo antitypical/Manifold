@@ -27,9 +27,6 @@ public enum Elaborated<Term: TermType>: TermContainerType {
 	// MARK: TermContainerType
 
 	public var out: Expression<Elaborated> {
-		switch self {
-		case let .Unroll(_, term):
-			return term
-		}
+		return destructure.1
 	}
 }
