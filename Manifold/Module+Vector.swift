@@ -8,10 +8,15 @@ extension Module {
 			type: .Type --> Natural --> .Type,
 			value: (.Type, Natural, .Type) => { A, n, B in (A --> Vector[A, n] --> B) --> B --> B })
 
+		let successor: Recur = "successor"
+		let cons = Declaration("cons",
+			type: (.Type, Natural)  => { A, n in A --> Vector[A, n] --> Vector[A, successor[n]] },
+			value: .Type)
+
 		let zero: Recur = "zero"
 		let `nil` = Declaration("nil",
 			type: .Type => { (A: Recur) in Vector[A, zero] },
 			value: .Type)
-		return Module("Vector", [ natural ], [ vector, `nil` ])
+		return Module("Vector", [ natural ], [ vector, cons, `nil` ])
 	}
 }
