@@ -42,13 +42,6 @@ extension TermType {
 }
 
 
-// MARK: - Term: TermType over Expression<Term>
-
-public func apo<A>(f: A -> Expression<Either<Term, A>>)(_ seed: A) -> Term {
-	return seed |> (Term.init <<< (map { $0.either(ifLeft: id, ifRight: apo(f)) }) <<< f)
-}
-
-
 // MARK: - Implementation details
 
 private func map<A, B>(@noescape transform: A -> B)(_ expression: Expression<A>) -> Expression<B> {
