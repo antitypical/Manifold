@@ -2,6 +2,6 @@
 
 extension Module {
 	public static var finiteSet: Module {
-		return Module("FiniteSet", [])
+		return Module("FiniteSet", [ natural ], [])
 	}
 }
