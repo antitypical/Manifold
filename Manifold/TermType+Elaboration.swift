@@ -14,6 +14,10 @@ extension Elaborated {
 }
 
 extension TermType {
+	private func checkIsTypeElaborated(environment: [Name:Self], _ context: [Name:Self]) throws -> Elaborated<Self> {
+		return try elaborate(.Type, environment, context)
+	}
+
 	private func elaborate(against: Self?, _ environment: [Name:Self], _ context: [Name:Self]) throws -> Elaborated<Self> {
 		switch (out, against?.weakHeadNormalForm(environment).out) {
 		case let (.Type(n), .None):
