@@ -5,6 +5,15 @@ public enum Datatype<Recur: TermType>: DictionaryLiteralConvertible {
 	case End([(String, Telescope<Recur>)])
 
 
+	public init(_ type: Recur, _ constructor: Recur -> Datatype<Recur>) {
+		self = .Argument(type, constructor)
+	}
+
+	public init(_ type1: Recur, _ type2: Recur, _ constructor: (Recur, Recur) -> Datatype<Recur>) {
+		self = .Argument(type1, { a in Datatype.Argument(type2) { b in constructor(a, b) } })
+	}
+
+
 	public init(dictionaryLiteral: (String, Telescope<Recur>)...) {
 		self = .End(dictionaryLiteral)
 	}
