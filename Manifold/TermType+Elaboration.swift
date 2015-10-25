@@ -18,7 +18,7 @@ extension TermType {
 		do {
 			return .Right(try elaborate(against, environment, context))
 		} catch let e {
-			return .Left(String(e))
+			return .Left("\(e)\nin: '\(self)'" + (against.map { " ⇐ '\($0)'" } ?? " ⇒ ?"))
 		}
 	}
 
