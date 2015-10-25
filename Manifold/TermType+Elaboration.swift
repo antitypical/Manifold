@@ -31,6 +31,9 @@ extension TermType {
 			let b = try b.elaborate(type.term, environment, context)
 			return .Unroll(body.term.substitute(i, b.term), .Application(a, b))
 
+		case (.Type, .Some(.Type)):
+			return try elaborate(nil, environment, context)
+
 		case let (_, .Some(b)):
 			let a = try elaborate(nil, environment, context)
 			guard Self.equate(a.type, Self(b), environment) else {
