@@ -38,6 +38,10 @@ extension TermType {
 		case (.Type, .Some(.Type)):
 			return try elaborate(nil, environment, context)
 
+		case let (.Lambda(i, type1, body), .Some(.Lambda(j, type2, bodyType))) where Self.equate(type1, type2, environment):
+			try type1.checkIsTypeElaborated(environment, context)
+			return try body.elaborate(bodyType.substitute(j, .Variable(.Local(i))), environment, context + [ Name.Local(i) : type1 ])
+
 		case let (_, .Some(b)):
 			let a = try elaborate(nil, environment, context)
 			guard Self.equate(a.type, Self(b), environment) else {
