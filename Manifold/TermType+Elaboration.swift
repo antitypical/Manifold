@@ -16,7 +16,8 @@ extension Elaborated {
 extension TermType {
 	public func elaborateType(against: Self?, _ environment: [Name:Self], _ context: [Name:Self]) -> Either<String, Elaborated<Self>> {
 		do {
-			return Either.Right(try elaborate(against, environment, context)).map { Elaborated.Unroll(against ?? $0.type, $0.out) }
+			let (type, roll) = try elaborate(against, environment, context).destructure
+			return .Right(.Unroll(against ?? type, roll))
 		} catch let e {
 			return .Left("\(e)\nin: '\(self)'" + (against.map { " ⇐ '\($0)'" } ?? " ⇒ ?"))
 		}
