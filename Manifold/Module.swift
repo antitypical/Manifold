@@ -19,14 +19,8 @@ public struct Module<Recur: TermType> {
 	public let dependencies: [Module]
 	public let declarations: [Declaration<Recur>]
 
-	public var definitions: AnySequence<(Name, Recur, Recur)> {
-		return AnySequence(declarations
-			.lazy
-			.flatMap {
-				$0.definitions.lazy.map { symbol, type, value in
-					(.Global(symbol), type, value)
-				}
-			})
+	public var definitions: [(Name, Recur, Recur)] {
+		return declarations.flatMap { $0.definitions }
 	}
 
 	public var environment: Environment {

@@ -20,15 +20,15 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 	}
 
 
-	public typealias DefinitionType = (symbol: String, type: Recur, value: Recur)
+	public typealias DefinitionType = (symbol: Name, type: Recur, value: Recur)
 
 	public var definitions: [DefinitionType] {
 		switch self {
 		case let .Definition(symbol, type, value):
-			return [ (symbol, type, value) ]
+			return [ (.Global(symbol), type, value) ]
 		case let .Datatype(symbol, datatype):
 			let recur = Recur.Variable(.Global(symbol))
-			return [ (symbol, datatype.type(), datatype.value(recur)) ] + datatype.definitions(recur)
+			return [ (.Global(symbol), datatype.type(), datatype.value(recur)) ] + datatype.definitions(recur)
 		}
 	}
 

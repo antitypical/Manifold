@@ -35,7 +35,7 @@ public enum Datatype<Recur: TermType>: DictionaryLiteralConvertible {
 		case let .End(constructors):
 			return constructors.map {
 				// Since at this point the type and value both close over the same parameter despite its inevitable use at two different indices, we copy them recursively using `Recur(term:)` to ensure that they’re finished with the shared state by the time they’re returned to the caller.
-				($0, Recur(term: abstract(self.type($1))(recur)), Recur(term: abstract(self.value($0, telescope: $1, constructors: constructors))(recur)))
+				(.Global($0), Recur(term: abstract(self.type($1))(recur)), Recur(term: abstract(self.value($0, telescope: $1, constructors: constructors))(recur)))
 			}
 		}
 	}
