@@ -100,7 +100,7 @@ infix operator => {
 }
 
 public func --> <Term: TermType> (left: Term, right: Term) -> Term {
-	return .FunctionType(left, right)
+	return .lambda(left, const(right))
 }
 
 public func => <Term: TermType> (left: Term, right: Term -> Term) -> Term {
