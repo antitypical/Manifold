@@ -5,8 +5,7 @@ extension String: ErrorType {}
 extension TermType {
 	public func elaborateType(against: Self?, _ environment: [Name:Self], _ context: [Name:Self]) -> Either<String, Elaborated<Self>> {
 		do {
-			let elaborated = try elaborate(against, environment, context)
-			return .Right(.Unroll(against ?? elaborated.type, elaborated.out))
+			return .Right(try elaborate(against, environment, context))
 		} catch let e {
 			return .Left("\(e)\nin: '\(self)'" + (against.map { " ⇐ '\($0)'" } ?? " ⇒ ?"))
 		}
