@@ -49,6 +49,11 @@ public enum Declaration<Recur: TermType>: CustomStringConvertible {
 
 
 	public var ref: Recur {
-		return .Variable(symbol)
+		switch self {
+		case let .Definition(symbol, _, _):
+			return .Variable(symbol)
+		case let .Datatype(symbol, _):
+			return .Variable(symbol)
+		}
 	}
 }
