@@ -28,8 +28,8 @@ extension TermType {
 			guard case let .Lambda(i, type, body) = a.type.weakHeadNormalForm(environment).out else {
 				throw "Illegal application of \(self) : \(a.type) in context: \(Self.toString(context, separator: ":")), environment: \(Self.toString(environment, separator: "="))"
 			}
-			let b = try b.elaborate(type, environment, context)
-			return .Unroll(body.substitute(i, b.term), .Application(a, b))
+			let bʹ = try b.elaborate(type, environment, context)
+			return .Unroll(body.substitute(i, b), .Application(a, bʹ))
 
 		case let (.Lambda(i, a, b), .None):
 			let aʹ = try a.elaborate(.Type, environment, context)
