@@ -3,8 +3,8 @@
 extension String: ErrorType {}
 
 extension Elaborated {
-	private func ensureLambda() throws -> (Int, Elaborated, Elaborated) {
-		switch out {
+	private func ensureLambda(environment: [Name:Term]) throws -> (Int, Term, Term) {
+		switch type.weakHeadNormalForm(environment).out {
 		case let .Lambda(i, a, b):
 			return (i, a, b)
 		default:
@@ -48,9 +48,9 @@ extension TermType {
 
 		case let (.Application(a, b), .None):
 			let a = try a.elaborate(nil, environment, context)
-			let (i, type, body) = try a.ensureLambda()
-			let b = try b.elaborate(type.term, environment, context)
-			return .Unroll(body.term.substitute(i, b.term), .Application(a, b))
+			let (i, type, body) = try a.ensureLambda(environment)
+			let b = try b.elaborate(type, environment, context)
+			return .Unroll(body.substitute(i, b.term), .Application(a, b))
 
 		case (.Type, .Some(.Type)):
 			return try elaborate(nil, environment, context)
