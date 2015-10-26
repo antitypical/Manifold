@@ -18,10 +18,6 @@ extension TermType {
 		return elaborateType(against, environment, context)
 	}
 
-	public func inferType(environment: [Name:Self] = [:], _ context: [Name:Self] = [:]) -> Either<String, Elaborated<Self>> {
-		return elaborateType(nil, environment, context)
-	}
-
 	public func elaborateType(against: Self?, _ environment: [Name:Self], _ context: [Name:Self]) -> Either<String, Elaborated<Self>> {
 		do {
 			let (type, roll) = try elaborate(against, environment, context).destructure
