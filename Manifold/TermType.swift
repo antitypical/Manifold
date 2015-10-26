@@ -10,11 +10,11 @@ extension TermContainerType {
 	}
 
 	public func cata<Result>(transform: Expression<Result> -> Result) -> Result {
-		return (Self.out >>> map { $0.cata(transform) } >>> transform)(self)
+		return (Self.out >>> { $0.map { $0.cata(transform) } } >>> transform)(self)
 	}
 
 	public func para<Result>(transform: Expression<(Self, Result)> -> Result) -> Result {
-		return (Self.out >>> map { ($0, $0.para(transform)) } >>> transform)(self)
+		return (Self.out >>> { $0.map { ($0, $0.para(transform)) } } >>> transform)(self)
 	}
 }
 
@@ -34,24 +34,4 @@ extension TermType {
 }
 
 
-// MARK: - Term: TermType over Expression<Term>
-
-public func ana<A, Term: TermType>(f: A -> Expression<A>)(_ seed: A) -> Term {
-	return seed |> (Term.init <<< map(ana(f)) <<< f)
-}
-
-
-public func apo<A>(f: A -> Expression<Either<Term, A>>)(_ seed: A) -> Term {
-	return seed |> (Term.init <<< (map { $0.either(ifLeft: id, ifRight: apo(f)) }) <<< f)
-}
-
-
-// MARK: - Implementation details
-
-private func map<A, B>(@noescape transform: A -> B)(_ expression: Expression<A>) -> Expression<B> {
-	return Expression.map(expression)(transform)
-}
-
-
-import Either
 import Prelude

@@ -16,7 +16,7 @@ final class EvaluationTests: XCTestCase {
 	}
 
 	func testAbstractionsBodiesAreNotNormalized() {
-		assert(identity.evaluate(), ==, identity)
+		assert(identity.value.evaluate(), ==, identity.value)
 	}
 }
 

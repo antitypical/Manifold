@@ -17,7 +17,3 @@ public enum Term: TermType {
 		}
 	}
 }
-
-
-import Either
-import Prelude

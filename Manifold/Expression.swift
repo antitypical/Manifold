@@ -3,16 +3,16 @@
 public enum Expression<Recur> {
 	// MARK: Functor
 
-	public func map<T>(@noescape transform: Recur -> T) -> Expression<T> {
+	public func map<T>(@noescape transform: Recur throws -> T) rethrows -> Expression<T> {
 		switch self {
 		case let .Type(i):
 			return .Type(i)
 		case let .Variable(n):
 			return .Variable(n)
 		case let .Application(a, b):
-			return .Application(transform(a), transform(b))
+			return try .Application(transform(a), transform(b))
 		case let .Lambda(i, a, b):
-			return .Lambda(i, transform(a), transform(b))
+			return try .Lambda(i, transform(a), transform(b))
 		}
 	}
 

@@ -55,6 +55,3 @@ extension Module where Recur: TermType {
 			.flatMap { $0.typecheck(environment, context).map { "\(self.name).\($0)" } }
 	}
 }
-
-
-import Either
