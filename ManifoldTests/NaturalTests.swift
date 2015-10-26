@@ -19,6 +19,7 @@ private let module = Module<Term>.natural
 private let environment = module.environment
 private let context = module.context
 
+private let Natural: Term = "Natural"
 private let successor: Term = "successor"
 private let zero: Term = "zero"
 
