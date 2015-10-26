@@ -7,7 +7,7 @@ extension TermContainerType {
 			case let .Type(n):
 				return ".Type(\(n))"
 			case let .Variable(n):
-				return ".Variable(\(n))"
+				return ".Variable(\(String(reflecting: n)))"
 			case let .Application(a, b):
 				return ".Application(\(a), \(b))"
 			case let .Lambda(i, a, b):
