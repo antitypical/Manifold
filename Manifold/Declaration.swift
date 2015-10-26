@@ -61,17 +61,6 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 	public var ref: Recur {
 		return .Variable(Name.Global(symbol))
 	}
-
-	public func typecheck(environment: [Name:Recur], _ context: [Name:Recur]) -> [String] {
-		switch self {
-		case let .Definition(symbol, type, value):
-			return (`catch` { try type.elaborateType(.Type, environment, context) }.map { [ "\(symbol) : τ ⇐ Type: \($0)" ] } ?? [])
-				+ (`catch` { try value.elaborateType(type, environment, context) }.map { [ "\(symbol) ⇐ \(type): \($0)" ] } ?? [])
-		case let .Datatype(symbol, _):
-			return definitions
-				.flatMap { definition, type, value in `catch` { try value.elaborateType(type, environment, context) }.map { "\(symbol).\(definition): \($0)" } }
-		}
-	}
 }
 
 private func `catch`(f: () throws -> ()) -> ErrorType? {
