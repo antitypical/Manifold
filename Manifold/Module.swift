@@ -27,9 +27,7 @@ public struct Module<Recur: TermType> {
 			+ definitions.map { symbol, type, _ in [ symbol: type ] })
 			.reduce([:], combine: +)
 	}
-}
 
-extension Module where Recur: TermType {
 	public func typecheck() -> [String] {
 		let environment = self.environment
 		let context = self.context
