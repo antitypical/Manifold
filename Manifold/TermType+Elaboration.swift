@@ -72,7 +72,7 @@ extension TermType {
 			return a
 
 		default:
-			throw "No rule to infer the type of '\(self)'"
+			throw "No rule to infer the type of '\(self)' in context: \(Self.toString(context, separator: ":")), environment: \(Self.toString(environment, separator: "="))"
 		}
 	}
 
