@@ -52,12 +52,12 @@ extension TermType {
 			return try elaborate(nil, environment, context)
 
 		case let (.Lambda(i, type1, body), .Some(.Lambda(j, type2, bodyType))) where Self.equate(type1, type2, environment):
-			let t: Elaborated<Self> = try type1.elaborate(.Type, environment, context)
+			let t = try type1.elaborate(.Type, environment, context)
 			let b = try body.elaborate(bodyType.substitute(j, Self.Variable(Name.Local(i))), environment, context + [ Name.Local(i) : type1 ])
 			return .Unroll(.Lambda(j, type2, bodyType), .Lambda(i, t, b))
 
 		case let (.Lambda(i, type, body), .Some(.Type)):
-			let _: Elaborated<Self> = try type.elaborate(.Type, environment, context)
+			try type.elaborate(.Type, environment, context)
 			return try body.elaborate(.Type, environment, context + [ Name.Local(i) : type ])
 			
 		case let (_, .Some(b)):
