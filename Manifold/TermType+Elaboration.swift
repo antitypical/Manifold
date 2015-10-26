@@ -28,7 +28,7 @@ extension TermType {
 				let bʹ = try b.elaborateType(nil, environment, context + [ .Local(i): a ])
 				return .Unroll(a => { bʹ.type.substitute(i, $0) }, .Lambda(i, aʹ, bʹ))
 
-			case (.Type, .Some(.Type)):
+			case let (.Type(m), .Some(.Type(n))) where n > m:
 				return try elaborateType(nil, environment, context)
 
 			case let (.Lambda(i, type1, body), .Some(.Lambda(j, type2, bodyType))) where Self.equate(type1, type2, environment):
