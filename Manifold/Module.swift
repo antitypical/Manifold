@@ -1,9 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public struct Module<Recur: TermType> {
-	public typealias Environment = [Name:Recur]
-	public typealias Context = [Name:Recur]
-
 	public init<D: SequenceType, S: SequenceType where D.Generator.Element == Module, S.Generator.Element == Declaration<Recur>>(_ name: String, _ dependencies: D, _ declarations: S) {
 		self.name = name
 		self.dependencies = Array(dependencies)
@@ -23,16 +20,16 @@ public struct Module<Recur: TermType> {
 		return declarations.flatMap { $0.definitions }
 	}
 
-	public var environment: Environment {
+	public var environment: [Name:Recur] {
 		return (dependencies.map { $0.environment }
 			+ definitions.map { symbol, _, value in [ symbol: value ] })
-			.reduce(Environment(), combine: +)
+			.reduce([:], combine: +)
 	}
 
-	public var context: Context {
+	public var context: [Name:Recur] {
 		return (dependencies.map { $0.context }
 			+ definitions.map { symbol, type, _ in [ symbol: type ] })
-			.reduce(Context(), combine: +)
+			.reduce([:], combine: +)
 	}
 }
 
