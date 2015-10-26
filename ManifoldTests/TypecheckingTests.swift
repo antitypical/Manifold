@@ -6,8 +6,7 @@ final class TypecheckingTests: XCTestCase {
 	}
 
 	func testApplicationOfIdentityAbstractionToTermTypechecksToType() {
-		let identity = Term.lambda(.Type(1), id)
-		assert(Term.Application(identity, .Type).inferType(), ==, .Unroll(.Type(0), .Application(.Unroll(.Lambda(0, .Type(1), .Variable(.Local(0))), .Lambda(0, .Unroll(.Type(2), .Type(1)), .Unroll(.Type(1), .Variable(0)))), .Unroll(.Type(1), .Type(0)))))
+		assert(Term.Application("identity", .Type).checkType(.Type, [:], [ "identity": .lambda(.Type(1), id) ]), ==, .Unroll(.Type, .Application(.Unroll(.Type(1) => id, .Variable(.Global("identity"))), .Unroll(.Type(1), .Type(0)))))
 	}
 
 	func testSimpleAbstractionTypechecksToAbstractionType() {
