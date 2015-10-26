@@ -2,17 +2,6 @@
 
 extension String: ErrorType {}
 
-extension Elaborated {
-	private func ensureLambda(environment: [Name:Term]) throws -> (Int, Term, Term) {
-		switch type.weakHeadNormalForm(environment).out {
-		case let .Lambda(i, a, b):
-			return (i, a, b)
-		default:
-			throw "Illegal application of \(term) : \(type)"
-		}
-	}
-}
-
 extension TermType {
 	public func elaborateType(against: Self?, _ environment: [Name:Self], _ context: [Name:Self]) -> Either<String, Elaborated<Self>> {
 		do {
