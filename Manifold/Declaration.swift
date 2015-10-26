@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomStringConvertible {
+public enum Declaration<Recur: TermType>: CustomStringConvertible {
 	public init(_ symbol: String, type: Recur, value: Recur) {
 		self = .Definition(symbol, type, value)
 	}
@@ -32,16 +32,6 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 		}
 	}
 
-
-	public var debugDescription: String {
-		switch self {
-		case let .Definition(symbol, type, value):
-			return "\(symbol) : \(String(reflecting: type))\n"
-				+ "\(symbol) = \(String(reflecting: value))"
-		case let .Datatype(symbol, datatype):
-			return "data \(symbol) = \(String(reflecting: datatype))"
-		}
-	}
 
 	public var description: String {
 		switch self {
