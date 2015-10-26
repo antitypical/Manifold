@@ -62,8 +62,3 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 		return .Variable(Name.Global(symbol))
 	}
 }
-
-private func `catch`(f: () throws -> ()) -> ErrorType? {
-	do { try f() ; return nil }
-	catch { return error }
-}
