@@ -48,6 +48,11 @@ extension TermType {
 			let b = try b.elaborate(type, environment, context)
 			return .Unroll(body.substitute(i, b.term), .Application(a, b))
 
+		case let (.Lambda(i, a, b), .None):
+			let aʹ = try a.elaborate(.Type, environment, context)
+			let bʹ = try b.elaborate(nil, environment, context + [ .Local(i): a ])
+			return .Unroll(a => { bʹ.type.substitute(i, $0) }, .Lambda(i, aʹ, bʹ))
+
 		case (.Type, .Some(.Type)):
 			return try elaborate(nil, environment, context)
 
