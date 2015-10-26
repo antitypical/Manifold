@@ -78,7 +78,3 @@ private func `catch`(f: () throws -> ()) -> ErrorType? {
 	do { try f() ; return nil }
 	catch { return error }
 }
-
-
-import Either
-import Prelude

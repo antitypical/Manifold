@@ -61,6 +61,3 @@ extension TermType {
 		return "[\n\t\(formattedContext)\n]"
 	}
 }
-
-
-import Either

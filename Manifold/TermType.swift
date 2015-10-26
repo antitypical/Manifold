@@ -34,5 +34,4 @@ extension TermType {
 }
 
 
-import Either
 import Prelude
