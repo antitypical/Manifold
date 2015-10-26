@@ -7,12 +7,12 @@ final class TermTests: XCTestCase {
 	}
 
 	func testRightNestedFunctionTypesAreNotParenthesized() {
-		assert(Term.FunctionType(.Type, .Type).description, ==, "Type → Type")
-		assert(Term.FunctionType(.Type, .Type, .Type).description, ==, "Type → Type → Type")
+		assert((Term(.Type(0)) --> .Type).description, ==, "Type → Type")
+		assert((Term(.Type(0)) --> .Type --> .Type).description, ==, "Type → Type → Type")
 	}
 
 	func testLeftNestedFunctionTypesAreParenthesized() {
-		assert(Term.FunctionType(.FunctionType(.Type, .Type), .Type).description, ==, "(Type → Type) → Type")
+		assert(((Term(.Type(0)) --> .Type) --> .Type).description, ==, "(Type → Type) → Type")
 	}
 
 	func testGlobalsPrintTheirNames() {
@@ -32,7 +32,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testFunctionTypeConstruction() {
-		assert(Term.lambda(.Type) { A in .lambda(.FunctionType(A, A), A, const(A)) }, ==, .Lambda(0, .Type, .Lambda(-1, .Lambda(-1, 0, 0), .Lambda(-1, 0, 0))))
+		assert(Term.lambda(.Type) { A in .lambda(A --> A, A, const(A)) }, ==, .Lambda(0, .Type, .Lambda(-1, .Lambda(-1, 0, 0), .Lambda(-1, 0, 0))))
 	}
 
 	func testSubstitution() {

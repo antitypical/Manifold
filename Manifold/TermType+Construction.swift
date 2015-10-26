@@ -24,15 +24,6 @@ extension TermType {
 	}
 
 
-	public static func FunctionType(a: Self, _ b: Self) -> Self {
-		return .Lambda(-1, a, b)
-	}
-
-	public static func FunctionType(a: Self, _ b: Self, _ c: Self) -> Self {
-		return FunctionType(a, FunctionType(b, c))
-	}
-
-
 	public subscript (operands: Self...) -> Self {
 		return operands.reduce(self, combine: Self.Application)
 	}
@@ -54,10 +45,6 @@ extension TermType {
 
 	public static func lambda(type1: Self, _ type2: Self, _ type3: Self, _ body: (Self, Self, Self) -> Self) -> Self {
 		return lambda(type1) { a in lambda(type2) { b in lambda(type3) { c in body(a, b, c) } } }
-	}
-
-	public static func lambda(type1: Self, _ type2: Self, _ type3: Self, _ type4: Self, _ body: (Self, Self, Self, Self) -> Self) -> Self {
-		return lambda(type1) { a in lambda(type2) { b in lambda(type3) { c in lambda(type4) { d in body(a, b, c, d) } } } }
 	}
 
 
@@ -100,7 +87,7 @@ infix operator => {
 }
 
 public func --> <Term: TermType> (left: Term, right: Term) -> Term {
-	return .FunctionType(left, right)
+	return .lambda(left, const(right))
 }
 
 public func => <Term: TermType> (left: Term, right: Term -> Term) -> Term {

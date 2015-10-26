@@ -2,23 +2,23 @@
 
 final class IntExtensionTests: XCTestCase {
 	func testThereIsOneDigitInZero() {
-		assert(0.digits, ==, [0])
+		assert(0.digits(10), ==, [0])
 	}
 
 	func testThereIsOneDigitInNine() {
-		assert(9.digits, ==, [9])
+		assert(9.digits(10), ==, [9])
 	}
 
 	func testThereAreTwoDigitsInTen() {
-		assert(10.digits, ==, [1, 0])
+		assert(10.digits(10), ==, [1, 0])
 	}
 
 	func testThereAreTwoDigitsInNinetyNine() {
-		assert(99.digits, ==, [9, 9])
+		assert(99.digits(10), ==, [9, 9])
 	}
 
 	func testThereAreThreeDigitsInOneHundredAndTwentyThree() {
-		assert(123.digits, ==, [1, 2, 3])
+		assert(123.digits(10), ==, [1, 2, 3])
 	}
 
 	func testBinaryDigits() {
