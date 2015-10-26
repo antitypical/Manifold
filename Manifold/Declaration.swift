@@ -1,11 +1,11 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public enum Declaration<Recur: TermType>: CustomStringConvertible {
-	public init(_ symbol: String, type: Recur, value: Recur) {
+	public init(_ symbol: Name, type: Recur, value: Recur) {
 		self = .Definition(symbol, type, value)
 	}
 
-	public init(_ symbol: String, _ datatype: Manifold.Datatype<Recur>) {
+	public init(_ symbol: Name, _ datatype: Manifold.Datatype<Recur>) {
 		self = .Datatype(symbol, datatype)
 	}
 
@@ -13,9 +13,9 @@ public enum Declaration<Recur: TermType>: CustomStringConvertible {
 	public var symbol: Name {
 		switch self {
 		case let .Definition(symbol, _, _):
-			return .Global(symbol)
+			return symbol
 		case let .Datatype(symbol, _):
-			return .Global(symbol)
+			return symbol
 		}
 	}
 
@@ -25,10 +25,10 @@ public enum Declaration<Recur: TermType>: CustomStringConvertible {
 	public var definitions: [DefinitionType] {
 		switch self {
 		case let .Definition(symbol, type, value):
-			return [ (.Global(symbol), type, value) ]
+			return [ (symbol, type, value) ]
 		case let .Datatype(symbol, datatype):
-			let recur = Recur.Variable(.Global(symbol))
-			return [ (.Global(symbol), datatype.type(), datatype.value(recur)) ] + datatype.definitions(recur)
+			let recur = Recur.Variable(symbol)
+			return [ (symbol, datatype.type(), datatype.value(recur)) ] + datatype.definitions(recur)
 		}
 	}
 
@@ -39,13 +39,13 @@ public enum Declaration<Recur: TermType>: CustomStringConvertible {
 			return "\(symbol) : \(type)\n"
 				+ "\(symbol) = \(value)"
 		case let .Datatype(symbol, datatype):
-			return "data \(symbol) : \(datatype.type()) = \(datatype.value(.Variable(.Global(symbol))))"
+			return "data \(symbol) : \(datatype.type()) = \(datatype.value(.Variable(symbol)))"
 		}
 	}
 
 
-	case Definition(String, Recur, Recur)
-	case Datatype(String, Manifold.Datatype<Recur>)
+	case Definition(Name, Recur, Recur)
+	case Datatype(Name, Manifold.Datatype<Recur>)
 
 
 	public var ref: Recur {
