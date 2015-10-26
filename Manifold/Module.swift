@@ -37,8 +37,14 @@ extension Module where Recur: TermType {
 	public func typecheck() -> [String] {
 		let environment = self.environment
 		let context = self.context
-		return declarations
-			.lazy
-			.flatMap { $0.typecheck(environment, context).map { "\(self.name).\($0)" } }
+		return definitions.flatMap { symbol, type, value -> [String] in
+			do {
+				try type.elaborateType(.Type, environment, context)
+				try value.elaborateType(type, environment, context)
+				return []
+			} catch {
+				return [ "\(self.name).\(symbol): \(error)" ]
+			}
+		}
 	}
 }
