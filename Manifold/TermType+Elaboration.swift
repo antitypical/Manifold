@@ -67,7 +67,7 @@ extension TermType {
 		case let (_, .Some(b)):
 			let a = try elaborate(nil, environment, context)
 			guard Self.equate(a.type, Self(b), environment) else {
-				throw "Type mismatch: expected '\(self)' to be of type '\(against)', but it was actually of type '\(a.type)' in context: \(Self.toString(context, separator: ":")), environment: \(Self.toString(environment, separator: "="))"
+				throw "Type mismatch: expected '\(self)' to be of type '\(Self(b))', but it was actually of type '\(a.type)' in context: \(Self.toString(context, separator: ":")), environment: \(Self.toString(environment, separator: "="))"
 			}
 			return a
 
