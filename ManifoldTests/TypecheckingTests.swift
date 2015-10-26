@@ -6,16 +6,16 @@ final class TypecheckingTests: XCTestCase {
 	}
 
 	func testApplicationOfIdentityAbstractionToTermTypechecksToType() {
-		assert(Term.Application("identity", .Type).checkType(.Type, [:], [ "identity": .lambda(.Type(1), id) ]), ==, .Unroll(.Type, .Application(.Unroll(.Type(1) => id, .Variable(.Global("identity"))), .Unroll(.Type(1), .Type(0)))))
+		assert(Term.Application("identity", .Type).elaborateType(.Type, [:], [ "identity": .lambda(.Type(1), id) ]), ==, .Unroll(.Type, .Application(.Unroll(.Type(1) => id, .Variable(.Global("identity"))), .Unroll(.Type(1), .Type(0)))))
 	}
 
 	func testSimpleAbstractionTypechecksToAbstractionType() {
 		let identity = Term.lambda(.Type, id)
-		assert(identity.checkType(.Lambda(-1, .Type(0), .Type(0)), [:], [:]), ==, .Unroll(.Type --> .Type, .Lambda(0, .Unroll(.Type(1), .Type(0)), .Unroll(.Type(0), .Variable(.Local(0))))))
+		assert(identity.elaborateType(.Lambda(-1, .Type(0), .Type(0)), [:], [:]), ==, .Unroll(.Type --> .Type, .Lambda(0, .Unroll(.Type(1), .Type(0)), .Unroll(.Type(0), .Variable(.Local(0))))))
 	}
 
 	func testAbstractedAbstractionTypechecks() {
-		assert(identity.value.checkType(identity.type, [:], [:]), ==, .Unroll(identity.type, .Lambda(1, .Unroll(.Type(1), .Type(0)), .Unroll(.Lambda(-1, .Variable(.Local(1)), .Variable(.Local(1))), .Lambda(0, .Unroll(.Type(0), .Variable(.Local(1))), .Unroll(.Variable(.Local(1)), .Variable(.Local(0))))))))
+		assert(identity.value.elaborateType(identity.type, [:], [:]), ==, .Unroll(identity.type, .Lambda(1, .Unroll(.Type(1), .Type(0)), .Unroll(.Lambda(-1, .Variable(.Local(1)), .Variable(.Local(1))), .Lambda(0, .Unroll(.Type(0), .Variable(.Local(1))), .Unroll(.Variable(.Local(1)), .Variable(.Local(0))))))))
 	}
 }
 
