@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Elaborated<Term: TermType>: CustomDebugStringConvertible, Equatable, TermContainerType {
+public enum Elaborated<Term: TermType>: Equatable, TermContainerType {
 	indirect case Unroll(Term, Expression<Elaborated>)
 
 	/// Construct an elaborated term by coiteration.
@@ -26,21 +26,6 @@ public enum Elaborated<Term: TermType>: CustomDebugStringConvertible, Equatable,
 
 	public func cata<Result>(transform: (Term, Expression<Result>) -> Result) -> Result {
 		return transform(type, out.map { $0.cata(transform) })
-	}
-
-	public var debugDescription: String {
-		return cata { type, out in
-			switch out {
-			case let .Type(n):
-				return ".Unroll(\(String(reflecting: type)), .Type(\(n)))"
-			case let .Variable(name):
-				return ".Unroll(\(String(reflecting: type)), .Variable(\(String(reflecting: name))))"
-			case let .Application(a, b):
-				return ".Unroll(\(String(reflecting: type)), .Application(\(a), \(b)))"
-			case let .Lambda(i, a, b):
-				return ".Unroll(\(String(reflecting: type)), .Lambda(\(i), \(a), \(b)))"
-			}
-		}
 	}
 
 
