@@ -6,7 +6,7 @@ final class NaturalTests: XCTestCase {
 	}
 
 	func testZeroTypechecksAsNatural() {
-		assert(zero.checkType(Natural, environment, context), ==, Natural)
+		assert(zero.checkType(Natural, environment, context), ==, .Unroll(Natural, .Variable(.Global("zero"))))
 		assert(zero.inferType(environment, context), ==, .Unroll(Natural, .Variable(.Global("zero"))))
 	}
 

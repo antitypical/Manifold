@@ -65,11 +65,11 @@ public enum Declaration<Recur: TermType>: CustomDebugStringConvertible, CustomSt
 	public func typecheck(environment: [Name:Recur], _ context: [Name:Recur]) -> [String] {
 		switch self {
 		case let .Definition(symbol, type, value):
-			return (type.checkIsType(environment, context).left.map { [ "\(symbol) : 𝜏 ⇐ Type: \($0)" ] } ?? [])
-				+ ((value.checkType(type, environment, context) as Either<String, Recur>).left.map { [ "\(symbol) ⇐ \(type): \($0)" ] } ?? [])
+			return (type.elaborateType(.Type, environment, context).left.map { [ "\(symbol) : 𝜏 ⇐ Type: \($0)" ] } ?? [])
+				+ (value.elaborateType(type, environment, context).left.map { [ "\(symbol) ⇐ \(type): \($0)" ] } ?? [])
 		case let .Datatype(symbol, _):
 			return definitions
-				.flatMap { definition, type, value in (value.checkType(type, environment, context) as Either<String, Recur>).left.map { "\(symbol).\(definition): \($0)" } }
+				.flatMap { definition, type, value in value.elaborateType(type, environment, context).left.map { "\(symbol).\(definition): \($0)" } }
 		}
 	}
 }
