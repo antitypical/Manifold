@@ -24,11 +24,6 @@ public enum Elaborated<Term: TermType>: Equatable, TermContainerType {
 	}
 
 
-	public func cata<Result>(transform: (Term, Expression<Result>) -> Result) -> Result {
-		return transform(type, out.map { $0.cata(transform) })
-	}
-
-
 	// MARK: TermContainerType
 
 	public var out: Expression<Elaborated> {
