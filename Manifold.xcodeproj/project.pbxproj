@@ -55,8 +55,6 @@
 		D4E990241BD3EE5300F00CA7 /* Elaborated.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E990231BD3EE5300F00CA7 /* Elaborated.swift */; };
 		D4EDEF571AFEDEC5001B9A1D /* Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EDEF561AFEDEC5001B9A1D /* Name.swift */; };
 		D4F1B84F1B46E2F40065BF22 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F1B84E1B46E2F40065BF22 /* Int.swift */; };
-		D4F1B8511B46EBE10065BF22 /* LazyScanSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F1B8501B46EBE10065BF22 /* LazyScanSequence.swift */; };
-		D4F1B8531B46FD4F0065BF22 /* LazyScanSequenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F1B8521B46FD4F0065BF22 /* LazyScanSequenceTests.swift */; };
 		D4F1B8551B470B430065BF22 /* IntExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F1B8541B470B430065BF22 /* IntExtensionTests.swift */; };
 		D4F969961B98ECE80069F481 /* SwiftCheck.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4F969951B98ECE80069F481 /* SwiftCheck.framework */; };
 		D4F969981B98F3220069F481 /* Term+Arbitrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F969971B98F3220069F481 /* Term+Arbitrary.swift */; };
@@ -129,8 +127,6 @@
 		D4E990231BD3EE5300F00CA7 /* Elaborated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Elaborated.swift; sourceTree = "<group>"; };
 		D4EDEF561AFEDEC5001B9A1D /* Name.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Name.swift; sourceTree = "<group>"; };
 		D4F1B84E1B46E2F40065BF22 /* Int.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
-		D4F1B8501B46EBE10065BF22 /* LazyScanSequence.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LazyScanSequence.swift; sourceTree = "<group>"; };
-		D4F1B8521B46FD4F0065BF22 /* LazyScanSequenceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LazyScanSequenceTests.swift; sourceTree = "<group>"; };
 		D4F1B8541B470B430065BF22 /* IntExtensionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntExtensionTests.swift; sourceTree = "<group>"; };
 		D4F969951B98ECE80069F481 /* SwiftCheck.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SwiftCheck.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D4F969971B98F3220069F481 /* Term+Arbitrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Term+Arbitrary.swift"; sourceTree = "<group>"; };
@@ -235,7 +231,6 @@
 				D4B3FBEF1A83515800DA2AC3 /* Info.plist */,
 				D4B4AA561A90320F0089A5F2 /* Dictionary.swift */,
 				D4F1B84E1B46E2F40065BF22 /* Int.swift */,
-				D4F1B8501B46EBE10065BF22 /* LazyScanSequence.swift */,
 				D4E8289C1B5202BB00713E60 /* StringLiteralConvertible.swift */,
 				D4E289A31B641FDA0070389F /* String.swift */,
 			);
@@ -249,7 +244,6 @@
 				D4809FBC1AF6BD400084B8FE /* TermTests.swift */,
 				D4F1B8541B470B430065BF22 /* IntExtensionTests.swift */,
 				D463F6D31BD2A8FF00BA0628 /* Modules */,
-				D4F1B8521B46FD4F0065BF22 /* LazyScanSequenceTests.swift */,
 				D4DF444F1B2DB043008DCA5D /* TypecheckingTests.swift */,
 				D4F969971B98F3220069F481 /* Term+Arbitrary.swift */,
 				D4FC2FDD1BAF564F005F3B26 /* DeclarationTests.swift */,
@@ -402,7 +396,6 @@
 				D470CB981BDC27130003A931 /* Module+Vector.swift in Sources */,
 				D44541861BCAEF1000F2946D /* TermType+Substitution.swift in Sources */,
 				D4E289A41B641FDA0070389F /* String.swift in Sources */,
-				D4F1B8511B46EBE10065BF22 /* LazyScanSequence.swift in Sources */,
 				D43AC8831BC1824D008762B7 /* Telescope.swift in Sources */,
 				D4E101BA1B484611001A7E55 /* Module+Natural.swift in Sources */,
 				D4B56CB11AFDA26A00D7BD6F /* Expression.swift in Sources */,
@@ -447,7 +440,6 @@
 				D44541821BCAE3CD00F2946D /* ListTests.swift in Sources */,
 				D4D0FC101BD4A7000010F243 /* SigmaTests.swift in Sources */,
 				D4DF44501B2DB043008DCA5D /* TypecheckingTests.swift in Sources */,
-				D4F1B8531B46FD4F0065BF22 /* LazyScanSequenceTests.swift in Sources */,
 				D4FC2FDE1BAF564F005F3B26 /* DeclarationTests.swift in Sources */,
 				D463F6D51BD2A91200BA0628 /* MaybeTests.swift in Sources */,
 				D484903C1B2A40E800F249F7 /* EvaluationTests.swift in Sources */,
