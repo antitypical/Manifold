@@ -10,16 +10,6 @@ public enum Declaration<Recur: TermType>: CustomStringConvertible {
 	}
 
 
-	public var symbol: Name {
-		switch self {
-		case let .Definition(symbol, _, _):
-			return symbol
-		case let .Datatype(symbol, _):
-			return symbol
-		}
-	}
-
-
 	public typealias DefinitionType = (symbol: Name, type: Recur, value: Recur)
 
 	public var definitions: [DefinitionType] {
