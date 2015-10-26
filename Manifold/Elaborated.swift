@@ -12,10 +12,6 @@ public enum Elaborated<Term: TermType>: Equatable, TermContainerType {
 		return destructure.0
 	}
 
-	public var term: Term {
-		return Term(term: self)
-	}
-
 	public var destructure: (Term, Expression<Elaborated>) {
 		switch self {
 		case let .Unroll(all):
