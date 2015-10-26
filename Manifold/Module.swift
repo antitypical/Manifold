@@ -4,7 +4,7 @@ public struct Module<Recur: TermType> {
 	public init<D: SequenceType, S: SequenceType where D.Generator.Element == Module, S.Generator.Element == Declaration<Recur>>(_ name: String, _ dependencies: D, _ declarations: S) {
 		self.name = name
 		self.dependencies = Array(dependencies)
-		self.declarations = Array(declarations)
+		self.definitions = declarations.flatMap { $0.definitions }
 	}
 
 	public init<S: SequenceType where S.Generator.Element == Declaration<Recur>>(_ name: String, _ declarations: S) {
@@ -14,11 +14,7 @@ public struct Module<Recur: TermType> {
 	public let name: String
 
 	public let dependencies: [Module]
-	public let declarations: [Declaration<Recur>]
-
-	public var definitions: [(Name, Recur, Recur)] {
-		return declarations.flatMap { $0.definitions }
-	}
+	public let definitions: [(Name, Recur, Recur)]
 
 	public var environment: [Name:Recur] {
 		return (dependencies.map { $0.environment }
