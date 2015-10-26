@@ -71,9 +71,6 @@ extension TermType {
 				throw "Type mismatch: expected '\(self)' to be of type '\(Self(b))', but it was actually of type '\(a.type)' in context: \(Self.toString(context, separator: ":")), environment: \(Self.toString(environment, separator: "="))"
 			}
 			return a
-
-		default:
-			throw "No rule to infer the type of '\(self)' in context: \(Self.toString(context, separator: ":")), environment: \(Self.toString(environment, separator: "="))"
 		}
 	}
 
