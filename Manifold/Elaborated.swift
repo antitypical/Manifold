@@ -3,11 +3,6 @@
 public enum Elaborated<Term: TermType>: Equatable, TermContainerType {
 	indirect case Unroll(Term, Expression<Elaborated>)
 
-	/// Construct an elaborated term by coiteration.
-	public static func coiterate(elaborate: Term throws -> Expression<Term>)(_ seed: Term) rethrows -> Elaborated {
-		return try .Unroll(seed, elaborate(seed).map { try coiterate(elaborate)($0) })
-	}
-
 	public var type: Term {
 		return destructure.0
 	}
