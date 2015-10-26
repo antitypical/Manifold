@@ -31,10 +31,6 @@ extension TermType {
 	public init(_ expression: Expression<Self>) {
 		self.init { expression }
 	}
-
-	public static func ana<A>(transform: A -> Expression<A>)(_ seed: A) -> Self {
-		return (Self.init <<< { $0.map(ana(transform)) } <<< transform)(seed)
-	}
 }
 
 
