@@ -25,8 +25,8 @@ extension TermType {
 		default:
 			return inferType(environment, context)
 				.flatMap { inferred in
-					Self.equate(inferred, against, environment)
-						? Either.Right(inferred)
+					Self.equate(inferred.type, against, environment)
+						? Either.Right(inferred.type)
 						: Either.Left("Type mismatch: expected '\(self)' to be of type '\(against)', but it was actually of type '\(inferred)' in context: \(Self.toString(context, separator: ":")), environment: \(Self.toString(environment, separator: "="))")
 				}
 		}

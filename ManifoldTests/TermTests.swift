@@ -2,8 +2,8 @@
 
 final class TermTests: XCTestCase {
 	func testLambdaTypeDescription() {
-		assert(identity.description, ==, "λ b : Type . λ a : b . a")
-		assert((identity.inferType().right as Term?)?.description, ==, "λ a : Type . a → a")
+		assert(identity.value.description, ==, "λ b : Type . λ a : b . a")
+		assert((identity.value.checkType(identity.type, [:], [:]).right as Term?)?.description, ==, "λ a : Type . a → a")
 	}
 
 	func testRightNestedFunctionTypesAreNotParenthesized() {
@@ -22,7 +22,7 @@ final class TermTests: XCTestCase {
 
 	func testHigherOrderConstruction() {
 		assert(Term.lambda(.Type, id), ==, .Lambda(0, .Type, 0))
-		assert(identity, ==, .Lambda(1, .Type, .Lambda(0, 1, 0)))
+		assert(identity.value, ==, .Lambda(1, .Type, .Lambda(0, 1, 0)))
 		assert(constant, ==, .Lambda(2, .Type, .Lambda(1, .Type, .Lambda(0, 2, .Lambda(-1, 1, 0)))))
 	}
 
@@ -36,7 +36,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testSubstitution() {
-		assert(Term.Lambda(0, 1, 0).substitute(1, identity), ==, .Lambda(0, identity, 0))
+		assert(Term.Lambda(0, 1, 0).substitute(1, identity.value), ==, .Lambda(0, identity.value, 0))
 	}
 
 	func testFreeVariablesDoNotIncludeThoseBoundByLambdas() {
@@ -53,7 +53,7 @@ final class TermTests: XCTestCase {
 }
 
 
-let identity = Term.lambda(.Type) { A in .lambda(A, id) }
+let identity: (type: Term, value: Term) = (type: .Type => { A in A --> A }, value: .Type => { A in .lambda(A, id) })
 let constant = Term.lambda(.Type) { A in Term.lambda(.Type) { B in Term.lambda(A) { a in .lambda(B, const(a)) } } }
 
 
