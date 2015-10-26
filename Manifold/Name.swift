@@ -1,18 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Name: Comparable, CustomDebugStringConvertible, CustomStringConvertible, Hashable, StringLiteralConvertible {
-	// MARK: CustomDebugStringConvertible
-
-	public var debugDescription: String {
-		switch self {
-		case let .Global(name):
-			return ".Global(\(name))"
-		case let .Local(i):
-			return ".Local(\(i))"
-		}
-	}
-
-
+public enum Name: Comparable, CustomStringConvertible, Hashable, StringLiteralConvertible {
 	// MARK: CustomStringConvertible
 
 	public var description: String {
