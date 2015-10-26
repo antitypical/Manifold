@@ -10,8 +10,4 @@ extension Int {
 			.map { $0 % base }
 			.reverse()
 	}
-
-	public var digits: [Int] {
-		return digits(10)
-	}
 }
