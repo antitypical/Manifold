@@ -6,12 +6,11 @@ final class NaturalTests: XCTestCase {
 	}
 
 	func testZeroTypechecksAsNatural() {
-		assert(zero.checkType(Natural, environment, context), ==, .Unroll(Natural, .Variable(.Global("zero"))))
-		assert(zero.inferType(environment, context), ==, .Unroll(Natural, .Variable(.Global("zero"))))
+		assert(zero.elaborateType(nil, environment, context), ==, .Unroll(Natural, .Variable(.Global("zero"))))
 	}
 
 	func testSuccessorOfZeroTypechecksAsNatural() {
-		assert(successor[zero].inferType(environment, context), ==, .Unroll(Natural, .Application(.Unroll(Natural --> Natural, .Variable(.Global("successor"))), .Unroll(Natural, .Variable(.Global("zero"))))))
+		assert(successor[zero].elaborateType(nil, environment, context), ==, .Unroll(Natural, .Application(.Unroll(Natural --> Natural, .Variable(.Global("successor"))), .Unroll(Natural, .Variable(.Global("zero"))))))
 	}
 }
 

@@ -2,7 +2,7 @@
 
 final class TypecheckingTests: XCTestCase {
 	func testTypeTypechecksToNextTypeLevel() {
-		assert(Term(.Type(0)).inferType(), ==, .Unroll(.Type(1), .Type(0)))
+		assert(Term(.Type(0)).elaborateType(nil, [:], [:]), ==, .Unroll(.Type(1), .Type(0)))
 	}
 
 	func testApplicationOfIdentityAbstractionToTermTypechecksToType() {
