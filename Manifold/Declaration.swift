@@ -10,12 +10,12 @@ public enum Declaration<Recur: TermType>: CustomStringConvertible {
 	}
 
 
-	public var symbol: String {
+	public var symbol: Name {
 		switch self {
 		case let .Definition(symbol, _, _):
-			return symbol
+			return .Global(symbol)
 		case let .Datatype(symbol, _):
-			return symbol
+			return .Global(symbol)
 		}
 	}
 
@@ -49,6 +49,6 @@ public enum Declaration<Recur: TermType>: CustomStringConvertible {
 
 
 	public var ref: Recur {
-		return .Variable(Name.Global(symbol))
+		return .Variable(symbol)
 	}
 }
