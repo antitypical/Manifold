@@ -24,18 +24,14 @@ public struct Module<Recur: TermType> {
 	}
 
 	public var environment: Environment {
-		let dependencies = self.dependencies.lazy.map { $0.environment }
-		let definitions = self.definitions.lazy.map { symbol, _, value in [ symbol: value ] }
-		return dependencies
-			.concat(definitions)
+		return (dependencies.map { $0.environment }
+			+ definitions.map { symbol, _, value in [ symbol: value ] })
 			.reduce(Environment(), combine: +)
 	}
 
 	public var context: Context {
-		let dependencies = self.dependencies.lazy.map { $0.context }
-		let definitions = self.definitions.lazy.map { symbol, type, _ in [ symbol: type ] }
-		return dependencies
-			.concat(definitions)
+		return (dependencies.map { $0.context }
+			+ definitions.map { symbol, type, _ in [ symbol: type ] })
 			.reduce(Context(), combine: +)
 	}
 }
