@@ -5,12 +5,12 @@ extension Module {
 		let Boolean: Recur = "Boolean"
 		let So = Declaration("So",
 			type: Boolean --> .Type,
-			value: Boolean => { b in b[.Type, .Type => { $0 --> $0 }, .Type] })
+			value: Boolean --> .Type)
 
 		let `true`: Recur = "true"
 		let Oh = Declaration("Oh",
 			type: So.ref[`true`],
-			value: .Type => { $0 => id })
+			value: .Type)
 
 		return Module("So", [ boolean ], [ So, Oh ])
 	}
