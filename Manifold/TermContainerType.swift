@@ -23,7 +23,4 @@ public func == <Term: TermContainerType> (left: Term, right: Term) -> Bool {
 }
 
 
-public protocol TermType: IntegerLiteralConvertible, StringLiteralConvertible, TermContainerType {}
-
-
 import Prelude
