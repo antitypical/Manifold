@@ -15,7 +15,7 @@ final class SigmaTests: XCTestCase {
 
 private let module = Module.sigma
 private let expected: Module = {
-	let Sigma = Declaration<Term>("Sigma",
+	let Sigma = Declaration("Sigma",
 		type: .Type => { A in (A --> .Type) --> .Type },
 		value: .Type => { A in (A --> .Type, .Type) => { B, C in (A => { x in B[x] --> C }) --> C } })
 

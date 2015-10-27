@@ -2,7 +2,7 @@
 
 extension Module {
 	public static var pair: Module {
-		let Pair = Declaration<Term>("Pair", Datatype(.Type, .Type) {
+		let Pair = Declaration("Pair", Datatype(.Type, .Type) {
 			[ "pair": .Argument($0, const(.Argument($1, const(.End)))) ]
 		})
 

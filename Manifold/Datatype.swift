@@ -19,7 +19,7 @@ public enum Datatype<Recur: TermType>: DictionaryLiteralConvertible {
 	}
 
 
-	public func definitions(recur: Recur, abstract: (Recur -> Recur) -> Recur -> Recur = { f in { f($0) } }) -> [Declaration<Recur>.DefinitionType] {
+	public func definitions(recur: Recur, abstract: (Recur -> Recur) -> Recur -> Recur = { f in { f($0) } }) -> [(Name, Recur, Recur)] {
 		switch self {
 		case let .Argument(type, continuation):
 			var parameter = Recur.Variable(.Local(-1))

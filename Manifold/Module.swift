@@ -1,13 +1,13 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public struct Module {
-	public init<D: SequenceType, S: SequenceType where D.Generator.Element == Module, S.Generator.Element == Declaration<Term>>(_ name: String, _ dependencies: D, _ declarations: S) {
+	public init<D: SequenceType, S: SequenceType where D.Generator.Element == Module, S.Generator.Element == Declaration>(_ name: String, _ dependencies: D, _ declarations: S) {
 		self.name = name
 		self.dependencies = Array(dependencies)
 		self.definitions = declarations.flatMap { $0.definitions }
 	}
 
-	public init<S: SequenceType where S.Generator.Element == Declaration<Term>>(_ name: String, _ declarations: S) {
+	public init<S: SequenceType where S.Generator.Element == Declaration>(_ name: String, _ declarations: S) {
 		self.init(name, [], declarations)
 	}
 

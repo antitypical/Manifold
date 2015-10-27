@@ -2,7 +2,7 @@
 
 extension Module {
 	public static var boolean: Module {
-		let Boolean = Declaration<Term>.Datatype("Boolean", [
+		let Boolean = Declaration.Datatype("Boolean", [
 			"true": .End,
 			"false": .End
 		])
