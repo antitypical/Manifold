@@ -7,12 +7,12 @@ extension Module {
 		})
 
 		let first = Declaration("first",
-			type: Term.lambda(.Type, .Type) { A, B in Pair.ref[A, B] --> A },
-			value: Term.lambda(.Type, .Type) { A, B in Term.lambda(Pair.ref[A, B]) { pair in pair[A, Term.lambda(A, B) { a, _ in a }] } })
+			type: (.Type, .Type) => { A, B in Pair.ref[A, B] --> A },
+			value: (.Type, .Type) => { A, B in (Pair.ref[A, B]) => { pair in pair[A, (A, B) => { a, _ in a }] } })
 
 		let second = Declaration("second",
-			type: Term.lambda(.Type, .Type) { A, B in Pair.ref[A, B] --> B },
-			value: Term.lambda(.Type, .Type) { A, B in Term.lambda(Pair.ref[A, B]) { pair in pair[B, Term.lambda(A, B) { _, b in b }] } })
+			type: (.Type, .Type) => { A, B in Pair.ref[A, B] --> B },
+			value: (.Type, .Type) => { A, B in (Pair.ref[A, B]) => { pair in pair[B, (A, B) => { _, b in b }] } })
 
 		return Module("Pair", [ Pair, first, second ])
 	}

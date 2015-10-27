@@ -21,8 +21,8 @@ final class DeclarationTests: XCTestCase {
 	}
 
 	func testDatatypeConstructorsWithArgumentsHaveFunctionTypes() {
-		assert(datatype.context["a"], ==, .lambda(.Type, .Type, const("A")))
-		assert(datatype.context["b"], ==, .lambda(.Type, .Type, const("A")))
+		assert(datatype.context["a"], ==, (.Type, .Type) => const("A"))
+		assert(datatype.context["b"], ==, (.Type, .Type) => const("A"))
 	}
 
 	func testDatatypeConstructorsWithArgumentsAreEncodedFunctions() {

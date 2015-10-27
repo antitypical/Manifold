@@ -21,18 +21,18 @@ final class TermTests: XCTestCase {
 
 
 	func testHigherOrderConstruction() {
-		assert(Term.lambda(.Type, id), ==, .Lambda(0, .Type, 0))
+		assert(.Type => id, ==, .Lambda(0, .Type, 0))
 		assert(identity.value, ==, .Lambda(1, .Type, .Lambda(0, 1, 0)))
 		assert(constant, ==, .Lambda(2, .Type, .Lambda(1, .Type, .Lambda(0, 2, .Lambda(-1, 1, 0)))))
 	}
 
 	func testChurchEncodedBooleanConstruction() {
-		assert(Term.lambda(.Type) { A in Term.lambda(A, A) { a, _ in a } }, ==, .Lambda(1, .Type, .Lambda(0, 1, .Lambda(-1, 1, 0))))
-		assert(Term.lambda(.Type) { A in Term.lambda(A, A) { _, b in b } }, ==, .Lambda(1, .Type, .Lambda(-1, 1, .Lambda(0, 1, 0))))
+		assert(.Type => { A in (A, A) => { a, _ in a } }, ==, .Lambda(1, .Type, .Lambda(0, 1, .Lambda(-1, 1, 0))))
+		assert(.Type => { A in (A, A) => { _, b in b } }, ==, .Lambda(1, .Type, .Lambda(-1, 1, .Lambda(0, 1, 0))))
 	}
 
 	func testFunctionTypeConstruction() {
-		assert(Term.lambda(.Type) { A in .lambda(A --> A, A, const(A)) }, ==, .Lambda(0, .Type, .Lambda(-1, .Lambda(-1, 0, 0), .Lambda(-1, 0, 0))))
+		assert(.Type => { A in (A --> A, A) => const(A) }, ==, .Lambda(0, .Type, .Lambda(-1, .Lambda(-1, 0, 0), .Lambda(-1, 0, 0))))
 	}
 
 	func testSubstitution() {
@@ -53,8 +53,8 @@ final class TermTests: XCTestCase {
 }
 
 
-let identity: (type: Term, value: Term) = (type: .Type => { A in A --> A }, value: .Type => { A in .lambda(A, id) })
-let constant = Term.lambda(.Type) { A in Term.lambda(.Type) { B in Term.lambda(A) { a in .lambda(B, const(a)) } } }
+let identity: (type: Term, value: Term) = (type: .Type => { A in A --> A }, value: .Type => { A in A => id })
+let constant = .Type => { A in .Type => { B in A => { a in B => const(a) } } }
 
 
 import Assertions
