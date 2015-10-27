@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D415A09B1B51EFDE001C15E5 /* TermType+Construction.swift in Sources */ = {isa = PBXBuildFile; fileRef = D415A09A1B51EFDE001C15E5 /* TermType+Construction.swift */; };
+		D415A09B1B51EFDE001C15E5 /* Term+Construction.swift in Sources */ = {isa = PBXBuildFile; fileRef = D415A09A1B51EFDE001C15E5 /* Term+Construction.swift */; };
 		D43AC8831BC1824D008762B7 /* Telescope.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43AC8821BC1824D008762B7 /* Telescope.swift */; };
 		D445417C1BCAB0C100F2946D /* Module+Unit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D445417B1BCAB0C100F2946D /* Module+Unit.swift */; };
 		D445417E1BCAB11100F2946D /* UnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D445417D1BCAB11100F2946D /* UnitTests.swift */; };
@@ -75,7 +75,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		D415A09A1B51EFDE001C15E5 /* TermType+Construction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TermType+Construction.swift"; sourceTree = "<group>"; };
+		D415A09A1B51EFDE001C15E5 /* Term+Construction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Term+Construction.swift"; sourceTree = "<group>"; };
 		D43AC8821BC1824D008762B7 /* Telescope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Telescope.swift; sourceTree = "<group>"; };
 		D445417B1BCAB0C100F2946D /* Module+Unit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Module+Unit.swift"; sourceTree = "<group>"; };
 		D445417D1BCAB11100F2946D /* UnitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnitTests.swift; sourceTree = "<group>"; };
@@ -208,7 +208,7 @@
 				D4D0FBFF1BD420B20010F243 /* Term+Elaboration.swift */,
 				D44541851BCAEF1000F2946D /* Term+Substitution.swift */,
 				D445418B1BCAF3ED00F2946D /* Term+DefinitionalEquality.swift */,
-				D415A09A1B51EFDE001C15E5 /* TermType+Construction.swift */,
+				D415A09A1B51EFDE001C15E5 /* Term+Construction.swift */,
 				D445418F1BCB028A00F2946D /* TermContainerType+CustomDebugStringConvertible.swift */,
 				D44541911BCB030F00F2946D /* TermContainerType+CustomStringConvertible.swift */,
 				D4E1F7121BD4176100FCA0B4 /* TermContainerType+FreeVariables.swift */,
@@ -387,7 +387,7 @@
 			files = (
 				D445417C1BCAB0C100F2946D /* Module+Unit.swift in Sources */,
 				D4E9901C1BD3431D00F00CA7 /* Module+Either.swift in Sources */,
-				D415A09B1B51EFDE001C15E5 /* TermType+Construction.swift in Sources */,
+				D415A09B1B51EFDE001C15E5 /* Term+Construction.swift in Sources */,
 				D44541901BCB028A00F2946D /* TermContainerType+CustomDebugStringConvertible.swift in Sources */,
 				D44541841BCAEDCD00F2946D /* Term+WeakHeadNormalForm.swift in Sources */,
 				D470CB981BDC27130003A931 /* Module+Vector.swift in Sources */,
