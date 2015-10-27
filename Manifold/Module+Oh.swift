@@ -2,6 +2,6 @@
 
 extension Module {
 	public static var oh: Module {
-		return Module("Oh", [])
+		return Module("Oh", [ boolean ], [])
 	}
 }
