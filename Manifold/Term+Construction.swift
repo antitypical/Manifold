@@ -65,14 +65,6 @@ extension Term {
 	public init(stringLiteral value: String) {
 		self.init(.Variable(.Global(value)))
 	}
-
-	public init(unicodeScalarLiteral: Term.StringLiteralType) {
-		self.init(stringLiteral: unicodeScalarLiteral)
-	}
-
-	public init(extendedGraphemeClusterLiteral: Term.StringLiteralType) {
-		self.init(stringLiteral: extendedGraphemeClusterLiteral)
-	}
 }
 
 
