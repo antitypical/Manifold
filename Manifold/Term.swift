@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Term: TermType {
+public enum Term: TermType, TermContainerType {
 	case In(() -> Expression<Term>)
 
 
@@ -9,6 +9,9 @@ public enum Term: TermType {
 	public init(_ expression: () -> Expression<Term>) {
 		self = .In(expression)
 	}
+
+
+	// MARK: TermContainerType
 
 	public var out: Expression<Term> {
 		switch self {
