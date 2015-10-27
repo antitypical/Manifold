@@ -1,15 +1,15 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Datatype<Term: TermType>: DictionaryLiteralConvertible {
+public enum Datatype: DictionaryLiteralConvertible {
 	indirect case Argument(Term, Term -> Datatype)
 	case End([(String, Telescope<Term>)])
 
 
-	public init(_ type: Term, _ constructor: Term -> Datatype<Term>) {
+	public init(_ type: Term, _ constructor: Term -> Datatype) {
 		self = .Argument(type, constructor)
 	}
 
-	public init(_ type1: Term, _ type2: Term, _ constructor: (Term, Term) -> Datatype<Term>) {
+	public init(_ type1: Term, _ type2: Term, _ constructor: (Term, Term) -> Datatype) {
 		self = .Argument(type1, { a in Datatype.Argument(type2) { b in constructor(a, b) } })
 	}
 

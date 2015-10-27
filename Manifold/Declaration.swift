@@ -5,7 +5,7 @@ public enum Declaration: CustomStringConvertible {
 		self = .Definition(symbol, type, value)
 	}
 
-	public init(_ symbol: Name, _ datatype: Manifold.Datatype<Term>) {
+	public init(_ symbol: Name, _ datatype: Manifold.Datatype) {
 		self = .Datatype(symbol, datatype)
 	}
 
@@ -35,7 +35,7 @@ public enum Declaration: CustomStringConvertible {
 
 
 	case Definition(Name, Term, Term)
-	case Datatype(Name, Manifold.Datatype<Term>)
+	case Datatype(Name, Manifold.Datatype)
 
 
 	public var ref: Term {
