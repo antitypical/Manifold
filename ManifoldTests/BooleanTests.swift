@@ -13,8 +13,8 @@ final class BooleanTests: XCTestCase {
 	}
 }
 
-private let module = Module<Term>.boolean
-private let expected: Module<Term> = {
+private let module = Module.boolean
+private let expected: Module = {
 	let Boolean = Declaration("Boolean",
 		type: .Type,
 		value: Term.lambda(.Type) { Term.lambda($0, $0, const($0)) })

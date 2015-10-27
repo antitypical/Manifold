@@ -1,28 +1,28 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public struct Module<Recur: TermType> {
-	public init<D: SequenceType, S: SequenceType where D.Generator.Element == Module, S.Generator.Element == Declaration<Recur>>(_ name: String, _ dependencies: D, _ declarations: S) {
+public struct Module {
+	public init<D: SequenceType, S: SequenceType where D.Generator.Element == Module, S.Generator.Element == Declaration<Term>>(_ name: String, _ dependencies: D, _ declarations: S) {
 		self.name = name
 		self.dependencies = Array(dependencies)
 		self.definitions = declarations.flatMap { $0.definitions }
 	}
 
-	public init<S: SequenceType where S.Generator.Element == Declaration<Recur>>(_ name: String, _ declarations: S) {
+	public init<S: SequenceType where S.Generator.Element == Declaration<Term>>(_ name: String, _ declarations: S) {
 		self.init(name, [], declarations)
 	}
 
 	public let name: String
 
 	public let dependencies: [Module]
-	public let definitions: [(Name, Recur, Recur)]
+	public let definitions: [(Name, Term, Term)]
 
-	public var environment: [Name:Recur] {
+	public var environment: [Name:Term] {
 		return (dependencies.map { $0.environment }
 			+ definitions.map { symbol, _, value in [ symbol: value ] })
 			.reduce([:], combine: +)
 	}
 
-	public var context: [Name:Recur] {
+	public var context: [Name:Term] {
 		return (dependencies.map { $0.context }
 			+ definitions.map { symbol, type, _ in [ symbol: type ] })
 			.reduce([:], combine: +)

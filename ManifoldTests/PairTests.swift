@@ -13,8 +13,8 @@ final class PairTests: XCTestCase {
 	}
 }
 
-private let module = Module<Term>.pair
-private let expected: Module<Term> = {
+private let module = Module.pair
+private let expected: Module = {
 	let Pair = Declaration("Pair",
 		type: .Type --> .Type --> .Type,
 		value: Term.lambda(.Type, .Type, .Type) { A, B, Result in .lambda(A --> B --> Result, const(Result)) })

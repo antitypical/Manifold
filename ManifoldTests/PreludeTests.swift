@@ -6,7 +6,7 @@ final class PreludeTests: XCTestCase {
 	}
 }
 
-private let module = Module<Term>.prelude
+private let module = Module.prelude
 
 
 import Manifold

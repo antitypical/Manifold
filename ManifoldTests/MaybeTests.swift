@@ -7,7 +7,7 @@ final class MaybeTests: XCTestCase {
 }
 
 
-private let module = Module<Term>.maybe
+private let module = Module.maybe
 
 
 import Manifold

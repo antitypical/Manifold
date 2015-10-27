@@ -6,7 +6,7 @@ final class UnitTests: XCTestCase {
 	}
 }
 
-private let module = Module<Term>.unit
+private let module = Module.unit
 
 
 @testable import Manifold

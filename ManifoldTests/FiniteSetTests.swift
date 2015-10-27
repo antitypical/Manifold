@@ -6,7 +6,7 @@ final class FiniteSetTests: XCTestCase {
 	}
 }
 
-private let module = Module<Term>.finiteSet
+private let module = Module.finiteSet
 
 
 import Manifold

@@ -6,7 +6,7 @@ final class VectorTests: XCTestCase {
 	}
 }
 
-private let module = Module<Term>.vector
+private let module = Module.vector
 
 
 import Manifold
