@@ -2,7 +2,7 @@
 
 public enum Datatype: DictionaryLiteralConvertible {
 	indirect case Argument(Term, Term -> Datatype)
-	case End([(String, Telescope<Term>)])
+	case End([(String, Telescope)])
 
 
 	public init(_ type: Term, _ constructor: Term -> Datatype) {
@@ -14,7 +14,7 @@ public enum Datatype: DictionaryLiteralConvertible {
 	}
 
 
-	public init(dictionaryLiteral: (String, Telescope<Term>)...) {
+	public init(dictionaryLiteral: (String, Telescope)...) {
 		self = .End(dictionaryLiteral)
 	}
 
@@ -40,7 +40,7 @@ public enum Datatype: DictionaryLiteralConvertible {
 		}
 	}
 
-	public func type(telescope: Telescope<Term>)(_ recur: Term) -> Term {
+	public func type(telescope: Telescope)(_ recur: Term) -> Term {
 		switch telescope {
 		case let .Recursive(rest):
 			return recur --> type(rest)(recur)
@@ -51,7 +51,7 @@ public enum Datatype: DictionaryLiteralConvertible {
 		}
 	}
 
-	public func value(symbol: String, telescope: Telescope<Term>, constructors: [(String, Telescope<Term>)], parameters: [Term] = [])(_ recur: Term) -> Term {
+	public func value(symbol: String, telescope: Telescope, constructors: [(String, Telescope)], parameters: [Term] = [])(_ recur: Term) -> Term {
 		switch telescope {
 		case let .Recursive(rest):
 			return recur => { self.value(symbol, telescope: rest, constructors: constructors, parameters: parameters + [ $0 ])(recur) }
@@ -70,7 +70,7 @@ public enum Datatype: DictionaryLiteralConvertible {
 		}
 	}
 
-	public func withTypeParameters(recur: Term, continuation: (Term, [(String, Telescope<Term>)]) -> Term) -> Term {
+	public func withTypeParameters(recur: Term, continuation: (Term, [(String, Telescope)]) -> Term) -> Term {
 		switch self {
 		case let .Argument(type, rest):
 			return type => { rest($0).withTypeParameters(.Application(recur, $0), continuation: continuation) }
