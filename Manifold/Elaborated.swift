@@ -22,6 +22,6 @@ public enum Elaborated<Term: TermType>: Equatable, TermContainerType {
 	}
 }
 
-public func == <Term: TermType> (left: Elaborated<Term>, right: Elaborated<Term>) -> Bool {
+public func == (left: Elaborated<Term>, right: Elaborated<Term>) -> Bool {
 	return left.type == right.type && left.out == right.out
 }
