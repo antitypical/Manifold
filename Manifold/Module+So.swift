@@ -5,7 +5,7 @@ extension Module {
 		let Boolean: Recur = "Boolean"
 		let So = Declaration("So",
 			type: Boolean --> .Type,
-			value: Boolean => { b in b[.Type, .Type => { $0 --> $0 }, .Type => { $0 --> $0 }] })
+			value: Boolean => { b in b[.Type, .Type => { $0 --> $0 }, .Type] })
 
 		let `true`: Recur = "true"
 		let Oh = Declaration("Oh",
