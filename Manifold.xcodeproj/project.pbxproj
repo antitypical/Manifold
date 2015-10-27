@@ -62,6 +62,7 @@
 		D4FB02D91B71D06A0090E764 /* Module+Boolean.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FB02D81B71D06A0090E764 /* Module+Boolean.swift */; };
 		D4FB02DB1B71D1F10090E764 /* BooleanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FB02DA1B71D1F10090E764 /* BooleanTests.swift */; };
 		D4FB2CEC1BDF1A5200B3CCE0 /* Module+Oh.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FB2CEB1BDF1A5200B3CCE0 /* Module+Oh.swift */; };
+		D4FB2CEE1BDF1AC700B3CCE0 /* OhTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FB2CED1BDF1AC700B3CCE0 /* OhTests.swift */; };
 		D4FC2FDE1BAF564F005F3B26 /* DeclarationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FC2FDD1BAF564F005F3B26 /* DeclarationTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -133,6 +134,7 @@
 		D4FB02D81B71D06A0090E764 /* Module+Boolean.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Module+Boolean.swift"; sourceTree = "<group>"; };
 		D4FB02DA1B71D1F10090E764 /* BooleanTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BooleanTests.swift; sourceTree = "<group>"; };
 		D4FB2CEB1BDF1A5200B3CCE0 /* Module+Oh.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Module+Oh.swift"; sourceTree = "<group>"; };
+		D4FB2CED1BDF1AC700B3CCE0 /* OhTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OhTests.swift; sourceTree = "<group>"; };
 		D4FC2FDD1BAF564F005F3B26 /* DeclarationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeclarationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -173,6 +175,7 @@
 				D4D0FC071BD45CD60010F243 /* PreludeTests.swift */,
 				D470CB991BDC273C0003A931 /* VectorTests.swift */,
 				D4ACE90E1BDC7E79009E928F /* FiniteSetTests.swift */,
+				D4FB2CED1BDF1AC700B3CCE0 /* OhTests.swift */,
 			);
 			name = Modules;
 			sourceTree = "<group>";
@@ -441,6 +444,7 @@
 				D44541821BCAE3CD00F2946D /* ListTests.swift in Sources */,
 				D4D0FC101BD4A7000010F243 /* SigmaTests.swift in Sources */,
 				D4FC2FDE1BAF564F005F3B26 /* DeclarationTests.swift in Sources */,
+				D4FB2CEE1BDF1AC700B3CCE0 /* OhTests.swift in Sources */,
 				D463F6D51BD2A91200BA0628 /* MaybeTests.swift in Sources */,
 				D484903C1B2A40E800F249F7 /* EvaluationTests.swift in Sources */,
 				D4D0FC081BD45CD60010F243 /* PreludeTests.swift in Sources */,
