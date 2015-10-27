@@ -29,21 +29,6 @@ extension Term {
 	}
 
 
-	// MARK: Higher-order construction
-
-	public static func lambda(type: Term, _ body: Term -> Term) -> Term {
-		return type => body
-	}
-
-	public static func lambda(type1: Term, _ type2: Term, _ body: (Term, Term) -> Term) -> Term {
-		return lambda(type1) { a in lambda(type2) { b in body(a, b) } }
-	}
-
-	public static func lambda(type1: Term, _ type2: Term, _ type3: Term, _ body: (Term, Term, Term) -> Term) -> Term {
-		return lambda(type1) { a in lambda(type2) { b in lambda(type3) { c in body(a, b, c) } } }
-	}
-
-
 	public init<T: TermContainerType>(term: T) {
 		self.init(term.out.map { Term(term: $0) })
 	}
@@ -84,11 +69,11 @@ public func => (type: Term, body: Term -> Term) -> Term {
 }
 
 public func => (left: (Term, Term), right: (Term, Term) -> Term) -> Term {
-	return .lambda(left.0, left.1, right)
+	return left.0 => { a in left.1 => { b in right(a, b) } }
 }
 
 public func => (left: (Term, Term, Term), right: (Term, Term, Term) -> Term) -> Term {
-	return .lambda(left.0, left.1, left.2, right)
+	return left.0 => { a in left.1 => { b in left.2 => { c in right(a, b, c) } } }
 }
 
 
