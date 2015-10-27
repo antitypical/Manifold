@@ -49,11 +49,7 @@ extension Term {
 
 
 	public init<T: TermContainerType>(term: T) {
-		self.init(expression: term.out)
-	}
-
-	public init<T: TermContainerType>(expression: Expression<T>) {
-		self.init(expression.map { Term(term: $0) })
+		self.init(term.out.map { Term(term: $0) })
 	}
 
 
