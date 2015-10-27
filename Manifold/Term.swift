@@ -10,6 +10,10 @@ public enum Term: TermType, TermContainerType {
 		self = .In(expression)
 	}
 
+	public init(_ expression: Expression<Term>) {
+		self.init { expression }
+	}
+
 
 	// MARK: TermContainerType
 
