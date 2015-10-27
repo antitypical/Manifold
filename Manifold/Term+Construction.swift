@@ -1,8 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 extension Term {
-	// MARK: First-order construction
-
 	public static var Type: Term {
 		return Type(0)
 	}
