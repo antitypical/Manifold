@@ -2,6 +2,11 @@
 
 extension Module {
 	public static var so: Module {
-		return Module("So", [ boolean ], [])
+		let Boolean: Recur = "Boolean"
+		let So = Declaration("So",
+			type: Boolean --> .Type,
+			value: Boolean => { b in b[.Type, .Type => { $0 --> $0 }, .Type => { $0 --> $0 }] })
+
+		return Module("So", [ boolean ], [ So ])
 	}
 }
