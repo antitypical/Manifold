@@ -32,11 +32,7 @@ extension Term {
 	// MARK: Higher-order construction
 
 	public static func lambda(type: Term, _ body: Term -> Term) -> Term {
-		var n = -1
-		let body = body(Term { .Variable(.Local(n)) })
-		n = body.maxBoundVariable + 1
-		if !body.freeVariables.contains(n) { n = -1 }
-		return .Lambda(n, type, body)
+		return type => body
 	}
 
 	public static func lambda(type1: Term, _ type2: Term, _ body: (Term, Term) -> Term) -> Term {
@@ -78,8 +74,13 @@ public func --> (left: Term, right: Term) -> Term {
 	return left => const(right)
 }
 
-public func => (left: Term, right: Term -> Term) -> Term {
-	return .lambda(left, right)
+public func => (type: Term, body: Term -> Term) -> Term {
+	var n = -1
+	let body = body(Term { .Variable(.Local(n)) })
+	n = body.maxBoundVariable + 1
+	if !body.freeVariables.contains(n) { n = -1 }
+	return .Lambda(n, type, body)
+
 }
 
 public func => (left: (Term, Term), right: (Term, Term) -> Term) -> Term {
