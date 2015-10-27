@@ -1,14 +1,14 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-extension TermType {
-	public static func equate(left: Self, _ right: Self, _ environment: [Name:Self], var _ visited: Set<Name> = []) -> Bool {
+extension Term {
+	public static func equate(left: Term, _ right: Term, _ environment: [Name:Term], var _ visited: Set<Name> = []) -> Bool {
 		if left == right { return true }
 
-		let recur: (Self, Self) -> Bool = {
+		let recur: (Term, Term) -> Bool = {
 			equate($0, $1, environment, visited)
 		}
 
-		let normalize: (Self, Set<Name>) -> (Self, Set<Name>) = { (term, var visited) in
+		let normalize: (Term, Set<Name>) -> (Term, Set<Name>) = { (term, var visited) in
 			(term.weakHeadNormalForm(environment, shouldRecur: false, visited: &visited), visited)
 		}
 

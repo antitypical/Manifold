@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Elaborated<Term: TermType>: Equatable, TermContainerType {
+public enum Elaborated: Equatable, TermContainerType {
 	indirect case Unroll(Term, Expression<Elaborated>)
 
 	public var type: Term {
@@ -22,6 +22,6 @@ public enum Elaborated<Term: TermType>: Equatable, TermContainerType {
 	}
 }
 
-public func == <Term: TermType> (left: Elaborated<Term>, right: Elaborated<Term>) -> Bool {
+public func == (left: Elaborated, right: Elaborated) -> Bool {
 	return left.type == right.type && left.out == right.out
 }

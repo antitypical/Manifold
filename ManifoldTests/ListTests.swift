@@ -13,8 +13,8 @@ final class ListTests: XCTestCase {
 	}
 }
 
-private let module = Module<Term>.list
-private let expected: Module<Term> = {
+private let module = Module.list
+private let expected: Module = {
 	let List: Term = "List"
 	let list = Declaration("List",
 		type: .Type --> .Type,

@@ -2,27 +2,27 @@
 
 final class DeclarationTests: XCTestCase {
 	func testDatatypeDeclarationsAddTypesToContext() {
-		assert(Module<Term>.boolean.context["Boolean"], ==, .Type(0))
+		assert(Module.boolean.context["Boolean"], ==, .Type(0))
 	}
 
 	func testDatatypeDeclarationsAddDataConstructorsToContext() {
-		assert(Module<Term>.boolean.context["true"], ==, .Variable("Boolean"))
-		assert(Module<Term>.boolean.context["false"], ==, .Variable("Boolean"))
+		assert(Module.boolean.context["true"], ==, .Variable("Boolean"))
+		assert(Module.boolean.context["false"], ==, .Variable("Boolean"))
 	}
 
 	func testDatatypeDeclarationsAddDataConstructorsToEnvironment() {
-		assert(Module<Term>.boolean.environment["true"], ==, .Type => { A in A => { a in A --> a } })
-		assert(Module<Term>.boolean.environment["false"], ==, .Type => { A in A --> A => id })
+		assert(Module.boolean.environment["true"], ==, .Type => { A in A => { a in A --> a } })
+		assert(Module.boolean.environment["false"], ==, .Type => { A in A --> A => id })
 	}
 
 	func testDatatypeConstructorsWithRecursiveReferencesProduceValuesEmbeddingReferencesToTheirType() {
 		let Natural: Term = "Natural"
-		assert(Module<Term>.natural.environment["successor"], ==, (Natural, .Type) => { n, A in A --> (Natural --> A) => { $0[n] } })
+		assert(Module.natural.environment["successor"], ==, (Natural, .Type) => { n, A in A --> (Natural --> A) => { $0[n] } })
 	}
 
 	func testDatatypeConstructorsWithArgumentsHaveFunctionTypes() {
-		assert(datatype.context["a"], ==, .lambda(.Type, .Type, const("A")))
-		assert(datatype.context["b"], ==, .lambda(.Type, .Type, const("A")))
+		assert(datatype.context["a"], ==, (.Type, .Type) => const("A"))
+		assert(datatype.context["b"], ==, (.Type, .Type) => const("A"))
 	}
 
 	func testDatatypeConstructorsWithArgumentsAreEncodedFunctions() {
@@ -32,7 +32,7 @@ final class DeclarationTests: XCTestCase {
 }
 
 
-private let datatype = Module<Term>("A", [], [
+private let datatype = Module("A", [], [
 	Declaration.Datatype("A", [
 		"a": Telescope.Argument(.Type) { a in .Argument(.Type, const(.End)) },
 		"b": Telescope.Argument(.Type) { a in .Argument(.Type, const(.End)) },

@@ -1,16 +1,16 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-extension TermType {
-	public func weakHeadNormalForm(environment: [Name:Self], shouldRecur: Bool = true) -> Self {
+extension Term {
+	public func weakHeadNormalForm(environment: [Name:Term], shouldRecur: Bool = true) -> Term {
 		var visited: Set<Name> = []
 		return weakHeadNormalForm(environment, shouldRecur: shouldRecur, visited: &visited)
 	}
 
-	func weakHeadNormalForm(environment: [Name:Self], shouldRecur: Bool = true, inout visited: Set<Name>) -> Self {
-		let unfold: Self -> Self = {
+	func weakHeadNormalForm(environment: [Name:Term], shouldRecur: Bool = true, inout visited: Set<Name>) -> Term {
+		let unfold: Term -> Term = {
 			$0.weakHeadNormalForm(environment, shouldRecur: shouldRecur, visited: &visited)
 		}
-		let done: Self -> Self = {
+		let done: Term -> Term = {
 			$0.weakHeadNormalForm(environment, shouldRecur: false, visited: &visited)
 		}
 		switch out {

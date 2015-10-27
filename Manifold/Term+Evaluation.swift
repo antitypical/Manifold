@@ -1,7 +1,7 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-extension TermType {
-	public func evaluate(environment: [Name:Self] = [:]) -> Self {
+extension Term {
+	public func evaluate(environment: [Name:Term] = [:]) -> Term {
 		switch out {
 		case let .Variable(i):
 			if let found = environment[i] {

@@ -13,9 +13,9 @@ final class EitherTests: XCTestCase {
 	}
 }
 
-private let module = Module<Term>.either
-private let expected: Module<Term> = {
-	let Either = Declaration<Term>("Either",
+private let module = Module.either
+private let expected: Module = {
+	let Either = Declaration("Either",
 		type: .Type --> .Type --> .Type,
 		value: (.Type, .Type, .Type) => { L, R, Result in (L --> Result) --> (R --> Result) --> Result })
 

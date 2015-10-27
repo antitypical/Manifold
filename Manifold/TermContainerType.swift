@@ -23,15 +23,4 @@ public func == <Term: TermContainerType> (left: Term, right: Term) -> Bool {
 }
 
 
-public protocol TermType: IntegerLiteralConvertible, StringLiteralConvertible, TermContainerType {
-	init(_: () -> Expression<Self>)
-}
-
-extension TermType {
-	public init(_ expression: Expression<Self>) {
-		self.init { expression }
-	}
-}
-
-
 import Prelude

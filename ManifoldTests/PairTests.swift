@@ -13,15 +13,15 @@ final class PairTests: XCTestCase {
 	}
 }
 
-private let module = Module<Term>.pair
-private let expected: Module<Term> = {
+private let module = Module.pair
+private let expected: Module = {
 	let Pair = Declaration("Pair",
 		type: .Type --> .Type --> .Type,
-		value: Term.lambda(.Type, .Type, .Type) { A, B, Result in .lambda(A --> B --> Result, const(Result)) })
+		value: (.Type, .Type, .Type) => { A, B, Result in (A --> B --> Result) => const(Result) })
 
 	let pair = Declaration("pair",
-		type: Term.lambda(.Type, .Type) { A, B in A --> B --> Pair.ref[A, B] },
-		value: Term.lambda(.Type, .Type) { A, B in Term.lambda(A, B, .Type) { a, b, Result in Term.lambda(A --> B --> Result) { f in f[a, b] } } })
+		type: (.Type, .Type) => { A, B in A --> B --> Pair.ref[A, B] },
+		value: (.Type, .Type) => { A, B in (A, B, .Type) => { a, b, Result in (A --> B --> Result) => { f in f[a, b] } } })
 
 	return Module("ChurchPair", [ Pair, pair, ])
 }()

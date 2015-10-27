@@ -6,12 +6,12 @@ final class EvaluationTests: XCTestCase {
 	}
 
 	func testApplicationOfIdentityAbstractionToTermEvaluatesToTerm() {
-		let identity = Term.lambda(.Type, id)
+		let identity: Term = .Type => id
 		assert(Term.Application(identity, .Type).evaluate(), ==, .Type)
 	}
 
 	func testSimpleAbstractionEvaluatesToItself() {
-		let identity = Term.lambda(.Type, id)
+		let identity: Term = .Type => id
 		assert(identity.evaluate(), ==, identity)
 	}
 

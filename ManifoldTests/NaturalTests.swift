@@ -14,7 +14,7 @@ final class NaturalTests: XCTestCase {
 	}
 }
 
-private let module = Module<Term>.natural
+private let module = Module.natural
 private let environment = module.environment
 private let context = module.context
 
