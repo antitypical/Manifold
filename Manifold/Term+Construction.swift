@@ -66,7 +66,7 @@ public func => (type: Term?, body: Term -> Term) -> Term {
 
 }
 
-public func => (left: (Term, Term), right: (Term, Term) -> Term) -> Term {
+public func => (left: (Term?, Term?), right: (Term, Term) -> Term) -> Term {
 	return left.0 => { a in left.1 => { b in right(a, b) } }
 }
 
