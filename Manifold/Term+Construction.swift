@@ -17,7 +17,7 @@ extension Term {
 		return Term(.Application(a, b))
 	}
 
-	public static func Lambda(i: Int, _ type: Term, _ body: Term) -> Term {
+	public static func Lambda(i: Int, _ type: Term?, _ body: Term) -> Term {
 		return Term(.Lambda(i, type, body))
 	}
 
