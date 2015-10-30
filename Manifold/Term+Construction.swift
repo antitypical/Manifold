@@ -70,7 +70,7 @@ public func => (left: (Term?, Term?), right: (Term, Term) -> Term) -> Term {
 	return left.0 => { a in left.1 => { b in right(a, b) } }
 }
 
-public func => (left: (Term, Term, Term), right: (Term, Term, Term) -> Term) -> Term {
+public func => (left: (Term?, Term?, Term?), right: (Term, Term, Term) -> Term) -> Term {
 	return left.0 => { a in left.1 => { b in left.2 => { c in right(a, b, c) } } }
 }
 
