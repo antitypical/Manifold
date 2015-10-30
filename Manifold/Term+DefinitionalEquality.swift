@@ -27,7 +27,7 @@ extension Term {
 		case let (.Application(a1, a2), .Application(b1, b2)):
 			return recur(a1, b1) && recur(a2, b2)
 
-		case let (.Lambda(_, a1, a2), .Lambda(_, b1, b2)):
+		case let (.Lambda(_, .Some(a1), a2), .Lambda(_, .Some(b1), b2)):
 			return recur(a1, b1) && recur(a2, b2)
 
 		default:

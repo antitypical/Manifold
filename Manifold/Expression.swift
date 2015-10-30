@@ -12,7 +12,7 @@ public enum Expression<Recur> {
 		case let .Application(a, b):
 			return try .Application(transform(a), transform(b))
 		case let .Lambda(i, a, b):
-			return try .Lambda(i, transform(a), transform(b))
+			return try .Lambda(i, a.map(transform), transform(b))
 		}
 	}
 
@@ -22,7 +22,7 @@ public enum Expression<Recur> {
 	case Type(Int)
 	case Variable(Name)
 	case Application(Recur, Recur)
-	case Lambda(Int, Recur, Recur) // (Πx:A)B where B can depend on x
+	case Lambda(Int, Recur?, Recur) // (Πx:A)B where B can depend on x
 }
 
 
