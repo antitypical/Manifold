@@ -31,7 +31,7 @@ final class ModuleTests: XCTestCase {
 
 	// MARK: Pair
 
-	func testAutomaticallyEncodedDefinitionsAreEquivalentToHandEncodedDefinitions() {
+	func testEquivalenceOfEncodedAndDatatypePairs() {
 		encodedPair.definitions.forEach { symbol, type, value in
 			assert(Module.pair.context[symbol], ==, type, message: "\(symbol)")
 			assert(Module.pair.environment[symbol], ==, value, message: "\(symbol)")
