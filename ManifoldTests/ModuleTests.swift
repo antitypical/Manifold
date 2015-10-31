@@ -47,6 +47,16 @@ final class ModuleTests: XCTestCase {
 			assert(Module.sigma.environment[symbol], ==, value, message: "'\(symbol)' expected '\(value)', actual '\(Module.sigma.environment[symbol])'")
 		}
 	}
+
+
+	// MARK: Either
+
+	func testEquivalenceOfEncodedAndDatatypeEithers() {
+		Module.either.definitions.forEach { symbol, type, value in
+			assert(encodedEither.context[symbol], ==, type, message: "\(symbol)")
+			assert(encodedEither.environment[symbol], ==, value, message: "\(symbol)")
+		}
+	}
 }
 
 
@@ -95,6 +105,23 @@ private let encodedSigma: Module = {
 		value: .Type => { A in (A --> .Type, A) => { B, x in (B[x], .Type) => { y, C in (A => { xʹ in B[xʹ] --> C }) => { f in f[x, y] } } } })
 
 	return Module("EncodedSigma", [ Sigma, sigma ])
+}()
+
+
+private let encodedEither: Module = {
+	let Either = Declaration("Either",
+		type: .Type --> .Type --> .Type,
+		value: (.Type, .Type, .Type) => { L, R, Result in (L --> Result) --> (R --> Result) --> Result })
+
+	let left = Declaration("left",
+		type: (.Type, .Type) => { L, R in L --> Either.ref[L, R] },
+		value: (.Type, .Type) => { L, R in (L, .Type) => { (l: Term, Result) in ((L --> Result), (R --> Result)) => { ifL, _ in ifL[l] } } })
+
+	let right = Declaration("right",
+		type: (.Type, .Type) => { L, R in R --> Either.ref[L, R] },
+		value: (.Type, .Type) => { L, R in (R, .Type) => { (r: Term, Result) in ((L --> Result), (R --> Result)) => { _, ifR in ifR[r] } } })
+
+	return Module("EncodedEither", [ Either, left, right ])
 }()
 
 

@@ -42,7 +42,6 @@
 		D4E829171B521B3400713E60 /* Module.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E829161B521B3400713E60 /* Module.swift */; };
 		D4E829191B521BFC00713E60 /* Declaration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E829181B521BFC00713E60 /* Declaration.swift */; };
 		D4E9901C1BD3431D00F00CA7 /* Module+Either.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E9901B1BD3431D00F00CA7 /* Module+Either.swift */; };
-		D4E9901E1BD343AE00F00CA7 /* EitherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E9901D1BD343AE00F00CA7 /* EitherTests.swift */; };
 		D4E990241BD3EE5300F00CA7 /* Elaborated.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E990231BD3EE5300F00CA7 /* Elaborated.swift */; };
 		D4EDEF571AFEDEC5001B9A1D /* Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4EDEF561AFEDEC5001B9A1D /* Name.swift */; };
 		D4F1B84F1B46E2F40065BF22 /* Int.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F1B84E1B46E2F40065BF22 /* Int.swift */; };
@@ -106,7 +105,6 @@
 		D4E829161B521B3400713E60 /* Module.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Module.swift; sourceTree = "<group>"; };
 		D4E829181B521BFC00713E60 /* Declaration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Declaration.swift; sourceTree = "<group>"; };
 		D4E9901B1BD3431D00F00CA7 /* Module+Either.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Module+Either.swift"; sourceTree = "<group>"; };
-		D4E9901D1BD343AE00F00CA7 /* EitherTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EitherTests.swift; sourceTree = "<group>"; };
 		D4E990231BD3EE5300F00CA7 /* Elaborated.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Elaborated.swift; sourceTree = "<group>"; };
 		D4EDEF561AFEDEC5001B9A1D /* Name.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Name.swift; sourceTree = "<group>"; };
 		D4F1B84E1B46E2F40065BF22 /* Int.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Int.swift; sourceTree = "<group>"; };
@@ -147,7 +145,6 @@
 			isa = PBXGroup;
 			children = (
 				D44541811BCAE3CD00F2946D /* ListTests.swift */,
-				D4E9901D1BD343AE00F00CA7 /* EitherTests.swift */,
 			);
 			name = Modules;
 			sourceTree = "<group>";
@@ -407,7 +404,6 @@
 			files = (
 				D4FB2D091BE4490000B3CCE0 /* ModuleTests.swift in Sources */,
 				D4F969981B98F3220069F481 /* Term+Arbitrary.swift in Sources */,
-				D4E9901E1BD343AE00F00CA7 /* EitherTests.swift in Sources */,
 				D4809FBD1AF6BD400084B8FE /* TermTests.swift in Sources */,
 				D44541821BCAE3CD00F2946D /* ListTests.swift in Sources */,
 				D4FC2FDE1BAF564F005F3B26 /* DeclarationTests.swift in Sources */,
