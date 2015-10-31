@@ -20,9 +20,10 @@ extension Module {
 			type: .Type => { A in A --> List.ref[A] },
 			value: { A, a in cons[A, a, `nil`[A]] })
 
+		let _cat: Term = "cat"
 		let cat = Declaration("cat",
 			type: .Type => { A in List.ref[A] --> List.ref[A] --> List.ref[A] },
-			value: .Type)
+			value: { A, x, y in x[List.ref[A], () => { cons[A, $0, _cat[A, $1, y]] }, y] })
 
 		let _join: Term = "List.join"
 		let join = Declaration("List.join",
