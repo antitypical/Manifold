@@ -57,6 +57,16 @@ final class ModuleTests: XCTestCase {
 			assert(encodedEither.environment[symbol], ==, value, message: "\(symbol)")
 		}
 	}
+
+
+	// MARK: List
+
+	func testEquivalenceOfEncodedAndDatatypeLists() {
+		encodedList.definitions.forEach { symbol, type, value in
+			assert(Module.list.context[symbol], ==, type, message: "'\(symbol)' expected '\(type)', actual '\(Module.list.context[symbol])'")
+			assert(Module.list.environment[symbol], ==, value, message: "'\(symbol)' expected '\(value)', actual '\(Module.list.environment[symbol])'")
+		}
+	}
 }
 
 
@@ -122,6 +132,24 @@ private let encodedEither: Module = {
 		value: (.Type, .Type) => { L, R in (R, .Type) => { (r: Term, Result) in ((L --> Result), (R --> Result)) => { _, ifR in ifR[r] } } })
 
 	return Module("EncodedEither", [ Either, left, right ])
+}()
+
+
+private let encodedList: Module = {
+	let List: Term = "List"
+	let list = Declaration("List",
+		type: .Type --> .Type,
+		value: (.Type, .Type) => { A, B in (A --> List[A] --> B) --> B --> B })
+
+	let cons = Declaration("cons",
+		type: .Type => { A in A --> List[A] --> List[A] },
+		value: .Type => { A in (A, List[A], .Type) => { head, tail, B in (A --> List[A] --> B, B) => { ifCons, _ in ifCons[head, tail] } } })
+
+	let `nil` = Declaration("nil",
+		type: .Type => { (A: Term) in List[A] },
+		value: (.Type, .Type) => { A, B in (A --> List[A] --> B, B) => { _, other in other } })
+
+	return Module("EncodedList", [ list, cons, `nil` ])
 }()
 
 
