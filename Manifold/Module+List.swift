@@ -24,9 +24,10 @@ extension Module {
 			type: .Type => { A in List.ref[A] --> List.ref[A] --> List.ref[A] },
 			value: .Type)
 
+		let _join: Term = "List.join"
 		let join = Declaration("List.join",
 			type: .Type => { A in List.ref[List.ref[A]] --> List.ref[A] },
-			value: .Type)
+			value: { A, list in list[List.ref[A], () => { cat.ref[A, $0, _join[A, $1]] }, `nil`[A]] })
 
 		let bind = Declaration("List.bind",
 			type: (.Type, .Type) => { A, B in (A --> List.ref[B]) --> List.ref[A] --> List.ref[B] },
