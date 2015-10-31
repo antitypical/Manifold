@@ -76,5 +76,13 @@ public func => (left: (), right: (Term, Term, Term) -> Term) -> Term {
 	return nil => { a in nil => { b in nil => { c in right(a, b, c) } } }
 }
 
+public func => (left: (Term?, Term?, Term?, Term?), right: (Term, Term, Term, Term) -> Term) -> Term {
+	return left.0 => { a in left.1 => { b in left.2 => { c in left.3 => { d in right(a, b, c, d) } } } }
+}
+
+public func => (left: (), right: (Term, Term, Term, Term) -> Term) -> Term {
+	return nil => { a in nil => { b in nil => { c in nil => { d in right(a, b, c, d) } } } }
+}
+
 
 import Prelude
