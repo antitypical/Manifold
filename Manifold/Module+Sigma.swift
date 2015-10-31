@@ -10,11 +10,11 @@ extension Module {
 
 		let first = Declaration("first",
 			type: .Type => { A in (A --> .Type) => { B in Sigma.ref[A, B] --> A } },
-			value: nil => { A in nil => { B in nil => { v in v[A, nil => { x in B[x] => const(x) }] } } })
+			value: { A in nil => { B in nil => { v in v[A, nil => { x in B[x] => const(x) }] } } })
 
 		let second = Declaration("second",
 			type: .Type => { A in (A --> .Type) => { B in Sigma.ref[A, B] => { v in B[first.ref[A, B, v]] } } },
-			value: nil => { A in nil => { B in nil => { v in v[(A => { x in B[x] })[first.ref[A, B, v]], nil => { x in B[x] => id }] } } })
+			value: { A in nil => { B in nil => { v in v[(A => { x in B[x] })[first.ref[A, B, v]], nil => { x in B[x] => id }] } } })
 
 		return Module("Sigma", [ Sigma, first, second ])
 	}
