@@ -35,11 +35,6 @@ extension Term {
 	public init(integerLiteral value: Int) {
 		self.init(.Variable(.Local(value)))
 	}
-
-
-	public init(stringLiteral value: String) {
-		self.init(.Variable(.Global(value)))
-	}
 }
 
 

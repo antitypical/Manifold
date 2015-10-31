@@ -13,6 +13,13 @@ public enum Term: IntegerLiteralConvertible, StringLiteralConvertible, TermConta
 	}
 
 
+	// MARK: StringLiteralConvertible
+
+	public init(stringLiteral value: String) {
+		self.init(.Variable(.Global(value)))
+	}
+
+
 	// MARK: TermContainerType
 
 	public var out: Expression<Term> {
