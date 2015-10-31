@@ -7,7 +7,7 @@ extension Module {
 		}))
 
 		let map = Declaration("map",
-			type: .Type --> .Type => { Functor.ref[$0] },
+			type: .Type --> .Type => { f in (Functor.ref[f], .Type, .Type) => { F, A, B in (A --> B) --> f[A] --> f[B] } },
 			value: .Type)
 
 		return Module("Functor", [ Functor, map ])
