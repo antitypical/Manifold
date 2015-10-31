@@ -18,7 +18,7 @@ extension Module {
 
 		let pure = Declaration("List.pure",
 			type: .Type => { A in A --> List.ref[A] },
-			value: .Type)
+			value: { A, a in cons[A, a, `nil`[A]] })
 
 		let bind = Declaration("List.bind",
 			type: (.Type, .Type) => { A, B in (A --> List.ref[B]) --> List.ref[A] --> List.ref[B] },
