@@ -62,6 +62,7 @@
 		D4FB02D91B71D06A0090E764 /* Module+Boolean.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FB02D81B71D06A0090E764 /* Module+Boolean.swift */; };
 		D4FB02DB1B71D1F10090E764 /* BooleanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FB02DA1B71D1F10090E764 /* BooleanTests.swift */; };
 		D4FB2D071BE447DE00B3CCE0 /* Module+Directory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FB2D061BE447DE00B3CCE0 /* Module+Directory.swift */; };
+		D4FB2D091BE4490000B3CCE0 /* ModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FB2D081BE4490000B3CCE0 /* ModuleTests.swift */; };
 		D4FC2FDE1BAF564F005F3B26 /* DeclarationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FC2FDD1BAF564F005F3B26 /* DeclarationTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -133,6 +134,7 @@
 		D4FB02D81B71D06A0090E764 /* Module+Boolean.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Module+Boolean.swift"; sourceTree = "<group>"; };
 		D4FB02DA1B71D1F10090E764 /* BooleanTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BooleanTests.swift; sourceTree = "<group>"; };
 		D4FB2D061BE447DE00B3CCE0 /* Module+Directory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Module+Directory.swift"; sourceTree = "<group>"; };
+		D4FB2D081BE4490000B3CCE0 /* ModuleTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModuleTests.swift; sourceTree = "<group>"; };
 		D4FC2FDD1BAF564F005F3B26 /* DeclarationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeclarationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -244,6 +246,7 @@
 				D484903B1B2A40E800F249F7 /* EvaluationTests.swift */,
 				D4809FBC1AF6BD400084B8FE /* TermTests.swift */,
 				D4F1B8541B470B430065BF22 /* IntExtensionTests.swift */,
+				D4FB2D081BE4490000B3CCE0 /* ModuleTests.swift */,
 				D463F6D31BD2A8FF00BA0628 /* Modules */,
 				D4F969971B98F3220069F481 /* Term+Arbitrary.swift */,
 				D4FC2FDD1BAF564F005F3B26 /* DeclarationTests.swift */,
@@ -431,6 +434,7 @@
 			files = (
 				D4FB02DB1B71D1F10090E764 /* BooleanTests.swift in Sources */,
 				D445417E1BCAB11100F2946D /* UnitTests.swift in Sources */,
+				D4FB2D091BE4490000B3CCE0 /* ModuleTests.swift in Sources */,
 				D4E101B81B484606001A7E55 /* NaturalTests.swift in Sources */,
 				D4F969981B98F3220069F481 /* Term+Arbitrary.swift in Sources */,
 				D4ACE90F1BDC7E79009E928F /* FiniteSetTests.swift in Sources */,
