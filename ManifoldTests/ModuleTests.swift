@@ -7,11 +7,25 @@ final class ModuleTests: XCTestCase {
 		}
 	}
 
+
+	// MARK: Boolean
+
 	func testEquivalenceOfEncodedAndDatatypeBooleans() {
 		encodedBoolean.definitions.forEach { symbol, type, value in
 			assert(Module.boolean.context[symbol], ==, type, message: "\(symbol)")
 			assert(Module.boolean.environment[symbol], ==, value, message: "\(symbol)")
 		}
+	}
+
+
+	// MARK: Natural
+
+	func testZeroTypechecksAsNatural() {
+		assert(try? zero.elaborateType(nil, Module.natural.environment, Module.natural.context), ==, .Unroll(Natural, .Variable(.Global("zero"))))
+	}
+
+	func testSuccessorOfZeroTypechecksAsNatural() {
+		assert(try? successor[zero].elaborateType(nil, Module.natural.environment, Module.natural.context), ==, .Unroll(Natural, .Application(.Unroll(Natural --> Natural, .Variable(.Global("successor"))), .Unroll(Natural, .Variable(.Global("zero"))))))
 	}
 }
 
@@ -31,6 +45,11 @@ private let encodedBoolean: Module = {
 
 	return Module("EncodedBoolean", [ Boolean, `true`, `false` ])
 }()
+
+
+private let Natural: Term = "Natural"
+private let successor: Term = "successor"
+private let zero: Term = "zero"
 
 
 import Assertions
