@@ -20,11 +20,15 @@ extension Module {
 			type: .Type => { A in A --> List.ref[A] },
 			value: { A, a in cons[A, a, `nil`[A]] })
 
+		let join = Declaration("List.join",
+			type: .Type => { A in List.ref[List.ref[A]] --> List.ref[A] },
+			value: .Type)
+
 		let bind = Declaration("List.bind",
 			type: (.Type, .Type) => { A, B in (A --> List.ref[B]) --> List.ref[A] --> List.ref[B] },
 			value: .Type)
 
-		return Module("List", [ List, map, pure, bind ])
+		return Module("List", [ List, map, pure, join, bind ])
 	}
 }
 
