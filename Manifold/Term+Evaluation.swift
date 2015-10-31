@@ -1,7 +1,7 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 extension Term {
-	public func evaluate(environment: [Name:Term] = [:]) -> Term {
+	public func evaluate(environment: [Name:Term] = [:]) throws -> Term {
 		switch out {
 		case let .Variable(i):
 			if let found = environment[i] {
@@ -9,9 +9,9 @@ extension Term {
 			}
 			fatalError("Illegal free variable \(i)")
 		case let .Application(a, b):
-			let a = a.evaluate(environment)
+			let a = try a.evaluate(environment)
 			if case let .Lambda(i, _, body) = a.out {
-				return body.substitute(i, b.evaluate(environment)).evaluate(environment)
+				return try body.substitute(i, b.evaluate(environment)).evaluate(environment)
 			}
 			fatalError("Illegal application of non-lambda term \(a) to \(b)")
 		default:
