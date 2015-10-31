@@ -2,7 +2,7 @@
 
 extension Module {
 	public static var sigma: Module {
-		let Sigma = Declaration.Datatype("Sigma", Datatype.Argument(.Type, { A in
+		let Sigma = Declaration("Sigma", Datatype(.Type, { A in
 			Datatype.Argument(A --> .Type) { B in
 				[ "sigma": Telescope.Argument(A) { a in .Argument(B[a], const(.End)) } ]
 			}
