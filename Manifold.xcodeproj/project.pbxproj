@@ -52,6 +52,7 @@
 		D4FB02D91B71D06A0090E764 /* Module+Boolean.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FB02D81B71D06A0090E764 /* Module+Boolean.swift */; };
 		D4FB2D071BE447DE00B3CCE0 /* Module+Directory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FB2D061BE447DE00B3CCE0 /* Module+Directory.swift */; };
 		D4FB2D091BE4490000B3CCE0 /* ModuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FB2D081BE4490000B3CCE0 /* ModuleTests.swift */; };
+		D4FB2D0B1BE44DAF00B3CCE0 /* Module+Functor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FB2D0A1BE44DAF00B3CCE0 /* Module+Functor.swift */; };
 		D4FC2FDE1BAF564F005F3B26 /* DeclarationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4FC2FDD1BAF564F005F3B26 /* DeclarationTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -113,6 +114,7 @@
 		D4FB02D81B71D06A0090E764 /* Module+Boolean.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Module+Boolean.swift"; sourceTree = "<group>"; };
 		D4FB2D061BE447DE00B3CCE0 /* Module+Directory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Module+Directory.swift"; sourceTree = "<group>"; };
 		D4FB2D081BE4490000B3CCE0 /* ModuleTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModuleTests.swift; sourceTree = "<group>"; };
+		D4FB2D0A1BE44DAF00B3CCE0 /* Module+Functor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Module+Functor.swift"; sourceTree = "<group>"; };
 		D4FC2FDD1BAF564F005F3B26 /* DeclarationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeclarationTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -238,6 +240,7 @@
 				D4D0FC0D1BD4A6D80010F243 /* Module+Sigma.swift */,
 				D470CB971BDC27130003A931 /* Module+Vector.swift */,
 				D4ACE90C1BDC7E51009E928F /* Module+FiniteSet.swift */,
+				D4FB2D0A1BE44DAF00B3CCE0 /* Module+Functor.swift */,
 			);
 			name = Modules;
 			sourceTree = "<group>";
@@ -368,6 +371,7 @@
 				D44541801BCAC38500F2946D /* Module+List.swift in Sources */,
 				D463F6D21BD2A83E00BA0628 /* Module+Maybe.swift in Sources */,
 				D4E990241BD3EE5300F00CA7 /* Elaborated.swift in Sources */,
+				D4FB2D0B1BE44DAF00B3CCE0 /* Module+Functor.swift in Sources */,
 				D445418E1BCAF57D00F2946D /* Term+Evaluation.swift in Sources */,
 				D4D0FC001BD420B20010F243 /* Term+Elaboration.swift in Sources */,
 				D4ACE90D1BDC7E51009E928F /* Module+FiniteSet.swift in Sources */,
