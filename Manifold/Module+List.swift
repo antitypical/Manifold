@@ -2,14 +2,13 @@
 
 extension Module {
 	public static var list: Module {
-		return Module("List", [
-			Declaration("List", Datatype(.Type) {
-				[
-					"cons": .Argument($0, const(.Recursive(.End))),
-					"nil": .End
-				]
-			})
-		])
+		let List = Declaration("List", Datatype(.Type) {
+			[
+				"cons": .Argument($0, const(.Recursive(.End))),
+				"nil": .End
+			]
+		})
+		return Module("List", [ List ])
 	}
 }
 
