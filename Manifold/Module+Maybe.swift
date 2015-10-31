@@ -13,7 +13,7 @@ extension Module {
 		let nothing: Term = "nothing"
 		let map = Declaration("Maybe.map",
 			type: (.Type, .Type) => { A, B in (A --> B) --> Maybe.ref[A] --> Maybe.ref[B] },
-			value: { A, B, transform, maybe in maybe[Maybe.ref[B], () => { just[transform[$0]] }, nothing[B]] })
+			value: { A, B in (A --> B, nil) => { transform, maybe in maybe[Maybe.ref[B], () => { just[transform[$0]] }, nothing[B]] } })
 
 		return Module("Maybe", [ Maybe, map ])
 	}
