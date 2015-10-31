@@ -26,7 +26,7 @@ extension Module {
 
 		let bind = Declaration("List.bind",
 			type: (.Type, .Type) => { A, B in (A --> List.ref[B]) --> List.ref[A] --> List.ref[B] },
-			value: .Type)
+			value: { A, B, transform, list in join.ref[B, map.ref[A, List.ref[B], transform, list]] })
 
 		return Module("List", [ List, map, pure, join, bind ])
 	}
