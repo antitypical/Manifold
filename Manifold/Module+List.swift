@@ -11,10 +11,10 @@ extension Module {
 
 		let cons: Term = "cons"
 		let `nil`: Term = "nil"
-		let listMap: Term = "List.map"
+		let _map: Term = "List.map"
 		let map = Declaration("List.map",
 			type: (.Type, .Type) => { A, B in (A --> B) --> List.ref[A] --> List.ref[B] },
-			value: { A, B, transform, list in list[List.ref[B], () => { cons[B, transform[$0], listMap[A, B, transform, $1]] }, `nil`[B]] })
+			value: { A, B, transform, list in list[List.ref[B], () => { cons[B, transform[$0], _map[A, B, transform, $1]] }, `nil`[B]] })
 
 		let pure = Declaration("List.pure",
 			type: .Type => { A in A --> List.ref[A] },
