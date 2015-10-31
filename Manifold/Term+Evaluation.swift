@@ -13,7 +13,7 @@ extension Term {
 			if case let .Lambda(i, _, body) = a.out {
 				return try body.substitute(i, b.evaluate(environment)).evaluate(environment)
 			}
-			fatalError("Illegal application of non-lambda term \(a) to \(b)")
+			throw "Illegal application of non-lambda term \(a) to \(b)"
 		default:
 			return self
 		}
