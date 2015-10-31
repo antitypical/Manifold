@@ -2,21 +2,21 @@
 
 final class EvaluationTests: XCTestCase {
 	func testTypeEvaluatesToItself() {
-		assert(Term(.Type(0)).evaluate(), ==, .Type(0))
+		assert(try? Term(.Type(0)).evaluate(), ==, .Type(0))
 	}
 
 	func testApplicationOfIdentityAbstractionToTermEvaluatesToTerm() {
 		let identity: Term = .Type => id
-		assert(Term.Application(identity, .Type).evaluate(), ==, .Type)
+		assert(try? Term.Application(identity, .Type).evaluate(), ==, .Type)
 	}
 
 	func testSimpleAbstractionEvaluatesToItself() {
 		let identity: Term = .Type => id
-		assert(identity.evaluate(), ==, identity)
+		assert(try? identity.evaluate(), ==, identity)
 	}
 
 	func testAbstractionsBodiesAreNotNormalized() {
-		assert(identity.value.evaluate(), ==, identity.value)
+		assert(try? identity.value.evaluate(), ==, identity.value)
 	}
 }
 
