@@ -8,7 +8,12 @@ extension Module {
 				"nil": .End
 			]
 		})
-		return Module("List", [ List ])
+
+		let map = Declaration("List.map",
+			type: (.Type, .Type) => { A, B in (A --> B) --> List.ref[A] --> List.ref[B] },
+			value: .Type)
+
+		return Module("List", [ List, map ])
 	}
 }
 
