@@ -30,11 +30,6 @@ extension Term {
 	public init<T: TermContainerType>(term: T) {
 		self.init(term.out.map { Term(term: $0) })
 	}
-
-
-	public init(integerLiteral value: Int) {
-		self.init(.Variable(.Local(value)))
-	}
 }
 
 

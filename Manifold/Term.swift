@@ -13,6 +13,13 @@ public enum Term: IntegerLiteralConvertible, StringLiteralConvertible, TermConta
 	}
 
 
+	// MARK: IntegerLiteralConvertible
+
+	public init(integerLiteral value: Int) {
+		self.init(.Variable(.Local(value)))
+	}
+
+
 	// MARK: StringLiteralConvertible
 
 	public init(stringLiteral value: String) {
