@@ -2,6 +2,13 @@
 
 extension Module {
 	public static var functor: Module {
-		return Module("Functor", [])
+		let Functor = Declaration("Functor", Datatype(.Type --> .Type, { f in
+			[ "functor": Telescope.Argument((.Type, .Type) => { A, B in (A --> B) --> f[A] --> f[B] }, const(.End)) ]
+		}))
+
+		return Module("Functor", [ Functor ])
 	}
 }
+
+
+import Prelude
