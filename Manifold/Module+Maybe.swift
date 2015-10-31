@@ -2,14 +2,13 @@
 
 extension Module {
 	public static var maybe: Module {
-		return Module("Maybe", [
-			Declaration.Datatype("Maybe", .Argument(.Type, {
-				[
-					"just": .Argument($0, const(.End)),
-					"nothing": .End
-				]
-			}))
-		])
+		let Maybe = Declaration.Datatype("Maybe", .Argument(.Type, {
+			[
+				"just": .Argument($0, const(.End)),
+				"nothing": .End
+			]
+		}))
+		return Module("Maybe", [ Maybe ])
 	}
 }
 
