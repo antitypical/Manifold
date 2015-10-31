@@ -27,6 +27,16 @@ final class ModuleTests: XCTestCase {
 	func testSuccessorOfZeroTypechecksAsNatural() {
 		assert(try? successor[zero].elaborateType(nil, Module.natural.environment, Module.natural.context), ==, .Unroll(Natural, .Application(.Unroll(Natural --> Natural, .Variable(.Global("successor"))), .Unroll(Natural, .Variable(.Global("zero"))))))
 	}
+
+
+	// MARK: Pair
+
+	func testAutomaticallyEncodedDefinitionsAreEquivalentToHandEncodedDefinitions() {
+		encodedPair.definitions.forEach { symbol, type, value in
+			assert(Module.pair.context[symbol], ==, type, message: "\(symbol)")
+			assert(Module.pair.environment[symbol], ==, value, message: "\(symbol)")
+		}
+	}
 }
 
 
@@ -50,6 +60,19 @@ private let encodedBoolean: Module = {
 private let Natural: Term = "Natural"
 private let successor: Term = "successor"
 private let zero: Term = "zero"
+
+
+private let encodedPair: Module = {
+	let Pair = Declaration("Pair",
+		type: .Type --> .Type --> .Type,
+		value: (.Type, .Type, .Type) => { A, B, Result in (A --> B --> Result) => const(Result) })
+
+	let pair = Declaration("pair",
+		type: (.Type, .Type) => { A, B in A --> B --> Pair.ref[A, B] },
+		value: (.Type, .Type) => { A, B in (A, B, .Type) => { a, b, Result in (A --> B --> Result) => { f in f[a, b] } } })
+
+	return Module("EncodedPair", [ Pair, pair, ])
+}()
 
 
 import Assertions
