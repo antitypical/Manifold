@@ -14,7 +14,7 @@ extension Module {
 		let listMap: Term = "List.map"
 		let map = Declaration("List.map",
 			type: (.Type, .Type) => { A, B in (A --> B) --> List.ref[A] --> List.ref[B] },
-			value: { A, B in (A --> B, nil) => { transform, list in list[List.ref[B], () => { cons[B, transform[$0], listMap[A, B, transform, $1]] }, `nil`[B]] } })
+			value: { A, B, transform, list in list[List.ref[B], () => { cons[B, transform[$0], listMap[A, B, transform, $1]] }, `nil`[B]] })
 
 		return Module("List", [ List, map ])
 	}
