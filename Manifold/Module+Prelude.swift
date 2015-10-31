@@ -12,7 +12,7 @@ extension Module {
 
 		let flip = Declaration("flip",
 			type: (.Type, .Type, .Type) => { A, B, C in (A --> B --> C) --> (B --> A --> C) },
-			value: { A, B, C in (A --> B --> C) => { f in (nil, nil) => { b, a in f[a, b] } } })
+			value: { A, B, C in (A --> B --> C) => { f in () => { b, a in f[a, b] } } })
 
 		return Module("Prelude", [ identity, constant, flip ])
 	}

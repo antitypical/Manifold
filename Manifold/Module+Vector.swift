@@ -11,7 +11,7 @@ extension Module {
 		let successor: Term = "successor"
 		let cons = Declaration("cons",
 			type: (.Type, Natural)  => { A, n in A --> Vector[A, n] --> Vector[A, successor[n]] },
-			value: { A, n in (nil, nil, nil) => { head, tail, B in (A --> Vector[A, n] --> B) => { ifCons in ifCons[head, tail] } } })
+			value: { A, n in () => { head, tail, B in (A --> Vector[A, n] --> B) => { ifCons in ifCons[head, tail] } } })
 
 		let zero: Term = "zero"
 		let `nil` = Declaration("nil",

@@ -12,11 +12,11 @@ extension Module {
 
 		let not = Declaration("not",
 			type: Boolean.ref --> Boolean.ref,
-			value: { b, A in (nil, nil) => { t, f in b[A, f, t] } })
+			value: { b, A in () => { t, f in b[A, f, t] } })
 
 		let `if` = Declaration("if",
 			type: (.Type, Boolean.ref) => { A, condition in (A, A) => const(A) },
-			value: { A, condition in (nil, nil) => { condition[A, $0, $1] } })
+			value: { A, condition in () => { condition[A, $0, $1] } })
 
 		let and = Declaration("and",
 			type: Boolean.ref --> Boolean.ref --> Boolean.ref,

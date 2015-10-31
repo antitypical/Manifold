@@ -11,11 +11,11 @@ extension Module {
 		let successor: Term = "successor"
 		let zeroth = Declaration("zeroth",
 			type: Natural => { n in FiniteSet[successor[n]] },
-			value: { n in nil => { A in nil => { (FiniteSet[n] --> A) --> $0 } } })
+			value: { n in () => { A in () => { (FiniteSet[n] --> A) --> $0 } } })
 
 		let nextth = Declaration("nextth",
 			type: Natural => { n in FiniteSet[n] --> FiniteSet[successor[n]] },
-			value: { n in (FiniteSet[n], nil) => { prev, A in A --> nil => { $0[prev] } } })
+			value: { n in (FiniteSet[n], nil) => { prev, A in A --> () => { $0[prev] } } })
 
 		return Module("FiniteSet", [ natural ], [ finiteSet, zeroth, nextth ])
 	}
