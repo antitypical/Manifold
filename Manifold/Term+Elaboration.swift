@@ -23,7 +23,7 @@ extension Term {
 				let bʹ = try b.elaborateType(type, environment, context)
 				return .Unroll(body.substitute(i, b), .Application(a, bʹ))
 
-			case let (.Lambda(i, a, b), .None):
+			case let (.Lambda(i, .Some(a), b), .None):
 				let aʹ = try a.elaborateType(.Type, environment, context)
 				let bʹ = try b.elaborateType(nil, environment, context + [ .Local(i): a ])
 				return .Unroll(a => { bʹ.type.substitute(i, $0) }, .Lambda(i, aʹ, bʹ))
@@ -31,12 +31,17 @@ extension Term {
 			case let (.Type(m), .Some(.Type(n))) where n > m:
 				return try elaborateType(nil, environment, context)
 
-			case let (.Lambda(i, type1, body), .Some(.Lambda(j, type2, bodyType))) where Term.equate(type1, type2, environment):
-				let t = try type1.elaborateType(.Type, environment, context)
-				let b = try body.elaborateType(bodyType.substitute(j, Term.Variable(Name.Local(i))), environment, context + [ Name.Local(i) : type1 ])
+			case let (.Lambda(i, .Some(type), body), .Some(.Lambda(j, .Some(type2), bodyType))) where Term.equate(type, type2, environment):
+				let t = try type.elaborateType(.Type, environment, context)
+				let b = try body.elaborateType(bodyType.substitute(j, Term.Variable(Name.Local(i))), environment, context + [ Name.Local(i) : type ])
 				return .Unroll(.Lambda(j, type2, bodyType), .Lambda(i, t, b))
 
-			case let (.Lambda(i, type, body), .Some(.Type)):
+			case let (.Lambda(i, .None, body), .Some(.Lambda(j, .Some(type), bodyType))):
+				let t = try type.elaborateType(.Type, environment, context)
+				let b = try body.elaborateType(bodyType.substitute(j, Term.Variable(Name.Local(i))), environment, context + [ Name.Local(i) : type ])
+				return .Unroll(.Lambda(j, type, bodyType), .Lambda(i, t, b))
+
+			case let (.Lambda(i, .Some(type), body), .Some(.Type)):
 				try type.elaborateType(.Type, environment, context)
 				return try body.elaborateType(.Type, environment, context + [ Name.Local(i) : type ])
 
@@ -46,6 +51,9 @@ extension Term {
 					throw "Type mismatch: expected '\(self)' to be of type '\(Term(b))', but it was actually of type '\(a.type)' in context: \(Term.toString(context, separator: ":")), environment: \(Term.toString(environment, separator: "="))"
 				}
 				return a
+
+			default:
+				throw "No rule to infer type of '\(self)'"
 			}
 		} catch let e {
 			throw "\(e)\nin: '\(self)'" + (against.map { " ⇐ '\($0)'" } ?? " ⇒ ?")

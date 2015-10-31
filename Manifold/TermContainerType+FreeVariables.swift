@@ -10,8 +10,10 @@ extension TermContainerType {
 				return -1
 			case let .Application(a, b):
 				return max(a, b)
-			case let .Lambda(i, a, b):
+			case let .Lambda(i, .Some(a), b):
 				return i < 0 ? max(a, b) : max(i, a)
+			case let .Lambda(i, .None, b):
+				return i < 0 ? b : i
 			}
 		}
 	}
@@ -26,7 +28,7 @@ extension TermContainerType {
 			case let .Application(a, b):
 				return a.union(b)
 			case let .Lambda(i, a, b):
-				return a.union(b.subtract([ i ]))
+				return b.subtract([ i ]).union(a ?? [])
 			}
 		}
 	}

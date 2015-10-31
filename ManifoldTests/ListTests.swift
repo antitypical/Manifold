@@ -22,7 +22,7 @@ private let expected: Module = {
 
 	let cons = Declaration("cons",
 		type: .Type => { A in A --> List[A] --> List[A] },
-		value: .Type => { (A: Term) in (A, List[A], .Type) => { head, tail, B in (A --> List[A] --> B, B) => { ifCons, _ in ifCons[head, tail] } } })
+		value: .Type => { A in (A, List[A], .Type) => { head, tail, B in (A --> List[A] --> B, B) => { ifCons, _ in ifCons[head, tail] } } })
 
 	let `nil` = Declaration("nil",
 		type: .Type => { (A: Term) in List[A] },

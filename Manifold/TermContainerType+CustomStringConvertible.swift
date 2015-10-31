@@ -20,10 +20,13 @@ extension TermContainerType {
 			case let .Application((_, (a, _)), (_, b)):
 				return ("\(a) \(wrap(b))", true)
 
-			case let .Lambda(variable, (_, type), (b, (body, _))):
+			case let .Lambda(variable, .Some(_, type), (b, (body, _))):
 				return (b.freeVariables.contains(variable)
 					? "λ \(Name.Local(variable)) : \(type.0) . \(body)"
 					: "\(wrap(type)) → \(body)", true)
+
+			case let .Lambda(variable, _, (_, (body, _))):
+				return ("λ \(Name.Local(variable)) . \(body)", true)
 			}
 		}
 		return out
