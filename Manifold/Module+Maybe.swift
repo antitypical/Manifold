@@ -8,7 +8,12 @@ extension Module {
 				"nothing": .End
 			]
 		}))
-		return Module("Maybe", [ Maybe ])
+
+		let map = Declaration("Maybe.map",
+			type: (.Type, .Type) => { A, B in (A --> B) --> Maybe.ref[A] --> Maybe.ref[B] },
+			value: .Type)
+
+		return Module("Maybe", [ Maybe, map ])
 	}
 }
 
