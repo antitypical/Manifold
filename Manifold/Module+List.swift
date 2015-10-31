@@ -16,7 +16,11 @@ extension Module {
 			type: (.Type, .Type) => { A, B in (A --> B) --> List.ref[A] --> List.ref[B] },
 			value: { A, B, transform, list in list[List.ref[B], () => { cons[B, transform[$0], listMap[A, B, transform, $1]] }, `nil`[B]] })
 
-		return Module("List", [ List, map ])
+		let bind = Declaration("List.bind",
+			type: (.Type, .Type) => { A, B in (A --> List.ref[B]) --> List.ref[A] --> List.ref[B] },
+			value: .Type)
+
+		return Module("List", [ List, map, bind ])
 	}
 }
 
