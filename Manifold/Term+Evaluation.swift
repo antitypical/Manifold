@@ -7,7 +7,7 @@ extension Term {
 			if let found = environment[i] {
 				return found
 			}
-			fatalError("Illegal free variable \(i)")
+			throw "Illegal free variable \(i)"
 		case let .Application(a, b):
 			let a = try a.evaluate(environment)
 			if case let .Lambda(i, _, body) = a.out {
