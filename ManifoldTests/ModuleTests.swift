@@ -37,6 +37,16 @@ final class ModuleTests: XCTestCase {
 			assert(Module.pair.environment[symbol], ==, value, message: "\(symbol)")
 		}
 	}
+
+
+	// MARK: Sigma
+
+	func testEquivalenceOfEncodedAndDatatypeSigmas() {
+		encodedSigma.definitions.forEach { symbol, type, value in
+			assert(Module.sigma.context[symbol], ==, type, message: "'\(symbol)' expected '\(type)', actual '\(Module.sigma.context[symbol])'")
+			assert(Module.sigma.environment[symbol], ==, value, message: "'\(symbol)' expected '\(value)', actual '\(Module.sigma.environment[symbol])'")
+		}
+	}
 }
 
 
@@ -72,6 +82,19 @@ private let encodedPair: Module = {
 		value: (.Type, .Type) => { A, B in (A, B, .Type) => { a, b, Result in (A --> B --> Result) => { f in f[a, b] } } })
 
 	return Module("EncodedPair", [ Pair, pair, ])
+}()
+
+
+private let encodedSigma: Module = {
+	let Sigma = Declaration("Sigma",
+		type: .Type => { A in (A --> .Type) --> .Type },
+		value: .Type => { A in (A --> .Type, .Type) => { B, C in (A => { x in B[x] --> C }) --> C } })
+
+	let sigma = Declaration("sigma",
+		type: .Type => { A in (A --> .Type, A) => { B, x in B[x] --> Sigma.ref[A, B] } },
+		value: .Type => { A in (A --> .Type, A) => { B, x in (B[x], .Type) => { y, C in (A => { xʹ in B[xʹ] --> C }) => { f in f[x, y] } } } })
+
+	return Module("EncodedSigma", [ Sigma, sigma ])
 }()
 
 
