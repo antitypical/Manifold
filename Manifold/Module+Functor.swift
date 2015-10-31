@@ -6,7 +6,11 @@ extension Module {
 			[ "functor": Telescope.Argument((.Type, .Type) => { A, B in (A --> B) --> f[A] --> f[B] }, const(.End)) ]
 		}))
 
-		return Module("Functor", [ Functor ])
+		let map = Declaration("map",
+			type: .Type --> .Type => { Functor.ref[$0] },
+			value: .Type)
+
+		return Module("Functor", [ Functor, map ])
 	}
 }
 
