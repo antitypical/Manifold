@@ -2,8 +2,6 @@
 
 extension Term {
 	public static func equate(left: Term, _ right: Term, _ environment: [Name:Term], var _ visited: Set<Name> = []) -> Bool {
-		if left == right { return true }
-
 		let recur: (Term, Term) -> Bool = {
 			equate($0, $1, environment, visited)
 		}
@@ -16,6 +14,8 @@ extension Term {
 		let (right, rnames) = normalize(right, visited)
 		visited.unionInPlace(lnames)
 		visited.unionInPlace(rnames)
+
+		if left == right { return right }
 
 		switch (left.out, right.out) {
 		case (.Type, .Type):
