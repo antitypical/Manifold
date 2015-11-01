@@ -15,7 +15,7 @@ extension Module {
 
 		let zero: Term = "zero"
 		let `nil` = Declaration("nil",
-			type: .Type => { A in Vector[A, zero] },
+			type: () => { A in Vector[A, zero] },
 			value: () => { A, B in B => id })
 
 		return Module("Vector", [ natural ], [ vector, cons, `nil` ])
