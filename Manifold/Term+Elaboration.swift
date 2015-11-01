@@ -36,9 +36,9 @@ extension Term {
 				let b = try body.elaborateType(bodyType.substitute(j, Term.Variable(Name.Local(i))), environment, context + [ Name.Local(i) : type2 ])
 				return .Unroll(.Lambda(j, type2, bodyType), .Lambda(i, t, b))
 
-			case let (.Lambda(i, .Some(type), body), .Some(.Type(n))):
-				let typeʹ = try type.elaborateType(.Type, environment, context)
-				return .Unroll(.Type(n), .Lambda(i, typeʹ, try body.elaborateType(.Type, environment, context + [ Name.Local(i) : type ])))
+			case let (.Lambda(i, type, body), .Some(.Type(n))):
+				let typeʹ = try type?.elaborateType(.Type, environment, context) ?? .Unroll(.Type(n + 1), .Type(n))
+				return .Unroll(.Lambda(i, .Type, .Type), .Lambda(i, typeʹ, try body.elaborateType(.Type, environment, context + [ Name.Local(i) : type ?? .Type(n) ])))
 
 			case let (_, .Some(b)):
 				let a = try elaborateType(nil, environment, context)
