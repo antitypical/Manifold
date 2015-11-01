@@ -7,8 +7,8 @@ extension Module {
 		}))
 
 		let map = Declaration("map",
-			type: .Type --> .Type => { f in (Functor.ref[f], .Type, .Type) => { F, A, B in (A --> B) --> f[A] --> f[B] } },
-			value: { f in () => { F, A, B in (A --> B, f[A]) => { transform, functor in F[A, B, functor] } } })
+			type: .Type --> () => { f in (Functor.ref[f], .Type, .Type) => { F, A, B in (A --> B) --> f[A] --> f[B] } },
+			value: () => { f in () => { F, A, B in (A --> B, f[A]) => { transform, functor in F[A, B, functor] } } })
 
 		return Module("Functor", [ Functor, map ])
 	}

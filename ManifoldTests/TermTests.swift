@@ -50,6 +50,16 @@ final class TermTests: XCTestCase {
 	func testLambdasBindVariablesDeeply() {
 		assert(Term.Lambda(2, .Type, .Lambda(1, 2, .Lambda(0, .Type, .Application(2, .Application(1, 0))))).freeVariables, ==, [])
 	}
+
+
+	func testFreeVariablesAreOrderedByOccurence() {
+		assert(Array(Term.Application(.Application(.Application(1, 2), .Application(3, 4)), .Application(.Application(5, 6), .Application(7, 8))).freeVariables), ==, (1...8).map(id))
+	}
+
+
+	func testGeneralizationMaintainsLeftToRightOrdering() {
+		assert(Term.Lambda(0, 2, .Lambda(-1, 1, 0)).generalize(), ==, .Lambda(2, nil, .Lambda(1, nil, .Lambda(0, 2, .Lambda(-1, 1, 0)))))
+	}
 }
 
 

@@ -5,22 +5,6 @@ public enum Declaration: CustomStringConvertible {
 		self = .Definition(symbol, type, value)
 	}
 
-	public init(_ symbol: Name, type: Term, value: Term -> Term) {
-		self = .Definition(symbol, type, nil => value)
-	}
-
-	public init(_ symbol: Name, type: Term, value: (Term, Term) -> Term) {
-		self = .Definition(symbol, type, (nil, nil) => value)
-	}
-
-	public init(_ symbol: Name, type: Term, value: (Term, Term, Term) -> Term) {
-		self = .Definition(symbol, type, (nil, nil, nil) => value)
-	}
-
-	public init(_ symbol: Name, type: Term, value: (Term, Term, Term, Term) -> Term) {
-		self = .Definition(symbol, type, (nil, nil, nil, nil) => value)
-	}
-
 	public init(_ symbol: Name, _ datatype: Manifold.Datatype) {
 		self = .Datatype(symbol, datatype)
 	}

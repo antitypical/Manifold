@@ -18,7 +18,7 @@ extension TermContainerType {
 		}
 	}
 
-	public var freeVariables: Set<Int> {
+	public var freeVariables: [Int] {
 		return cata {
 			switch $0 {
 			case .Type, .Variable(.Global):
@@ -26,10 +26,19 @@ extension TermContainerType {
 			case let .Variable(.Local(i)):
 				return [ i ]
 			case let .Application(a, b):
-				return a.union(b)
+				return a + b
 			case let .Lambda(i, a, b):
-				return b.subtract([ i ]).union(a ?? [])
+				return (a ?? []) + b.filter { $0 != i }
 			}
+		}
+	}
+}
+
+
+extension Term {
+	public func generalize() -> Term {
+		return freeVariables.sort().reduce(self) {
+			.Lambda($1, nil, $0)
 		}
 	}
 }
