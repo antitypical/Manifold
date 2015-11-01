@@ -42,7 +42,7 @@ extension Term {
 
 			case let (_, .Some(b)):
 				let a = try elaborateType(nil, environment, context)
-				guard let actual = Term.equate(a.type, Term(b), environment) else {
+				guard Term.equate(a.type, Term(b), environment) != nil else {
 					throw "Type mismatch: expected '\(self)' to be of type '\(Term(b))', but it was actually of type '\(a.type)' in context: \(Term.toString(context, separator: ":")), environment: \(Term.toString(environment, separator: "="))"
 				}
 				return a
