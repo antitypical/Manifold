@@ -35,4 +35,13 @@ extension TermContainerType {
 }
 
 
+extension Term {
+	public func generalize() -> Term {
+		return freeVariables.sort().reduce(self) {
+			.Lambda($1, nil, $0)
+		}
+	}
+}
+
+
 import Prelude
