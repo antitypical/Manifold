@@ -31,15 +31,10 @@ extension Term {
 			case let (.Type(m), .Some(.Type(n))) where n > m:
 				return try elaborateType(nil, environment, context)
 
-			case let (.Lambda(i, .Some(type), body), .Some(.Lambda(j, .Some(type2), bodyType))) where Term.equate(type, type2, environment):
-				let t = try type.elaborateType(.Type, environment, context)
-				let b = try body.elaborateType(bodyType.substitute(j, Term.Variable(Name.Local(i))), environment, context + [ Name.Local(i) : type ])
+			case let (.Lambda(i, type, body), .Some(.Lambda(j, .Some(type2), bodyType))) where type.map { Term.equate($0, type2, environment) } ?? true:
+				let t = try (type ?? type2).elaborateType(.Type, environment, context)
+				let b = try body.elaborateType(bodyType.substitute(j, Term.Variable(Name.Local(i))), environment, context + [ Name.Local(i) : type2 ])
 				return .Unroll(.Lambda(j, type2, bodyType), .Lambda(i, t, b))
-
-			case let (.Lambda(i, .None, body), .Some(.Lambda(j, .Some(type), bodyType))):
-				let t = try type.elaborateType(.Type, environment, context)
-				let b = try body.elaborateType(bodyType.substitute(j, Term.Variable(Name.Local(i))), environment, context + [ Name.Local(i) : type ])
-				return .Unroll(.Lambda(j, type, bodyType), .Lambda(i, t, b))
 
 			case let (.Lambda(i, .Some(type), body), .Some(.Type(n))):
 				let typeʹ = try type.elaborateType(.Type, environment, context)
