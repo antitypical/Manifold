@@ -33,8 +33,8 @@ public struct Module {
 		let context = self.context
 		return definitions.flatMap { symbol, type, value -> [String] in
 			do {
-				try type.elaborateType(.Type, environment, context)
-				try value.elaborateType(type, environment, context)
+				let typeʹ = try type.elaborateType(.Type, environment, context)
+				try value.elaborateType(Term(term: typeʹ), environment, context)
 				return []
 			} catch {
 				return [ "\(self.name).\(symbol): \(error)" ]
