@@ -21,9 +21,6 @@ extension Term {
 		case (.Type, .Type):
 			return true
 
-		case let (.Variable(a), .Variable(b)):
-			return a == b
-
 		case let (.Application(a1, a2), .Application(b1, b2)):
 			return recur(a1, b1) && recur(a2, b2)
 
