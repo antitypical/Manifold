@@ -32,7 +32,7 @@ extension Term {
 				return try elaborateType(nil, environment, context)
 
 			case let (.Lambda(i, type, body), .Some(.Lambda(j, .Some(type2), bodyType))) where type.map { Term.equate($0, type2, environment) } ?? true:
-				let t = try (type ?? type2).elaborateType(.Type, environment, context)
+				let t = try type2.elaborateType(.Type, environment, context)
 				let b = try body.elaborateType(bodyType.substitute(j, Term.Variable(Name.Local(i))), environment, context + [ Name.Local(i) : type2 ])
 				return .Unroll(.Lambda(j, type2, bodyType), .Lambda(i, t, b))
 
