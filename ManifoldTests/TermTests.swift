@@ -50,6 +50,11 @@ final class TermTests: XCTestCase {
 	func testLambdasBindVariablesDeeply() {
 		assert(Term.Lambda(2, .Type, .Lambda(1, 2, .Lambda(0, .Type, .Application(2, .Application(1, 0))))).freeVariables, ==, [])
 	}
+
+
+	func testGeneralizationMaintainsLeftToRightOrdering() {
+		assert(Term.Lambda(0, 2, .Lambda(-1, 1, 0)).generalize(), ==, .Lambda(2, nil, .Lambda(1, nil, .Lambda(0, 2, .Lambda(-1, 1, 0)))))
+	}
 }
 
 
