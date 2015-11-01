@@ -31,7 +31,7 @@ extension Term {
 			case let (.Type(m), .Some(.Type(n))) where n > m:
 				return try elaborateType(nil, environment, context)
 
-			case let (.Lambda(i, type, body), .Some(.Lambda(j, .Some(type2), bodyType))) where type.map { Term.equate($0, type2, environment) } ?? true:
+			case let (.Lambda(i, type, body), .Some(.Lambda(j, .Some(type2), bodyType))) where type.map { Term.equate($0, type2, environment) != nil } ?? true:
 				let t = try type2.elaborateType(.Type, environment, context)
 				let b = try body.elaborateType(bodyType.substitute(j, Term.Variable(Name.Local(i))), environment, context + [ Name.Local(i) : type2 ])
 				return .Unroll(.Lambda(j, type2, bodyType), .Lambda(i, t, b))
@@ -42,7 +42,7 @@ extension Term {
 
 			case let (_, .Some(b)):
 				let a = try elaborateType(nil, environment, context)
-				guard Term.equate(a.type, Term(b), environment) else {
+				guard let actual = Term.equate(a.type, Term(b), environment) else {
 					throw "Type mismatch: expected '\(self)' to be of type '\(Term(b))', but it was actually of type '\(a.type)' in context: \(Term.toString(context, separator: ":")), environment: \(Term.toString(environment, separator: "="))"
 				}
 				return a
