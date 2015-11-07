@@ -4,7 +4,7 @@ public enum AnnotatedTerm: Equatable, TermContainerType {
 	public typealias Annotation = Term
 	indirect case Unroll(Annotation, Expression<AnnotatedTerm>)
 
-	public var type: Term {
+	public var annotation: Annotation {
 		return destructure.0
 	}
 
@@ -24,5 +24,5 @@ public enum AnnotatedTerm: Equatable, TermContainerType {
 }
 
 public func == (left: AnnotatedTerm, right: AnnotatedTerm) -> Bool {
-	return left.type == right.type && left.out == right.out
+	return left.annotation == right.annotation && left.out == right.out
 }
