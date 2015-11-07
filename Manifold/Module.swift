@@ -2,13 +2,17 @@
 
 public struct Module: CustomStringConvertible {
 	public init<D: SequenceType, S: SequenceType where D.Generator.Element == Module, S.Generator.Element == Declaration>(_ name: String, _ dependencies: D, _ declarations: S) {
-		self.name = name
-		self.dependencies = Array(dependencies)
-		self.definitions = declarations.flatMap { $0.definitions }
+		self.init(name: name, dependencies: Array(dependencies), definitions: declarations.flatMap { $0.definitions })
 	}
 
 	public init<S: SequenceType where S.Generator.Element == Declaration>(_ name: String, _ declarations: S) {
 		self.init(name, [], declarations)
+	}
+
+	public init(name: String, dependencies: [Module], definitions: [(Name, Term, Term)]) {
+		self.name = name
+		self.dependencies = dependencies
+		self.definitions = definitions
 	}
 
 	public let name: String
