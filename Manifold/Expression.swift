@@ -1,6 +1,12 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public enum Expression<Recur> {
+	case Type(Int)
+	case Variable(Name)
+	case Application(Recur, Recur)
+	case Lambda(Int, Recur?, Recur)
+
+
 	// MARK: Functor
 
 	public func map<T>(@noescape transform: Recur throws -> T) rethrows -> Expression<T> {
@@ -15,14 +21,6 @@ public enum Expression<Recur> {
 			return try .Lambda(i, a.map(transform), transform(b))
 		}
 	}
-
-
-	// MARK: Cases
-
-	case Type(Int)
-	case Variable(Name)
-	case Application(Recur, Recur)
-	case Lambda(Int, Recur?, Recur) // (Πx:A)B where B can depend on x
 }
 
 
