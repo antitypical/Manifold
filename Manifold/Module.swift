@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public struct Module {
+public struct Module: CustomStringConvertible {
 	public init<D: SequenceType, S: SequenceType where D.Generator.Element == Module, S.Generator.Element == Declaration>(_ name: String, _ dependencies: D, _ declarations: S) {
 		self.name = name
 		self.dependencies = Array(dependencies)
@@ -40,5 +40,10 @@ public struct Module {
 				return [ "\(self.name).\(symbol): \(error)" ]
 			}
 		}
+	}
+
+
+	public var description: String {
+		return name
 	}
 }
