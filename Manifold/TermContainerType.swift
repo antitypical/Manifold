@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public protocol TermContainerType: Equatable, CustomDebugStringConvertible, CustomStringConvertible {
+public protocol TermContainerType: CustomDebugStringConvertible, CustomStringConvertible {
 	var out: Expression<Self> { get }
 }
 
@@ -16,10 +16,6 @@ extension TermContainerType {
 	public func para<Result>(transform: Expression<(Self, Result)> -> Result) -> Result {
 		return (Self.out >>> { $0.map { ($0, $0.para(transform)) } } >>> transform)(self)
 	}
-}
-
-public func == <Term: TermContainerType> (left: Term, right: Term) -> Bool {
-	return left.out == right.out
 }
 
 

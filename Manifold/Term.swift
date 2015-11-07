@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Term: IntegerLiteralConvertible, StringLiteralConvertible, TermContainerType {
+public enum Term: Equatable, IntegerLiteralConvertible, StringLiteralConvertible, TermContainerType {
 	case In(() -> Expression<Term>)
 
 
@@ -35,4 +35,9 @@ public enum Term: IntegerLiteralConvertible, StringLiteralConvertible, TermConta
 			return f()
 		}
 	}
+}
+
+
+public func == (left: Term, right: Term) -> Bool {
+	return left.out == right.out
 }
