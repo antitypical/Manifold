@@ -3,7 +3,7 @@
 extension String: ErrorType {}
 
 extension Term {
-	public func elaborateType(against: Term?, _ environment: [Name:Term], _ context: [Name:Term]) throws -> Elaborated {
+	public func elaborateType(against: Term?, _ environment: [Name:Term], _ context: [Name:Term]) throws -> AnnotatedTerm<Term> {
 		do {
 			switch (out, against?.weakHeadNormalForm(environment).out) {
 			case let (.Type(n), .None):
@@ -17,8 +17,8 @@ extension Term {
 
 			case let (.Application(a, b), .None):
 				let a = try a.elaborateType(nil, environment, context)
-				guard case let .Lambda(i, type, body) = a.type.weakHeadNormalForm(environment).out else {
-					throw "Illegal application of \(self) : \(a.type) in context: \(Term.toString(context, separator: ":")), environment: \(Term.toString(environment, separator: "="))"
+				guard case let .Lambda(i, type, body) = a.annotation.weakHeadNormalForm(environment).out else {
+					throw "Illegal application of \(self) : \(a.annotation) in context: \(Term.toString(context, separator: ":")), environment: \(Term.toString(environment, separator: "="))"
 				}
 				let bʹ = try b.elaborateType(type, environment, context)
 				return .Unroll(body.substitute(i, b), .Application(a, bʹ))
@@ -26,7 +26,7 @@ extension Term {
 			case let (.Lambda(i, .Some(a), b), .None):
 				let aʹ = try a.elaborateType(.Type, environment, context)
 				let bʹ = try b.elaborateType(nil, environment, context + [ .Local(i): a ])
-				return .Unroll(a => { bʹ.type.substitute(i, $0) }, .Lambda(i, aʹ, bʹ))
+				return .Unroll(a => { bʹ.annotation.substitute(i, $0) }, .Lambda(i, aʹ, bʹ))
 
 			case let (.Type(m), .Some(.Type(n))) where n > m:
 				return try elaborateType(nil, environment, context)
@@ -42,8 +42,8 @@ extension Term {
 
 			case let (_, .Some(b)):
 				let a = try elaborateType(nil, environment, context)
-				guard Term.equate(a.type, Term(b), environment) != nil else {
-					throw "Type mismatch: expected '\(self)' to be of type '\(Term(b))', but it was actually of type '\(a.type)' in context: \(Term.toString(context, separator: ":")), environment: \(Term.toString(environment, separator: "="))"
+				guard Term.equate(a.annotation, Term(b), environment) != nil else {
+					throw "Type mismatch: expected '\(self)' to be of type '\(Term(b))', but it was actually of type '\(a.annotation)' in context: \(Term.toString(context, separator: ":")), environment: \(Term.toString(environment, separator: "="))"
 				}
 				return a
 
