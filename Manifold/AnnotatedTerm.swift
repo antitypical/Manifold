@@ -1,7 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum AnnotatedTerm: Equatable, TermContainerType {
-	public typealias Annotation = Term
+public enum AnnotatedTerm<Annotation>: TermContainerType {
 	indirect case Unroll(Annotation, Expression<AnnotatedTerm>)
 
 	public var annotation: Annotation {
@@ -23,6 +22,6 @@ public enum AnnotatedTerm: Equatable, TermContainerType {
 	}
 }
 
-public func == (left: AnnotatedTerm, right: AnnotatedTerm) -> Bool {
-	return left.annotation == right.annotation && left.out == right.out
+public func == <Annotation: Equatable> (left: AnnotatedTerm<Annotation>, right: AnnotatedTerm<Annotation>) -> Bool {
+	return left.annotation == right.annotation && Expression.equal(==)(left.out, right.out)
 }

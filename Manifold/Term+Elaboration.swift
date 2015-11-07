@@ -3,7 +3,7 @@
 extension String: ErrorType {}
 
 extension Term {
-	public func elaborateType(against: Term?, _ environment: [Name:Term], _ context: [Name:Term]) throws -> AnnotatedTerm {
+	public func elaborateType(against: Term?, _ environment: [Name:Term], _ context: [Name:Term]) throws -> AnnotatedTerm<Term> {
 		do {
 			switch (out, against?.weakHeadNormalForm(environment).out) {
 			case let (.Type(n), .None):
