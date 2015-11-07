@@ -1,13 +1,14 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public enum Elaborated: Equatable, TermContainerType {
-	indirect case Unroll(Term, Expression<Elaborated>)
+	public typealias Annotation = Term
+	indirect case Unroll(Annotation, Expression<Elaborated>)
 
 	public var type: Term {
 		return destructure.0
 	}
 
-	public var destructure: (Term, Expression<Elaborated>) {
+	public var destructure: (Annotation, Expression<Elaborated>) {
 		switch self {
 		case let .Unroll(all):
 			return all
