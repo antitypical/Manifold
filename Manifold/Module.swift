@@ -11,6 +11,12 @@ public struct Module: CustomStringConvertible {
 		self.init(name, [], declarations)
 	}
 
+	public init(name: String, dependencies: [Module], definitions: [(Name, Term, Term)]) {
+		self.name = name
+		self.dependencies = dependencies
+		self.definitions = definitions
+	}
+
 	public let name: String
 
 	public let dependencies: [Module]
