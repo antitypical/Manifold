@@ -4,7 +4,12 @@ public enum AnnotatedTerm<Annotation>: TermContainerType {
 	indirect case Unroll(Annotation, Expression<AnnotatedTerm>)
 
 	public var annotation: Annotation {
-		return destructure.0
+		get {
+			return destructure.0
+		}
+		set {
+			self = .Unroll(newValue, out)
+		}
 	}
 
 	public var destructure: (Annotation, Expression<AnnotatedTerm>) {
