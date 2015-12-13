@@ -14,10 +14,11 @@ extension Module {
 			type: .Type,
 			value: .Embedded(Swift.Character.self))
 
+		let embedCharacter: Swift.Character -> Term = { Term.Embedded($0, Character.ref) }
 		func toTerm(characters: Swift.String.CharacterView) -> Term {
 			switch characters.first {
 			case let .Some(c):
-				return cons[Character.ref, .Embedded(c), toTerm(characters.dropFirst())]
+				return cons[Character.ref, embedCharacter(c), toTerm(characters.dropFirst())]
 			default:
 				return `nil`[Character.ref]
 			}
