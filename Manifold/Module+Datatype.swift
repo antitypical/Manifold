@@ -3,7 +3,9 @@
 extension Module {
 	public static var datatype: Module {
 		return Module("Datatype", [
-			.Datatype("Datatype", [:])
+			.Datatype("Datatype", [
+				"end": .End,
+			])
 		])
 	}
 }
