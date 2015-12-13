@@ -13,7 +13,7 @@ extension Term {
 			case let .Lambda(i, _, body):
 				return try body.substitute(i, b.evaluate(environment)).evaluate(environment)
 
-			case let .Embedded(evaluator as Term throws -> Term, _, _):
+			case let .Embedded((_, evaluator) as (String, Term throws -> Term), _, _):
 				return try evaluator(b.evaluate(environment)).evaluate(environment)
 
 			default:
