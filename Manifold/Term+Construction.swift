@@ -31,7 +31,7 @@ extension Term {
 
 	public static func Embedded<A>(name: String, _ type: Term, _ evaluator: A throws -> Term) -> Term {
 		return Embedded(name, type) { term in
-			guard case let .Embedded(value as A, _, _) = term.out else { throw "illegal application of '\(name)' to \(term)" }
+			guard case let .Embedded(value as A, _, _) = term.out else { throw "Illegal application of '\(name)' to '\(term)'" }
 			return try evaluator(value)
 		}
 	}
