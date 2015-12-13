@@ -6,6 +6,10 @@ extension Module {
 			type: .Type,
 			value: .Embedded(Swift.String.self))
 
-		return Module("String", [ String ])
+		let Character = Declaration("Character",
+			type: .Type,
+			value: .Embedded(Swift.Character.self))
+
+		return Module("String", [ String, Character ])
 	}
 }
