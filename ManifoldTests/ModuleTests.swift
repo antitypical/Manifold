@@ -67,6 +67,16 @@ final class ModuleTests: XCTestCase {
 			assert(Module.list.environment[symbol], ==, value, message: "'\(symbol)' expected '\(value)', actual '\(Module.list.environment[symbol])'")
 		}
 	}
+
+
+	// MARK: Datatype
+
+	func testEquivalenceOfDatatypeEncodedAndDatatypeBooleans() {
+		datatypeEncodedBoolean.definitions.forEach { symbol, type, value in
+			assert(Module.boolean.context[symbol], ==, type, message: "'\(symbol)' expected '\(type)', actual '\(Module.boolean.context[symbol])'")
+			assert(Module.boolean.environment[symbol], ==, value, message: "'\(symbol)' expected '\(value)', actual '\(Module.boolean.environment[symbol])'")
+		}
+	}
 }
 
 
