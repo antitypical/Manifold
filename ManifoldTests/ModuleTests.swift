@@ -53,8 +53,8 @@ final class ModuleTests: XCTestCase {
 
 	func testEquivalenceOfEncodedAndDatatypeEithers() {
 		Module.either.definitions.forEach { symbol, type, value in
-			assert(encodedEither.context[symbol], ==, type, message: "\(symbol)")
-			assert(encodedEither.environment[symbol], ==, value, message: "\(symbol)")
+			assert(encodedEither.context[symbol], ==, type, message: "'\(symbol)' expected '\(type), actual '\(Module.either.context[symbol])'")
+			assert(encodedEither.environment[symbol], ==, value, message: "'\(symbol)' expected '\(type)', actual '\(Module.either.environment[symbol])'")
 		}
 	}
 
