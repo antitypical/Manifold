@@ -28,6 +28,10 @@ extension Term {
 				let bʹ = try b.elaborateType(nil, environment, context + [ .Local(i): a ])
 				return .Unroll(a => { bʹ.annotation.substitute(i, $0) }, .Lambda(i, aʹ, bʹ))
 
+			case let (.Embedded(value, type), .None):
+				let typeʹ = try type.elaborateType(.Type, environment, context)
+				return .Unroll(type, .Embedded(value, typeʹ))
+
 			case let (.Type(m), .Some(.Type(n))) where n > m:
 				return try elaborateType(nil, environment, context)
 
