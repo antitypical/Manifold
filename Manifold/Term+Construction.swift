@@ -21,6 +21,14 @@ extension Term {
 		return Term(.Lambda(i, type, body))
 	}
 
+	public static func Embedded(name: String, _ type: Term, _ evaluator: Term throws -> Term) -> Term {
+		let equal: (Any, Any) -> Bool = { a, b in
+			guard let a = a as? (String, Term throws -> Term), b = b as? (String, Term throws -> Term) else { return false }
+			return a.0 == b.0
+		}
+		return Term(.Embedded((name, evaluator), equal, type))
+	}
+
 	public static func Embedded<A>(value: A, _ equal: (A, A) -> Bool, _ type: Term) -> Term {
 		let equal: (Any, Any) -> Bool = { a, b in
 			guard let a = a as? A, b = b as? A else { return false }
