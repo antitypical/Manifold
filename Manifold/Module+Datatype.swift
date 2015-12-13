@@ -6,6 +6,7 @@ extension Module {
 			Declaration("Datatype", Datatype(.Type) { I in
 				[
 					"end": .Argument(I, const(.End)),
+					"recursive": .Argument(I, const(.Recursive(.End))),
 				]
 			})
 		])
