@@ -153,6 +153,11 @@ private let encodedList: Module = {
 }()
 
 
+private let datatypeEncodedBoolean: Module = {
+	return Module("DatatypeEncodedBoolean", [])
+}()
+
+
 import Assertions
 import Manifold
 import Prelude
