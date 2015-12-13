@@ -79,7 +79,6 @@ final class ModuleTests: XCTestCase {
 		let Character: Term = "Character"
 		let cons: Term = "cons"
 		let `nil`: Term = "nil"
-		let embedCharacter: Swift.Character -> Term = { Term.Embedded($0, Character) }
 		assert(try? toList[string].evaluate(environment), ==, try? cons[Character, embedCharacter("h"), cons[Character, embedCharacter("i"), `nil`[Character]]].evaluate(environment))
 	}
 }
@@ -166,6 +165,8 @@ private let encodedList: Module = {
 
 	return Module("EncodedList", [ list, cons, `nil` ])
 }()
+
+private let embedCharacter: Swift.Character -> Term = { Term.Embedded($0, Character) }
 
 
 import Assertions
