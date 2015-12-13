@@ -166,7 +166,7 @@ private let encodedList: Module = {
 	return Module("EncodedList", [ list, cons, `nil` ])
 }()
 
-private let embedCharacter: Swift.Character -> Term = { Term.Embedded($0, "Character") }
+private let embedCharacter: Character -> Term = { Term.Embedded($0, "Character") }
 
 
 import Assertions
