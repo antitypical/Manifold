@@ -74,8 +74,7 @@ final class ModuleTests: XCTestCase {
 	func testStringToListConversion() {
 		let environment = Module.string.environment
 		let toList: Term = "toList"
-		let String: Term = "String"
-		let string = Term.Embedded("hi", String)
+		let string = Term.Embedded("hi", "String")
 		let Character: Term = "Character"
 		let cons: Term = "cons"
 		let `nil`: Term = "nil"
