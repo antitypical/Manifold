@@ -46,7 +46,7 @@ extension Term {
 	}
 
 	public static func Embedded<A: Equatable>(type: A.Type) -> Term {
-		return .Embedded(A.self, ==, .Type)
+		return .Embedded(A.self, (==) as (A.Type, A.Type) -> Bool, .Type)
 	}
 
 
