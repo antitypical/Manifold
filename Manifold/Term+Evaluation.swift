@@ -9,8 +9,12 @@ extension Term {
 
 		case let .Application(a, b):
 			let aʹ = try a.evaluate(environment)
-			guard case let .Lambda(i, _, body) = aʹ.out else { throw "Illegal application of non-lambda term \(a)↓\(aʹ) to \(b)" }
-			return try body.substitute(i, b.evaluate(environment)).evaluate(environment)
+			switch aʹ.out {
+			case let .Lambda(i, _, body):
+				return try body.substitute(i, b.evaluate(environment)).evaluate(environment)
+			default:
+				throw "Illegal application of non-lambda term \(a)↓\(aʹ) to \(b)"
+			}
 
 		default:
 			return self
