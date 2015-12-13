@@ -26,6 +26,14 @@ extension Module {
 				toTerm(string.characters)
 			})
 
-		return Module("String", [ list ], [ String, Character, toList ])
+		let embedString: Swift.String -> Term = { .Embedded($0, String.ref) }
+		let fromList: Term = "fromList"
+		let _fromList = Declaration("fromList",
+			type: List[Character.ref] --> String.ref,
+			value: Term.Embedded("fromList", List[Character.ref] --> String.ref) {
+				$0[String.ref, () => { c, rest in fromList[rest] }, embedString("")]
+			})
+
+		return Module("String", [ list ], [ String, Character, toList, _fromList ])
 	}
 }
