@@ -8,12 +8,14 @@ extension Term {
 				return found
 			}
 			throw "Illegal free variable \(i)"
+
 		case let .Application(a, b):
 			let a = try a.evaluate(environment)
 			if case let .Lambda(i, _, body) = a.out {
 				return try body.substitute(i, b.evaluate(environment)).evaluate(environment)
 			}
 			throw "Illegal application of non-lambda term \(a) to \(b)"
+
 		default:
 			return self
 		}
