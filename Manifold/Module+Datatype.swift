@@ -2,6 +2,8 @@
 
 extension Module {
 	public static var datatype: Module {
-		return Module("Datatype", [])
+		return Module("Datatype", [
+			.Datatype("Datatype", [:])
+		])
 	}
 }
