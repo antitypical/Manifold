@@ -38,6 +38,8 @@ public enum Expression<Recur> {
 			return equal(t1, u1) && equal(t2, u2)
 		case let (.Lambda(i, t, a), .Lambda(j, u, b)):
 			return i == j && ((t &&& u).map(equal) ?? (t == nil && u == nil)) && equal(a, b)
+		case let (.Embedded(a, t1), .Embedded(b, t2)) where a.dynamicType == b.dynamicType:
+			return equal(t1, t2)
 		default:
 			return false
 		}
