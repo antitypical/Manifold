@@ -29,6 +29,13 @@ extension Term {
 		return Term(.Embedded((name, evaluator), equal, type))
 	}
 
+	public static func Embedded<A>(name: String, _ type: Term, _ evaluator: A throws -> Term) -> Term {
+		return Embedded(name, type) { term in
+			guard case let .Embedded(value as A, _, _) = term.out else { throw "illegal application of '\(name)' to \(term)" }
+			return try evaluator(value)
+		}
+	}
+
 	public static func Embedded<A>(value: A, _ equal: (A, A) -> Bool, _ type: Term) -> Term {
 		let equal: (Any, Any) -> Bool = { a, b in
 			guard let a = a as? A, b = b as? A else { return false }
