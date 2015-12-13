@@ -67,6 +67,21 @@ final class ModuleTests: XCTestCase {
 			assert(Module.list.environment[symbol], ==, value, message: "'\(symbol)' expected '\(value)', actual '\(Module.list.environment[symbol])'")
 		}
 	}
+
+
+	// MARK: String
+
+	func testStringToListConversion() {
+		let environment = Module.string.environment
+		let toList: Term = "toList"
+		let String: Term = "String"
+		let string = Term.Embedded("hi", String)
+		let Character: Term = "Character"
+		let cons: Term = "cons"
+		let `nil`: Term = "nil"
+		let embedCharacter: Swift.Character -> Term = { Term.Embedded($0, Character) }
+		assert(try? toList[string].evaluate(environment), ==, try? cons[Character, embedCharacter("h"), cons[Character, embedCharacter("i"), `nil`[Character]]].evaluate(environment))
+	}
 }
 
 
