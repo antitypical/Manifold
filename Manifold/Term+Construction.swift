@@ -25,6 +25,10 @@ extension Term {
 		return Term(.Embedded(value, type))
 	}
 
+	public static func Embedded<A>(value: A) -> Term {
+		return Term(.Embedded(value, .Embedded(A.self, .Type)))
+	}
+
 
 	public subscript (operands: Term...) -> Term {
 		return operands.reduce(self, combine: Term.Application)
