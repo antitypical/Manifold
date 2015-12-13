@@ -2,6 +2,10 @@
 
 extension Module {
 	public static var string: Module {
+		let List: Term = "List"
+		let cons: Term = "cons"
+		let `nil`: Term = "nil"
+
 		let String = Declaration("String",
 			type: .Type,
 			value: .Embedded(Swift.String.self))
