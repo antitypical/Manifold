@@ -14,7 +14,7 @@ extension Module {
 			type: .Type,
 			value: .Embedded(Swift.Character.self))
 
-		let embedCharacter: Swift.Character -> Term = { Term.Embedded($0, Character.ref) }
+		let embedCharacter: Swift.Character -> Term = { .Embedded($0, Character.ref) }
 		func toTerm(characters: Swift.String.CharacterView) -> Term {
 			guard let c = characters.first else { return `nil`[Character.ref] }
 			return cons[Character.ref, embedCharacter(c), toTerm(characters.dropFirst())]
