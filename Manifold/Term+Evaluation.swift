@@ -12,6 +12,10 @@ extension Term {
 			switch aʹ.out {
 			case let .Lambda(i, _, body):
 				return try body.substitute(i, b.evaluate(environment)).evaluate(environment)
+
+			case let .Embedded(evaluator as Term throws -> Term, _, _):
+				return try evaluator(b.evaluate(environment)).evaluate(environment)
+
 			default:
 				throw "Illegal application of non-lambda term \(a)↓\(aʹ) to \(b)"
 			}
