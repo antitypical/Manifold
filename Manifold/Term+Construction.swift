@@ -21,8 +21,8 @@ extension Term {
 		return Term(.Lambda(i, type, body))
 	}
 
-	public static func Embedded(value: Any, _ type: Term) -> Term {
-		return Term(.Embedded(value, type))
+	public static func Embedded<A>(value: A, _ type: Term) -> Term {
+		return Term(.Embedded(value as Any, type))
 	}
 
 	public static func Embedded<A>(value: A) -> Term {
