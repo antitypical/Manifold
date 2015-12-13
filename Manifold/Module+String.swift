@@ -15,5 +15,13 @@ extension Module {
 			value: .Embedded(Swift.Character.self))
 
 		return Module("String", [ String, Character ])
+		func toTerm(characters: Swift.String.CharacterView) -> Term {
+			switch characters.first {
+			case let .Some(c):
+				return cons[Character.ref, .Embedded(c), toTerm(characters.dropFirst())]
+			default:
+				return `nil`[Character.ref]
+			}
+		}
 	}
 }
