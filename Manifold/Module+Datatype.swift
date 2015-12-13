@@ -2,11 +2,13 @@
 
 extension Module {
 	public static var datatype: Module {
+		let _Datatype: Term = "Datatype"
 		return Module("Datatype", [
 			Declaration("Datatype", Datatype(.Type) { I in
 				[
 					"end": .Argument(I, const(.End)),
 					"recursive": .Argument(I, const(.Recursive(.End))),
+					"argument": Telescope.Argument(.Type) { A in .Argument(A --> _Datatype[I], const(.End)) },
 				]
 			})
 		])
