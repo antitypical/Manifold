@@ -21,6 +21,10 @@ extension Term {
 		return Term(.Lambda(i, type, body))
 	}
 
+	public static func Embedded(value: Any, _ type: Term) -> Term {
+		return Term(.Embedded(value, type))
+	}
+
 
 	public subscript (operands: Term...) -> Term {
 		return operands.reduce(self, combine: Term.Application)
