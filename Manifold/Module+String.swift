@@ -2,6 +2,10 @@
 
 extension Module {
 	public static var string: Module {
-		return Module("String", [])
+		let String = Declaration("String",
+			type: .Type,
+			value: .Embedded(Swift.String.self))
+
+		return Module("String", [ String ])
 	}
 }
