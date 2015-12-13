@@ -28,7 +28,7 @@ extension TermContainerType {
 			case let .Lambda(variable, _, (_, (body, _))):
 				return ("λ \(Name.Local(variable)) . \(body)", true)
 
-			case let .Embedded(value, (_, (type, _))):
+			case let .Embedded(value, _, (_, (type, _))):
 				return ("'\(value)' : \(type)", true)
 			}
 		}

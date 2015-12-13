@@ -14,7 +14,7 @@ extension TermContainerType {
 				return i < 0 ? max(a, b) : max(i, a)
 			case let .Lambda(i, .None, b):
 				return i < 0 ? b : i
-			case let .Embedded(_, type):
+			case let .Embedded(_, _, type):
 				return type
 			}
 		}
@@ -31,7 +31,7 @@ extension TermContainerType {
 				return a + b
 			case let .Lambda(i, a, b):
 				return (a ?? []) + b.filter { $0 != i }
-			case let .Embedded(_, type):
+			case let .Embedded(_, _, type):
 				return type
 			}
 		}

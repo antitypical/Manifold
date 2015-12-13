@@ -12,8 +12,8 @@ extension TermContainerType {
 				return ".Application(\(a), \(b))"
 			case let .Lambda(i, a, b):
 				return ".Lambda(\(i), \(a), \(b))"
-			case let .Embedded(value, type):
-				return ".Embedded(\(String(reflecting: value)), \(type))"
+			case let .Embedded(value, eq, type):
+				return ".Embedded(\(String(reflecting: value)), \(String(reflecting: eq)), \(type))"
 			}
 		}
 	}

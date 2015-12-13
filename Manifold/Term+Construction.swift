@@ -22,7 +22,11 @@ extension Term {
 	}
 
 	public static func Embedded<A>(value: A, _ equal: (A, A) -> Bool, _ type: Term) -> Term {
-		return Term(.Embedded(value as Any, type))
+		let equal: (Any, Any) -> Bool = { a, b in
+			guard let a = a as? A, b = b as? A else { return false }
+			return equal(a, b)
+		}
+		return Term(.Embedded(value as Any, equal, type))
 	}
 
 	public static func Embedded<A: Equatable>(value: A, _ type: Term) -> Term {
