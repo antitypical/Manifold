@@ -3,9 +3,14 @@
 extension Module {
 	public static var datatype: Module {
 		return Module("Datatype", [
-			.Datatype("Datatype", [
-				"end": .End,
-			])
+			Declaration("Datatype", Datatype(.Type) { I in
+				[
+					"end": .Argument(I, const(.End)),
+				]
+			})
 		])
 	}
 }
+
+
+import Prelude
