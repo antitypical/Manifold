@@ -164,7 +164,57 @@ private let encodedList: Module = {
 
 
 private let datatypeEncodedBoolean: Module = {
-	return Module("DatatypeEncodedBoolean", [])
+	let Enum: Term = "Tag"
+	let Tag: Term = "Tag"
+	let here: Term = "here"
+	let there: Term = "there"
+	let Datatype: Term = "Datatype"
+	let argument: Term = "argument"
+	let end: Term = "end"
+	let µ: Term = "µ"
+	let caseD: Term = "caseD"
+	let `init`: Term = "init"
+	let refl: Term = "refl"
+	let Unit: Term = "Unit"
+	let unit: Term = "unit"
+
+	let BooleanE = Declaration("BooleanE",
+		type: Enum,
+		value: Enum[])
+
+	let BooleanT = Declaration("BooleanT",
+		type: .Type,
+		value: Tag[BooleanE.ref])
+
+	let BooleanC = Declaration("BooleanC",
+		type: BooleanT.ref --> Datatype[Unit],
+		value: caseD[end[unit], end[unit]])
+
+	let BooleanD = Declaration("BooleanD",
+		type: Datatype[Unit],
+		value: argument[BooleanT.ref, BooleanC.ref])
+
+	let Boolean = Declaration("Boolean",
+		type: .Type,
+		value: µ[BooleanD.ref])
+
+	let trueT = Declaration("trueT",
+		type: BooleanT.ref,
+		value: here)
+
+	let `true` = Declaration("true",
+		type: Boolean.ref,
+		value: `init`[trueT.ref, refl])
+
+	let falseT = Declaration("falseT",
+		type: BooleanT.ref,
+		value: there)
+
+	let `false` = Declaration("false",
+		type: Boolean.ref,
+		value: `init`[falseT.ref, refl])
+
+	return Module("DatatypeEncodedBoolean", [ Module.unit, Module.datatype ], [ BooleanE, BooleanT, BooleanC, BooleanD, Boolean, trueT, `true`, falseT, `false` ])
 }()
 
 
