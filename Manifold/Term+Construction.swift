@@ -21,16 +21,20 @@ extension Term {
 		return Term(.Lambda(i, type, body))
 	}
 
-	public static func Embedded<A>(value: A, _ type: Term) -> Term {
+	public static func Embedded<A>(value: A, _ equal: (A, A) -> Bool, _ type: Term) -> Term {
 		return Term(.Embedded(value as Any, type))
 	}
 
-	public static func Embedded<A>(value: A) -> Term {
+	public static func Embedded<A: Equatable>(value: A, _ type: Term) -> Term {
+		return .Embedded(value, ==, type)
+	}
+
+	public static func Embedded<A: Equatable>(value: A) -> Term {
 		return .Embedded(value, .Embedded(A.self))
 	}
 
-	public static func Embedded<A>(type: A.Type) -> Term {
-		return .Embedded(A.self, .Type)
+	public static func Embedded<A: Equatable>(type: A.Type) -> Term {
+		return .Embedded(A.self, ==, .Type)
 	}
 
 
