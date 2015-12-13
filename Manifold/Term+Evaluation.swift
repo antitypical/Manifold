@@ -8,8 +8,8 @@ extension Term {
 			return found
 
 		case let .Application(a, b):
-			let a = try a.evaluate(environment)
-			guard case let .Lambda(i, _, body) = a.out else { throw "Illegal application of non-lambda term \(a) to \(b)" }
+			let aʹ = try a.evaluate(environment)
+			guard case let .Lambda(i, _, body) = aʹ.out else { throw "Illegal application of non-lambda term \(a)↓\(aʹ) to \(b)" }
 			return try body.substitute(i, b.evaluate(environment)).evaluate(environment)
 
 		default:
