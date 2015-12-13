@@ -26,11 +26,11 @@ extension Term {
 	}
 
 	public static func Embedded<A>(value: A) -> Term {
-		return Term(.Embedded(value, .Embedded(A.self)))
+		return .Embedded(value, .Embedded(A.self))
 	}
 
 	public static func Embedded<A>(type: A.Type) -> Term {
-		return Term(.Embedded(A.self, .Type))
+		return .Embedded(A.self, .Type)
 	}
 
 
