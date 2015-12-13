@@ -14,7 +14,6 @@ extension Module {
 			type: .Type,
 			value: .Embedded(Swift.Character.self))
 
-		return Module("String", [ String, Character ])
 		func toTerm(characters: Swift.String.CharacterView) -> Term {
 			switch characters.first {
 			case let .Some(c):
@@ -23,5 +22,14 @@ extension Module {
 				return `nil`[Character.ref]
 			}
 		}
+
+		let toList = Declaration("toList",
+			type: String.ref --> List[Character.ref],
+			value: () => { (string: Term) -> Term in
+				guard case let .Embedded(value as Swift.String, _) = string.out else { return ("toList" as Term)[string] }
+				return toTerm(value.characters)
+			})
+
+		return Module("String", [ list ], [ String, Character, toList ])
 	}
 }
