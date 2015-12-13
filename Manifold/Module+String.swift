@@ -22,9 +22,8 @@ extension Module {
 
 		let toList = Declaration("toList",
 			type: String.ref --> List[Character.ref],
-			value: () => { (string: Term) -> Term in
-				guard case let .Embedded(value as Swift.String, _, _) = string.out else { return ("toList" as Term)[string] }
-				return toTerm(value.characters)
+			value: Term.Embedded("toList", String.ref --> List[Character.ref]) { (string: Swift.String) -> Term in
+				toTerm(string.characters)
 			})
 
 		return Module("String", [ list ], [ String, Character, toList ])
