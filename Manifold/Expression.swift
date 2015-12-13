@@ -5,6 +5,7 @@ public enum Expression<Recur> {
 	case Variable(Name)
 	case Application(Recur, Recur)
 	case Lambda(Int, Recur?, Recur)
+	case Embedded(Any, Recur)
 
 
 	// MARK: Functor
@@ -19,6 +20,8 @@ public enum Expression<Recur> {
 			return try .Application(transform(a), transform(b))
 		case let .Lambda(i, a, b):
 			return try .Lambda(i, a.map(transform), transform(b))
+		case let .Embedded(a, b):
+			return try .Embedded(a, transform(b))
 		}
 	}
 
