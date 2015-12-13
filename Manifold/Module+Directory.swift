@@ -13,5 +13,6 @@ extension Module {
 		sigma,
 		vector,
 		finiteSet,
+		datatype,
 	].map { ($0.name, $0) })
 }
