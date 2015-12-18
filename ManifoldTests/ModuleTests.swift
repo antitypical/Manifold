@@ -68,6 +68,26 @@ final class ModuleTests: XCTestCase {
 		}
 	}
 
+	func testListValuesAsEliminators() {
+		let module = Module("test", [ Module.list, Module.unit, Module.boolean ], [])
+		let List: Term = "List"
+		let cons: Term = "cons"
+		let `nil`: Term = "nil"
+		let Unit: Term = "Unit"
+		let unit: Term = "unit"
+		let Boolean: Term = "Boolean"
+		let `true`: Term = "true"
+		let `false`: Term = "false"
+		let list: Term = cons[Unit, unit, `nil`[Unit]]
+
+		let isEmpty = List[Unit] => { list in
+			list[Boolean, (unit, List[Unit]) => { _ in `false` }, `true`]
+		}
+
+		assert((try? isEmpty[list].evaluate(module.environment)).flatMap { Term.equate($0, `false`, module.environment) }, !=, nil)
+		assert((try? isEmpty[`nil`[Unit]].evaluate(module.environment)).flatMap { Term.equate($0, `true`, module.environment) }, !=, nil)
+	}
+
 
 	// MARK: String
 
