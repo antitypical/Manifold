@@ -80,6 +80,15 @@ final class ModuleTests: XCTestCase {
 		let `nil`: Term = "nil"
 		assert(try? toList[string].evaluate(environment), ==, try? cons[Character, embedCharacter("h"), cons[Character, embedCharacter("i"), `nil`[Character]]].evaluate(environment))
 	}
+
+	func testListToStringConversion() {
+		let environment = Module.string.environment
+		let Character: Term = "Character"
+		let `nil`: Term = "nil"
+		let fromList: Term = "fromList"
+		let nilTerm: Term = fromList[`nil`[Character]]
+		assert(try? nilTerm.evaluate(environment), ==, Term.Embedded("", "String"))
+	}
 }
 
 
@@ -169,6 +178,6 @@ private let embedCharacter: Character -> Term = { Term.Embedded($0, "Character")
 
 
 import Assertions
-import Manifold
+@testable import Manifold
 import Prelude
 import XCTest
