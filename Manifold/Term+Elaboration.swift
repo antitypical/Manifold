@@ -16,12 +16,12 @@ extension Term {
 				return .Unroll(type, .Variable(name))
 
 			case let (.Application(a, b), .None):
-				let a = try a.elaborateType(nil, environment, context)
-				guard case let .Lambda(i, type, body) = a.annotation.weakHeadNormalForm(environment).out else {
-					throw "Illegal application of \(self) : \(a.annotation) in context: \(Term.toString(context, separator: ":")), environment: \(Term.toString(environment, separator: "="))"
+				let aʹ = try a.elaborateType(nil, environment, context)
+				guard case let .Lambda(i, type, body) = aʹ.annotation.weakHeadNormalForm(environment).out else {
+					throw "Illegal application of \(self) : \(aʹ.annotation) in context: \(Term.toString(context, separator: ":")), environment: \(Term.toString(environment, separator: "="))"
 				}
 				let bʹ = try b.elaborateType(type, environment, context)
-				return .Unroll(body.substitute(i, b), .Application(a, bʹ))
+				return .Unroll(body.substitute(i, b), .Application(aʹ, bʹ))
 
 			case let (.Lambda(i, .Some(a), b), .None):
 				let aʹ = try a.elaborateType(.Type, environment, context)
