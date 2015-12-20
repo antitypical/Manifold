@@ -4,7 +4,7 @@ public enum Expression<Recur> {
 	case Type(Int)
 	case Variable(Name)
 	case Application(Recur, Recur)
-	case Lambda(Int, Recur?, Recur)
+	case Lambda(Int, Recur, Recur)
 	case Embedded(Any, (Any, Any) -> Bool, Recur)
 	case Implicit
 
@@ -20,7 +20,7 @@ public enum Expression<Recur> {
 		case let .Application(a, b):
 			return try .Application(transform(a), transform(b))
 		case let .Lambda(i, a, b):
-			return try .Lambda(i, a.map(transform), transform(b))
+			return try .Lambda(i, transform(a), transform(b))
 		case let .Embedded(a, eq, b):
 			return try .Embedded(a, eq, transform(b))
 		case .Implicit:
@@ -40,7 +40,7 @@ public enum Expression<Recur> {
 		case let (.Application(t1, t2), .Application(u1, u2)):
 			return equal(t1, u1) && equal(t2, u2)
 		case let (.Lambda(i, t, a), .Lambda(j, u, b)):
-			return i == j && ((t &&& u).map(equal) ?? (t == nil && u == nil)) && equal(a, b)
+			return i == j && equal(t, u) && equal(a, b)
 		case let (.Embedded(a, eq, t1), .Embedded(b, _, t2)) where a.dynamicType == b.dynamicType:
 			return eq(a, b) && equal(t1, t2)
 		case (.Implicit, .Implicit):

@@ -23,7 +23,7 @@ extension Term {
 				let bʹ = try b.elaborateType(type, environment, context)
 				return .Unroll(body.substitute(i, b), .Application(aʹ, bʹ))
 
-			case let (.Lambda(i, .Some(a), b), .None):
+			case let (.Lambda(i, a, b), .None) where a != nil:
 				let aʹ = try a.elaborateType(.Type, environment, context)
 				let bʹ = try b.elaborateType(nil, environment, context + [ .Local(i): a ])
 				return .Unroll(a => { bʹ.annotation.substitute(i, $0) }, .Lambda(i, aʹ, bʹ))
@@ -35,13 +35,13 @@ extension Term {
 			case let (.Type(m), .Some(.Type(n))) where n > m:
 				return try elaborateType(nil, environment, context)
 
-			case let (.Lambda(i, type, body), .Some(.Lambda(j, .Some(type2), bodyType))) where type.map { Term.equate($0, type2, environment) != nil } ?? true:
+			case let (.Lambda(i, type, body), .Some(.Lambda(j, type2, bodyType))) where Term.equate(type, type2, environment) != nil:
 				let t = try type2.elaborateType(.Type, environment, context)
 				let b = try body.elaborateType(bodyType.substitute(j, Term.Variable(Name.Local(i))), environment, context + [ Name.Local(i) : type2 ])
 				return .Unroll(.Lambda(j, type2, bodyType), .Lambda(i, t, b))
 
 			case let (.Lambda(i, type, body), .Some(.Type(n))):
-				let typeʹ = try type?.elaborateType(.Type, environment, context) ?? .Unroll(.Type(n + 1), .Type(n))
+				let typeʹ = try type.elaborateType(.Type, environment, context) ?? .Unroll(.Type(n + 1), .Type(n))
 				return .Unroll(.Lambda(i, .Type, .Type), .Lambda(i, typeʹ, try body.elaborateType(.Type, environment, context + [ Name.Local(i) : type ?? .Type(n) ])))
 
 			case let (_, .Some(b)):

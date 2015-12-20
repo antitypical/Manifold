@@ -17,7 +17,7 @@ extension Term {
 		return Term(.Application(a, b))
 	}
 
-	public static func Lambda(i: Int, _ type: Term?, _ body: Term) -> Term {
+	public static func Lambda(i: Int, _ type: Term, _ body: Term) -> Term {
 		return Term(.Lambda(i, type, body))
 	}
 
@@ -86,7 +86,7 @@ public func --> (left: Term, right: Term) -> Term {
 	return left => const(right)
 }
 
-public func => (type: Term?, body: Term -> Term) -> Term {
+public func => (type: Term, body: Term -> Term) -> Term {
 	var n = -1
 	let body = body(Term { .Variable(.Local(n)) })
 	n = body.maxBoundVariable + 1
@@ -99,7 +99,7 @@ public func => (type: (), body: Term -> Term) -> Term {
 	return nil => body
 }
 
-public func => (left: (Term?, Term?), right: (Term, Term) -> Term) -> Term {
+public func => (left: (Term, Term), right: (Term, Term) -> Term) -> Term {
 	return left.0 => { a in left.1 => { b in right(a, b) } }
 }
 
@@ -107,7 +107,7 @@ public func => (left: (), right: (Term, Term) -> Term) -> Term {
 	return nil => { a in nil => { b in right(a, b) } }
 }
 
-public func => (left: (Term?, Term?, Term?), right: (Term, Term, Term) -> Term) -> Term {
+public func => (left: (Term, Term, Term), right: (Term, Term, Term) -> Term) -> Term {
 	return left.0 => { a in left.1 => { b in left.2 => { c in right(a, b, c) } } }
 }
 
@@ -115,7 +115,7 @@ public func => (left: (), right: (Term, Term, Term) -> Term) -> Term {
 	return nil => { a in nil => { b in nil => { c in right(a, b, c) } } }
 }
 
-public func => (left: (Term?, Term?, Term?, Term?), right: (Term, Term, Term, Term) -> Term) -> Term {
+public func => (left: (Term, Term, Term, Term), right: (Term, Term, Term, Term) -> Term) -> Term {
 	return left.0 => { a in left.1 => { b in left.2 => { c in left.3 => { d in right(a, b, c, d) } } } }
 }
 

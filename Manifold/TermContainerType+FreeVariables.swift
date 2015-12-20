@@ -10,10 +10,8 @@ extension TermContainerType {
 				return -1
 			case let .Application(a, b):
 				return max(a, b)
-			case let .Lambda(i, .Some(a), b):
+			case let .Lambda(i, a, b):
 				return i < 0 ? max(a, b) : max(i, a)
-			case let .Lambda(i, .None, b):
-				return i < 0 ? b : i
 			case let .Embedded(_, _, type):
 				return type
 			}

@@ -25,7 +25,7 @@ extension Term {
 			}
 			return nil
 
-		case let (.Lambda(_, .Some(a1), a2), .Lambda(i, .Some(b1), b2)):
+		case let (.Lambda(_, a1, a2), .Lambda(i, b1, b2)):
 			if let type = recur(a1, b1), body = recur(a2, b2) {
 				return .Lambda(i, type, body)
 			}
