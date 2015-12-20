@@ -8,6 +8,10 @@ extension Module {
 			type: .Type,
 			value: List[String])
 
-		return Module("Tag", [ list, string ], [ Enum ])
+		let Tag = Declaration("Tag",
+			type: Enum.ref --> .Type,
+			value: (Enum.ref, .Type) => { e, Motive in (Enum.ref --> Motive) => { f in f[e] } })
+
+		return Module("Tag", [ list, string ], [ Enum, Tag ])
 	}
 }
