@@ -9,33 +9,41 @@ enum TermDiff {
 	}
 
 	init(_ left: Term, _ right: Term, _ environment: [Name:Term], var _ visited: Set<Term> = []) {
-		func unify(left: Term, _ right: Term) -> TermDiff {
+		func unify(left: Term, _ right: Term) -> (TermDiff, Set<Term>) {
 			let (leftʹ, visitedLeft) = left.weakHeadNormalForm(environment, shouldRecur: true, visited: visited)
 			visited.unionInPlace(visitedLeft)
 			let (rightʹ, visitedRight) = right.weakHeadNormalForm(environment, shouldRecur: true, visited: visited)
 			visited.unionInPlace(visitedRight)
 
-			guard leftʹ != rightʹ else { return TermDiff(right) }
+			guard leftʹ != rightʹ else { return (TermDiff(right), visited) }
 
 			switch (leftʹ.out, rightʹ.out) {
 			case (.Implicit, _):
-				return TermDiff(right)
+				return (TermDiff(right), visited)
 			case (_, .Implicit):
-				return TermDiff(left)
+				return (TermDiff(left), visited)
 
 			case (.Type, .Type):
-				return TermDiff(right)
+				return (TermDiff(right), visited)
 
 			case let (.Application(a1, b1), .Application(a2, b2)):
-				return .Roll(.Application(unify(a1, a2), unify(b1, b2)))
+				let (a, visitedA) = unify(a1, a2)
+				visited.unionInPlace(visitedA)
+				let (b, visitedB) = unify(b1, b2)
+				visited.unionInPlace(visitedB)
+				return (.Roll(.Application(a, b)), visited)
 
 			case let (.Lambda(_, type1, body1), .Lambda(i, type2, body2)):
-				return .Roll(.Lambda(i, unify(type1, type2), unify(body1, body2)))
+				let (type, visitedType) = unify(type1, type2)
+				visited.unionInPlace(visitedType)
+				let (body, visitedBody) = unify(body1, body2)
+				visited.unionInPlace(visitedBody)
+				return (.Roll(.Lambda(i, type, body)), visited)
 
 			default:
-				return .Patch(left, right)
+				return (.Patch(left, right), visited)
 			}
 		}
-		self = unify(left, right)
+		(self, _) = unify(left, right)
 	}
 }
