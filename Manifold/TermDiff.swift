@@ -16,16 +16,16 @@ public enum TermDiff {
 			let (rightʹ, visitedRight) = right.weakHeadNormalForm(environment, shouldRecur: true, visited: visited)
 			visited.unionInPlace(visitedRight)
 
-			if leftʹ == rightʹ { return (TermDiff(right), visited) }
+			if leftʹ == rightʹ { return (TermDiff(rightʹ), visited) }
 
 			switch (leftʹ.out, rightʹ.out) {
 			case (.Implicit, _):
-				return (TermDiff(right), visited)
+				return (TermDiff(rightʹ), visited)
 			case (_, .Implicit):
-				return (TermDiff(left), visited)
+				return (TermDiff(leftʹ), visited)
 
 			case (.Type, .Type):
-				return (TermDiff(right), visited)
+				return (TermDiff(rightʹ), visited)
 
 			case let (.Application(a1, b1), .Application(a2, b2)):
 				let (a, visitedA) = unify(a1, a2)
@@ -42,7 +42,7 @@ public enum TermDiff {
 				return (.Roll(.Lambda(i, type, body)), visited)
 
 			default:
-				return (.Patch(left, right), visited)
+				return (.Patch(leftʹ, rightʹ), visited)
 			}
 		}
 		(self, _) = unify(left, right)
