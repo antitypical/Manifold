@@ -2,8 +2,6 @@
 
 extension Term {
 	public static func equate(left: Term, _ right: Term, _ environment: [Name:Term], var visited: Set<Term> = []) -> Term? {
-		if left == right { return right }
-
 		let (leftʹ, visitedLeft) = left.weakHeadNormalForm(environment, shouldRecur: false, visited: visited)
 		let (rightʹ, visitedRight) = right.weakHeadNormalForm(environment, shouldRecur: false, visited: visited)
 		visited.unionInPlace(visitedLeft)
