@@ -27,13 +27,19 @@ extension Module {
 			})
 
 		let embedString: Swift.String -> Term = { .Embedded($0, String.ref) }
+		let combine = Declaration("combine",
+			type: Character.ref --> String.ref --> String.ref,
+			value: Term.Embedded("combine1", Character.ref --> String.ref --> String.ref) { (c: Swift.Character) in
+				Term.Embedded("combine2", String.ref --> String.ref) { (s: Swift.String) in
+					Term.Embedded(Swift.String(c) + s, String.ref)
+				}
+			})
+
 		let fromList: Term = "fromList"
 		let _fromList = Declaration("fromList",
 			type: List[Character.ref] --> String.ref,
-			value: Term.Embedded("fromList", List[Character.ref] --> String.ref) {
-				$0[String.ref, () => { c, rest in fromList[rest] }, embedString("")]
-			})
+			value: () => { list in list[String.ref, () => { c, rest in combine.ref[c, fromList[rest]] }, embedString("")] })
 
-		return Module("String", [ list ], [ String, Character, toList, _fromList ])
+		return Module("String", [ list ], [ String, Character, toList, combine, _fromList ])
 	}
 }
