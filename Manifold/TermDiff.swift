@@ -47,4 +47,19 @@ public enum TermDiff {
 		}
 		(self, _) = unify(left, right)
 	}
+
+
+	public var unified: Term? {
+		struct E: ErrorType {}
+		func unified(diff: TermDiff) throws -> Term {
+			switch diff {
+			case .Patch:
+				throw E()
+
+			case let .Roll(expression):
+				return try Term(expression.map(unified))
+			}
+		}
+		return try? unified(self)
+	}
 }
