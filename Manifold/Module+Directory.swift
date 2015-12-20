@@ -15,5 +15,6 @@ extension Module {
 		finiteSet,
 		string,
 		datatype,
+		tag,
 	].map { ($0.name, $0) })
 }
