@@ -23,6 +23,7 @@
 		D470CB981BDC27130003A931 /* Module+Vector.swift in Sources */ = {isa = PBXBuildFile; fileRef = D470CB971BDC27130003A931 /* Module+Vector.swift */; };
 		D4809FBD1AF6BD400084B8FE /* TermTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4809FBC1AF6BD400084B8FE /* TermTests.swift */; };
 		D484903C1B2A40E800F249F7 /* EvaluationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D484903B1B2A40E800F249F7 /* EvaluationTests.swift */; };
+		D492927B1C26837000BA59F3 /* Module+Tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = D492927A1C26837000BA59F3 /* Module+Tag.swift */; };
 		D4A31B2A1AA366EC00B3FC68 /* TermContainerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4A31B291AA366EC00B3FC68 /* TermContainerType.swift */; };
 		D4ACE90D1BDC7E51009E928F /* Module+FiniteSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4ACE90C1BDC7E51009E928F /* Module+FiniteSet.swift */; };
 		D4B3FBF11A83515800DA2AC3 /* Manifold.h in Headers */ = {isa = PBXBuildFile; fileRef = D4B3FBF01A83515800DA2AC3 /* Manifold.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -85,6 +86,7 @@
 		D470CB971BDC27130003A931 /* Module+Vector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Module+Vector.swift"; sourceTree = "<group>"; };
 		D4809FBC1AF6BD400084B8FE /* TermTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TermTests.swift; sourceTree = "<group>"; };
 		D484903B1B2A40E800F249F7 /* EvaluationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EvaluationTests.swift; sourceTree = "<group>"; };
+		D492927A1C26837000BA59F3 /* Module+Tag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Module+Tag.swift"; sourceTree = "<group>"; };
 		D4A31B291AA366EC00B3FC68 /* TermContainerType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TermContainerType.swift; sourceTree = "<group>"; };
 		D4ACE90C1BDC7E51009E928F /* Module+FiniteSet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Module+FiniteSet.swift"; sourceTree = "<group>"; };
 		D4B3FBEB1A83515800DA2AC3 /* Manifold.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Manifold.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -235,6 +237,7 @@
 			children = (
 				D445417B1BCAB0C100F2946D /* Module+Unit.swift */,
 				D4FA652C1C1CF228009999A3 /* Module+Datatype.swift */,
+				D492927A1C26837000BA59F3 /* Module+Tag.swift */,
 				D4FB02D81B71D06A0090E764 /* Module+Boolean.swift */,
 				D445417F1BCAC38500F2946D /* Module+List.swift */,
 				D4E101B91B484611001A7E55 /* Module+Natural.swift */,
@@ -359,6 +362,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D492927B1C26837000BA59F3 /* Module+Tag.swift in Sources */,
 				D445417C1BCAB0C100F2946D /* Module+Unit.swift in Sources */,
 				D4E9901C1BD3431D00F00CA7 /* Module+Either.swift in Sources */,
 				D43B6D1B1C1DB2CA008EF3D2 /* Module+String.swift in Sources */,
