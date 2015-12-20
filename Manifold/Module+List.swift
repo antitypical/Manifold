@@ -14,7 +14,7 @@ extension Module {
 		let _map: Term = "List.map"
 		let map = Declaration("List.map",
 			type: (nil, nil) => { A, B in (A --> B) --> List.ref[A] --> List.ref[B] },
-			value: (nil, nil, nil, nil) => { A, B, transform, list in list[nil, (nil, nil) => { cons[nil, transform[$0], _map[A, nil, transform, $1]] }, `nil`[Term.Implicit]] })
+			value: (nil, nil, nil, nil) => { A, B, transform, list in list[nil, (nil, nil) => { cons[nil, transform[$0], _map[A, B, transform, $1]] }, `nil`[Term.Implicit]] })
 
 		let pure = Declaration("List.pure",
 			type: nil => { A in A --> List.ref[A] },
@@ -28,11 +28,11 @@ extension Module {
 		let _join: Term = "List.join"
 		let join = Declaration("List.join",
 			type: nil => { A in List.ref[List.ref[A]] --> List.ref[A] },
-			value: (nil, nil) => { A, list in list[nil, (nil, nil) => { cat.ref[nil, $0, _join[A, $1]] }, `nil`[Term.Implicit]] })
+			value: (nil, nil) => { A, list in list[nil, (nil, nil) => { cat.ref[A, $0, _join[A, $1]] }, `nil`[Term.Implicit]] })
 
 		let bind = Declaration("List.bind",
 			type: (nil, nil) => { A, B in (A --> List.ref[B]) --> List.ref[A] --> List.ref[B] },
-			value: (nil, nil, nil, nil) => { A, B, transform, list in join.ref[nil, map.ref[A, nil, transform, list]] })
+			value: (nil, nil, nil, nil) => { A, B, transform, list in join.ref[B, map.ref[A, List.ref[B], transform, list]] })
 
 		return Module("List", [ List, map, pure, cat, join, bind ])
 	}
