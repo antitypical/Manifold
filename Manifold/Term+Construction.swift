@@ -92,7 +92,6 @@ public func => (type: Term, body: Term -> Term) -> Term {
 	n = body.maxBoundVariable + 1
 	if !body.freeVariables.contains(n) { n = -1 }
 	return .Lambda(n, type, body)
-
 }
 
 public func => (type: (), body: Term -> Term) -> Term {
