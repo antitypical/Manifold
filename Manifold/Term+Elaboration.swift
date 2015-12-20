@@ -18,7 +18,7 @@ extension Term {
 			case let (.Application(a, b), .None):
 				let aʹ = try a.elaborateType(nil, environment, context)
 				guard case let .Lambda(i, type, body) = aʹ.annotation.weakHeadNormalForm(environment).out else {
-					throw "Illegal application of \(self) : \(aʹ.annotation) in context: \(Term.toString(context, separator: ":")), environment: \(Term.toString(environment, separator: "="))"
+					throw "Illegal application of \(a) : \(aʹ.annotation) in context: \(Term.toString(context, separator: ":")), environment: \(Term.toString(environment, separator: "="))"
 				}
 				let bʹ = try b.elaborateType(type, environment, context)
 				return .Unroll(body.substitute(i, b), .Application(aʹ, bʹ))
