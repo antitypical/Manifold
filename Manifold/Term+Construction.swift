@@ -56,6 +56,10 @@ extension Term {
 		return .Embedded(A.self, (==) as (A.Type, A.Type) -> Bool, .Type)
 	}
 
+	public static var Implicit: Term {
+		return nil
+	}
+
 
 	public subscript (operands: Term...) -> Term {
 		return operands.reduce(self, combine: Term.Application)
