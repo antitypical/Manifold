@@ -8,11 +8,11 @@ extension Module {
 
 		let first = Declaration("first",
 			type: (nil, nil) => { A, B in Pair.ref[A, B] --> A },
-			value: (nil, nil) => { A, B in nil => { pair in pair[A, (nil, B) => { a, _ in a }] } })
+			value: (nil, nil, nil) => { A, B, pair in pair[nil, (nil, B) => { a, _ in a }] })
 
 		let second = Declaration("second",
 			type: (nil, nil) => { A, B in Pair.ref[A, B] --> B },
-			value: (nil, nil) => { A, B in nil => { pair in pair[B, (nil, nil) => { _, b in b }] } })
+			value: (nil, nil, nil) => { A, B, pair in pair[nil, (nil, nil) => { _, b in b }] })
 
 		return Module("Pair", [ Pair, first, second ])
 	}
