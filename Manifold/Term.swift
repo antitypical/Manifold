@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Term: Equatable, IntegerLiteralConvertible, StringLiteralConvertible, TermContainerType {
+public enum Term: Equatable, IntegerLiteralConvertible, NilLiteralConvertible, StringLiteralConvertible, TermContainerType {
 	case In(() -> Expression<Term>)
 
 
@@ -17,6 +17,13 @@ public enum Term: Equatable, IntegerLiteralConvertible, StringLiteralConvertible
 
 	public init(integerLiteral value: Int) {
 		self.init(.Variable(.Local(value)))
+	}
+
+
+	// MARK: NilLiteralConvertible
+
+	public init(nilLiteral: ()) {
+		self.init(.Implicit)
 	}
 
 
