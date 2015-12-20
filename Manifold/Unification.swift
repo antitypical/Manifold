@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Unification {
+public enum Unification: CustomStringConvertible {
 	case Patch(Term, Term)
 	indirect case Roll(Expression<Unification>)
 
@@ -83,5 +83,12 @@ public enum Unification {
 		case let .Roll(expression):
 			return Term(expression.map { $0.actual })
 		}
+	}
+
+
+	// MARK: CustomStringConvertible
+
+	public var description: String {
+		return "\(expected)\n\(actual)"
 	}
 }
