@@ -12,8 +12,8 @@ extension Module {
 		let just: Term = "just"
 		let nothing: Term = "nothing"
 		let map = Declaration("Maybe.map",
-			type: () => { A, B in (A --> B) --> Maybe.ref[A] --> Maybe.ref[B] },
-			value: () => { A, B in (A --> B, nil) => { transform, maybe in maybe[Maybe.ref[B], () => { just[B, transform[$0]] }, nothing[B]] } })
+			type: (nil, nil) => { A, B in (A --> B) --> Maybe.ref[A] --> Maybe.ref[B] },
+			value: (nil, nil) => { A, B in (A --> B, nil) => { transform, maybe in maybe[nil, nil => { just[nil, transform[$0]] }, nothing[Term.Implicit]] } })
 
 		return Module("Maybe", [ Maybe, map ])
 	}

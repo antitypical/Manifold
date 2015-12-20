@@ -13,26 +13,26 @@ extension Module {
 		let `nil`: Term = "nil"
 		let _map: Term = "List.map"
 		let map = Declaration("List.map",
-			type: () => { A, B in (A --> B) --> List.ref[A] --> List.ref[B] },
-			value: () => { A, B, transform, list in list[List.ref[B], () => { cons[B, transform[$0], _map[A, B, transform, $1]] }, `nil`[B]] })
+			type: (nil, nil) => { A, B in (A --> B) --> List.ref[A] --> List.ref[B] },
+			value: (nil, nil, nil, nil) => { A, B, transform, list in list[nil, (nil, nil) => { cons[nil, transform[$0], _map[A, B, transform, $1]] }, `nil`[Term.Implicit]] })
 
 		let pure = Declaration("List.pure",
-			type: () => { A in A --> List.ref[A] },
-			value: () => { A, a in cons[A, a, `nil`[A]] })
+			type: nil => { A in A --> List.ref[A] },
+			value: (nil, nil) => { A, a in cons[nil, a, `nil`[Term.Implicit]] })
 
 		let _cat: Term = "cat"
 		let cat = Declaration("cat",
-			type: () => { A in List.ref[A] --> List.ref[A] --> List.ref[A] },
-			value: () => { A, x, y in x[List.ref[A], () => { cons[A, $0, _cat[A, $1, y]] }, y] })
+			type: nil => { A in List.ref[A] --> List.ref[A] --> List.ref[A] },
+			value: (nil, nil, nil) => { A, x, y in x[nil, (nil, nil) => { cons[nil, $0, _cat[A, $1, y]] }, y] })
 
 		let _join: Term = "List.join"
 		let join = Declaration("List.join",
-			type: () => { A in List.ref[List.ref[A]] --> List.ref[A] },
-			value: () => { A, list in list[List.ref[A], () => { cat.ref[A, $0, _join[A, $1]] }, `nil`[A]] })
+			type: nil => { A in List.ref[List.ref[A]] --> List.ref[A] },
+			value: (nil, nil) => { A, list in list[nil, (nil, nil) => { cat.ref[A, $0, _join[A, $1]] }, `nil`[Term.Implicit]] })
 
 		let bind = Declaration("List.bind",
-			type: () => { A, B in (A --> List.ref[B]) --> List.ref[A] --> List.ref[B] },
-			value: () => { A, B, transform, list in join.ref[B, map.ref[A, List.ref[B], transform, list]] })
+			type: (nil, nil) => { A, B in (A --> List.ref[B]) --> List.ref[A] --> List.ref[B] },
+			value: (nil, nil, nil, nil) => { A, B, transform, list in join.ref[B, map.ref[A, List.ref[B], transform, list]] })
 
 		return Module("List", [ List, map, pure, cat, join, bind ])
 	}

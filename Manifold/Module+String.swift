@@ -16,8 +16,8 @@ extension Module {
 
 		let embedCharacter: Swift.Character -> Term = { .Embedded($0, Character.ref) }
 		func toTerm(characters: Swift.String.CharacterView) -> Term {
-			guard let c = characters.first else { return `nil`[Character.ref] }
-			return cons[Character.ref, embedCharacter(c), toTerm(characters.dropFirst())]
+			guard let c = characters.first else { return `nil`[Term.Implicit] }
+			return cons[nil, embedCharacter(c), toTerm(characters.dropFirst())]
 		}
 
 		let toList = Declaration("toList",
@@ -38,7 +38,7 @@ extension Module {
 		let fromList: Term = "fromList"
 		let _fromList = Declaration("fromList",
 			type: List[Character.ref] --> String.ref,
-			value: () => { list in list[String.ref, () => { c, rest in combine.ref[c, fromList[rest]] }, embedString("")] })
+			value: nil => { list in list[nil, (nil, nil) => { c, rest in combine.ref[c, fromList[rest]] }, embedString("")] })
 
 		return Module("String", [ list ], [ String, Character, toList, combine, _fromList ])
 	}

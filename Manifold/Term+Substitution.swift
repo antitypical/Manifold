@@ -6,7 +6,7 @@ extension Term {
 		case let .Variable(.Local(j)) where i == j:
 			return expression
 		case let .Lambda(j, type, body):
-			return .Lambda(j, type?.substitute(i, expression), i == j
+			return .Lambda(j, type.substitute(i, expression), i == j
 				? body
 				: body.substitute(i, expression))
 		case let .Application(a, b):

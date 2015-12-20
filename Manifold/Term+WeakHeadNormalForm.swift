@@ -2,35 +2,37 @@
 
 extension Term {
 	public func weakHeadNormalForm(environment: [Name:Term], shouldRecur: Bool = true) -> Term {
-		let unfold: Term -> Term = {
-			$0.weakHeadNormalForm(environment, shouldRecur: shouldRecur)
-		}
-		let done: Term -> Term = {
-			$0.weakHeadNormalForm(environment, shouldRecur: false)
-		}
+		return weakHeadNormalForm(environment, shouldRecur: shouldRecur, visited: []).0
+	}
+
+	func weakHeadNormalForm(environment: [Name:Term], shouldRecur: Bool = true, var visited: Set<Term> = []) -> (Term, Set<Term>) {
+		guard !visited.contains(self) else { return (self, visited) }
+		visited.insert(self)
 		switch out {
 		case let .Variable(name) where shouldRecur:
-			return environment[name].map(done) ?? self
+			return environment[name].map { $0.weakHeadNormalForm(environment, shouldRecur: false, visited: visited) }
+				?? (self, visited)
 
 		case let .Variable(name):
-			return environment[name] ?? self
+			return (environment[name] ?? self, visited)
 
 		case let .Application(t1, t2):
-			let t1 = unfold(t1)
+			let (t1, visited) = t1.weakHeadNormalForm(environment, shouldRecur: shouldRecur, visited: visited)
 			switch t1.out {
 			case let .Lambda(i, _, body):
-				return unfold(body.substitute(i, t2))
+				return body.substitute(i, t2).weakHeadNormalForm(environment, shouldRecur: shouldRecur, visited: visited)
 
 			case let .Variable(name) where shouldRecur:
-				let t2 = unfold(t2)
-				return environment[name].map { .Application($0, t2) }.map(done) ?? .Application(t1, t2)
+				let (t2, visited) = t2.weakHeadNormalForm(environment, shouldRecur: shouldRecur, visited: visited)
+				return environment[name].map { Term.Application($0, t2).weakHeadNormalForm(environment, shouldRecur: false, visited: visited) }
+					?? (.Application(t1, t2), visited)
 
 			default:
-				return .Application(t1, t2)
+				return (.Application(t1, t2), visited)
 			}
 
 		default:
-			return self
+			return (self, visited)
 		}
 	}
 }

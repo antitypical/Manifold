@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Term: Equatable, IntegerLiteralConvertible, StringLiteralConvertible, TermContainerType {
+public enum Term: Equatable, Hashable, IntegerLiteralConvertible, NilLiteralConvertible, StringLiteralConvertible, TermContainerType {
 	case In(() -> Expression<Term>)
 
 
@@ -13,10 +13,39 @@ public enum Term: Equatable, IntegerLiteralConvertible, StringLiteralConvertible
 	}
 
 
+	// MARK: Hashable
+
+	public var hashValue: Int {
+		return cata {
+			switch $0 {
+			case let .Type(n):
+				return (Int.max - 59) ^ n
+			case let .Variable(n):
+				return (Int.max - 83) ^ n.hashValue
+			case let .Application(a, b):
+				return (Int.max - 95) ^ a ^ b
+			case let .Lambda(i, t, b):
+				return (Int.max - 179) ^ i ^ t ^ b
+			case let .Embedded(_, _, type):
+				return (Int.max - 189) ^ type
+			case .Implicit:
+				return (Int.max - 257)
+			}
+		}
+	}
+
+
 	// MARK: IntegerLiteralConvertible
 
 	public init(integerLiteral value: Int) {
 		self.init(.Variable(.Local(value)))
+	}
+
+
+	// MARK: NilLiteralConvertible
+
+	public init(nilLiteral: ()) {
+		self.init(.Implicit)
 	}
 
 
