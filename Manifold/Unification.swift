@@ -65,4 +65,14 @@ public enum Unification {
 		}
 		return try? unified(self)
 	}
+
+
+	public var expected: Term {
+		switch self {
+		case let .Patch(_, expected):
+			return expected
+		case let .Roll(expression):
+			return Term(expression.map { $0.expected })
+		}
+	}
 }
