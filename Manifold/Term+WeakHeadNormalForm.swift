@@ -6,6 +6,7 @@ extension Term {
 	}
 
 	private func weakHeadNormalForm(environment: [Name:Term], shouldRecur: Bool = true, var visited: Set<Term> = []) -> (Term, Set<Term>) {
+		guard !visited.contains(self) else { return (self, visited) }
 		switch out {
 		case let .Variable(name) where shouldRecur:
 			return environment[name].map { $0.weakHeadNormalForm(environment, shouldRecur: false, visited: visited) }
