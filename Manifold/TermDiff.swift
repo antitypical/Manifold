@@ -16,7 +16,7 @@ public enum TermDiff {
 			let (rightʹ, visitedRight) = right.weakHeadNormalForm(environment, shouldRecur: true, visited: visited)
 			visited.unionInPlace(visitedRight)
 
-			guard leftʹ != rightʹ else { return (TermDiff(right), visited) }
+			if leftʹ == rightʹ { return (TermDiff(right), visited) }
 
 			switch (leftʹ.out, rightʹ.out) {
 			case (.Implicit, _):
