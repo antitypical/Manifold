@@ -49,25 +49,6 @@ public enum Expression<Recur> {
 			return false
 		}
 	}
-
-
-	// MARK: Hashing
-	public func hashValue(hash: Recur -> Int) -> Int {
-		switch self {
-		case let .Type(n):
-			return (Int.max - 59) ^ n
-		case let .Variable(n):
-			return (Int.max - 83) ^ n.hashValue
-		case let .Application(a, b):
-			return (Int.max - 95) ^ hash(a) ^ hash(b)
-		case let .Lambda(i, t, b):
-			return (Int.max - 179) ^ i ^ hash(t) ^ hash(b)
-		case let .Embedded(_, _, type):
-			return (Int.max - 189) ^ hash(type)
-		case .Implicit:
-			return (Int.max - 257)
-		}
-	}
 }
 
 
