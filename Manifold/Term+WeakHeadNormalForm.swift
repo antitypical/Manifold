@@ -2,24 +2,17 @@
 
 extension Term {
 	public func weakHeadNormalForm(environment: [Name:Term], shouldRecur: Bool = true) -> Term {
-		var visited: Set<Name> = []
-		return weakHeadNormalForm(environment, shouldRecur: shouldRecur, visited: &visited)
-	}
-
-	func weakHeadNormalForm(environment: [Name:Term], shouldRecur: Bool = true, inout visited: Set<Name>) -> Term {
 		let unfold: Term -> Term = {
-			$0.weakHeadNormalForm(environment, shouldRecur: shouldRecur, visited: &visited)
+			$0.weakHeadNormalForm(environment, shouldRecur: shouldRecur)
 		}
 		let done: Term -> Term = {
-			$0.weakHeadNormalForm(environment, shouldRecur: false, visited: &visited)
+			$0.weakHeadNormalForm(environment, shouldRecur: false)
 		}
 		switch out {
-		case let .Variable(name) where shouldRecur && !visited.contains(name):
-			visited.insert(name)
+		case let .Variable(name) where shouldRecur:
 			return environment[name].map(done) ?? self
 
-		case let .Variable(name) where !visited.contains(name):
-			visited.insert(name)
+		case let .Variable(name):
 			return environment[name] ?? self
 
 		case let .Application(t1, t2):
@@ -29,7 +22,6 @@ extension Term {
 				return unfold(body.substitute(i, t2))
 
 			case let .Variable(name) where shouldRecur:
-				visited.insert(name)
 				let t2 = unfold(t2)
 				return environment[name].map { .Application($0, t2) }.map(done) ?? .Application(t1, t2)
 

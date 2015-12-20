@@ -67,6 +67,53 @@ final class ModuleTests: XCTestCase {
 			assert(Module.list.environment[symbol], ==, value, message: "'\(symbol)' expected '\(value)', actual '\(Module.list.environment[symbol])'")
 		}
 	}
+
+	func testListValuesAsEliminators() {
+		let module = Module("test", [ Module.list, Module.unit, Module.boolean ], [])
+		let List: Term = "List"
+		let cons: Term = "cons"
+		let `nil`: Term = "nil"
+		let Unit: Term = "Unit"
+		let unit: Term = "unit"
+		let Boolean: Term = "Boolean"
+		let `true`: Term = "true"
+		let `false`: Term = "false"
+		let list: Term = cons[Unit, unit, `nil`[Unit]]
+
+		let isEmpty = List[Unit] => { list in
+			list[Boolean, (unit, List[Unit]) => { _ in `false` }, `true`]
+		}
+
+		assert((try? isEmpty[list].evaluate(module.environment)).flatMap { Term.equate($0, `false`, module.environment) }, !=, nil)
+		assert((try? isEmpty[`nil`[Unit]].evaluate(module.environment)).flatMap { Term.equate($0, `true`, module.environment) }, !=, nil)
+	}
+
+
+	// MARK: String
+
+	func testStringToListConversion() {
+		let environment = Module.string.environment
+		let toList: Term = "toList"
+		let string = Term.Embedded("hi", "String")
+		let Character: Term = "Character"
+		let cons: Term = "cons"
+		let `nil`: Term = "nil"
+		assert(try? toList[string].evaluate(environment), ==, try? cons[Character, embedCharacter("h"), cons[Character, embedCharacter("i"), `nil`[Character]]].evaluate(environment))
+	}
+
+	func testListToStringConversion() {
+		let environment = Module.string.environment
+		let Character: Term = "Character"
+		let cons: Term = "cons"
+		let `nil`: Term = "nil"
+		let fromList: Term = "fromList"
+		let nilTerm: Term = fromList[`nil`[Character]]
+		let consTerm: Term = fromList[cons[Character, embedCharacter("a"), `nil`[Character]]]
+		let term = fromList[cons[Character, embedCharacter("h"), cons[Character, embedCharacter("i"), `nil`[Character]]]]
+		assert(try? nilTerm.evaluate(environment), ==, Term.Embedded("", "String"))
+		assert(try? consTerm.evaluate(environment), ==, Term.Embedded("a", "String"))
+		assert(try? term.evaluate(environment), ==, Term.Embedded("hi", "String"))
+	}
 }
 
 
@@ -152,8 +199,10 @@ private let encodedList: Module = {
 	return Module("EncodedList", [ list, cons, `nil` ])
 }()
 
+private let embedCharacter: Character -> Term = { Term.Embedded($0, "Character") }
+
 
 import Assertions
-import Manifold
+@testable import Manifold
 import Prelude
 import XCTest

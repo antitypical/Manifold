@@ -5,6 +5,7 @@ public enum Expression<Recur> {
 	case Variable(Name)
 	case Application(Recur, Recur)
 	case Lambda(Int, Recur?, Recur)
+	case Embedded(Any, (Any, Any) -> Bool, Recur)
 
 
 	// MARK: Functor
@@ -19,6 +20,8 @@ public enum Expression<Recur> {
 			return try .Application(transform(a), transform(b))
 		case let .Lambda(i, a, b):
 			return try .Lambda(i, a.map(transform), transform(b))
+		case let .Embedded(a, eq, b):
+			return try .Embedded(a, eq, transform(b))
 		}
 	}
 
@@ -35,6 +38,8 @@ public enum Expression<Recur> {
 			return equal(t1, u1) && equal(t2, u2)
 		case let (.Lambda(i, t, a), .Lambda(j, u, b)):
 			return i == j && ((t &&& u).map(equal) ?? (t == nil && u == nil)) && equal(a, b)
+		case let (.Embedded(a, eq, t1), .Embedded(b, _, t2)) where a.dynamicType == b.dynamicType:
+			return eq(a, b) && equal(t1, t2)
 		default:
 			return false
 		}

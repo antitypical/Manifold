@@ -21,6 +21,41 @@ extension Term {
 		return Term(.Lambda(i, type, body))
 	}
 
+	public static func Embedded(name: String, _ type: Term, _ evaluator: Term throws -> Term) -> Term {
+		let equal: (Any, Any) -> Bool = { a, b in
+			guard let a = a as? (String, Term throws -> Term), b = b as? (String, Term throws -> Term) else { return false }
+			return a.0 == b.0
+		}
+		return Term(.Embedded((name, evaluator), equal, type))
+	}
+
+	public static func Embedded<A>(name: String, _ type: Term, _ evaluator: A throws -> Term) -> Term {
+		return Embedded(name, type) { term in
+			guard case let .Embedded(value as A, _, _) = term.out else { throw "Illegal application of '\(name)' to '\(term)'" }
+			return try evaluator(value)
+		}
+	}
+
+	public static func Embedded<A>(value: A, _ equal: (A, A) -> Bool, _ type: Term) -> Term {
+		let equal: (Any, Any) -> Bool = { a, b in
+			guard let a = a as? A, b = b as? A else { return false }
+			return equal(a, b)
+		}
+		return Term(.Embedded(value as Any, equal, type))
+	}
+
+	public static func Embedded<A: Equatable>(value: A, _ type: Term) -> Term {
+		return .Embedded(value, ==, type)
+	}
+
+	public static func Embedded<A: Equatable>(value: A) -> Term {
+		return .Embedded(value, .Embedded(A.self))
+	}
+
+	public static func Embedded<A: Equatable>(type: A.Type) -> Term {
+		return .Embedded(A.self, (==) as (A.Type, A.Type) -> Bool, .Type)
+	}
+
 
 	public subscript (operands: Term...) -> Term {
 		return operands.reduce(self, combine: Term.Application)
