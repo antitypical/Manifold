@@ -26,16 +26,12 @@ extension Term {
 			return right
 
 		case let (.Application(a1, a2), .Application(b1, b2)):
-			if let first = recur(a1, b1), second = recur(a2, b2) {
-				return .Application(first, second)
-			}
-			return nil
+			guard let first = recur(a1, b1), second = recur(a2, b2) else { return nil }
+			return .Application(first, second)
 
 		case let (.Lambda(_, a1, a2), .Lambda(i, b1, b2)):
-			if let type = recur(a1, b1), body = recur(a2, b2) {
-				return .Lambda(i, type, body)
-			}
-			return nil
+			guard let type = recur(a1, b1), body = recur(a2, b2) else { return nil }
+			return .Lambda(i, type, body)
 
 		default:
 			return nil
