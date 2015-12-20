@@ -89,6 +89,6 @@ public enum Unification: CustomStringConvertible {
 	// MARK: CustomStringConvertible
 
 	public var description: String {
-		return "\(expected)\n\(actual)"
+		return "Expected: \(expected)\n" + "  Actual: \(actual)\n"
 	}
 }
