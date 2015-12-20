@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		D415A09B1B51EFDE001C15E5 /* Term+Construction.swift in Sources */ = {isa = PBXBuildFile; fileRef = D415A09A1B51EFDE001C15E5 /* Term+Construction.swift */; };
 		D43AC8831BC1824D008762B7 /* Telescope.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43AC8821BC1824D008762B7 /* Telescope.swift */; };
+		D43B6D1B1C1DB2CA008EF3D2 /* Module+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43B6D1A1C1DB2CA008EF3D2 /* Module+String.swift */; };
 		D445417C1BCAB0C100F2946D /* Module+Unit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D445417B1BCAB0C100F2946D /* Module+Unit.swift */; };
 		D44541801BCAC38500F2946D /* Module+List.swift in Sources */ = {isa = PBXBuildFile; fileRef = D445417F1BCAC38500F2946D /* Module+List.swift */; };
 		D44541841BCAEDCD00F2946D /* Term+WeakHeadNormalForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = D44541831BCAEDCD00F2946D /* Term+WeakHeadNormalForm.swift */; };
@@ -70,6 +71,7 @@
 /* Begin PBXFileReference section */
 		D415A09A1B51EFDE001C15E5 /* Term+Construction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Term+Construction.swift"; sourceTree = "<group>"; };
 		D43AC8821BC1824D008762B7 /* Telescope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Telescope.swift; sourceTree = "<group>"; };
+		D43B6D1A1C1DB2CA008EF3D2 /* Module+String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Module+String.swift"; sourceTree = "<group>"; };
 		D445417B1BCAB0C100F2946D /* Module+Unit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Module+Unit.swift"; sourceTree = "<group>"; };
 		D445417F1BCAC38500F2946D /* Module+List.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Module+List.swift"; sourceTree = "<group>"; };
 		D44541831BCAEDCD00F2946D /* Term+WeakHeadNormalForm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Term+WeakHeadNormalForm.swift"; sourceTree = "<group>"; };
@@ -244,6 +246,7 @@
 				D470CB971BDC27130003A931 /* Module+Vector.swift */,
 				D4ACE90C1BDC7E51009E928F /* Module+FiniteSet.swift */,
 				D4FB2D0A1BE44DAF00B3CCE0 /* Module+Functor.swift */,
+				D43B6D1A1C1DB2CA008EF3D2 /* Module+String.swift */,
 			);
 			name = Modules;
 			sourceTree = "<group>";
@@ -358,6 +361,7 @@
 			files = (
 				D445417C1BCAB0C100F2946D /* Module+Unit.swift in Sources */,
 				D4E9901C1BD3431D00F00CA7 /* Module+Either.swift in Sources */,
+				D43B6D1B1C1DB2CA008EF3D2 /* Module+String.swift in Sources */,
 				D415A09B1B51EFDE001C15E5 /* Term+Construction.swift in Sources */,
 				D44541901BCB028A00F2946D /* TermContainerType+CustomDebugStringConvertible.swift in Sources */,
 				D44541841BCAEDCD00F2946D /* Term+WeakHeadNormalForm.swift in Sources */,

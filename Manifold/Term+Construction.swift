@@ -17,8 +17,47 @@ extension Term {
 		return Term(.Application(a, b))
 	}
 
-	public static func Lambda(i: Int, _ type: Term?, _ body: Term) -> Term {
+	public static func Lambda(i: Int, _ type: Term, _ body: Term) -> Term {
 		return Term(.Lambda(i, type, body))
+	}
+
+	public static func Embedded(name: String, _ type: Term, _ evaluator: Term throws -> Term) -> Term {
+		let equal: (Any, Any) -> Bool = { a, b in
+			guard let a = a as? (String, Term throws -> Term), b = b as? (String, Term throws -> Term) else { return false }
+			return a.0 == b.0
+		}
+		return Term(.Embedded((name, evaluator), equal, type))
+	}
+
+	public static func Embedded<A>(name: String, _ type: Term, _ evaluator: A throws -> Term) -> Term {
+		return Embedded(name, type) { term in
+			guard case let .Embedded(value as A, _, _) = term.out else { throw "Illegal application of '\(name)' to '\(term)'" }
+			return try evaluator(value)
+		}
+	}
+
+	public static func Embedded<A>(value: A, _ equal: (A, A) -> Bool, _ type: Term) -> Term {
+		let equal: (Any, Any) -> Bool = { a, b in
+			guard let a = a as? A, b = b as? A else { return false }
+			return equal(a, b)
+		}
+		return Term(.Embedded(value as Any, equal, type))
+	}
+
+	public static func Embedded<A: Equatable>(value: A, _ type: Term) -> Term {
+		return .Embedded(value, ==, type)
+	}
+
+	public static func Embedded<A: Equatable>(value: A) -> Term {
+		return .Embedded(value, .Embedded(A.self))
+	}
+
+	public static func Embedded<A: Equatable>(type: A.Type) -> Term {
+		return .Embedded(A.self, (==) as (A.Type, A.Type) -> Bool, .Type)
+	}
+
+	public static var Implicit: Term {
+		return nil
 	}
 
 
@@ -47,41 +86,24 @@ public func --> (left: Term, right: Term) -> Term {
 	return left => const(right)
 }
 
-public func => (type: Term?, body: Term -> Term) -> Term {
+public func => (type: Term, body: Term -> Term) -> Term {
 	var n = -1
 	let body = body(Term { .Variable(.Local(n)) })
 	n = body.maxBoundVariable + 1
 	if !body.freeVariables.contains(n) { n = -1 }
 	return .Lambda(n, type, body)
-
 }
 
-public func => (type: (), body: Term -> Term) -> Term {
-	return nil => body
-}
-
-public func => (left: (Term?, Term?), right: (Term, Term) -> Term) -> Term {
+public func => (left: (Term, Term), right: (Term, Term) -> Term) -> Term {
 	return left.0 => { a in left.1 => { b in right(a, b) } }
 }
 
-public func => (left: (), right: (Term, Term) -> Term) -> Term {
-	return nil => { a in nil => { b in right(a, b) } }
-}
-
-public func => (left: (Term?, Term?, Term?), right: (Term, Term, Term) -> Term) -> Term {
+public func => (left: (Term, Term, Term), right: (Term, Term, Term) -> Term) -> Term {
 	return left.0 => { a in left.1 => { b in left.2 => { c in right(a, b, c) } } }
 }
 
-public func => (left: (), right: (Term, Term, Term) -> Term) -> Term {
-	return nil => { a in nil => { b in nil => { c in right(a, b, c) } } }
-}
-
-public func => (left: (Term?, Term?, Term?, Term?), right: (Term, Term, Term, Term) -> Term) -> Term {
+public func => (left: (Term, Term, Term, Term), right: (Term, Term, Term, Term) -> Term) -> Term {
 	return left.0 => { a in left.1 => { b in left.2 => { c in left.3 => { d in right(a, b, c, d) } } } }
-}
-
-public func => (left: (), right: (Term, Term, Term, Term) -> Term) -> Term {
-	return nil => { a in nil => { b in nil => { c in nil => { d in right(a, b, c, d) } } } }
 }
 
 

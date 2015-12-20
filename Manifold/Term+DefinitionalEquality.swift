@@ -1,37 +1,33 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 extension Term {
-	public static func equate(left: Term, _ right: Term, _ environment: [Name:Term], var _ visited: Set<Name> = []) -> Term? {
-		let recur: (Term, Term) -> Term? = {
-			equate($0, $1, environment, visited)
-		}
-
-		let normalize: (Term, Set<Name>) -> (Term, Set<Name>) = { (term, var visited) in
-			(term.weakHeadNormalForm(environment, shouldRecur: false, visited: &visited), visited)
-		}
-
-		let (left, lnames) = normalize(left, visited)
-		let (right, rnames) = normalize(right, visited)
-		visited.unionInPlace(lnames)
-		visited.unionInPlace(rnames)
-
+	public static func equate(left: Term, _ right: Term, _ environment: [Name:Term], var visited: Set<Term> = []) -> Term? {
 		if left == right { return right }
 
-		switch (left.out, right.out) {
+		let (leftʹ, visitedLeft) = left.weakHeadNormalForm(environment, shouldRecur: false, visited: visited)
+		let (rightʹ, visitedRight) = right.weakHeadNormalForm(environment, shouldRecur: false, visited: visited)
+		visited.unionInPlace(visitedLeft)
+		visited.unionInPlace(visitedRight)
+
+		if leftʹ == rightʹ { return rightʹ }
+
+		switch (leftʹ.out, rightʹ.out) {
+		case (.Implicit, _):
+			return rightʹ
+
+		case (_, .Implicit):
+			return leftʹ
+
 		case (.Type, .Type):
-			return right
+			return rightʹ
 
 		case let (.Application(a1, a2), .Application(b1, b2)):
-			if let first = recur(a1, b1), second = recur(a2, b2) {
-				return .Application(first, second)
-			}
-			return nil
+			guard let first = equate(a1, b1, environment, visited: visited), second = equate(a2, b2, environment, visited: visited) else { return nil }
+			return .Application(first, second)
 
-		case let (.Lambda(_, .Some(a1), a2), .Lambda(i, .Some(b1), b2)):
-			if let type = recur(a1, b1), body = recur(a2, b2) {
-				return .Lambda(i, type, body)
-			}
-			return nil
+		case let (.Lambda(_, a1, a2), .Lambda(i, b1, b2)):
+			guard let type = equate(a1, b1, environment, visited: visited), body = equate(a2, b2, environment, visited: visited) else { return nil }
+			return .Lambda(i, type, body)
 
 		default:
 			return nil

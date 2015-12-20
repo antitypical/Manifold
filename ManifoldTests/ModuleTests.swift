@@ -68,6 +68,51 @@ final class ModuleTests: XCTestCase {
 		}
 	}
 
+	func testListValuesAsEliminators() {
+		let module = Module("test", [ Module.list, Module.unit, Module.boolean ], [])
+		let List: Term = "List"
+		let cons: Term = "cons"
+		let `nil`: Term = "nil"
+		let Unit: Term = "Unit"
+		let unit: Term = "unit"
+		let Boolean: Term = "Boolean"
+		let `true`: Term = "true"
+		let `false`: Term = "false"
+		let list: Term = cons[nil, unit, `nil`[Term.Implicit]]
+
+		let isEmpty = List[Unit] => { list in
+			list[Boolean, (unit, List[Unit]) => { _ in `false` }, `true`]
+		}
+
+		assert((try? isEmpty[list].evaluate(module.environment)).flatMap { Term.equate($0, `false`, module.environment) }, !=, nil)
+		assert((try? isEmpty[`nil`[Term.Implicit]].evaluate(module.environment)).flatMap { Term.equate($0, `true`, module.environment) }, !=, nil)
+	}
+
+
+	// MARK: String
+
+	func testStringToListConversion() {
+		let environment = Module.string.environment
+		let toList: Term = "toList"
+		let string = Term.Embedded("hi", "String")
+		let cons: Term = "cons"
+		let `nil`: Term = "nil"
+		assert(try? toList[string].evaluate(environment), ==, try? cons[nil, embedCharacter("h"), cons[nil, embedCharacter("i"), `nil`[Term.Implicit]]].evaluate(environment))
+	}
+
+	func testListToStringConversion() {
+		let environment = Module.string.environment
+		let cons: Term = "cons"
+		let `nil`: Term = "nil"
+		let fromList: Term = "fromList"
+		let nilTerm: Term = fromList[`nil`[Term.Implicit]]
+		let consTerm: Term = fromList[cons[nil, embedCharacter("a"), `nil`[Term.Implicit]]]
+		let term = fromList[cons[nil, embedCharacter("h"), cons[nil, embedCharacter("i"), `nil`[Term.Implicit]]]]
+		assert(try? nilTerm.evaluate(environment), ==, Term.Embedded("", "String"))
+		assert(try? consTerm.evaluate(environment), ==, Term.Embedded("a", "String"))
+		assert(try? term.evaluate(environment), ==, Term.Embedded("hi", "String"))
+	}
+
 
 	// MARK: Datatype
 
@@ -162,6 +207,8 @@ private let encodedList: Module = {
 	return Module("EncodedList", [ list, cons, `nil` ])
 }()
 
+private let embedCharacter: Character -> Term = { Term.Embedded($0, "Character") }
+
 
 private let datatypeEncodedBoolean: Module = {
 	let Enum: Term = "Tag"
@@ -219,6 +266,6 @@ private let datatypeEncodedBoolean: Module = {
 
 
 import Assertions
-import Manifold
+@testable import Manifold
 import Prelude
 import XCTest
