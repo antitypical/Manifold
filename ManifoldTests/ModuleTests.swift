@@ -104,10 +104,13 @@ final class ModuleTests: XCTestCase {
 	func testListToStringConversion() {
 		let environment = Module.string.environment
 		let Character: Term = "Character"
+		let cons: Term = "cons"
 		let `nil`: Term = "nil"
 		let fromList: Term = "fromList"
 		let nilTerm: Term = fromList[`nil`[Character]]
+		let consTerm: Term = fromList[cons[Character, embedCharacter("a"), `nil`[Character]]]
 		assert(try? nilTerm.evaluate(environment), ==, Term.Embedded("", "String"))
+		assert(try? consTerm.evaluate(environment), ==, Term.Embedded("a", "String"))
 	}
 }
 
