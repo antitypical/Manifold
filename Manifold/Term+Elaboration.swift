@@ -44,6 +44,9 @@ extension Term {
 				let typeʹ = try type.elaborateType(.Type, environment, context) ?? .Unroll(.Type(n + 1), .Type(n))
 				return .Unroll(.Lambda(i, .Type, .Type), .Lambda(i, typeʹ, try body.elaborateType(.Type, environment, context + [ Name.Local(i) : type ?? .Type(n) ])))
 
+			case let (.Implicit, .Some(type)):
+				return .Unroll(Term(type), .Implicit)
+
 			case let (_, .Some(b)):
 				let a = try elaborateType(nil, environment, context)
 				guard Term.equate(a.annotation, Term(b), environment) != nil else {
