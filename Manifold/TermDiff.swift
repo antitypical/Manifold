@@ -29,15 +29,15 @@ public enum TermDiff {
 
 			case let (.Application(a1, b1), .Application(a2, b2)):
 				let (a, visitedA) = unify(a1, a2)
-				visited.unionInPlace(visitedA)
 				let (b, visitedB) = unify(b1, b2)
+				visited.unionInPlace(visitedA)
 				visited.unionInPlace(visitedB)
 				return (.Roll(.Application(a, b)), visited)
 
 			case let (.Lambda(_, type1, body1), .Lambda(i, type2, body2)):
 				let (type, visitedType) = unify(type1, type2)
-				visited.unionInPlace(visitedType)
 				let (body, visitedBody) = unify(body1, body2)
+				visited.unionInPlace(visitedType)
 				visited.unionInPlace(visitedBody)
 				return (.Roll(.Lambda(i, type, body)), visited)
 
