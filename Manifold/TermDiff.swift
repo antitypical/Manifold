@@ -1,14 +1,14 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-enum TermDiff {
+public enum TermDiff {
 	case Patch(Term, Term)
 	indirect case Roll(Expression<TermDiff>)
 
-	init(_ term: Term) {
+	public init(_ term: Term) {
 		self = .Roll(term.out.map(TermDiff.init))
 	}
 
-	init(_ left: Term, _ right: Term, _ environment: [Name:Term]) {
+	public init(_ left: Term, _ right: Term, _ environment: [Name:Term]) {
 		var visited: Set<Term> = []
 		func unify(left: Term, _ right: Term) -> (TermDiff, Set<Term>) {
 			let (leftʹ, visitedLeft) = left.weakHeadNormalForm(environment, shouldRecur: true, visited: visited)
