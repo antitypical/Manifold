@@ -1,31 +1,31 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum TermDiff {
+public enum Unification {
 	case Patch(Term, Term)
-	indirect case Roll(Expression<TermDiff>)
+	indirect case Roll(Expression<Unification>)
 
 	public init(_ term: Term) {
-		self = .Roll(term.out.map(TermDiff.init))
+		self = .Roll(term.out.map(Unification.init))
 	}
 
 	public init(_ left: Term, _ right: Term, _ environment: [Name:Term]) {
 		var visited: Set<Term> = []
-		func unify(left: Term, _ right: Term) -> (TermDiff, Set<Term>) {
+		func unify(left: Term, _ right: Term) -> (Unification, Set<Term>) {
 			let (leftʹ, visitedLeft) = left.weakHeadNormalForm(environment, shouldRecur: false, visited: visited)
 			let (rightʹ, visitedRight) = right.weakHeadNormalForm(environment, shouldRecur: false, visited: visited)
 			visited.unionInPlace(visitedLeft)
 			visited.unionInPlace(visitedRight)
 
-			if leftʹ == rightʹ { return (TermDiff(rightʹ), visited) }
+			if leftʹ == rightʹ { return (Unification(rightʹ), visited) }
 
 			switch (leftʹ.out, rightʹ.out) {
 			case (.Implicit, _):
-				return (TermDiff(rightʹ), visited)
+				return (Unification(rightʹ), visited)
 			case (_, .Implicit):
-				return (TermDiff(leftʹ), visited)
+				return (Unification(leftʹ), visited)
 
 			case (.Type, .Type):
-				return (TermDiff(rightʹ), visited)
+				return (Unification(rightʹ), visited)
 
 			case let (.Application(a1, b1), .Application(a2, b2)):
 				let (a, visitedA) = unify(a1, a2)
@@ -54,7 +54,7 @@ public enum TermDiff {
 	/// This will be a valid term for unifiable terms, and `nil` otherwise.
 	public var unified: Term? {
 		struct E: ErrorType {}
-		func unified(diff: TermDiff) throws -> Term {
+		func unified(diff: Unification) throws -> Term {
 			switch diff {
 			case .Patch:
 				throw E()

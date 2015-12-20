@@ -52,7 +52,7 @@ extension Term {
 
 			case let (_, b):
 				let a = try elaborateType(nil, environment, context)
-				let diff = TermDiff(a.annotation, Term(b), environment)
+				let diff = Unification(a.annotation, Term(b), environment)
 				guard diff.unified != nil else {
 					throw "Type mismatch: expected '\(self)' to be of type '\(Term(b))', but it was actually of type '\(a.annotation)' in context: \(Term.toString(context, separator: ":")), environment: \(Term.toString(environment, separator: "="))"
 				}
