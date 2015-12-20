@@ -6,17 +6,17 @@ extension Module {
 		let Vector: Term = "Vector"
 		let vector = Declaration("Vector",
 			type: .Type --> Natural --> .Type,
-			value: () => { A, n in .Type => { B in n[.Type, B --> B, Natural => { n in (A --> Vector[A, n] --> B) --> B }] } })
+			value: (nil, nil) => { A, n in .Type => { B in n[.Type, B --> B, Natural => { n in (A --> Vector[A, n] --> B) --> B }] } })
 
 		let successor: Term = "successor"
 		let cons = Declaration("cons",
 			type: (.Type, Natural)  => { A, n in A --> Vector[A, n] --> Vector[A, successor[n]] },
-			value: () => { A, n in () => { head, tail, B in (A --> Vector[A, n] --> B) => { ifCons in ifCons[head, tail] } } })
+			value: (nil, nil) => { A, n in (nil, nil, nil) => { head, tail, B in (A --> Vector[A, n] --> B) => { ifCons in ifCons[head, tail] } } })
 
 		let zero: Term = "zero"
 		let `nil` = Declaration("nil",
-			type: () => { A in Vector[A, zero] },
-			value: () => { A, B in B => id })
+			type: nil => { A in Vector[A, zero] },
+			value: (nil, nil) => { A, B in B => id })
 
 		return Module("Vector", [ natural ], [ vector, cons, `nil` ])
 	}

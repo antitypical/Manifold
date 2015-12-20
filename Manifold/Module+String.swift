@@ -38,7 +38,7 @@ extension Module {
 		let fromList: Term = "fromList"
 		let _fromList = Declaration("fromList",
 			type: List[Character.ref] --> String.ref,
-			value: () => { list in list[String.ref, () => { c, rest in combine.ref[c, fromList[rest]] }, embedString("")] })
+			value: nil => { list in list[String.ref, (nil, nil) => { c, rest in combine.ref[c, fromList[rest]] }, embedString("")] })
 
 		return Module("String", [ list ], [ String, Character, toList, combine, _fromList ])
 	}

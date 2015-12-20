@@ -7,12 +7,12 @@ extension Module {
 		})
 
 		let first = Declaration("first",
-			type: () => { A, B in Pair.ref[A, B] --> A },
-			value: () => { A, B in () => { pair in pair[A, (nil, B) => { a, _ in a }] } })
+			type: (nil, nil) => { A, B in Pair.ref[A, B] --> A },
+			value: (nil, nil) => { A, B in nil => { pair in pair[A, (nil, B) => { a, _ in a }] } })
 
 		let second = Declaration("second",
-			type: () => { A, B in Pair.ref[A, B] --> B },
-			value: () => { A, B in () => { pair in pair[B, () => { _, b in b }] } })
+			type: (nil, nil) => { A, B in Pair.ref[A, B] --> B },
+			value: (nil, nil) => { A, B in nil => { pair in pair[B, (nil, nil) => { _, b in b }] } })
 
 		return Module("Pair", [ Pair, first, second ])
 	}
