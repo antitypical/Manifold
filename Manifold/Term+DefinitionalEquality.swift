@@ -6,20 +6,20 @@ extension Term {
 			term.weakHeadNormalForm(environment, shouldRecur: false)
 		}
 
-		let left = normalize(left)
-		let right = normalize(right)
+		let leftʹ = normalize(left)
+		let rightʹ = normalize(right)
 
-		if left == right { return right }
+		if leftʹ == rightʹ { return rightʹ }
 
-		switch (left.out, right.out) {
+		switch (leftʹ.out, rightʹ.out) {
 		case (.Implicit, _):
-			return right
+			return rightʹ
 
 		case (_, .Implicit):
-			return left
+			return leftʹ
 
 		case (.Type, .Type):
-			return right
+			return rightʹ
 
 		case let (.Application(a1, a2), .Application(b1, b2)):
 			guard let first = equate(a1, b1, environment), second = equate(a2, b2, environment) else { return nil }
