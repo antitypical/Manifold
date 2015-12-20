@@ -8,7 +8,8 @@ enum TermDiff {
 		self = .Roll(term.out.map(TermDiff.init))
 	}
 
-	init(_ left: Term, _ right: Term, _ environment: [Name:Term], var _ visited: Set<Term> = []) {
+	init(_ left: Term, _ right: Term, _ environment: [Name:Term]) {
+		var visited: Set<Term> = []
 		func unify(left: Term, _ right: Term) -> (TermDiff, Set<Term>) {
 			let (leftʹ, visitedLeft) = left.weakHeadNormalForm(environment, shouldRecur: true, visited: visited)
 			visited.unionInPlace(visitedLeft)
