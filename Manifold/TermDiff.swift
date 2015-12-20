@@ -11,8 +11,8 @@ public enum TermDiff {
 	public init(_ left: Term, _ right: Term, _ environment: [Name:Term]) {
 		var visited: Set<Term> = []
 		func unify(left: Term, _ right: Term) -> (TermDiff, Set<Term>) {
-			let (leftʹ, visitedLeft) = left.weakHeadNormalForm(environment, shouldRecur: true, visited: visited)
-			let (rightʹ, visitedRight) = right.weakHeadNormalForm(environment, shouldRecur: true, visited: visited)
+			let (leftʹ, visitedLeft) = left.weakHeadNormalForm(environment, shouldRecur: false, visited: visited)
+			let (rightʹ, visitedRight) = right.weakHeadNormalForm(environment, shouldRecur: false, visited: visited)
 			visited.unionInPlace(visitedLeft)
 			visited.unionInPlace(visitedRight)
 
