@@ -2,6 +2,12 @@
 
 extension Module {
 	public static var tag: Module {
-		return Module("Tag", [ list, string ], [])
+		let List: Term = "List"
+		let String: Term = "String"
+		let Enum = Declaration("Enum",
+			type: .Type,
+			value: List[String])
+
+		return Module("Tag", [ list, string ], [ Enum ])
 	}
 }
