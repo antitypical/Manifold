@@ -6,7 +6,7 @@ extension TermContainerType {
 	public var maxBoundVariable: Int {
 		return cata {
 			switch $0 {
-			case .Type, .Variable:
+			case .Type, .Variable, .Implicit:
 				return -1
 			case let .Application(a, b):
 				return max(a, b)
@@ -23,7 +23,7 @@ extension TermContainerType {
 	public var freeVariables: [Int] {
 		return cata {
 			switch $0 {
-			case .Type, .Variable(.Global):
+			case .Type, .Variable(.Global), .Implicit:
 				return []
 			case let .Variable(.Local(i)):
 				return [ i ]

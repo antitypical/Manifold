@@ -30,6 +30,9 @@ extension TermContainerType {
 
 			case let .Embedded(value, _, (_, (type, _))):
 				return ("'\(value)' : \(type)", true)
+
+			case .Implicit:
+				return ("_", false)
 			}
 		}
 		return out
