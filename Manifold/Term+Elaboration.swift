@@ -54,7 +54,7 @@ extension Term {
 				let a = try elaborateType(nil, environment, context)
 				let unification = Unification(a.annotation, Term(b), environment)
 				guard unification.unified != nil else {
-					throw "Type mismatch: expected '\(self)' to be of type '\(Term(b))', but it was actually of type '\(a.annotation)' in context: \(Term.toString(context, separator: ":")), environment: \(Term.toString(environment, separator: "="))"
+					throw "Type mismatch for '\(self)':\n\(unification)\nin context: \(Term.toString(context, separator: ":")),\nenvironment: \(Term.toString(environment, separator: "="))"
 				}
 				return a
 			}
