@@ -75,4 +75,13 @@ public enum Unification {
 			return Term(expression.map { $0.expected })
 		}
 	}
+
+	public var actual: Term {
+		switch self {
+		case let .Patch(actual, _):
+			return actual
+		case let .Roll(expression):
+			return Term(expression.map { $0.actual })
+		}
+	}
 }
