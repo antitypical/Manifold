@@ -10,7 +10,7 @@ extension Module {
 
 		let first = Declaration("first",
 			type: () => { A in (A --> .Type) => { B in Sigma.ref[A, B] --> A } },
-			value: () => { A in () => { B in () => { v in v[A, () => { x in B[x] => const(x) }] } } })
+			value: (nil) => { A in () => { B in () => { v in v[nil, () => { x in B[x] => const(x) }] } } })
 
 		let second = Declaration("second",
 			type: () => { A in (A --> .Type) => { B in Sigma.ref[A, B] => { v in B[first.ref[A, B, v]] } } },
