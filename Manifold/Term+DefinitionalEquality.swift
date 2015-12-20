@@ -16,6 +16,12 @@ extension Term {
 		if left == right { return right }
 
 		switch (left.out, right.out) {
+		case (.Implicit, _):
+			return right
+
+		case (_, .Implicit):
+			return left
+
 		case (.Type, .Type):
 			return right
 
