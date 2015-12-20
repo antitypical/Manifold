@@ -9,12 +9,12 @@ extension Module {
 		}))
 
 		let first = Declaration("first",
-			type: () => { A in (A --> .Type) => { B in Sigma.ref[A, B] --> A } },
-			value: nil => { A in () => { B in () => { v in v[nil, () => { x in B[x] => const(x) }] } } })
+			type: nil => { A in (A --> .Type) => { B in Sigma.ref[A, B] --> A } },
+			value: nil => { A in nil => { B in nil => { v in v[nil, nil => { x in B[x] => const(x) }] } } })
 
 		let second = Declaration("second",
-			type: () => { A in (A --> .Type) => { B in Sigma.ref[A, B] => { v in B[first.ref[A, B, v]] } } },
-			value: nil => { A in () => { B in () => { v in v[nil, () => { x in B[x] => id }] } } })
+			type: nil => { A in (A --> .Type) => { B in Sigma.ref[A, B] => { v in B[first.ref[A, B, v]] } } },
+			value: nil => { A in nil => { B in nil => { v in v[nil, nil => { x in B[x] => id }] } } })
 
 		return Module("Sigma", [ Sigma, first, second ])
 	}
