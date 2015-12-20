@@ -2,23 +2,16 @@
 
 extension Term {
 	public static func equate(left: Term, _ right: Term, _ environment: [Name:Term]) -> Term? {
-		var visited: Set<Name> = []
-		return equate(left, right, environment, &visited)
-	}
-
-	public static func equate(left: Term, _ right: Term, _ environment: [Name:Term], inout _ visited: Set<Name>) -> Term? {
 		let recur: (Term, Term) -> Term? = {
-			equate($0, $1, environment, &visited)
+			equate($0, $1, environment)
 		}
 
-		let normalize: (Term, Set<Name>) -> (Term, Set<Name>) = { (term, var visited) in
-			(term.weakHeadNormalForm(environment, shouldRecur: false, visited: &visited), visited)
+		let normalize: Term -> Term = { term in
+			term.weakHeadNormalForm(environment, shouldRecur: false)
 		}
 
-		let (left, lnames) = normalize(left, visited)
-		let (right, rnames) = normalize(right, visited)
-		visited.unionInPlace(lnames)
-		visited.unionInPlace(rnames)
+		let left = normalize(left)
+		let right = normalize(right)
 
 		if left == right { return right }
 
