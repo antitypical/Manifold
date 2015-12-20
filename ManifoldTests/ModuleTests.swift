@@ -211,7 +211,7 @@ private let embedCharacter: Character -> Term = { Term.Embedded($0, "Character")
 
 
 private let datatypeEncodedBoolean: Module = {
-	let Enum: Term = "Tag"
+	let Enum: Term = "Enum"
 	let Tag: Term = "Tag"
 	let here: Term = "here"
 	let there: Term = "there"
