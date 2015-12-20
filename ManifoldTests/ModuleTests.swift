@@ -212,6 +212,8 @@ private let embedCharacter: Character -> Term = { Term.Embedded($0, "Character")
 
 private let datatypeEncodedBoolean: Module = {
 	let Enum: Term = "Enum"
+	let cons: Term = "cons"
+	let `nil`: Term = "nil"
 	let Tag: Term = "Tag"
 	let here: Term = "here"
 	let there: Term = "there"
@@ -224,10 +226,13 @@ private let datatypeEncodedBoolean: Module = {
 	let refl: Term = "refl"
 	let Unit: Term = "Unit"
 	let unit: Term = "unit"
+	let String: Term = "String"
+
+	let embedString: Swift.String -> Term = { .Embedded($0, String) }
 
 	let BooleanE = Declaration("BooleanE",
 		type: Enum,
-		value: Enum[])
+		value: cons[nil, embedString("true"), cons[nil, embedString("false"), `nil`[Term.Implicit]]])
 
 	let BooleanT = Declaration("BooleanT",
 		type: .Type,
