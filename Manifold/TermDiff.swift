@@ -49,6 +49,9 @@ public enum TermDiff {
 	}
 
 
+	/// Produces the unified term for the receiver, if any.
+	///
+	/// This will be a valid term for unifiable terms, and `nil` otherwise.
 	public var unified: Term? {
 		struct E: ErrorType {}
 		func unified(diff: TermDiff) throws -> Term {
