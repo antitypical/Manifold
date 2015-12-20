@@ -2,6 +2,6 @@
 
 extension Module {
 	public static var tag: Module {
-		return Module("Tag", [ list ], [])
+		return Module("Tag", [ list, string ], [])
 	}
 }
