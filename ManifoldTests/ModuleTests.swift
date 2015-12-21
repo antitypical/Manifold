@@ -84,8 +84,8 @@ final class ModuleTests: XCTestCase {
 			list[Boolean, (unit, List[Unit]) => { _ in `false` }, `true`]
 		}
 
-		assert((try? isEmpty[list].evaluate(module.environment)).flatMap { Term.equate($0, `false`, module.environment) }, !=, nil)
-		assert((try? isEmpty[`nil`[Term.Implicit]].evaluate(module.environment)).flatMap { Term.equate($0, `true`, module.environment) }, !=, nil)
+		assert((try? isEmpty[list].evaluate(module.environment)).flatMap { Unification($0, `false`, module.environment).unified }, !=, nil)
+		assert((try? isEmpty[`nil`[Term.Implicit]].evaluate(module.environment)).flatMap { Unification($0, `true`, module.environment).unified }, !=, nil)
 	}
 
 

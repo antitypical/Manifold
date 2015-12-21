@@ -35,7 +35,7 @@ extension Term {
 			case let (.Type(m), .Type(n)) where n > m:
 				return try elaborateType(nil, environment, context)
 
-			case let (.Lambda(i, type, body), .Lambda(j, type2, bodyType)) where Term.equate(type, type2, environment) != nil:
+			case let (.Lambda(i, type, body), .Lambda(j, type2, bodyType)) where Unification(type, type2, environment).unified != nil:
 				let t = try type2.elaborateType(.Type, environment, context)
 				let b = try body.elaborateType(bodyType.substitute(j, Term.Variable(Name.Local(i))), environment, context + [ Name.Local(i) : type2 ])
 				return .Unroll(.Lambda(j, type2, bodyType), .Lambda(i, t, b))
