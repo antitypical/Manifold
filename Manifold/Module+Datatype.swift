@@ -24,7 +24,7 @@ extension Module {
 			type: nil => { I in (_Datatype[I], I) => { D, i in El[D, μ.ref[D], i] --> μ.ref[D, i] } },
 			value: nil)
 
-		return Module("Datatype", [ tag, propositionalEquality, pair ], [ datatype, μ, `init`, IType, el ])
+		return Module("Datatype", [ tag, propositionalEquality, pair, sigma ], [ datatype, μ, `init`, IType, el ])
 	}
 }
 
