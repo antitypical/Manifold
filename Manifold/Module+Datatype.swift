@@ -10,9 +10,7 @@ extension Module {
 				"argument": Telescope.Argument(.Type) { A in .Argument(A --> _Datatype[I], const(.End)) },
 			]
 		})
-		return Module("Datatype", [ tag ], [
-			datatype
-		])
+		return Module("Datatype", [ tag ], [ datatype ])
 	}
 }
 
