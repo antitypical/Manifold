@@ -120,6 +120,10 @@ final class ModuleTests: XCTestCase {
 
 	// MARK: Assertions
 
+	func assertEquivalent(a: Module, _ b: Module, _ file: String = __FILE__, _ line: UInt = __LINE__) {
+		a.definitions.forEach { definition in assertEquivalent(definition, b, file, line) }
+	}
+
 	func assertEquivalent(definition: (Name, Term, Term), _ module: Module, _ file: String = __FILE__, _ line: UInt = __LINE__) {
 		let (symbol, type, value) = definition
 		if let actual = module.context[symbol] {
