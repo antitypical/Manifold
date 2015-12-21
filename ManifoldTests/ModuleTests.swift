@@ -114,14 +114,15 @@ final class ModuleTests: XCTestCase {
 
 	func assertEquivalent(definition: (Name, Term, Term), _ module: Module, _ file: String = __FILE__, _ line: UInt = __LINE__) {
 		let (symbol, type, value) = definition
+		let equate = { l, r in Term.equate(l, r, module.environment) != nil }
 		if let actual = module.context[symbol] {
-			assert(actual, ==, type, message:
+			assert(actual, equate, type, message:
 				"Type mismatch in '\(module.name).\(symbol)'\n"
 					+ "expected : \(type)\n"
 					+ "  actual : \(actual)\n", file: file, line: line)
 		}
 		if let actual = module.environment[symbol] {
-			assert(actual, ==, value, message:
+			assert(actual, equate, value, message:
 				"Term mismatch in '\(module.name).\(symbol)'\n"
 					+ "expected : \(value)\n"
 					+ "  actual : \(actual)\n", file: file, line: line)
