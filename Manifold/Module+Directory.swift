@@ -10,6 +10,7 @@ extension Module {
 		either,
 		pair,
 		prelude,
+		propositionalEquality,
 		sigma,
 		vector,
 		finiteSet,
