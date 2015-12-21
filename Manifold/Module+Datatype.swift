@@ -26,7 +26,7 @@ extension Module {
 		let el = Declaration("El",
 			type: .Type => { I in _Datatype[I] --> (I --> .Type) --> I --> .Type },
 			value: .Type => { I in
-				(_Datatype[I], IType.ref[I], I) => { D, X, i in
+				(_Datatype[I], I --> .Type, I) => { D, X, i in
 					D[.Type,
 						I => { j in Identical[I, i, j] },
 						(I, _Datatype[I]) => { j, D in Pair[X[j], El[I, D, X, i]] },
