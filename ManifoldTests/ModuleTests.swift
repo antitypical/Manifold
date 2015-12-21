@@ -130,6 +130,7 @@ final class ModuleTests: XCTestCase {
 
 	func testEquivalenceOfDatatypeEncodedAndDatatypeBooleans() {
 		datatypeEncodedBoolean.definitions.forEach { definition in
+			guard Module.boolean.context[definition.0] != nil else { return }
 			assertEquivalent(definition, Module.boolean)
 		}
 	}
