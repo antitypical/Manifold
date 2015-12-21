@@ -36,7 +36,7 @@ extension Module {
 
 		let `init` = Declaration("init",
 			type: nil => { I in (_Datatype[I], I) => { D, i in El[I, D, μ.ref[I, D], i] --> μ.ref[I, D, i] } },
-			value: nil)
+			value: nil => { I in (nil, nil) => { D, i in nil => { _ in nil } } })
 
 		return Module("Datatype", [ tag, propositionalEquality, pair, sigma ], [ datatype, μ, `init`, IType, el ])
 	}
