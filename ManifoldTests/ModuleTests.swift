@@ -102,6 +102,7 @@ final class ModuleTests: XCTestCase {
 	// MARK: Datatype
 
 	func testEquivalenceOfDatatypeEncodedAndDatatypeBooleans() {
+		datatypeEncodedBoolean.typecheck().forEach { XCTFail($0) }
 		assertEquivalent(datatypeEncodedBoolean, Module.boolean)
 	}
 
