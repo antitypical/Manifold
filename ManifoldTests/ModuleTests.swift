@@ -113,7 +113,6 @@ final class ModuleTests: XCTestCase {
 
 	func testEquivalenceOfDatatypeEncodedAndDatatypeBooleans() {
 		datatypeEncodedBoolean.definitions.forEach { definition in
-			guard Module.boolean.context[definition.0] != nil else { return }
 			assertEquivalent(definition, Module.boolean)
 		}
 	}
@@ -123,14 +122,18 @@ final class ModuleTests: XCTestCase {
 
 	func assertEquivalent(definition: (Name, Term, Term), _ module: Module, _ file: String = __FILE__, _ line: UInt = __LINE__) {
 		let (symbol, type, value) = definition
-		assert(module.context[symbol], ==, type, message:
-			"Type mismatch in '\(module.name).\(symbol)'\n"
-				+ "expected : \(type)\n"
-				+ "  actual : \(module.context[symbol] ?? "nil")\n", file: file, line: line)
-		assert(module.environment[symbol], ==, value, message:
-			"Term mismatch in '\(module.name).\(symbol)'\n"
-				+ "expected : \(value)\n"
-				+ "  actual : \(module.environment[symbol] ?? "nil")\n", file: file, line: line)
+		if let actual = module.context[symbol] {
+			assert(actual, ==, type, message:
+				"Type mismatch in '\(module.name).\(symbol)'\n"
+					+ "expected : \(type)\n"
+					+ "  actual : \(actual)\n", file: file, line: line)
+		}
+		if let actual = module.environment[symbol] {
+			assert(actual, ==, value, message:
+				"Term mismatch in '\(module.name).\(symbol)'\n"
+					+ "expected : \(value)\n"
+					+ "  actual : \(actual)\n", file: file, line: line)
+		}
 	}
 }
 
