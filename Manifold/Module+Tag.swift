@@ -11,11 +11,11 @@ extension Module {
 
 		let Tag = Declaration("Tag",
 			type: Enum.ref --> .Type,
-			value: (Enum.ref, .Type) => { e, Motive in (String --> Motive) --> Motive })
+			value: (Enum.ref, .Type) => { e, Motive in (String --> Motive) --> (List[String] --> Motive) --> Motive })
 
 		let here = Declaration("here",
 			type: (String, List[String]) => { l, E in Tag.ref[cons[nil, l, E]] },
-			value: (String, List[String], .Type) => { s, _, Motive in (String --> Motive) => { f in f[s] }  })
+			value: (String, List[String], .Type) => { s, _, Motive in (String --> Motive, List[String] --> Motive) => { f, _ in f[s] }  })
 
 		return Module("Tag", [ list, string ], [ Enum, Tag, here ])
 	}
