@@ -118,8 +118,8 @@ final class ModuleTests: XCTestCase {
 
 	func testEquivalenceOfDatatypeEncodedAndDatatypeBooleans() {
 		datatypeEncodedBoolean.definitions.forEach { symbol, type, value in
-			assert(Module.boolean.context[symbol], ==, type, message: "'\(symbol)'\nexpected : '\(type)',\n  actual : '\(Module.boolean.context[symbol])'")
-			assert(Module.boolean.environment[symbol], ==, value, message: "'\(symbol)'\nexpected = '\(value)',\n  actual = '\(Module.boolean.environment[symbol])'")
+			assert(Module.boolean.context[symbol], ==, type, message: "Type mismatch in '\(symbol)'\nexpected : '\(type)',\n  actual : '\(Module.boolean.context[symbol])'")
+			assert(Module.boolean.environment[symbol], ==, value, message: "Term mismatch in '\(symbol)'\nexpected = '\(value)',\n  actual = '\(Module.boolean.environment[symbol])'")
 		}
 	}
 }
