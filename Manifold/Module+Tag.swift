@@ -10,7 +10,7 @@ extension Module {
 
 		let Tag = Declaration("Tag",
 			type: Enum.ref --> .Type,
-			value: (Enum.ref, .Type) => { e, Motive in (Enum.ref --> Motive) => { f in f[e] } })
+			value: (Enum.ref, .Type) => { e, Motive in (String --> Motive) --> Motive })
 
 		return Module("Tag", [ list, string ], [ Enum, Tag ])
 	}
