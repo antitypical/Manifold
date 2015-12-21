@@ -227,7 +227,7 @@ private let datatypeEncodedBoolean: Module = {
 	let Datatype: Term = "Datatype"
 	let argument: Term = "argument"
 	let end: Term = "end"
-	let µ: Term = "µ"
+	let μ: Term = "μ"
 	let caseD: Term = "caseD"
 	let `init`: Term = "init"
 	let refl: Term = "refl"
@@ -251,7 +251,7 @@ private let datatypeEncodedBoolean: Module = {
 
 	let Boolean = Declaration("Boolean",
 		type: .Type,
-		value: µ[BooleanD.ref])
+		value: μ[BooleanD.ref])
 
 	let trueT = Declaration("trueT",
 		type: BooleanT.ref,
