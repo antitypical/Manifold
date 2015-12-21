@@ -237,13 +237,9 @@ private let datatypeEncodedBoolean: Module = {
 
 	let embedString: Swift.String -> Term = { .Embedded($0, String) }
 
-	let BooleanE = Declaration("BooleanE",
-		type: Enum,
-		value: cons[nil, embedString("true"), cons[nil, embedString("false"), `nil`[Term.Implicit]]])
-
 	let BooleanT = Declaration("BooleanT",
 		type: .Type,
-		value: Tag[BooleanE.ref])
+		value: Tag[cons[nil, embedString("true"), cons[nil, embedString("false"), `nil`[Term.Implicit]]]])
 
 	let BooleanC = Declaration("BooleanC",
 		type: BooleanT.ref --> Datatype[Unit],
@@ -273,7 +269,7 @@ private let datatypeEncodedBoolean: Module = {
 		type: Boolean.ref,
 		value: `init`[falseT.ref, refl])
 
-	return Module("DatatypeEncodedBoolean", [ Module.unit, Module.datatype ], [ BooleanE, BooleanT, BooleanC, BooleanD, Boolean, trueT, `true`, falseT, `false` ])
+	return Module("DatatypeEncodedBoolean", [ Module.unit, Module.datatype ], [ BooleanT, BooleanC, BooleanD, Boolean, trueT, `true`, falseT, `false` ])
 }()
 
 
