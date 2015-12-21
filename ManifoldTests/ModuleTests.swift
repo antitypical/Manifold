@@ -121,11 +121,11 @@ final class ModuleTests: XCTestCase {
 		assert(module.context[symbol], ==, type, message:
 			"Type mismatch in '\(module.name).\(symbol)'\n"
 				+ "expected : \(type)\n"
-				+ "  actual : \(module.context[symbol])\n", file: file, line: line)
+				+ "  actual : \(module.context[symbol] ?? "nil")\n", file: file, line: line)
 		assert(module.environment[symbol], ==, value, message:
 			"Term mismatch in '\(module.name).\(symbol)'\n"
 				+ "expected : \(value)\n"
-				+ "  actual : \(module.environment[symbol])\n", file: file, line: line)
+				+ "  actual : \(module.environment[symbol] ?? "nil")\n", file: file, line: line)
 	}
 
 	func testEquivalenceOfDatatypeEncodedAndDatatypeBooleans() {
