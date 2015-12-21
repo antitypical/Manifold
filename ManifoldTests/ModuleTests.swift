@@ -116,6 +116,16 @@ final class ModuleTests: XCTestCase {
 
 	// MARK: Datatype
 
+	func testEquivalenceOfDatatypeEncodedAndDatatypeBooleans() {
+		datatypeEncodedBoolean.definitions.forEach { definition in
+			guard Module.boolean.context[definition.0] != nil else { return }
+			assertEquivalent(definition, Module.boolean)
+		}
+	}
+
+
+	// MARK: Assertions
+
 	func assertEquivalent(definition: (Name, Term, Term), _ module: Module, _ file: String = __FILE__, _ line: UInt = __LINE__) {
 		let (symbol, type, value) = definition
 		assert(module.context[symbol], ==, type, message:
@@ -126,13 +136,6 @@ final class ModuleTests: XCTestCase {
 			"Term mismatch in '\(module.name).\(symbol)'\n"
 				+ "expected : \(value)\n"
 				+ "  actual : \(module.environment[symbol] ?? "nil")\n", file: file, line: line)
-	}
-
-	func testEquivalenceOfDatatypeEncodedAndDatatypeBooleans() {
-		datatypeEncodedBoolean.definitions.forEach { definition in
-			guard Module.boolean.context[definition.0] != nil else { return }
-			assertEquivalent(definition, Module.boolean)
-		}
 	}
 }
 
