@@ -8,7 +8,7 @@ extension Module {
 
 		let refl = Declaration("refl",
 			type: nil => { A in A => { a in Identical.ref[A, a, a] } },
-			value: nil)
+			value: nil => { A in A => { a in nil => { Motive in (A --> A --> Motive) => { f in f[a, a] } } } })
 
 		return Module("PropositionalEquality", [ Identical, refl ])
 	}
