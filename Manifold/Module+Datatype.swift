@@ -30,7 +30,7 @@ extension Module {
 					D[.Type,
 						I => { j in Identical[I, i, j] },
 						(I, _Datatype[I]) => { j, D in Pair[X[j], El[I, D, X, i]] },
-						(.Type) => { A in (A --> _Datatype[I]) => { B in Sigma[A, nil => { a in El[I, B[a], X, i] }] } }]
+						.Type => { A in (A --> _Datatype[I]) => { B in Sigma[A, nil => { a in El[I, B[a], X, i] }] } }]
 				}
 			})
 
