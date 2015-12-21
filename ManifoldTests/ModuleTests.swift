@@ -11,9 +11,7 @@ final class ModuleTests: XCTestCase {
 	// MARK: Boolean
 
 	func testEquivalenceOfEncodedAndDatatypeBooleans() {
-		encodedBoolean.definitions.forEach { definition in
-			assertEquivalent(definition, Module.boolean)
-		}
+		assertEquivalent(encodedBoolean, Module.boolean)
 	}
 
 
@@ -31,36 +29,28 @@ final class ModuleTests: XCTestCase {
 	// MARK: Pair
 
 	func testEquivalenceOfEncodedAndDatatypePairs() {
-		encodedPair.definitions.forEach { definition in
-			assertEquivalent(definition, Module.pair)
-		}
+		assertEquivalent(encodedPair, Module.pair)
 	}
 
 
 	// MARK: Sigma
 
 	func testEquivalenceOfEncodedAndDatatypeSigmas() {
-		encodedSigma.definitions.forEach { definition in
-			assertEquivalent(definition, Module.sigma)
-		}
+		assertEquivalent(encodedSigma, Module.sigma)
 	}
 
 
 	// MARK: Either
 
 	func testEquivalenceOfEncodedAndDatatypeEithers() {
-		Module.either.definitions.forEach { definition in
-			assertEquivalent(definition, encodedEither)
-		}
+		assertEquivalent(encodedEither, Module.either)
 	}
 
 
 	// MARK: List
 
 	func testEquivalenceOfEncodedAndDatatypeLists() {
-		encodedList.definitions.forEach { definition in
-			assertEquivalent(definition, Module.list)
-		}
+		assertEquivalent(encodedList, Module.list)
 	}
 
 	func testListValuesAsEliminators() {
@@ -112,9 +102,7 @@ final class ModuleTests: XCTestCase {
 	// MARK: Datatype
 
 	func testEquivalenceOfDatatypeEncodedAndDatatypeBooleans() {
-		datatypeEncodedBoolean.definitions.forEach { definition in
-			assertEquivalent(definition, Module.boolean)
-		}
+		assertEquivalent(datatypeEncodedBoolean, Module.boolean)
 	}
 
 
