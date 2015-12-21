@@ -116,6 +116,18 @@ final class ModuleTests: XCTestCase {
 
 	// MARK: Datatype
 
+	func assertEquivalent(definition: (Name, Term, Term), _ module: Module, _ file: String = __FILE__, _ line: UInt = __LINE__) {
+		let (symbol, type, value) = definition
+		assert(module.context[symbol], ==, type, message:
+			"Type mismatch in '\(module.name).\(symbol)'\n"
+				+ "expected : \(type)\n"
+				+ "  actual : \(module.context[symbol])\n", file: file, line: line)
+		assert(module.environment[symbol], ==, value, message:
+			"Term mismatch in '\(module.name).\(symbol)'\n"
+				+ "expected : \(value)\n"
+				+ "  actual : \(module.environment[symbol])\n", file: file, line: line)
+	}
+
 	func testEquivalenceOfDatatypeEncodedAndDatatypeBooleans() {
 		datatypeEncodedBoolean.definitions.forEach { symbol, type, value in
 			assert(Module.boolean.context[symbol], ==, type, message: "Type mismatch in '\(symbol)'\nexpected : '\(type)',\n  actual : '\(Module.boolean.context[symbol])'")
