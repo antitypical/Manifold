@@ -24,7 +24,7 @@ extension Module {
 		let Sigma: Term = "Sigma"
 		let El: Term = "El"
 		let el = Declaration("El",
-			type: .Type => { I in _Datatype[I] --> (I --> .Type) --> I --> .Type },
+			type: .Type => { I in _Datatype[I] --> IType.ref[I] --> IType.ref[I] },
 			value: .Type => { I in
 				(_Datatype[I], IType.ref[I], I) => { D, X, i in
 					D[.Type,
