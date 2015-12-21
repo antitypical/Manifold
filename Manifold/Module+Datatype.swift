@@ -15,12 +15,16 @@ extension Module {
 			type: nil => { I in _Datatype[I] --> I --> .Type },
 			value: nil => { I in (_Datatype[I], I, .Type) => { _, _, Motive in (_Datatype[I] --> I --> Motive) --> Motive } })
 
+		let ISet = Declaration("ISet",
+			type: .Type --> .Type(1),
+			value: .Type => { I in I --> .Type })
+
 		let El: Term = "El"
 		let `init` = Declaration("init",
 			type: nil => { I in (_Datatype[I], I) => { D, i in El[D, μ.ref[D], i] --> μ.ref[D, i] } },
 			value: nil)
 
-		return Module("Datatype", [ tag ], [ datatype, μ, `init` ])
+		return Module("Datatype", [ tag ], [ datatype, μ, `init`, ISet ])
 	}
 }
 
