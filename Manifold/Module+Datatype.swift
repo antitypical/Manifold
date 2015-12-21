@@ -10,7 +10,12 @@ extension Module {
 				"argument": Telescope.Argument(.Type) { A in .Argument(A --> _Datatype[I], const(.End)) },
 			]
 		})
-		return Module("Datatype", [ tag ], [ datatype ])
+
+		let μ = Declaration("μ",
+			type: nil => { I in _Datatype[I] --> I --> .Type },
+			value: nil => { I in (_Datatype[I], I, .Type) => { _, _, Motive in (_Datatype[I] --> I --> Motive) --> Motive } })
+
+		return Module("Datatype", [ tag ], [ datatype, μ ])
 	}
 }
 
