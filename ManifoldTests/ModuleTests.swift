@@ -260,7 +260,7 @@ private let datatypeEncodedBoolean: Module = {
 
 	let falseT = Declaration("falseT",
 		type: BooleanT.ref,
-		value: there)
+		value: there[here])
 
 	let `false` = Declaration("false",
 		type: Boolean.ref,
