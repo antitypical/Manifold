@@ -15,7 +15,7 @@ extension Module {
 
 		let here = Declaration("here",
 			type: (String, List[String]) => { l, E in Tag.ref[cons[nil, l, E]] },
-			value: (String, List[String], .Type) => { s, _, Motive in (String --> Motive, List[String] --> Motive) => { f, _ in f[s] }  })
+			value: (String, List[String], .Type) => { l, _, Motive in (String --> Motive, List[String] --> Motive) => { f, _ in f[l] }  })
 
 		return Module("Tag", [ list, string ], [ Enum, Tag, here ])
 	}
