@@ -6,6 +6,10 @@ extension Module {
 			type: nil => { A in A --> A --> .Type },
 			value: nil => { A in (A, A) => { x, y in .Type => { Motive in (A --> A --> Motive) --> Motive } } })
 
-		return Module("PropositionalEquality", [ Identical ])
+		let refl = Declaration("refl",
+			type: nil => { A in A => { a in Identical.ref[A, a, a] } },
+			value: nil)
+
+		return Module("PropositionalEquality", [ Identical, refl ])
 	}
 }
