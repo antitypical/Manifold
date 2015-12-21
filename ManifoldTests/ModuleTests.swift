@@ -11,9 +11,8 @@ final class ModuleTests: XCTestCase {
 	// MARK: Boolean
 
 	func testEquivalenceOfEncodedAndDatatypeBooleans() {
-		encodedBoolean.definitions.forEach { symbol, type, value in
-			assert(Module.boolean.context[symbol], ==, type, message: "\(symbol)")
-			assert(Module.boolean.environment[symbol], ==, value, message: "\(symbol)")
+		encodedBoolean.definitions.forEach { definition in
+			assertEquivalent(definition, Module.boolean)
 		}
 	}
 
@@ -32,9 +31,8 @@ final class ModuleTests: XCTestCase {
 	// MARK: Pair
 
 	func testEquivalenceOfEncodedAndDatatypePairs() {
-		encodedPair.definitions.forEach { symbol, type, value in
-			assert(Module.pair.context[symbol], ==, type, message: "\(symbol)")
-			assert(Module.pair.environment[symbol], ==, value, message: "\(symbol)")
+		encodedPair.definitions.forEach { definition in
+			assertEquivalent(definition, Module.pair)
 		}
 	}
 
@@ -42,9 +40,8 @@ final class ModuleTests: XCTestCase {
 	// MARK: Sigma
 
 	func testEquivalenceOfEncodedAndDatatypeSigmas() {
-		encodedSigma.definitions.forEach { symbol, type, value in
-			assert(Module.sigma.context[symbol], ==, type, message: "'\(symbol)' expected '\(type)', actual '\(Module.sigma.context[symbol])'")
-			assert(Module.sigma.environment[symbol], ==, value, message: "'\(symbol)' expected '\(value)', actual '\(Module.sigma.environment[symbol])'")
+		encodedSigma.definitions.forEach { definition in
+			assertEquivalent(definition, Module.sigma)
 		}
 	}
 
@@ -52,9 +49,8 @@ final class ModuleTests: XCTestCase {
 	// MARK: Either
 
 	func testEquivalenceOfEncodedAndDatatypeEithers() {
-		Module.either.definitions.forEach { symbol, type, value in
-			assert(encodedEither.context[symbol], ==, type, message: "'\(symbol)' expected '\(type), actual '\(Module.either.context[symbol])'")
-			assert(encodedEither.environment[symbol], ==, value, message: "'\(symbol)' expected '\(type)', actual '\(Module.either.environment[symbol])'")
+		Module.either.definitions.forEach { definition in
+			assertEquivalent(definition, encodedEither)
 		}
 	}
 
@@ -62,9 +58,8 @@ final class ModuleTests: XCTestCase {
 	// MARK: List
 
 	func testEquivalenceOfEncodedAndDatatypeLists() {
-		encodedList.definitions.forEach { symbol, type, value in
-			assert(Module.list.context[symbol], ==, type, message: "'\(symbol)' expected '\(type)', actual '\(Module.list.context[symbol])'")
-			assert(Module.list.environment[symbol], ==, value, message: "'\(symbol)' expected '\(value)', actual '\(Module.list.environment[symbol])'")
+		encodedList.definitions.forEach { definition in
+			assertEquivalent(definition, Module.list)
 		}
 	}
 
