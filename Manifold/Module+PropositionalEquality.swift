@@ -2,6 +2,10 @@
 
 extension Module {
 	public static var propositionalEquality: Module {
-		return Module("PropositionalEquality", [])
+		let Identical = Declaration("≡",
+			type: nil => { A in A --> A --> .Type },
+			value: nil => { A in (A, A) => { x, y in .Type => { Motive in (A --> A --> Motive) --> Motive } } })
+
+		return Module("PropositionalEquality", [ Identical ])
 	}
 }
