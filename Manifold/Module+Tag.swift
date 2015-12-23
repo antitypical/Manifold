@@ -21,6 +21,13 @@ extension Module {
 			type: (String, List[String]) => { l, E in Tag.ref[E] --> Tag.ref[cons[nil, l, E]] },
 			value: (String, List[String]) => { _, E in Tag.ref[E] --> .Type => { Motive in (String --> Motive, List[String] --> Motive) => { _, f in f[E] } } })
 
-		return Module("Tag", [ list, string ], [ Enum, Tag, here, there ])
+		let Unit: Term = "Unit"
+		let Pair: Term = "Pair"
+		let Branches: Term = "Branches"
+		let branches = Declaration("Branches",
+			type: Enum.ref => { E in (Tag.ref[E] --> .Type) --> .Type },
+			value: nil => { E in nil => { P in E[nil, (nil, nil) => { l, E in Pair[P[here.ref], Branches[E, nil => { t in P[there.ref[t]] }]] }, Unit] } })
+
+		return Module("Tag", [ list, string, unit, pair ], [ Enum, Tag, here, there, branches ])
 	}
 }
