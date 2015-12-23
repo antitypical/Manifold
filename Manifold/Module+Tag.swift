@@ -28,9 +28,12 @@ extension Module {
 			type: List[String] => { E in (Tag.ref[E] --> .Type) --> .Type },
 			value: nil => { E in nil => { P in E[nil, (nil, nil) => { l, E in Pair[P[here.ref[nil, nil]], Branches[E, nil => { t in P[there.ref[nil, nil, t]] }]] }, Unit] } })
 
+		let _case: Term = "case"
+		let first: Term = "first"
+		let second: Term = "second"
 		let `case` = Declaration("case",
 			type: List[String] => { E in (Tag.ref[E] --> .Type) => { P in Branches[E, P] --> Tag.ref[E] => { t in P[t] } } },
-			value: nil => { _ in nil })
+			value: nil => { E in nil => { P in (nil, nil) => { cs, t in t[nil, nil => { _ in first[nil, nil, cs] }, nil => { t in _case[E, nil => { t in P[E, there.ref[nil, nil, t]] }, second[nil, nil, cs], t] }] } } })
 
 
 		return Module("Tag", [ list, string, unit, pair ], [ Enum, Tag, here, there, branches, `case` ])
