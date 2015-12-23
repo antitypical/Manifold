@@ -26,7 +26,7 @@ extension Module {
 		let Branches: Term = "Branches"
 		let branches = Declaration("Branches",
 			type: Enum.ref => { E in (Tag.ref[E] --> .Type) --> .Type },
-			value: nil => { E in nil => { P in E[nil, (nil, nil) => { l, E in Pair[P[here.ref], Branches[E, nil => { t in P[there.ref[t]] }]] }, Unit] } })
+			value: nil => { E in nil => { P in E[nil, (nil, nil) => { l, E in Pair[P[here.ref[nil, nil]], Branches[E, nil => { t in P[there.ref[nil, nil, t]] }]] }, Unit] } })
 
 		return Module("Tag", [ list, string, unit, pair ], [ Enum, Tag, here, there, branches ])
 	}
