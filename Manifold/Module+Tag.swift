@@ -29,7 +29,7 @@ extension Module {
 			value: nil => { E in nil => { P in E[nil, (nil, nil) => { l, E in Pair[P[here.ref[nil, nil]], Branches[E, nil => { t in P[there.ref[nil, nil, t]] }]] }, Unit] } })
 
 		let `case` = Declaration("case",
-			type: Enum.ref => { E in (Tag.ref[E] --> .Type) => { P in Branches[E, P] --> Tag.ref[E] => { t in P[t] } } },
+			type: List[String] => { E in (Tag.ref[E] --> .Type) => { P in Branches[E, P] --> Tag.ref[E] => { t in P[t] } } },
 			value: nil => { _ in nil })
 
 
