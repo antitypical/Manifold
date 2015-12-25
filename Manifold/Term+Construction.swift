@@ -112,7 +112,7 @@ public func => (left: (Name, Term), right: Term) -> Term {
 
 public func => (left: DictionaryLiteral<Name, Term>, right: Term) -> Term {
 	return left.reverse().reduce(right) { into, each in
-		each.1 => { _ in into }
+		each => into
 	}
 }
 
