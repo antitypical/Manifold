@@ -6,7 +6,7 @@ public enum Scoping<Syntax, Term> {
 	case Identity(Syntax)
 
 
-	static func equal(syntaxEqual syntaxEqual: (Syntax, Syntax) -> Bool, termEqual: (Term, Term) -> Bool)(_ left: Scoping, _ right: Scoping) -> Bool {
+	public static func equal(syntaxEqual syntaxEqual: (Syntax, Syntax) -> Bool, termEqual: (Term, Term) -> Bool)(_ left: Scoping, _ right: Scoping) -> Bool {
 		switch (left, right) {
 		case let (.Variable(name1), .Variable(name2)):
 			return name1 == name2
