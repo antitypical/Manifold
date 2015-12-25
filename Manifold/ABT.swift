@@ -20,6 +20,12 @@ enum ABT<Syntax, Term> {
 	}
 }
 
+
+func == <Syntax: Equatable, Term: Equatable> (left: ABT<Syntax, Term>, right: ABT<Syntax, Term>) -> Bool {
+	return ABT.equal(syntaxEqual: ==, termEqual: ==)(left, right)
+}
+
+
 indirect enum ABTTerm {
 	case In(Set<Name>, ABT<AST<ABTTerm>, ABTTerm>)
 
