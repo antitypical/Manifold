@@ -47,6 +47,22 @@ indirect enum ABTTerm {
 			return .Constructor(syntax.map { $0.rename(old, new) })
 		}
 	}
+
+	func substitute(variable: Name, with: ABTTerm) -> ABTTerm {
+		switch out {
+		case let .Variable(name) where name == variable:
+			return with
+		case .Variable:
+			return self
+		case let .Abstraction(name, scope):
+			let newName = name.fresh(freeVariables.union(with.freeVariables))
+			return .Abstraction(newName, name != newName
+				? scope.rename(name, newName).substitute(variable, with: with)
+				: scope.substitute(variable, with: with))
+		case let .Constructor(syntax):
+			return .Constructor(syntax.map { $0.substitute(variable, with: with) })
+		}
+	}
 }
 
 enum AST<Recur> {
