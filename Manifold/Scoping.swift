@@ -6,6 +6,20 @@ public enum Scoping<Term> {
 	case Identity(Expression<Term>)
 
 
+	// MARK: Functor
+
+	public func map<Other>(@noescape transform: Term -> Other) -> Scoping<Other> {
+		switch self {
+		case let .Variable(name):
+			return .Variable(name)
+		case let .Abstraction(name, term):
+			return .Abstraction(name, transform(term))
+		case let .Identity(expression):
+			return .Identity(expression.map(transform))
+		}
+	}
+
+
 	// MARK: Equatable
 
 	public static func equal(termEqual: (Term, Term) -> Bool)(_ left: Scoping, _ right: Scoping) -> Bool {
