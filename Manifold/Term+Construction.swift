@@ -18,7 +18,7 @@ extension Term {
 	}
 
 	public static func Lambda(i: Int, _ type: Term, _ body: Term) -> Term {
-		return Term(.Lambda(i, type, body))
+		return Term(body.freeVariables.subtract([ .Local(i) ]), .Lambda(i, type, body))
 	}
 
 	public static func Embedded(name: String, _ type: Term, _ evaluator: Term throws -> Term) -> Term {
