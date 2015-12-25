@@ -71,6 +71,8 @@ public enum Term: Equatable, Hashable, IntegerLiteralConvertible, NilLiteralConv
 
 	var scoping: Scoping<Expression<Term>, Term> {
 		switch out {
+		case let .Variable(name):
+			return .Variable(name)
 		default:
 			return .Identity(out)
 		}
