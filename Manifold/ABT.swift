@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-enum Scoping<Syntax, Term> {
+public enum Scoping<Syntax, Term> {
 	case Variable(Name)
 	case Abstraction(Name, Term)
 	case Identity(Syntax)
