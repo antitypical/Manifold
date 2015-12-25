@@ -4,6 +4,20 @@ enum ABT<Syntax, Term> {
 	case Variable(Name)
 	case Abstraction(Name, Term)
 	case Constructor(Syntax)
+
+
+	static func equal(syntaxEqual syntaxEqual: (Syntax, Syntax) -> Bool, termEqual: (Term, Term) -> Bool)(left: ABT, right: ABT) -> Bool {
+		switch (left, right) {
+		case let (.Variable(name1), .Variable(name2)):
+			return name1 == name2
+		case let (.Abstraction(name1, scope1), .Abstraction(name2, scope2)):
+			return name1 == name2 && termEqual(scope1, scope2)
+		case let (.Constructor(syntax1), .Constructor(syntax2)):
+			return syntaxEqual(syntax1, syntax2)
+		default:
+			return false
+		}
+	}
 }
 
 indirect enum ABTTerm {
