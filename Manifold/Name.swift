@@ -1,6 +1,21 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public enum Name: Comparable, CustomStringConvertible, Hashable, StringLiteralConvertible {
+	func fresh(isUsed: Name -> Bool) -> Name {
+		guard isUsed(self) else { return self }
+		switch self {
+		case let .Local(i):
+			return Name.Local(i + 1).fresh(isUsed)
+		case let .Global(string):
+			return Name.Global(string + "ʹ").fresh(isUsed)
+		}
+	}
+
+	func fresh(set: Set<Name>) -> Name {
+		return fresh(set.contains)
+	}
+
+
 	// MARK: CustomStringConvertible
 
 	public var description: String {

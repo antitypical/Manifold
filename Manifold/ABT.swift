@@ -81,19 +81,3 @@ enum AST<Recur> {
 		}
 	}
 }
-
-extension Name {
-	func fresh(isUsed: Name -> Bool) -> Name {
-		guard isUsed(self) else { return self }
-		switch self {
-		case let .Local(i):
-			return Name.Local(i + 1).fresh(isUsed)
-		case let .Global(string):
-			return Name.Global(string + "ʹ").fresh(isUsed)
-		}
-	}
-
-	func fresh(set: Set<Name>) -> Name {
-		return fresh(set.contains)
-	}
-}
