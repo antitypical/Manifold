@@ -42,6 +42,15 @@ enum AST<Recur> {
 			return .Application(transform(a), transform(b))
 		}
 	}
+
+	func foldMap<Result: MonoidType>(@noescape transform: Recur -> Result) -> Result {
+		switch self {
+		case let .Lambda(body):
+			return transform(body)
+		case let .Application(a, b):
+			return transform(a).mappend(transform(b))
+		}
+	}
 }
 
 protocol MonoidType {
