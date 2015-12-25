@@ -68,6 +68,13 @@ public enum Term: Equatable, Hashable, IntegerLiteralConvertible, NilLiteralConv
 			return f()
 		}
 	}
+
+	var scoping: Scoping<Expression<Term>, Term> {
+		switch out {
+		default:
+			return .Identity(out)
+		}
+	}
 }
 
 
