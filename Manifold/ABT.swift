@@ -32,6 +32,21 @@ indirect enum ABTTerm {
 			return out
 		}
 	}
+
+	func rename(old: Name, _ new: Name) -> ABTTerm {
+		switch out {
+		case let .Variable(name):
+			return name == old
+				? .Variable(new)
+				: self
+		case let .Abstraction(name, body):
+			return name == old
+				? self
+				: .Abstraction(name, body.rename(old, new))
+		case let .Constructor(syntax):
+			return .Constructor(syntax.map { $0.rename(old, new) })
+		}
+	}
 }
 
 enum AST<Recur> {
