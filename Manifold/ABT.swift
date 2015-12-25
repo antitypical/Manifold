@@ -21,7 +21,7 @@ public enum Scoping<Syntax, Term> {
 }
 
 
-func == <Syntax: Equatable, Term: Equatable> (left: Scoping<Syntax, Term>, right: Scoping<Syntax, Term>) -> Bool {
+public func == <Syntax: Equatable, Term: Equatable> (left: Scoping<Syntax, Term>, right: Scoping<Syntax, Term>) -> Bool {
 	return Scoping.equal(syntaxEqual: ==, termEqual: ==)(left, right)
 }
 
