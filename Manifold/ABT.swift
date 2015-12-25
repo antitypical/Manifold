@@ -6,6 +6,10 @@ enum ABT<Applied, Recur> {
 	case Constructor(Applied)
 }
 
+enum ABTTerm {
+	case In(Set<Name>, () -> ABT<AST<ABTTerm>, ABTTerm>)
+}
+
 enum AST<Recur> {
 	case Lambda(Recur)
 	case Application(Recur, Recur)
