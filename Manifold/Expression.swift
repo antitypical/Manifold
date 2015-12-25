@@ -29,6 +29,22 @@ public enum Expression<Recur> {
 	}
 
 
+	// MARK: Foldable
+
+	public func foldMap<Result: MonoidType>(@noescape transform: Recur -> Result) -> Result {
+		switch self {
+		case .Type, .Variable, .Implicit:
+			return Result.mempty
+		case let .Application(a, b):
+			return transform(a).mappend(transform(b))
+		case let .Lambda(_, type, body):
+			return transform(type).mappend(transform(body))
+		case let .Embedded(_, _, type):
+			return transform(type)
+		}
+	}
+
+
 	// MARK: Equality
 
 	public static func equal(equal: (Recur, Recur) -> Bool)(_ left: Expression, _ right: Expression) -> Bool {
