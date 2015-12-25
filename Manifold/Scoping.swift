@@ -6,6 +6,8 @@ public enum Scoping<Syntax, Term> {
 	case Identity(Syntax)
 
 
+	// MARK: Equatable
+
 	public static func equal(syntaxEqual syntaxEqual: (Syntax, Syntax) -> Bool, termEqual: (Term, Term) -> Bool)(_ left: Scoping, _ right: Scoping) -> Bool {
 		switch (left, right) {
 		case let (.Variable(name1), .Variable(name2)):
