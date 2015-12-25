@@ -1,11 +1,11 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public enum Term: Equatable, Hashable, IntegerLiteralConvertible, NilLiteralConvertible, StringLiteralConvertible, TermContainerType {
-	case In(() -> Expression<Term>)
+	case In(Set<Name>, () -> Expression<Term>)
 
 
 	public init(_ expression: () -> Expression<Term>) {
-		self = .In(expression)
+		self = .In([], expression)
 	}
 
 	public init(_ expression: Expression<Term>) {
@@ -60,7 +60,7 @@ public enum Term: Equatable, Hashable, IntegerLiteralConvertible, NilLiteralConv
 
 	public var out: Expression<Term> {
 		switch self {
-		case let .In(f):
+		case let .In(_, f):
 			return f()
 		}
 	}
