@@ -28,13 +28,17 @@ extension Module {
 			type: Enum.ref => { E in (Tag.ref[E] --> .Type) --> .Type },
 			value: nil => { E in nil => { P in E[nil, (nil, nil) => { l, E in Pair[P[here.ref[nil, nil]], Branches[E, nil => { t in P[there.ref[nil, nil, t]] }]] }, Unit] } })
 
-		let _case: Term = "case"
 		let first: Term = "first"
+		let firstBranch = Declaration("firstBranch",
+			type: (String, Enum.ref) => { l, E in (Tag.ref[cons[String, l, E]] --> .Type) => { P in Branches[cons[String, l, E], P] => { cs in P[here.ref[l, E]] } } },
+			value: (String, Enum.ref) => { l, E in (Tag.ref[cons[String, l, E]] --> .Type) => { P in Branches[cons[String, l, E], P] => { cs in first[nil, nil, cs] } } })
+
+		let _case: Term = "case"
 		let second: Term = "second"
 		let `case` = Declaration("case",
 			type: Enum.ref => { E in (Tag.ref[E] --> .Type) => { P in Branches[E, P] --> Tag.ref[E] => { t in P[t] } } },
 			value: nil => { E in nil => { P in (nil, nil) => { cs, t in t[nil, nil => { _ in first[nil, nil, cs] }, nil => { t in _case[E, nil => { t in P[E, there.ref[nil, nil, t]] }, second[nil, nil, cs], t] }] } } })
 
-		return Module("Tag", [ list, string, unit, pair ], [ Enum, Tag, here, there, branches, `case` ])
+		return Module("Tag", [ list, string, unit, pair ], [ Enum, Tag, here, there, branches, firstBranch, `case` ])
 	}
 }
