@@ -7,11 +7,11 @@ protocol MonoidType {
 
 
 extension Set: MonoidType {
-	static var mempty: Set {
+	public static var mempty: Set {
 		return []
 	}
 
-	func mappend(other: Set) -> Set {
+	public func mappend(other: Set) -> Set {
 		return union(other)
 	}
 }
