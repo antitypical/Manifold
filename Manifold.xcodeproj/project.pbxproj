@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D40D7D621C2DC34E004ADD6E /* ABT.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D7D611C2DC34E004ADD6E /* ABT.swift */; };
+		D40D7D641C2DCFB1004ADD6E /* MonoidType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D7D631C2DCFB1004ADD6E /* MonoidType.swift */; };
 		D415A09B1B51EFDE001C15E5 /* Term+Construction.swift in Sources */ = {isa = PBXBuildFile; fileRef = D415A09A1B51EFDE001C15E5 /* Term+Construction.swift */; };
 		D43AC8831BC1824D008762B7 /* Telescope.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43AC8821BC1824D008762B7 /* Telescope.swift */; };
 		D43B6D1B1C1DB2CA008EF3D2 /* Module+String.swift in Sources */ = {isa = PBXBuildFile; fileRef = D43B6D1A1C1DB2CA008EF3D2 /* Module+String.swift */; };
@@ -71,6 +72,7 @@
 
 /* Begin PBXFileReference section */
 		D40D7D611C2DC34E004ADD6E /* ABT.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ABT.swift; sourceTree = "<group>"; };
+		D40D7D631C2DCFB1004ADD6E /* MonoidType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonoidType.swift; sourceTree = "<group>"; };
 		D415A09A1B51EFDE001C15E5 /* Term+Construction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Term+Construction.swift"; sourceTree = "<group>"; };
 		D43AC8821BC1824D008762B7 /* Telescope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Telescope.swift; sourceTree = "<group>"; };
 		D43B6D1A1C1DB2CA008EF3D2 /* Module+String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Module+String.swift"; sourceTree = "<group>"; };
@@ -172,6 +174,7 @@
 				D4B3FBF01A83515800DA2AC3 /* Manifold.h */,
 				D4DE7E721AF66E25004D0CB9 /* Term.swift */,
 				D40D7D611C2DC34E004ADD6E /* ABT.swift */,
+				D40D7D631C2DCFB1004ADD6E /* MonoidType.swift */,
 				D4E990231BD3EE5300F00CA7 /* AnnotatedTerm.swift */,
 				D4B56CB01AFDA26A00D7BD6F /* Expression.swift */,
 				D4FB2D061BE447DE00B3CCE0 /* Module+Directory.swift */,
@@ -387,6 +390,7 @@
 				D4D0FC001BD420B20010F243 /* Term+Elaboration.swift in Sources */,
 				D4ACE90D1BDC7E51009E928F /* Module+FiniteSet.swift in Sources */,
 				D4D0FC061BD45CB10010F243 /* Module+Prelude.swift in Sources */,
+				D40D7D641C2DCFB1004ADD6E /* MonoidType.swift in Sources */,
 				D4E829191B521BFC00713E60 /* Declaration.swift in Sources */,
 				D4D0FC021BD4276B0010F243 /* Module+Pair.swift in Sources */,
 				D492927F1C278CC000BA59F3 /* Module+PropositionalEquality.swift in Sources */,
