@@ -1,6 +1,13 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 extension Term {
+	public var freeVariables: Set<Name> {
+		switch self {
+		case let .In(freeVariables, _):
+			return freeVariables
+		}
+	}
+
 	public func substitute(i: Int, _ expression: Term) -> Term {
 		switch out {
 		case let .Variable(.Local(j)) where i == j:
