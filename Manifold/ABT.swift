@@ -5,3 +5,8 @@ enum ABT<Applied, Recur> {
 	case Abstraction(Name, Recur)
 	case Constructor(Applied)
 }
+
+enum AST<Recur> {
+	case Lambda(Recur)
+	case Application(Recur, Recur)
+}
