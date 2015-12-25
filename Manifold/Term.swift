@@ -24,6 +24,12 @@ public indirect enum Term: Equatable, Hashable, IntegerLiteralConvertible, NilLi
 	}
 
 
+	public var scope: (Name, Term)? {
+		guard case let .Abstraction(name, scope) = out else { return nil }
+		return (name, scope)
+	}
+
+
 	// MARK: Hashable
 
 	public var hashValue: Int {
