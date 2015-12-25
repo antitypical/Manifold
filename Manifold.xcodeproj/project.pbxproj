@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D40D7D621C2DC34E004ADD6E /* ABT.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D7D611C2DC34E004ADD6E /* ABT.swift */; };
 		D40D7D641C2DCFB1004ADD6E /* MonoidType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D7D631C2DCFB1004ADD6E /* MonoidType.swift */; };
 		D40D7D661C2DD6A3004ADD6E /* Scoping.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40D7D651C2DD6A3004ADD6E /* Scoping.swift */; };
 		D415A09B1B51EFDE001C15E5 /* Term+Construction.swift in Sources */ = {isa = PBXBuildFile; fileRef = D415A09A1B51EFDE001C15E5 /* Term+Construction.swift */; };
@@ -70,7 +69,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		D40D7D611C2DC34E004ADD6E /* ABT.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ABT.swift; sourceTree = "<group>"; };
 		D40D7D631C2DCFB1004ADD6E /* MonoidType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonoidType.swift; sourceTree = "<group>"; };
 		D40D7D651C2DD6A3004ADD6E /* Scoping.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scoping.swift; sourceTree = "<group>"; };
 		D415A09A1B51EFDE001C15E5 /* Term+Construction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Term+Construction.swift"; sourceTree = "<group>"; };
@@ -171,7 +169,6 @@
 			children = (
 				D4B3FBF01A83515800DA2AC3 /* Manifold.h */,
 				D4DE7E721AF66E25004D0CB9 /* Term.swift */,
-				D40D7D611C2DC34E004ADD6E /* ABT.swift */,
 				D40D7D651C2DD6A3004ADD6E /* Scoping.swift */,
 				D40D7D631C2DCFB1004ADD6E /* MonoidType.swift */,
 				D4E990231BD3EE5300F00CA7 /* AnnotatedTerm.swift */,
@@ -363,7 +360,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D445417C1BCAB0C100F2946D /* Module+Unit.swift in Sources */,
-				D40D7D621C2DC34E004ADD6E /* ABT.swift in Sources */,
 				D4E9901C1BD3431D00F00CA7 /* Module+Either.swift in Sources */,
 				D43B6D1B1C1DB2CA008EF3D2 /* Module+String.swift in Sources */,
 				D415A09B1B51EFDE001C15E5 /* Term+Construction.swift in Sources */,
