@@ -47,6 +47,3 @@ func renderNumerals(n: Int, _ alphabet: String) -> String {
 	}
 	return n.digits(alphabet.characters.count).lazy.map { String(atModular(alphabet.characters, offset: $0)) }.joinWithSeparator("")
 }
-
-
-import Prelude
