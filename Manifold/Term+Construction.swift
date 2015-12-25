@@ -10,7 +10,7 @@ extension Term {
 	}
 
 	public static func Variable(name: Name) -> Term {
-		return Term(.Variable(name))
+		return Term([ name ], .Variable(name))
 	}
 
 	public static func Application(a: Term, _ b: Term) -> Term {
