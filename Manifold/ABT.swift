@@ -17,6 +17,10 @@ indirect enum ABTTerm {
 		return .In(body.freeVariables.subtract([ name ]), .Abstraction(name, body))
 	}
 
+	static func Constructor(body: AST<ABTTerm>) -> ABTTerm {
+		return .In(body.foldMap { $0.freeVariables }, .Constructor(body))
+	}
+
 	var freeVariables: Set<Name> {
 		guard case let .In(variables, _) = self else { return [] }
 		return variables
