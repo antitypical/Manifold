@@ -9,6 +9,10 @@ enum ABT<Applied, Recur> {
 indirect enum ABTTerm {
 	case In(Set<Name>, ABT<AST<ABTTerm>, ABTTerm>)
 
+	static func Variable(name: Name) -> ABTTerm {
+		return .In([ name ], .Variable(name))
+	}
+
 	var freeVariables: Set<Name> {
 		guard case let .In(variables, _) = self else { return [] }
 		return variables
