@@ -20,7 +20,8 @@ extension Term {
 			let (t1, visited) = t1.weakHeadNormalForm(environment, shouldRecur: shouldRecur, visited: visited)
 			switch t1.out {
 			case let .Identity(.Lambda(i, _, body)):
-				return body.substitute(.Local(i), with: t2).weakHeadNormalForm(environment, shouldRecur: shouldRecur, visited: visited)
+				guard let (name, scope) = body.scope else { return body.weakHeadNormalForm(environment, shouldRecur: shouldRecur, visited: visited) }
+				return scope.substitute(name, with: t2).weakHeadNormalForm(environment, shouldRecur: shouldRecur, visited: visited)
 
 			case let .Variable(name) where shouldRecur:
 				let (t2, visited) = t2.weakHeadNormalForm(environment, shouldRecur: shouldRecur, visited: visited)
