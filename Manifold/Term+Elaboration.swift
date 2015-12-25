@@ -5,7 +5,9 @@ extension String: ErrorType {}
 extension Term {
 	public func elaborateType(against: Term, _ environment: [Name:Term], _ context: [Name:Term]) throws -> AnnotatedTerm<Term> {
 		return try elaborateUnification(against, environment, context).map {
-			guard let unified = $0.unified else { throw $0.description }
+			guard let unified = $0.unified else {
+				throw "Type mismatch for '\(self)':\n\($0)in context: \(Term.toString(context, separator: ":")),\nenvironment: \(Term.toString(environment, separator: "="))"
+			}
 			return unified
 		}
 	}
