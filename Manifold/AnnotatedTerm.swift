@@ -25,6 +25,10 @@ public enum AnnotatedTerm<Annotation>: TermContainerType {
 	public var out: Expression<AnnotatedTerm> {
 		return destructure.1
 	}
+
+	public var freeVariables: Set<Name> {
+		return []
+	}
 }
 
 public func == <Annotation: Equatable> (left: AnnotatedTerm<Annotation>, right: AnnotatedTerm<Annotation>) -> Bool {
