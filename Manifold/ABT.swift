@@ -3,7 +3,7 @@
 enum ABT<Syntax, Term> {
 	case Variable(Name)
 	case Abstraction(Name, Term)
-	case Constructor(Syntax)
+	case Identity(Syntax)
 
 
 	static func equal(syntaxEqual syntaxEqual: (Syntax, Syntax) -> Bool, termEqual: (Term, Term) -> Bool)(_ left: ABT, _ right: ABT) -> Bool {
@@ -12,7 +12,7 @@ enum ABT<Syntax, Term> {
 			return name1 == name2
 		case let (.Abstraction(name1, scope1), .Abstraction(name2, scope2)):
 			return name1 == name2 && termEqual(scope1, scope2)
-		case let (.Constructor(syntax1), .Constructor(syntax2)):
+		case let (.Identity(syntax1), .Identity(syntax2)):
 			return syntaxEqual(syntax1, syntax2)
 		default:
 			return false
@@ -38,7 +38,7 @@ indirect enum ABTTerm {
 	}
 
 	static func Constructor(body: AST<ABTTerm>) -> ABTTerm {
-		return .In(body.foldMap { $0.freeVariables }, .Constructor(body))
+		return .In(body.foldMap { $0.freeVariables }, .Identity(body))
 	}
 
 	var freeVariables: Set<Name> {
@@ -63,7 +63,7 @@ indirect enum ABTTerm {
 			return name == old
 				? self
 				: .Abstraction(name, body.rename(old, new))
-		case let .Constructor(syntax):
+		case let .Identity(syntax):
 			return .Constructor(syntax.map { $0.rename(old, new) })
 		}
 	}
@@ -79,7 +79,7 @@ indirect enum ABTTerm {
 			return .Abstraction(newName, name != newName
 				? scope.rename(name, newName).substitute(variable, with: with)
 				: scope.substitute(variable, with: with))
-		case let .Constructor(syntax):
+		case let .Identity(syntax):
 			return .Constructor(syntax.map { $0.substitute(variable, with: with) })
 		}
 	}
