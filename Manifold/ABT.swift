@@ -97,4 +97,8 @@ extension Name {
 			return Name.Global(string + "ʹ").fresh(isUsed)
 		}
 	}
+
+	func fresh(set: Set<Name>) -> Name {
+		return fresh(set.contains)
+	}
 }
