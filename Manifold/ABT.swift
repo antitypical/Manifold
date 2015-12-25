@@ -33,6 +33,15 @@ indirect enum ABTTerm {
 enum AST<Recur> {
 	case Lambda(Recur)
 	case Application(Recur, Recur)
+
+	func map<Other>(@noescape transform: Recur -> Other) -> AST<Other> {
+		switch self {
+		case let .Lambda(body):
+			return .Lambda(transform(body))
+		case let .Application(a, b):
+			return .Application(transform(a), transform(b))
+		}
+	}
 }
 
 extension Name {
