@@ -6,7 +6,7 @@ enum ABT<Syntax, Term> {
 	case Constructor(Syntax)
 
 
-	static func equal(syntaxEqual syntaxEqual: (Syntax, Syntax) -> Bool, termEqual: (Term, Term) -> Bool)(left: ABT, right: ABT) -> Bool {
+	static func equal(syntaxEqual syntaxEqual: (Syntax, Syntax) -> Bool, termEqual: (Term, Term) -> Bool)(_ left: ABT, _ right: ABT) -> Bool {
 		switch (left, right) {
 		case let (.Variable(name1), .Variable(name2)):
 			return name1 == name2
