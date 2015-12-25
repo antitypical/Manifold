@@ -31,16 +31,16 @@ public enum Expression<Recur> {
 
 	// MARK: Foldable
 
-	public func foldMap<Result: MonoidType>(@noescape transform: Recur -> Result) -> Result {
+	public func foldMap<Result: MonoidType>(@noescape transform: Recur throws -> Result) rethrows -> Result {
 		switch self {
 		case .Type, .Variable, .Implicit:
 			return Result.mempty
 		case let .Application(a, b):
-			return transform(a).mappend(transform(b))
+			return try transform(a).mappend(transform(b))
 		case let .Lambda(_, type, body):
-			return transform(type).mappend(transform(body))
+			return try transform(type).mappend(transform(body))
 		case let .Embedded(_, _, type):
-			return transform(type)
+			return try transform(type)
 		}
 	}
 
