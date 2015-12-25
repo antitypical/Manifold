@@ -1,9 +1,9 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-enum ABT<Applied, Term> {
+enum ABT<Syntax, Term> {
 	case Variable(Name)
 	case Abstraction(Name, Term)
-	case Constructor(Applied)
+	case Constructor(Syntax)
 }
 
 indirect enum ABTTerm {
