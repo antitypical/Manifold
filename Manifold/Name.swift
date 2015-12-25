@@ -63,6 +63,3 @@ public func < (left: Name, right: Name) -> Bool {
 		return false
 	}
 }
-
-
-import Prelude
