@@ -18,6 +18,3 @@ extension Term {
 		}
 	}
 }
-
-
-import Prelude
