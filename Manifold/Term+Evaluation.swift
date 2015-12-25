@@ -11,7 +11,8 @@ extension Term {
 			let aʹ = try a.evaluate(environment)
 			switch aʹ.out {
 			case let .Identity(.Lambda(i, _, body)):
-				return try body.substitute(.Local(i), with: b.evaluate(environment)).evaluate(environment)
+				guard let (name, scope) = body.scope else { return try body.evaluate(environment) }
+				return try scope.substitute(name, with: b.evaluate(environment)).evaluate(environment)
 
 			case let .Identity(.Embedded((_, evaluator) as (String, Term throws -> Term), _, _)):
 				return try evaluator(b.evaluate(environment)).evaluate(environment)
