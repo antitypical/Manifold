@@ -68,5 +68,8 @@ public enum Term: Equatable, Hashable, IntegerLiteralConvertible, NilLiteralConv
 
 
 public func == (left: Term, right: Term) -> Bool {
-	return left.out == right.out
+	switch (left, right) {
+	case let (.In(v1, f), .In(v2, g)):
+		return v1 == v2 && f() == g()
+	}
 }
