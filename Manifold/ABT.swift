@@ -13,6 +13,13 @@ indirect enum ABTTerm {
 		guard case let .In(variables, _) = self else { return [] }
 		return variables
 	}
+
+	var out: ABT<AST<ABTTerm>, ABTTerm> {
+		switch self {
+		case let .In(_, out):
+			return out
+		}
+	}
 }
 
 enum AST<Recur> {
