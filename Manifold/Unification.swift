@@ -89,6 +89,7 @@ public enum Unification: CustomStringConvertible {
 	// MARK: CustomStringConvertible
 
 	public var description: String {
-		return "Expected: \(expected)\n" + "  Actual: \(actual)\n"
+		guard let unified = unified else { return "Expected: \(expected)\n" + "  Actual: \(actual)\n" }
+		return "\(unified)"
 	}
 }
