@@ -1,8 +1,8 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-enum ABT<Applied, Recur> {
+enum ABT<Applied, Term> {
 	case Variable(Name)
-	case Abstraction(Name, Recur)
+	case Abstraction(Name, Term)
 	case Constructor(Applied)
 }
 
