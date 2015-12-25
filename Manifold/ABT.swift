@@ -1,12 +1,12 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-enum ABT<Syntax, Term> {
+enum Scoping<Syntax, Term> {
 	case Variable(Name)
 	case Abstraction(Name, Term)
 	case Identity(Syntax)
 
 
-	static func equal(syntaxEqual syntaxEqual: (Syntax, Syntax) -> Bool, termEqual: (Term, Term) -> Bool)(_ left: ABT, _ right: ABT) -> Bool {
+	static func equal(syntaxEqual syntaxEqual: (Syntax, Syntax) -> Bool, termEqual: (Term, Term) -> Bool)(_ left: Scoping, _ right: Scoping) -> Bool {
 		switch (left, right) {
 		case let (.Variable(name1), .Variable(name2)):
 			return name1 == name2
@@ -21,13 +21,13 @@ enum ABT<Syntax, Term> {
 }
 
 
-func == <Syntax: Equatable, Term: Equatable> (left: ABT<Syntax, Term>, right: ABT<Syntax, Term>) -> Bool {
-	return ABT.equal(syntaxEqual: ==, termEqual: ==)(left, right)
+func == <Syntax: Equatable, Term: Equatable> (left: Scoping<Syntax, Term>, right: Scoping<Syntax, Term>) -> Bool {
+	return Scoping.equal(syntaxEqual: ==, termEqual: ==)(left, right)
 }
 
 
 indirect enum ABTTerm {
-	case In(Set<Name>, ABT<AST<ABTTerm>, ABTTerm>)
+	case In(Set<Name>, Scoping<AST<ABTTerm>, ABTTerm>)
 
 	static func Variable(name: Name) -> ABTTerm {
 		return .In([ name ], .Variable(name))
@@ -46,7 +46,7 @@ indirect enum ABTTerm {
 		return variables
 	}
 
-	var out: ABT<AST<ABTTerm>, ABTTerm> {
+	var out: Scoping<AST<ABTTerm>, ABTTerm> {
 		switch self {
 		case let .In(_, out):
 			return out
