@@ -20,16 +20,13 @@ extension TermContainerType {
 			case let .Identity(.Application((_, (a, _)), (_, b))):
 				return ("\(a) \(wrap(b))", true)
 
-			case let .Identity(.Lambda(variable, (t, (type, _)), (b, (body, _)))) where b.freeVariables.contains(.Local(variable)):
-				guard case let .Abstraction(name, _) = b.out else { return ("\(type) → \(body)", true) }
+			case let .Identity(.Lambda(_, (t, type), (b, (body, _)))):
+				guard case let .Abstraction(name, _) = b.out else { return ("\(wrap(type)) → \(body)", true) }
 
 				if case .Identity(.Implicit) = t.out {
 					return ("λ \(name) . \(body)", true)
 				}
-				return ("λ \(Name.Local(variable)) : \(type) . \(body)", true)
-
-			case let .Identity(.Lambda(_, (_, type), (_, (body, _)))):
-				return ("\(wrap(type)) → \(body)", true)
+				return ("λ \(name) : \(type.1) . \(body)", true)
 
 			case let .Identity(.Embedded(value, _, (_, (type, _)))):
 				return ("'\(value)' : \(type)", true)
