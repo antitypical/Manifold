@@ -88,16 +88,6 @@ enum AST<Recur> {
 	}
 }
 
-extension Set: MonoidType {
-	static var mempty: Set {
-		return []
-	}
-
-	func mappend(other: Set) -> Set {
-		return union(other)
-	}
-}
-
 extension Name {
 	func fresh(isUsed: Name -> Bool) -> Name {
 		guard isUsed(self) else { return self }
