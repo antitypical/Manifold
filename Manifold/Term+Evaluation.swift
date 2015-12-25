@@ -2,7 +2,7 @@
 
 extension Term {
 	public func evaluate(environment: [Name:Term] = [:]) throws -> Term {
-		switch scoping {
+		switch out {
 		case let .Variable(i):
 			guard let found = environment[i] else { throw "Illegal free variable \(i)" }
 			return found
@@ -10,10 +10,10 @@ extension Term {
 		case let .Identity(.Application(a, b)):
 			let aʹ = try a.evaluate(environment)
 			switch aʹ.out {
-			case let .Lambda(i, _, body):
-				return try body.substitute(i, b.evaluate(environment)).evaluate(environment)
+			case let .Identity(.Lambda(i, _, body)):
+				return try body.substitute(.Local(i), with: b.evaluate(environment)).evaluate(environment)
 
-			case let .Embedded((_, evaluator) as (String, Term throws -> Term), _, _):
+			case let .Identity(.Embedded((_, evaluator) as (String, Term throws -> Term), _, _)):
 				return try evaluator(b.evaluate(environment)).evaluate(environment)
 
 			default:

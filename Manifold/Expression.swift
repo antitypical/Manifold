@@ -2,7 +2,6 @@
 
 public enum Expression<Recur> {
 	case Type(Int)
-	case Variable(Name)
 	case Application(Recur, Recur)
 	case Lambda(Int, Recur, Recur)
 	case Embedded(Any, (Any, Any) -> Bool, Recur)
@@ -15,8 +14,6 @@ public enum Expression<Recur> {
 		switch self {
 		case let .Type(i):
 			return .Type(i)
-		case let .Variable(n):
-			return .Variable(n)
 		case let .Application(a, b):
 			return try .Application(transform(a), transform(b))
 		case let .Lambda(i, a, b):
@@ -33,7 +30,7 @@ public enum Expression<Recur> {
 
 	public func foldMap<Result: MonoidType>(@noescape transform: Recur throws -> Result) rethrows -> Result {
 		switch self {
-		case .Type, .Variable, .Implicit:
+		case .Type, .Implicit:
 			return Result.mempty
 		case let .Application(a, b):
 			return try transform(a).mappend(transform(b))
@@ -51,8 +48,6 @@ public enum Expression<Recur> {
 		switch (left, right) {
 		case let (.Type(i), .Type(j)):
 			return i == j
-		case let (.Variable(m), .Variable(n)):
-			return m == n
 		case let (.Application(t1, t2), .Application(u1, u2)):
 			return equal(t1, u1) && equal(t2, u2)
 		case let (.Lambda(i, t, a), .Lambda(j, u, b)):

@@ -1,19 +1,26 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Term: Equatable, Hashable, IntegerLiteralConvertible, NilLiteralConvertible, StringLiteralConvertible, TermContainerType {
-	case In(Set<Name>, () -> Expression<Term>)
+public indirect enum Term: Equatable, Hashable, IntegerLiteralConvertible, NilLiteralConvertible, StringLiteralConvertible, TermContainerType {
+	case In(Set<Name>, Scoping<Term>)
 
 
-	public init(_ expression: () -> Expression<Term>) {
-		self = .In([], expression)
+	public init(_ scoping: Scoping<Term>) {
+		switch scoping {
+		case let .Variable(name):
+			self = .Variable(name)
+		case let .Abstraction(name, scope):
+			self = .Abstraction(name, scope)
+		case let .Identity(body):
+			self = .Identity(body)
+		}
 	}
 
 	public init(_ expression: Expression<Term>) {
-		self.init { expression }
+		self.init([], .Identity(expression))
 	}
 
-	public init(_ freeVariables: Set<Name>, _ expression: Expression<Term>) {
-		self = Term.In(freeVariables) { expression }
+	public init(_ freeVariables: Set<Name>, _ scoping: Scoping<Term>) {
+		self = Term.In(freeVariables, scoping)
 	}
 
 
@@ -22,18 +29,20 @@ public enum Term: Equatable, Hashable, IntegerLiteralConvertible, NilLiteralConv
 	public var hashValue: Int {
 		return cata {
 			switch $0 {
-			case let .Type(n):
+			case let .Identity(.Type(n)):
 				return (Int.max - 59) ^ n
 			case let .Variable(n):
 				return (Int.max - 83) ^ n.hashValue
-			case let .Application(a, b):
+			case let .Identity(.Application(a, b)):
 				return (Int.max - 95) ^ a ^ b
-			case let .Lambda(i, t, b):
+			case let .Identity(.Lambda(i, t, b)):
 				return (Int.max - 179) ^ i ^ t ^ b
-			case let .Embedded(_, _, type):
+			case let .Identity(.Embedded(_, _, type)):
 				return (Int.max - 189) ^ type
-			case .Implicit:
+			case .Identity(.Implicit):
 				return (Int.max - 257)
+			case let .Abstraction(name, term):
+				return (Int.max - 279) ^ name.hashValue ^ term.hashValue
 			}
 		}
 	}
@@ -42,7 +51,7 @@ public enum Term: Equatable, Hashable, IntegerLiteralConvertible, NilLiteralConv
 	// MARK: IntegerLiteralConvertible
 
 	public init(integerLiteral value: Int) {
-		self.init(.Variable(.Local(value)))
+		self = .Variable(.Local(value))
 	}
 
 
@@ -56,27 +65,16 @@ public enum Term: Equatable, Hashable, IntegerLiteralConvertible, NilLiteralConv
 	// MARK: StringLiteralConvertible
 
 	public init(stringLiteral value: String) {
-		self.init(.Variable(.Global(value)))
+		self = .Variable(.Global(value))
 	}
 
 
 	// MARK: TermContainerType
 
-	public var out: Expression<Term> {
+	public var out: Scoping<Term> {
 		switch self {
 		case let .In(_, f):
-			return f()
-		}
-	}
-
-	var scoping: Scoping<Expression<Term>, Term> {
-		switch out {
-		case let .Variable(name):
-			return .Variable(name)
-		case let .Lambda(i, _, body):
-			return .Abstraction(.Local(i), body)
-		default:
-			return .Identity(out)
+			return f
 		}
 	}
 }
@@ -85,6 +83,6 @@ public enum Term: Equatable, Hashable, IntegerLiteralConvertible, NilLiteralConv
 public func == (left: Term, right: Term) -> Bool {
 	switch (left, right) {
 	case let (.In(v1, f), .In(v2, g)):
-		return v1 == v2 && f() == g()
+		return v1 == v2 && Scoping.equal(==)(f, g)
 	}
 }

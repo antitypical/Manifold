@@ -9,31 +9,34 @@ extension TermContainerType {
 		}
 		let (out, _): (String, Bool) = para {
 			switch $0 {
-			case let .Type(n) where n == 0:
+			case let .Identity(.Type(n)) where n == 0:
 				return ("Type", false)
-			case let .Type(n):
+			case let .Identity(.Type(n)):
 				return ("Type" + renderNumerals(n, "₀₁₂₃₄₅₆₇₈₉"), false)
 
 			case let .Variable(name):
 				return (String(name), false)
 
-			case let .Application((_, (a, _)), (_, b)):
+			case let .Identity(.Application((_, (a, _)), (_, b))):
 				return ("\(a) \(wrap(b))", true)
 
-			case let .Lambda(variable, (t, (type, _)), (b, (body, _))) where b.freeVariables.contains(.Local(variable)):
-				if case .Implicit = t.out {
+			case let .Identity(.Lambda(variable, (t, (type, _)), (b, (body, _)))) where b.freeVariables.contains(.Local(variable)):
+				if case .Identity(.Implicit) = t.out {
 					return ("λ \(Name.Local(variable)) . \(body)", true)
 				}
 				return ("λ \(Name.Local(variable)) : \(type) . \(body)", true)
 
-			case let .Lambda(_, (_, type), (_, (body, _))):
+			case let .Identity(.Lambda(_, (_, type), (_, (body, _)))):
 				return ("\(wrap(type)) → \(body)", true)
 
-			case let .Embedded(value, _, (_, (type, _))):
+			case let .Identity(.Embedded(value, _, (_, (type, _)))):
 				return ("'\(value)' : \(type)", true)
 
-			case .Implicit:
+			case .Identity(.Implicit):
 				return ("_", false)
+
+			case let .Abstraction(name, (_, scope)):
+				return ("\(name) : \(wrap(scope))", true)
 			}
 		}
 		return out

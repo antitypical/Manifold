@@ -8,20 +8,34 @@ extension Term {
 		}
 	}
 
-	public func substitute(i: Int, _ expression: Term) -> Term {
+	public func rename(old: Name, _ new: Name) -> Term {
 		switch out {
-		case let .Variable(.Local(j)) where i == j:
-			return expression
-		case let .Lambda(j, type, body):
-			return .Lambda(j, type.substitute(i, expression), i == j
-				? body
-				: body.substitute(i, expression))
-		case let .Application(a, b):
-			return .Application(a.substitute(i, expression), b.substitute(i, expression))
-		case let .Embedded(a, eq, type):
-			return .Embedded(a, eq, type.substitute(i, expression))
-		default:
+		case let .Variable(name):
+			return name == old
+				? .Variable(new)
+				: self
+		case let .Abstraction(name, body):
+			return name == old
+				? self
+				: .Abstraction(name, body.rename(old, new))
+		case let .Identity(syntax):
+			return .Identity(syntax.map { $0.rename(old, new) })
+		}
+	}
+
+	public func substitute(variable: Name, with: Term) -> Term {
+		switch out {
+		case let .Variable(name) where name == variable:
+			return with
+		case .Variable:
 			return self
+		case let .Abstraction(name, scope):
+			let newName = name.fresh(freeVariables.union(with.freeVariables))
+			return .Abstraction(newName, name != newName
+				? scope.rename(name, newName).substitute(variable, with: with)
+				: scope.substitute(variable, with: with))
+		case let .Identity(syntax):
+			return .Identity(syntax.map { $0.substitute(variable, with: with) })
 		}
 	}
 }

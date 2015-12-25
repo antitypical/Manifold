@@ -13,12 +13,20 @@ extension Term {
 		return Term([ name ], .Variable(name))
 	}
 
+	public static func Abstraction(name: Name, _ scope: Term) -> Term {
+		return Term(scope.freeVariables.subtract([ name ]), .Abstraction(name, scope))
+	}
+
+	public static func Identity(expression: Expression<Term>) -> Term {
+		return Term(expression.foldMap { $0.freeVariables }, .Identity(expression))
+	}
+
 	public static func Application(a: Term, _ b: Term) -> Term {
 		return Term(.Application(a, b))
 	}
 
 	public static func Lambda(i: Int, _ type: Term, _ body: Term) -> Term {
-		return Term(body.freeVariables.subtract([ .Local(i) ]), .Lambda(i, type, body))
+		return Term(body.freeVariables.subtract([ .Local(i) ]), .Identity(.Lambda(i, type, body)))
 	}
 
 	public static func Embedded(name: String, _ type: Term, _ evaluator: Term throws -> Term) -> Term {
@@ -31,7 +39,7 @@ extension Term {
 
 	public static func Embedded<A>(name: String, _ type: Term, _ evaluator: A throws -> Term) -> Term {
 		return Embedded(name, type) { term in
-			guard case let .Embedded(value as A, _, _) = term.out else { throw "Illegal application of '\(name)' to '\(term)'" }
+			guard case let .Identity(.Embedded(value as A, _, _)) = term.out else { throw "Illegal application of '\(name)' to '\(term)'" }
 			return try evaluator(value)
 		}
 	}
@@ -83,7 +91,7 @@ infix operator => {
 }
 
 public func --> (left: Term, right: Term) -> Term {
-	return left => const(right)
+	return (-1, left) => const(right)
 }
 
 public func => (type: Term, body: Term -> Term) -> Term {
@@ -91,15 +99,15 @@ public func => (type: Term, body: Term -> Term) -> Term {
 }
 
 public func => (left: (Term, Term), right: (Term, Term) -> Term) -> Term {
-	return left.0 => { a in left.1 => { b in right(a, b) } }
+	return [Name.Local(-1): left.0, Name.Local(-1): left.1] => right(-1, -1)
 }
 
 public func => (left: (Term, Term, Term), right: (Term, Term, Term) -> Term) -> Term {
-	return left.0 => { a in left.1 => { b in left.2 => { c in right(a, b, c) } } }
+	return [Name.Local(-1): left.0, Name.Local(-1): left.1, Name.Local(-1): left.2] => right(-1, -1, -1)
 }
 
 public func => (left: (Term, Term, Term, Term), right: (Term, Term, Term, Term) -> Term) -> Term {
-	return left.0 => { a in left.1 => { b in left.2 => { c in left.3 => { d in right(a, b, c, d) } } } }
+	return [Name.Local(-1): left.0, Name.Local(-1): left.1, Name.Local(-1): left.2, Name.Local(-1): left.3] => right(-1, -1, -1, -1)
 }
 
 public func => (left: (Name, Term), right: Term) -> Term {

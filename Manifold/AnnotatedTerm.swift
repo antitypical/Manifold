@@ -1,7 +1,7 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public enum AnnotatedTerm<Annotation>: TermContainerType {
-	indirect case Unroll(Annotation, Expression<AnnotatedTerm>)
+	indirect case Unroll(Annotation, Scoping<AnnotatedTerm>)
 
 	public var annotation: Annotation {
 		get {
@@ -12,7 +12,7 @@ public enum AnnotatedTerm<Annotation>: TermContainerType {
 		}
 	}
 
-	public var destructure: (Annotation, Expression<AnnotatedTerm>) {
+	public var destructure: (Annotation, Scoping<AnnotatedTerm>) {
 		switch self {
 		case let .Unroll(all):
 			return all
@@ -22,7 +22,7 @@ public enum AnnotatedTerm<Annotation>: TermContainerType {
 
 	// MARK: TermContainerType
 
-	public var out: Expression<AnnotatedTerm> {
+	public var out: Scoping<AnnotatedTerm> {
 		return destructure.1
 	}
 
@@ -32,5 +32,5 @@ public enum AnnotatedTerm<Annotation>: TermContainerType {
 }
 
 public func == <Annotation: Equatable> (left: AnnotatedTerm<Annotation>, right: AnnotatedTerm<Annotation>) -> Bool {
-	return left.annotation == right.annotation && Expression.equal(==)(left.out, right.out)
+	return left.annotation == right.annotation && Scoping.equal(==)(left.out, right.out)
 }
