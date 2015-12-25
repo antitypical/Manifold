@@ -13,6 +13,10 @@ indirect enum ABTTerm {
 		return .In([ name ], .Variable(name))
 	}
 
+	static func Abstraction(name: Name, _ body: ABTTerm) -> ABTTerm {
+		return .In(body.freeVariables.subtract([ name ]), .Abstraction(name, body))
+	}
+
 	var freeVariables: Set<Name> {
 		guard case let .In(variables, _) = self else { return [] }
 		return variables
