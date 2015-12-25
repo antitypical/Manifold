@@ -41,7 +41,7 @@ extension Module {
 		let _case: Term = "case"
 		let `case` = Declaration("case",
 			type: Enum.ref => { E in (Tag.ref[E] --> .Type) => { P in Branches[E, P] --> Tag.ref[E] => { t in P[t] } } },
-			value: nil => { E in nil => { P in (nil, nil) => { cs, t in t[nil, nil => { _ in firstBranch.ref[nil, nil, P, cs] }, nil => { t in _case[E, nil => { t in P[E, there.ref[nil, nil, t]] }, second[nil, nil, cs], t] }] } } })
+			value: nil => { E in nil => { P in (nil, nil) => { cs, t in t[nil, nil => { _ in firstBranch.ref[nil, nil, P, cs] }, nil => { t in _case[E, nil => { t in P[E, there.ref[nil, nil, t]] }, secondBranch.ref[nil, nil, P, cs], t] }] } } })
 
 		return Module("Tag", [ list, string, unit, pair ], [ Enum, Tag, here, there, branches, firstBranch, secondBranch, `case` ])
 	}
