@@ -44,6 +44,11 @@ enum AST<Recur> {
 	}
 }
 
+protocol MonoidType {
+	static var mempty: Self { get }
+	func mappend(other: Self) -> Self
+}
+
 extension Name {
 	func fresh(isUsed: Name -> Bool) -> Name {
 		guard isUsed(self) else { return self }
