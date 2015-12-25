@@ -20,6 +20,14 @@ public enum AnnotatedTerm<Annotation>: TermContainerType {
 	}
 
 
+	// MARK: Functor
+
+	public func map<Other>(@noescape transform: Annotation throws -> Other) rethrows -> AnnotatedTerm<Other> {
+		let (annotation, expression) = destructure
+		return try .Unroll(transform(annotation), expression.map { try $0.map(transform) })
+	}
+
+
 	// MARK: TermContainerType
 
 	public var out: Expression<AnnotatedTerm> {
