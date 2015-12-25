@@ -17,6 +17,3 @@ public enum Telescope {
 		}
 	}
 }
-
-
-import Prelude
