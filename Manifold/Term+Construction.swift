@@ -106,5 +106,8 @@ public func => (left: (Term, Term, Term, Term), right: (Term, Term, Term, Term) 
 	return left.0 => { a in left.1 => { b in left.2 => { c in left.3 => { d in right(a, b, c, d) } } } }
 }
 
+public func => (left: DictionaryLiteral<Name, Term>, right: Term) -> Term {
+	return right
+}
 
 import Prelude
