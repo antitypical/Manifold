@@ -8,14 +8,14 @@ public enum Scoping<Term> {
 
 	// MARK: Functor
 
-	public func map<Other>(@noescape transform: Term -> Other) -> Scoping<Other> {
+	public func map<Other>(@noescape transform: Term throws -> Other) rethrows -> Scoping<Other> {
 		switch self {
 		case let .Variable(name):
 			return .Variable(name)
 		case let .Abstraction(name, term):
-			return .Abstraction(name, transform(term))
+			return try .Abstraction(name, transform(term))
 		case let .Identity(expression):
-			return .Identity(expression.map(transform))
+			return try .Identity(expression.map(transform))
 		}
 	}
 
