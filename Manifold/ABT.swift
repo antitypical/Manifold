@@ -8,6 +8,11 @@ enum ABT<Applied, Recur> {
 
 indirect enum ABTTerm {
 	case In(Set<Name>, ABT<AST<ABTTerm>, ABTTerm>)
+
+	var freeVariables: Set<Name> {
+		guard case let .In(variables, _) = self else { return [] }
+		return variables
+	}
 }
 
 enum AST<Recur> {
