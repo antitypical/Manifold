@@ -21,8 +21,10 @@ extension TermContainerType {
 				return ("\(a) \(wrap(b))", true)
 
 			case let .Identity(.Lambda(variable, (t, (type, _)), (b, (body, _)))) where b.freeVariables.contains(.Local(variable)):
+				guard case let .Abstraction(name, _) = b.out else { return ("\(type) → \(body)", true) }
+
 				if case .Identity(.Implicit) = t.out {
-					return ("λ \(Name.Local(variable)) . \(body)", true)
+					return ("λ \(name) . \(body)", true)
 				}
 				return ("λ \(Name.Local(variable)) : \(type) . \(body)", true)
 
