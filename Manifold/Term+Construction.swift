@@ -87,11 +87,7 @@ public func --> (left: Term, right: Term) -> Term {
 }
 
 public func => (type: Term, body: Term -> Term) -> Term {
-	var n = -1
-	let body = body(Term { .Variable(.Local(n)) })
-	n = body.maxBoundVariable + 1
-	if !body.freeVariables.contains(.Local(n)) { n = -1 }
-	return .Lambda(n, type, body)
+	return .Lambda(-1, type, body(.Variable(.Local(-1))))
 }
 
 public func => (left: (Term, Term), right: (Term, Term) -> Term) -> Term {
