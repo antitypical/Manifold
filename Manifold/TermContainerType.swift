@@ -2,6 +2,8 @@
 
 public protocol TermContainerType: CustomDebugStringConvertible, CustomStringConvertible {
 	var out: Expression<Self> { get }
+
+	var freeVariables: Set<Name> { get }
 }
 
 extension TermContainerType {

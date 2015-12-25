@@ -20,7 +20,7 @@ extension TermContainerType {
 			case let .Application((_, (a, _)), (_, b)):
 				return ("\(a) \(wrap(b))", true)
 
-			case let .Lambda(variable, (t, (type, _)), (b, (body, _))) where b.freeVariables.contains(variable):
+			case let .Lambda(variable, (t, (type, _)), (b, (body, _))) where b.freeVariables.contains(.Local(variable)):
 				if case .Implicit = t.out {
 					return ("λ \(Name.Local(variable)) . \(body)", true)
 				}

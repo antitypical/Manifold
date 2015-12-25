@@ -44,7 +44,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testLambdasDoNotShadowFreeVariablesInTheirTypes() {
-		assert(Term.Lambda(1, 1, 1).freeVariables, ==, [ 1 ])
+		assert(Term.Lambda(1, 1, 1).freeVariables, ==, [ .Local(1) ])
 	}
 
 	func testLambdasBindVariablesDeeply() {
@@ -53,7 +53,7 @@ final class TermTests: XCTestCase {
 
 
 	func testFreeVariablesAreOrderedByOccurence() {
-		assert(Array(Term.Application(.Application(.Application(1, 2), .Application(3, 4)), .Application(.Application(5, 6), .Application(7, 8))).freeVariables), ==, (1...8).map(id))
+		assert(Array(Term.Application(.Application(.Application(1, 2), .Application(3, 4)), .Application(.Application(5, 6), .Application(7, 8))).freeVariables), ==, (1...8).map(Name.Local))
 	}
 }
 
