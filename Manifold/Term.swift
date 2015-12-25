@@ -73,6 +73,8 @@ public enum Term: Equatable, Hashable, IntegerLiteralConvertible, NilLiteralConv
 		switch out {
 		case let .Variable(name):
 			return .Variable(name)
+		case let .Lambda(i, _, body):
+			return .Abstraction(.Local(i), body)
 		default:
 			return .Identity(out)
 		}
