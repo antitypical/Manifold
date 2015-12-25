@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public protocol TermContainerType: CustomDebugStringConvertible, CustomStringConvertible {
+public protocol TermContainerType: CustomStringConvertible {
 	var out: Expression<Self> { get }
 
 	var freeVariables: Set<Name> { get }
