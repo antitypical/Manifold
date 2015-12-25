@@ -12,6 +12,10 @@ public enum Term: Equatable, Hashable, IntegerLiteralConvertible, NilLiteralConv
 		self.init { expression }
 	}
 
+	public init(_ freeVariables: Set<Name>, _ expression: Expression<Term>) {
+		self = Term.In(freeVariables) { expression }
+	}
+
 
 	// MARK: Hashable
 
