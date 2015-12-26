@@ -61,8 +61,8 @@ extension Term {
 				let typeʹ = try type.elaborateType(.Type, environment, context) ?? .Unroll(.Type(n + 1), .Identity(.Type(n)))
 				return .Unroll(.Lambda(.Type, .Type), .Identity(.Lambda(typeʹ, try body.elaborateTypeInScope(type, .Type, environment, context))))
 
-			case let (.Abstraction(_, body), _):
-				return try body.elaborateType(against, environment, context)
+			case let (.Abstraction(name, scope), _):
+				return try .Unroll(against, .Abstraction(name, scope.elaborateType(against, environment, context)))
 
 			case (_, .Identity(.Implicit)):
 				throw "No rule to infer type of '\(self)'"
