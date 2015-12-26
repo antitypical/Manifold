@@ -84,7 +84,7 @@ extension Term {
 
 	func elaborateTypeInScope(type: Term, _ against: Term, _ environment: [Name:Term], _ context: [Name:Term]) throws -> AnnotatedTerm<Term> {
 		if let (name, scope) = scope {
-			return try elaborateType(against, environment, context + [ name: type ])
+			return try scope.elaborateType(against, environment, context + [ name: type ])
 		} else {
 			return try elaborateType(against, environment, context)
 		}
