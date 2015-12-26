@@ -26,7 +26,7 @@ extension TermContainerType {
 				if case .Identity(.Implicit) = t.out {
 					return ("λ \(name) . \(body)", true)
 				}
-				return ("λ \(name) : \(type.1) . \(body)", true)
+				return ("λ \(name) : \(type.0) . \(body)", true)
 
 			case let .Identity(.Embedded(value, _, (_, (type, _)))):
 				return ("'\(value)' : \(type)", true)
