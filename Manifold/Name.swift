@@ -2,7 +2,11 @@
 
 public enum Name: Comparable, CustomStringConvertible, Hashable, StringLiteralConvertible {
 	static func fresh(set: Set<Name>) -> Name {
-		return Name.Local(0).fresh(set)
+		let proposed = set.lazy.filter {
+			guard case .Local = $0 else { return false }
+			return true
+		}.maxElement() ?? Name.Local(0)
+		return proposed.fresh(set)
 	}
 
 	func fresh(isUsed: Name -> Bool) -> Name {
