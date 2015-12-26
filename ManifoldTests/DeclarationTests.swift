@@ -26,8 +26,8 @@ final class DeclarationTests: XCTestCase {
 	}
 
 	func testDatatypeConstructorsWithArgumentsAreEncodedFunctions() {
-		assert(datatype.environment["a"], ==, (.Type, .Type, .Type) => { a, b, C in (.Type --> .Type --> C) => { (.Type --> .Type --> C) --> $0[a, b] } })
-		assert(datatype.environment["b"], ==, (.Type, .Type, .Type) => { a, b, C in (.Type --> .Type --> C) --> (.Type --> .Type --> C) => { $0[a, b] } })
+		assert(datatype.environment["a"], Term.equate, (.Type, .Type, .Type) => { a, b, C in (.Type --> .Type --> C) => { (.Type --> .Type --> C) --> $0[a, b] } })
+		assert(datatype.environment["b"], Term.equate, (.Type, .Type, .Type) => { a, b, C in (.Type --> .Type --> C) --> (.Type --> .Type --> C) => { $0[a, b] } })
 	}
 }
 
