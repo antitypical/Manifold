@@ -34,8 +34,8 @@ extension TermContainerType {
 			case .Identity(.Implicit):
 				return ("_", false)
 
-			case let .Abstraction(name, (_, scope)):
-				return ("\(name) : \(wrap(scope))", true)
+			case let .Abstraction(_, (_, scope)):
+				return scope
 			}
 		}
 		return out
