@@ -19,7 +19,7 @@ extension Term {
 				? self
 				: .Abstraction(name, body.rename(old, new))
 		case let .Identity(syntax):
-			return .Identity(syntax.map { $0.rename(old, new) })
+			return Term(syntax.map { $0.rename(old, new) })
 		}
 	}
 
@@ -35,7 +35,7 @@ extension Term {
 				? scope.rename(name, newName).substitute(variable, with: with)
 				: scope.substitute(variable, with: with))
 		case let .Identity(syntax):
-			return .Identity(syntax.map { $0.substitute(variable, with: with) })
+			return Term(syntax.map { $0.substitute(variable, with: with) })
 		}
 	}
 }

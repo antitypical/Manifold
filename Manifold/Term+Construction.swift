@@ -17,10 +17,6 @@ extension Term {
 		return Term(scope.freeVariables.subtract([ name ]), .Abstraction(name, scope))
 	}
 
-	public static func Identity(expression: Expression<Term>) -> Term {
-		return Term(expression.foldMap { $0.freeVariables }, .Identity(expression))
-	}
-
 	public static func Application(a: Term, _ b: Term) -> Term {
 		return Term(.Application(a, b))
 	}

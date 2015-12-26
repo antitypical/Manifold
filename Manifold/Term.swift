@@ -11,7 +11,7 @@ public indirect enum Term: Equatable, Hashable, IntegerLiteralConvertible, NilLi
 		case let .Abstraction(name, scope):
 			self = .Abstraction(name, scope)
 		case let .Identity(body):
-			self = .Identity(body)
+			self = Term(body)
 		}
 	}
 
