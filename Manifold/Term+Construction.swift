@@ -100,7 +100,7 @@ public func => (type: Term, body: Term -> Term) -> Term {
 		let proposedʹ = proposed.fresh(free1)
 		let free2 = body(.Variable(proposedʹ)).freeVariables.subtract([ proposedʹ ])
 		return free1 == free2
-			? .Lambda(type, body(.Variable(proposed)))
+			? .Lambda(proposed, type, body(.Variable(proposed)))
 			: pick(proposedʹ)
 	}
 	return pick(.Local(-1))
