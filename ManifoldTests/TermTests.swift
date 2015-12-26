@@ -23,7 +23,7 @@ final class TermTests: XCTestCase {
 	func testHigherOrderConstruction() {
 		assert(.Type => id, Term.equate, .Lambda(.Local(0), .Type, 0))
 		assert(identity.value, Term.equate, .Lambda(.Local(1), .Type, .Lambda(.Local(0), 1, 0)))
-		assert(constant, Term.equate, .Lambda(.Local(3), .Type, .Lambda(.Local(2), .Type, .Lambda(.Local(1), 2, .Lambda(.Local(0), 1, 0)))))
+		assert(constant, Term.equate, .Lambda(.Local(3), .Type, .Lambda(.Local(2), .Type, .Lambda(.Local(1), 3, .Lambda(.Local(0), 2, 1)))))
 	}
 
 	func testChurchEncodedBooleanConstruction() {
