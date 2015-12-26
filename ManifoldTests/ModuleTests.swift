@@ -108,7 +108,7 @@ final class ModuleTests: XCTestCase {
 		let nilTerm: Term = fromList[`nil`[Term.Implicit]]
 		let consTerm: Term = fromList[cons[nil, embedCharacter("a"), `nil`[Term.Implicit]]]
 		let term = fromList[cons[nil, embedCharacter("h"), cons[nil, embedCharacter("i"), `nil`[Term.Implicit]]]]
-		assert(try? nilTerm.evaluate(environment), ==, Term.Embedded("", "String"))
+		assert(try? nilTerm.evaluate(environment), Term.equate, Term.Embedded("", "String"))
 		assert(try? consTerm.evaluate(environment), Term.equate, Term.Embedded("a", "String"))
 		assert(try? term.evaluate(environment), Term.equate, Term.Embedded("hi", "String"))
 	}
