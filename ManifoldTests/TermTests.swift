@@ -21,7 +21,7 @@ final class TermTests: XCTestCase {
 
 
 	func testHigherOrderConstruction() {
-		assert(.Type => id, ==, .Lambda(.Type, 0))
+		assert(.Type => id, ==, .Lambda(.Local(0), .Type, 0))
 		assert(identity.value, ==, .Lambda(.Type, .Lambda(1, 0)))
 		assert(constant, ==, .Lambda(.Type, .Lambda(.Type, .Lambda(2, .Lambda(1, 0)))))
 	}
