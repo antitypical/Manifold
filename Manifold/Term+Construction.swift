@@ -95,7 +95,7 @@ public func --> (left: Term, right: Term) -> Term {
 }
 
 public func => (type: Term, body: Term -> Term) -> Term {
-	let proposed1: Name = .Local(-1)
+	let proposed1: Name = .Local(0)
 	let body1 = body(.Variable(proposed1))
 	let free1 = body1.freeVariables.subtract([ proposed1 ])
 	let proposed2 = proposed1.fresh(free1)
