@@ -99,15 +99,15 @@ public func => (type: Term, body: Term -> Term) -> Term {
 }
 
 public func => (left: (Term, Term), right: (Term, Term) -> Term) -> Term {
-	return [Name.Local(-1): left.0, Name.Local(-1): left.1] => right(-1, -1)
+	return left.0 => { a in left.1 => { b in right(a, b) } }
 }
 
 public func => (left: (Term, Term, Term), right: (Term, Term, Term) -> Term) -> Term {
-	return [Name.Local(-1): left.0, Name.Local(-1): left.1, Name.Local(-1): left.2] => right(-1, -1, -1)
+	return left.0 => { a in left.1 => { b in left.2 => { c in right(a, b, c) } } }
 }
 
 public func => (left: (Term, Term, Term, Term), right: (Term, Term, Term, Term) -> Term) -> Term {
-	return [Name.Local(-1): left.0, Name.Local(-1): left.1, Name.Local(-1): left.2, Name.Local(-1): left.3] => right(-1, -1, -1, -1)
+	return left.0 => { a in left.1 => { b in left.2 => { c in left.3 => { d in right(a, b, c, d) } } } }
 }
 
 public func => (left: (Name, Term), right: Term) -> Term {
