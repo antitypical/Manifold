@@ -32,7 +32,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testFunctionTypeConstruction() {
-		assert(.Type => { A in (A --> A, A) => const(A) }, ==, .Lambda(.Type, .Lambda(.Lambda(0, 0), .Lambda(0, 0))))
+		assert(.Type => { A in (A --> A) --> A --> A }, ==, .Lambda(.Local(0), .Type, .Lambda(.Lambda(0, 0), .Lambda(0, 0))))
 	}
 
 	func testSubstitution() {
