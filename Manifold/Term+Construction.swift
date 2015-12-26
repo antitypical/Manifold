@@ -10,11 +10,11 @@ extension Term {
 	}
 
 	public static func Variable(name: Name) -> Term {
-		return Term([ name ], .Variable(name))
+		return .In([ name ], .Variable(name))
 	}
 
 	public static func Abstraction(name: Name, _ scope: Term) -> Term {
-		return Term(scope.freeVariables.subtract([ name ]), .Abstraction(name, scope))
+		return .In(scope.freeVariables.subtract([ name ]), .Abstraction(name, scope))
 	}
 
 	public static func Application(a: Term, _ b: Term) -> Term {
@@ -22,7 +22,7 @@ extension Term {
 	}
 
 	public static func Lambda(name: Name, _ type: Term, _ body: Term) -> Term {
-		return Term(body.freeVariables.subtract([ name ]), .Identity(.Lambda(type, body)))
+		return .In(body.freeVariables.subtract([ name ]), .Identity(.Lambda(type, body)))
 	}
 
 	public static func Lambda(type: Term, _ body: Term) -> Term {

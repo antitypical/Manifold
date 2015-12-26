@@ -19,10 +19,6 @@ public indirect enum Term: Equatable, Hashable, IntegerLiteralConvertible, NilLi
 		self = .In(expression.foldMap { $0.freeVariables }, .Identity(expression))
 	}
 
-	public init(_ freeVariables: Set<Name>, _ scoping: Scoping<Term>) {
-		self = .In(freeVariables, scoping)
-	}
-
 
 	public var scope: (Name, Term)? {
 		guard case let .Abstraction(name, scope) = out else { return nil }
