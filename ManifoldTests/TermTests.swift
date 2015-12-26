@@ -40,7 +40,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testFreeVariablesDoNotIncludeThoseBoundByLambdas() {
-		assert(Term.Lambda(.Type, 1).freeVariables, ==, [])
+		assert(Term.Lambda(.Local(1), .Type, 1).freeVariables, ==, [])
 	}
 
 	func testLambdasDoNotShadowFreeVariablesInTheirTypes() {
