@@ -41,8 +41,8 @@ public indirect enum Term: Equatable, Hashable, IntegerLiteralConvertible, NilLi
 				return (Int.max - 83) ^ n.hashValue
 			case let .Identity(.Application(a, b)):
 				return (Int.max - 95) ^ a ^ b
-			case let .Identity(.Lambda(i, t, b)):
-				return (Int.max - 179) ^ i ^ t ^ b
+			case let .Identity(.Lambda(t, b)):
+				return (Int.max - 179) ^ t ^ b
 			case let .Identity(.Embedded(_, _, type)):
 				return (Int.max - 189) ^ type
 			case .Identity(.Implicit):

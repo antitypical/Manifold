@@ -17,16 +17,22 @@ extension Term {
 
 			case let (.Identity(.Application(a, b)), .Identity(.Implicit)):
 				let aʹ = try a.elaborateType(nil, environment, context)
-				guard case let .Identity(.Lambda(i, type, body)) = aʹ.annotation.weakHeadNormalForm(environment).out else {
+				guard case let .Identity(.Lambda(type, body)) = aʹ.annotation.weakHeadNormalForm(environment).out else {
 					throw "Illegal application of \(a) : \(aʹ.annotation) in context: \(Term.toString(context, separator: ":")), environment: \(Term.toString(environment, separator: "="))"
 				}
 				let bʹ = try b.elaborateType(type, environment, context)
-				return .Unroll(body.substitute(.Local(i), with: b), .Identity(.Application(aʹ, bʹ)))
+				guard let (name, _) = body.scope else { return .Unroll(body, .Identity(.Application(aʹ, bʹ))) }
+				return .Unroll(body.substitute(name, with: b), .Identity(.Application(aʹ, bʹ)))
 
-			case let (.Identity(.Lambda(i, a, b)), .Identity(.Implicit)) where a != nil:
+			case let (.Identity(.Lambda(a, b)), .Identity(.Implicit)) where a != nil:
 				let aʹ = try a.elaborateType(.Type, environment, context)
-				let bʹ = try b.elaborateType(nil, environment, context + [ .Local(i): a ])
-				return .Unroll(a => { bʹ.annotation.substitute(.Local(i), with: $0) }, .Identity(.Lambda(i, aʹ, bʹ)))
+				if let (name, _) = b.scope {
+					let bʹ = try b.elaborateType(nil, environment, context + [ name: a ])
+					return .Unroll(a => { bʹ.annotation.substitute(name, with: $0) }, .Identity(.Lambda(aʹ, bʹ)))
+				} else {
+					let bʹ = try b.elaborateType(nil, environment, context)
+					return .Unroll(bʹ.annotation, .Identity(.Lambda(aʹ, bʹ)))
+				}
 
 			case let (.Identity(.Embedded(value, eq, type)), .Identity(.Implicit)):
 				let typeʹ = try type.elaborateType(.Type, environment, context)
@@ -35,14 +41,29 @@ extension Term {
 			case let (.Identity(.Type(m)), .Identity(.Type(n))) where n > m:
 				return try elaborateType(nil, environment, context)
 
-			case let (.Identity(.Lambda(i, type, body)), .Identity(.Lambda(j, type2, bodyType))) where Term.equate(type, type2, environment) != nil:
+			case let (.Identity(.Lambda(type, body)), .Identity(.Lambda(type2, bodyType))) where Term.equate(type, type2, environment) != nil:
 				let t = try type2.elaborateType(.Type, environment, context)
-				let b = try body.elaborateType(bodyType.substitute(.Local(j), with: Term.Variable(Name.Local(i))), environment, context + [ Name.Local(i) : type2 ])
-				return .Unroll(.Lambda(j, type2, bodyType), .Identity(.Lambda(i, t, b)))
+				if let (name, _) = body.scope, (tName, _) = bodyType.scope {
+					let b = try body.elaborateType(bodyType.substitute(tName, with: Term.Variable(name)), environment, context + [ name : type2 ])
+					return .Unroll(.Lambda(type2, bodyType), .Identity(.Lambda(t, b)))
+				} else if let (name, _) = body.scope {
+					let b = try body.elaborateType(bodyType, environment, context + [ name : type2 ])
+					return .Unroll(.Lambda(type2, bodyType), .Identity(.Lambda(t, b)))
+				} else if let (tName, _) = bodyType.scope {
+					let b = try body.elaborateType(bodyType, environment, context + [ tName: type2 ])
+					return .Unroll(.Lambda(type2, bodyType), .Identity(.Lambda(t, b)))
+				} else {
+					let b = try body.elaborateType(bodyType, environment, context)
+					return .Unroll(.Lambda(type2, bodyType), .Identity(.Lambda(t, b)))
+				}
 
-			case let (.Identity(.Lambda(i, type, body)), .Identity(.Type(n))):
+			case let (.Identity(.Lambda(type, body)), .Identity(.Type(n))):
 				let typeʹ = try type.elaborateType(.Type, environment, context) ?? .Unroll(.Type(n + 1), .Identity(.Type(n)))
-				return .Unroll(.Lambda(i, .Type, .Type), .Identity(.Lambda(i, typeʹ, try body.elaborateType(.Type, environment, context + [ Name.Local(i) : type ?? .Type(n) ]))))
+				if let (name, _) = body.scope {
+					return .Unroll(.Lambda(.Type, .Type), .Identity(.Lambda(typeʹ, try body.elaborateType(.Type, environment, context + [ name : type ?? .Type(n) ]))))
+				} else {
+					return .Unroll(.Lambda(.Type, .Type), .Identity(.Lambda(typeʹ, try body.elaborateType(.Type, environment, context))))
+				}
 
 			case (.Identity(.Implicit), .Identity(.Implicit)):
 				throw "No rule to infer type of '\(self)'"

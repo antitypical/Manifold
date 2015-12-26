@@ -25,8 +25,12 @@ extension Term {
 		return Term(.Application(a, b))
 	}
 
-	public static func Lambda(i: Int, _ type: Term, _ body: Term) -> Term {
-		return Term(body.freeVariables.subtract([ .Local(i) ]), .Identity(.Lambda(i, type, body)))
+	public static func Lambda(name: Name, _ type: Term, _ body: Term) -> Term {
+		return Term(body.freeVariables.subtract([ name ]), .Identity(.Lambda(type, body)))
+	}
+
+	public static func Lambda(type: Term, _ body: Term) -> Term {
+		return Term(.Lambda(type, body))
 	}
 
 	public static func Embedded(name: String, _ type: Term, _ evaluator: Term throws -> Term) -> Term {
@@ -95,7 +99,7 @@ public func --> (left: Term, right: Term) -> Term {
 }
 
 public func => (type: Term, body: Term -> Term) -> Term {
-	return .Lambda(-1, type, body(.Variable(.Local(-1))))
+	return .Lambda(type, body(.Variable(.Local(-1))))
 }
 
 public func => (left: (Term, Term), right: (Term, Term) -> Term) -> Term {
@@ -111,7 +115,7 @@ public func => (left: (Term, Term, Term, Term), right: (Term, Term, Term, Term) 
 }
 
 public func => (left: (Name, Term), right: Term) -> Term {
-	return .Lambda(-1, left.1, right)
+	return .Lambda(left.0, left.1, right)
 }
 
 public func => (left: DictionaryLiteral<Name, Term>, right: Term) -> Term {

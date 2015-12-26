@@ -10,7 +10,7 @@ extension Term {
 		case let .Identity(.Application(a, b)):
 			let aʹ = try a.evaluate(environment)
 			switch aʹ.out {
-			case let .Identity(.Lambda(i, _, body)):
+			case let .Identity(.Lambda(_, body)):
 				guard let (name, scope) = body.scope else { return try body.evaluate(environment) }
 				return try scope.substitute(name, with: b.evaluate(environment)).evaluate(environment)
 

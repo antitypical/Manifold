@@ -20,7 +20,7 @@ extension TermContainerType {
 			case let .Identity(.Application((_, (a, _)), (_, b))):
 				return ("\(a) \(wrap(b))", true)
 
-			case let .Identity(.Lambda(_, (t, type), (b, (body, _)))):
+			case let .Identity(.Lambda((t, type), (b, (body, _)))):
 				guard case let .Abstraction(name, _) = b.out else { return ("\(wrap(type)) → \(body)", true) }
 
 				if case .Identity(.Implicit) = t.out {

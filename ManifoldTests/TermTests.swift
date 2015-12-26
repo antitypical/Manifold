@@ -21,34 +21,34 @@ final class TermTests: XCTestCase {
 
 
 	func testHigherOrderConstruction() {
-		assert(.Type => id, ==, .Lambda(0, .Type, 0))
-		assert(identity.value, ==, .Lambda(1, .Type, .Lambda(0, 1, 0)))
-		assert(constant, ==, .Lambda(2, .Type, .Lambda(1, .Type, .Lambda(0, 2, .Lambda(-1, 1, 0)))))
+		assert(.Type => id, ==, .Lambda(.Type, 0))
+		assert(identity.value, ==, .Lambda(.Type, .Lambda(1, 0)))
+		assert(constant, ==, .Lambda(.Type, .Lambda(.Type, .Lambda(2, .Lambda(1, 0)))))
 	}
 
 	func testChurchEncodedBooleanConstruction() {
-		assert(.Type => { A in (A, A) => { a, _ in a } }, ==, .Lambda(1, .Type, .Lambda(0, 1, .Lambda(-1, 1, 0))))
-		assert(.Type => { A in (A, A) => { _, b in b } }, ==, .Lambda(1, .Type, .Lambda(-1, 1, .Lambda(0, 1, 0))))
+		assert(.Type => { A in (A, A) => { a, _ in a } }, ==, .Lambda(.Type, .Lambda(1, .Lambda(1, 0))))
+		assert(.Type => { A in (A, A) => { _, b in b } }, ==, .Lambda( .Type, .Lambda(1, .Lambda(1, 0))))
 	}
 
 	func testFunctionTypeConstruction() {
-		assert(.Type => { A in (A --> A, A) => const(A) }, ==, .Lambda(0, .Type, .Lambda(-1, .Lambda(-1, 0, 0), .Lambda(-1, 0, 0))))
+		assert(.Type => { A in (A --> A, A) => const(A) }, ==, .Lambda(.Type, .Lambda(.Lambda(0, 0), .Lambda(0, 0))))
 	}
 
 	func testSubstitution() {
-		assert(Term.Lambda(0, 1, 0).substitute(.Local(1), with: identity.value), ==, .Lambda(0, identity.value, 0))
+		assert(Term.Lambda(1, 0).substitute(.Local(1), with: identity.value), ==, .Lambda(identity.value, 0))
 	}
 
 	func testFreeVariablesDoNotIncludeThoseBoundByLambdas() {
-		assert(Term.Lambda(1, .Type, 1).freeVariables, ==, [])
+		assert(Term.Lambda(.Type, 1).freeVariables, ==, [])
 	}
 
 	func testLambdasDoNotShadowFreeVariablesInTheirTypes() {
-		assert(Term.Lambda(1, 1, 1).freeVariables, ==, [ .Local(1) ])
+		assert(Term.Lambda(1, 1).freeVariables, ==, [ .Local(1) ])
 	}
 
 	func testLambdasBindVariablesDeeply() {
-		assert(Term.Lambda(2, .Type, .Lambda(1, 2, .Lambda(0, .Type, .Application(2, .Application(1, 0))))).freeVariables, ==, [])
+		assert(Term.Lambda(.Type, .Lambda(2, .Lambda(.Type, .Application(2, .Application(1, 0))))).freeVariables, ==, [])
 	}
 }
 

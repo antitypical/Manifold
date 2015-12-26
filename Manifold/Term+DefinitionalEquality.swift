@@ -25,9 +25,9 @@ extension Term {
 			guard let first = equate(a1, b1, environment, visited: visited), second = equate(a2, b2, environment, visited: visited) else { return nil }
 			return .Application(first, second)
 
-		case let (.Identity(.Lambda(_, a1, a2)), .Identity(.Lambda(i, b1, b2))):
+		case let (.Identity(.Lambda(a1, a2)), .Identity(.Lambda(b1, b2))):
 			guard let type = equate(a1, b1, environment, visited: visited), body = equate(a2, b2, environment, visited: visited) else { return nil }
-			return .Lambda(i, type, body)
+			return .Lambda(type, body)
 
 		default:
 			return nil
