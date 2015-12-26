@@ -22,7 +22,7 @@ public enum Datatype: DictionaryLiteralConvertible {
 	public func definitions(recur: Term, abstract: (Term -> Term) -> Term -> Term = { f in { f($0) } }) -> [(Name, Term, Term)] {
 		switch self {
 		case let .Argument(type, continuation):
-			return continuation(Term.Variable(.Local(-1))).definitions(recur, abstract: { f in
+			return continuation(-1).definitions(recur, abstract: { f in
 				{ recur in
 					type => {
 						// We compute the continuation of the type constructor with respect to a parameter, but we need it to match up with the variable bound by this lambda at runtime. Since `=>` already implements the desired [circular programming](http://chris.eidhof.nl/posts/repmin-in-swift.html) behaviour, we can simply copy it out at this point and get the desired lazily-normalizing circular behaviour for the type constructor itself, instantiated correctly for each data constructor—even though they may have different numbers of parameters, and thus bind the type constructor’s parameter at a different variable.
