@@ -65,7 +65,7 @@ extension Term {
 					return .Unroll(.Lambda(.Type, .Type), .Identity(.Lambda(typeʹ, try body.elaborateType(.Type, environment, context))))
 				}
 
-			case (.Identity(.Implicit), .Identity(.Implicit)):
+			case (_, .Identity(.Implicit)):
 				throw "No rule to infer type of '\(self)'"
 
 			case let (.Identity(.Implicit), .Identity(type)):
