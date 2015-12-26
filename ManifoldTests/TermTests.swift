@@ -48,7 +48,7 @@ final class TermTests: XCTestCase {
 	}
 
 	func testLambdasBindVariablesDeeply() {
-		assert(Term.Lambda(.Type, .Lambda(2, .Lambda(.Type, .Application(2, .Application(1, 0))))).freeVariables, ==, [])
+		assert(Term.Lambda(.Local(2), .Type, .Lambda(.Local(1), 2, .Lambda(.Local(0), .Type, .Application(2, .Application(1, 0))))).freeVariables, ==, [])
 	}
 }
 
