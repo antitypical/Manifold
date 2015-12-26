@@ -95,7 +95,9 @@ public func --> (left: Term, right: Term) -> Term {
 }
 
 public func => (type: Term, body: Term -> Term) -> Term {
-	return .Lambda(type, body(.Variable(.Local(-1))))
+	let proposed: Name = .Local(-1)
+	let freeVariables = body(.Variable(proposed)).freeVariables
+	return .Lambda(type, body(.Variable(proposed.fresh(freeVariables))))
 }
 
 public func => (left: (Term, Term), right: (Term, Term) -> Term) -> Term {
