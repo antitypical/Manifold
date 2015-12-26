@@ -21,7 +21,7 @@ extension TermContainerType {
 				return ("\(a) \(wrap(b))", true)
 
 			case let .Identity(.Lambda((t, type), (b, (body, _)))):
-				guard case let .Abstraction(name, _) = b.out else { return ("\(wrap(type)) → \(body)", true) }
+				guard let (name, _) = b.scope else { return ("\(wrap(type)) → \(body)", true) }
 
 				if case .Identity(.Implicit) = t.out {
 					return ("λ \(name) . \(body)", true)
