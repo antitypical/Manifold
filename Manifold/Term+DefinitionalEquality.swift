@@ -42,6 +42,12 @@ extension Term {
 			guard let scope = equate(scope1.rename(name1, fresh), scope2.rename(name2, fresh), environment, visited: visited) else { return nil }
 			return .Abstraction(name2, scope.rename(fresh, name2))
 
+		case let (.Abstraction(name, scope), _) where !scope.freeVariables.contains(name):
+			return equate(scope, rightʹ, environment, visited: visited)
+			
+		case let (_, .Abstraction(name, scope)) where !scope.freeVariables.contains(name):
+			return equate(leftʹ, scope, environment, visited: visited)
+
 		default:
 			return nil
 		}
