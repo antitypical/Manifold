@@ -16,7 +16,7 @@ public indirect enum Term: Equatable, Hashable, IntegerLiteralConvertible, NilLi
 	}
 
 	public init(_ expression: Expression<Term>) {
-		self.init(expression.foldMap { $0.freeVariables }, .Identity(expression))
+		self = .In(expression.foldMap { $0.freeVariables }, .Identity(expression))
 	}
 
 	public init(_ freeVariables: Set<Name>, _ scoping: Scoping<Term>) {
