@@ -8,6 +8,24 @@ extension Term {
 		}
 	}
 
+	public var boundVariables: Set<Name> {
+		return cata {
+			switch $0 {
+			case let .Abstraction(name, scope):
+				return scope.union([ name ])
+			case let .Identity(.Application(a, b)):
+				return a.union(b)
+			case let .Identity(.Lambda(type, body)):
+				return type.union(body)
+			case let .Identity(.Embedded(_, _, type)):
+				return type
+			default:
+				return []
+			}
+		}
+	}
+
+
 	public func rename(old: Name, _ new: Name) -> Term {
 		switch out {
 		case let .Variable(name):
