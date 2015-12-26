@@ -25,6 +25,11 @@ public indirect enum Term: Equatable, Hashable, IntegerLiteralConvertible, NilLi
 		return (name, scope)
 	}
 
+	public var explicit: Term? {
+		if case .Identity(.Implicit) = out { return nil }
+		return self
+	}
+
 
 	// MARK: Hashable
 
