@@ -12,8 +12,8 @@ final class ModuleTests: XCTestCase {
 
 	func testEquivalenceOfEncodedAndDatatypeBooleans() {
 		encodedBoolean.definitions.forEach { symbol, type, value in
-			assert(Module.boolean.context[symbol], ==, type, message: "\(symbol)")
-			assert(Module.boolean.environment[symbol], ==, value, message: "\(symbol)")
+			assert(Module.boolean.context[symbol], Term.equate, type, message: "\(symbol)")
+			assert(Module.boolean.environment[symbol], Term.equate, value, message: "\(symbol)")
 		}
 	}
 
@@ -33,8 +33,8 @@ final class ModuleTests: XCTestCase {
 
 	func testEquivalenceOfEncodedAndDatatypePairs() {
 		encodedPair.definitions.forEach { symbol, type, value in
-			assert(Module.pair.context[symbol], ==, type, message: "\(symbol)")
-			assert(Module.pair.environment[symbol], ==, value, message: "\(symbol)")
+			assert(Module.pair.context[symbol], Term.equate, type, message: "\(symbol)")
+			assert(Module.pair.environment[symbol], Term.equate, value, message: "\(symbol)")
 		}
 	}
 
@@ -43,8 +43,8 @@ final class ModuleTests: XCTestCase {
 
 	func testEquivalenceOfEncodedAndDatatypeSigmas() {
 		encodedSigma.definitions.forEach { symbol, type, value in
-			assert(Module.sigma.context[symbol], ==, type, message: "'\(symbol)' expected '\(type)', actual '\(Module.sigma.context[symbol])'")
-			assert(Module.sigma.environment[symbol], ==, value, message: "'\(symbol)' expected '\(value)', actual '\(Module.sigma.environment[symbol])'")
+			assert(Module.sigma.context[symbol], Term.equate, type, message: "'\(symbol)' expected '\(type)', actual '\(Module.sigma.context[symbol])'")
+			assert(Module.sigma.environment[symbol], Term.equate, value, message: "'\(symbol)' expected '\(value)', actual '\(Module.sigma.environment[symbol])'")
 		}
 	}
 
@@ -53,8 +53,8 @@ final class ModuleTests: XCTestCase {
 
 	func testEquivalenceOfEncodedAndDatatypeEithers() {
 		Module.either.definitions.forEach { symbol, type, value in
-			assert(encodedEither.context[symbol], ==, type, message: "\(symbol)")
-			assert(encodedEither.environment[symbol], ==, value, message: "\(symbol)")
+			assert(encodedEither.context[symbol], Term.equate, type, message: "\(symbol)")
+			assert(encodedEither.environment[symbol], Term.equate, value, message: "\(symbol)")
 		}
 	}
 
@@ -63,8 +63,8 @@ final class ModuleTests: XCTestCase {
 
 	func testEquivalenceOfEncodedAndDatatypeLists() {
 		encodedList.definitions.forEach { symbol, type, value in
-			assert(Module.list.context[symbol], ==, type, message: "'\(symbol)' expected '\(type)', actual '\(Module.list.context[symbol])'")
-			assert(Module.list.environment[symbol], ==, value, message: "'\(symbol)' expected '\(value)', actual '\(Module.list.environment[symbol])'")
+			assert(Module.list.context[symbol], Term.equate, type, message: "'\(symbol)' expected '\(type)', actual '\(Module.list.context[symbol])'")
+			assert(Module.list.environment[symbol], Term.equate, value, message: "'\(symbol)' expected '\(value)', actual '\(Module.list.environment[symbol])'")
 		}
 	}
 
@@ -109,8 +109,8 @@ final class ModuleTests: XCTestCase {
 		let consTerm: Term = fromList[cons[nil, embedCharacter("a"), `nil`[Term.Implicit]]]
 		let term = fromList[cons[nil, embedCharacter("h"), cons[nil, embedCharacter("i"), `nil`[Term.Implicit]]]]
 		assert(try? nilTerm.evaluate(environment), ==, Term.Embedded("", "String"))
-		assert(try? consTerm.evaluate(environment), ==, Term.Embedded("a", "String"))
-		assert(try? term.evaluate(environment), ==, Term.Embedded("hi", "String"))
+		assert(try? consTerm.evaluate(environment), Term.equate, Term.Embedded("a", "String"))
+		assert(try? term.evaluate(environment), Term.equate, Term.Embedded("hi", "String"))
 	}
 }
 
