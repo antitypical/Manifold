@@ -95,15 +95,18 @@ public func --> (left: Term, right: Term) -> Term {
 }
 
 public func => (type: Term, body: Term -> Term) -> Term {
-	func pick(proposed: Name) -> Term {
-		let free1 = body(.Variable(proposed)).freeVariables.subtract([ proposed ])
-		let proposedʹ = proposed.fresh(free1)
-		let free2 = body(.Variable(proposedʹ)).freeVariables.subtract([ proposedʹ ])
-		return free1 == free2
-			? .Lambda(proposed, type, body(.Variable(proposed)))
-			: pick(proposedʹ)
-	}
-	return pick(.Local(-1))
+	let proposed1: Name = .Local(-1)
+	let body1 = body(.Variable(proposed1))
+	let free1 = body1.freeVariables.subtract([ proposed1 ])
+	let proposed2 = proposed1.fresh(free1)
+	if proposed1 == proposed2 { return .Lambda(proposed1, type, body1) }
+
+	let body2 = body(.Variable(proposed2))
+	let free2 = body2.freeVariables.subtract([ proposed2 ])
+	
+	return free1 == free2
+		? .Lambda(proposed1, type, body1)
+		: .Lambda(proposed2, type, body2)
 }
 
 public func => (left: (Term, Term), right: (Term, Term) -> Term) -> Term {
