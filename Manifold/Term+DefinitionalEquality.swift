@@ -29,6 +29,10 @@ extension Term {
 			guard let type = equate(a1, b1, environment, visited: visited), body = equate(a2, b2, environment, visited: visited) else { return nil }
 			return .Lambda(type, body)
 
+		case let (.Abstraction(_, scope1), .Abstraction(name, scope2)):
+			guard let scope = equate(scope1, scope2, environment, visited: visited) else { return nil }
+			return .Abstraction(name, scope)
+
 		default:
 			return nil
 		}
