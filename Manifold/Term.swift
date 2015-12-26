@@ -20,7 +20,7 @@ public indirect enum Term: Equatable, Hashable, IntegerLiteralConvertible, NilLi
 	}
 
 	public init(_ freeVariables: Set<Name>, _ scoping: Scoping<Term>) {
-		self = Term.In(freeVariables, scoping)
+		self = .In(freeVariables, scoping)
 	}
 
 
