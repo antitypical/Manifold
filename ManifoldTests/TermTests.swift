@@ -3,7 +3,7 @@
 final class TermTests: XCTestCase {
 	func testLambdaTypeDescription() {
 		assert(identity.value.description, ==, "λ b : Type . λ a : b . a")
-		assert(try? identity.value.elaborateType(identity.type, [:], [:]).annotation.description, ==, "λ a : Type . a → a")
+		assert(try? identity.value.elaborateType(identity.type, [:], [:]).annotation.description, ==, "λ b : Type . λ a : b . b")
 	}
 
 	func testRightNestedFunctionTypesAreNotParenthesized() {
