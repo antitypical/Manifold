@@ -27,8 +27,8 @@ final class TermTests: XCTestCase {
 	}
 
 	func testChurchEncodedBooleanConstruction() {
-		assert(.Type => { A in (A, A) => { a, _ in a } }, ==, .Lambda(.Local(2), .Type, .Lambda(.Local(1), 2, .Lambda(.Local(0), 2, 0))))
-		assert(.Type => { A in (A, A) => { _, b in b } }, ==, .Lambda(.Local(2), .Type, .Lambda(.Local(1), 2, .Lambda(.Local(0), 2, 1))))
+		assert(.Type => { A in (A, A) => { b, _ in b } }, ==, .Lambda(.Local(2), .Type, .Lambda(.Local(1), 2, .Lambda(.Local(0), 2, 1))))
+		assert(.Type => { A in (A, A) => { _, a in a } }, ==, .Lambda(.Local(2), .Type, .Lambda(.Local(1), 2, .Lambda(.Local(0), 2, 0))))
 	}
 
 	func testFunctionTypeConstruction() {
