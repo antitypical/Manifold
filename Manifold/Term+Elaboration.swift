@@ -86,6 +86,14 @@ extension Term {
 		}
 	}
 
+	func elaborateTypeInScope(type: Term, against: Term, _ environment: [Name:Term], _ context: [Name:Term]) throws -> AnnotatedTerm<Term> {
+		if let (name, scope) = scope {
+			return try elaborateType(against, environment, context + [ name: scope ])
+		} else {
+			return try elaborateType(against, environment, context)
+		}
+	}
+
 	static func toString(table: [Name:Term], separator: String) -> String {
 		let keys = table.keys.sort().lazy
 		let maxLength: Int = keys.maxElement { $0.description.characters.count < $1.description.characters.count }?.description.characters.count ?? 0
