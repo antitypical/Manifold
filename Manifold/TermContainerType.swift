@@ -7,6 +7,17 @@ public protocol TermContainerType: CustomStringConvertible {
 }
 
 extension TermContainerType {
+	public var scope: (Name, Self)? {
+		guard case let .Abstraction(name, scope) = out else { return nil }
+		return (name, scope)
+	}
+
+	public var explicit: Self? {
+		if case .Identity(.Implicit) = out { return nil }
+		return self
+	}
+
+
 	public static func out(container: Self) -> Scoping<Self> {
 		return container.out
 	}
