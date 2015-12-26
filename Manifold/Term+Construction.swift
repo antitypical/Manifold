@@ -95,7 +95,7 @@ infix operator => {
 }
 
 public func --> (left: Term, right: Term) -> Term {
-	return (-1, left) => const(right)
+	return .Lambda(left, right)
 }
 
 public func => (type: Term, body: Term -> Term) -> Term {
