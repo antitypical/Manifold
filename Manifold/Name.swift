@@ -1,6 +1,10 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public enum Name: Comparable, CustomStringConvertible, Hashable, StringLiteralConvertible {
+	static func fresh(set: Set<Name>) -> Name {
+		return Name.Local(0).fresh(set)
+	}
+
 	func fresh(isUsed: Name -> Bool) -> Name {
 		guard isUsed(self) else { return self }
 		switch self {
