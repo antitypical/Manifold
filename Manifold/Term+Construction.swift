@@ -22,7 +22,7 @@ extension Term {
 	}
 
 	public static func Lambda(name: Name, _ type: Term, _ body: Term) -> Term {
-		return .In(body.freeVariables.subtract([ name ]), .Identity(.Lambda(type, body)))
+		return Term(.Lambda(type, .Abstraction(name, body)))
 	}
 
 	public static func Lambda(type: Term, _ body: Term) -> Term {
