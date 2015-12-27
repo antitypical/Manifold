@@ -17,6 +17,15 @@ public enum Scoping<Term>: CustomDebugStringConvertible {
 		}
 	}
 
+	public var scope: Term? {
+		switch self {
+		case let .Abstraction(_, scope):
+			return scope
+		default:
+			return nil
+		}
+	}
+
 
 	// MARK: CustomDebugStringConvertible
 
