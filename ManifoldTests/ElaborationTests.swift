@@ -13,6 +13,15 @@ final class ElaborationTests: XCTestCase {
 	}
 }
 
+func assertNoThrow<A>(@autoclosure test: () throws -> A, file: String = __FILE__, line: UInt = __LINE__) -> A? {
+	do {
+		return try test()
+	} catch {
+		XCTFail("\(error)", file: file, line: line)
+		return nil
+	}
+}
+
 
 import Assertions
 import Manifold
