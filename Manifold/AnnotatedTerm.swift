@@ -27,6 +27,13 @@ public enum AnnotatedTerm<Annotation>: TermContainerType {
 	}
 
 
+	// MARK: CustomStringConvertible
+
+	public var description: String {
+		return "\(annotation) @ \(cata { $0.description })"
+	}
+
+
 	// MARK: Equatable
 
 	public static func equal(annotationEqual: (Annotation, Annotation) -> Bool)(_ left: AnnotatedTerm, _ right: AnnotatedTerm) -> Bool {
