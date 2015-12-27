@@ -27,6 +27,13 @@ public enum AnnotatedTerm<Annotation>: TermContainerType {
 	}
 
 
+	// MARK: Equatable
+
+	public static func equal(annotationEqual: (Annotation, Annotation) -> Bool)(_ left: AnnotatedTerm, _ right: AnnotatedTerm) -> Bool {
+		return annotationEqual(left.annotation, right.annotation) && Scoping.equal(equal(annotationEqual))(left.out, right.out)
+	}
+
+
 	// MARK: TermContainerType
 
 	public var out: Scoping<AnnotatedTerm> {
