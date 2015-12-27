@@ -20,6 +20,13 @@ public enum AnnotatedTerm<Annotation>: TermContainerType {
 	}
 
 
+	// MARK: CustomDebugStringConvertible
+
+	public var debugDescription: String {
+		return ".Unroll(\(String(reflecting: annotation)), \(cata { $0.debugDescription }))"
+	}
+
+
 	// MARK: TermContainerType
 
 	public var out: Scoping<AnnotatedTerm> {
