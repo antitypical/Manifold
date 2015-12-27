@@ -9,7 +9,7 @@ final class ElaborationTests: XCTestCase {
 	func testChecksLambdasAgainstFunctionTypes() {
 		let type = .Type --> .Type
 		let term = .Type => { $0 }
-		let elaborated = try? term.elaborateType(type, [:], [:])
+		let elaborated = assertNoThrow(try term.elaborateType(type, [:], [:]))
 		assert(elaborated?.annotation, ==, type)
 	}
 
