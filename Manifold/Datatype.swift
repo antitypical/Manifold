@@ -54,13 +54,14 @@ public enum Datatype: DictionaryLiteralConvertible {
 		case let .Argument(type, rest):
 			return (name, type) => self.value(symbol, telescope: rest, constructors: constructors, index: index + 1, parameters: parameters + [ .Variable(name) ])(recur)
 		case .End:
-			return (name, .Type) => constructors.map {
+			let constructors = constructors.map {
 				($0, $1.fold(recur, terminal: .Variable(name), index: index + 1, combine: -->))
-			}.reverse().reduce(id, combine: { into, each in
-				each.0 == symbol
-					? { _ in each.1 => { into(parameters.reduce($0, combine: { $0[$1] })) } }
-					: into >>> { each.1 --> $0 }
-			})(.Variable(name))
+			}
+			return (name, .Type) => constructors.reverse().reduce((id, index), combine: { into, each in
+				(each.0 == symbol
+					? { _ in each.1 => { into.0(parameters.reduce($0, combine: { $0[$1] })) } }
+					: into.0 >>> { each.1 --> $0 }, into.1 + 1)
+			}).0(.Variable(name))
 		}
 	}
 
