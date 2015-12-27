@@ -64,6 +64,20 @@ public enum Scoping<Term>: CustomDebugStringConvertible, CustomStringConvertible
 	}
 
 
+	// MARK: Foldable
+
+	public func foldMap<Result: MonoidType>(@noescape transform: Term throws -> Result) rethrows -> Result {
+		switch self {
+		case .Variable:
+			return Result.mempty
+		case let .Abstraction(_, term):
+			return try transform(term)
+		case let .Identity(expression):
+			return try expression.foldMap(transform)
+		}
+	}
+
+
 	// MARK: Functor
 
 	public func map<Other>(@noescape transform: Term throws -> Other) rethrows -> Scoping<Other> {
