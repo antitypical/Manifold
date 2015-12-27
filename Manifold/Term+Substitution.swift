@@ -50,7 +50,7 @@ extension Term {
 		case .Variable:
 			return self
 		case let .Abstraction(name, scope):
-			let newName = name.fresh(freeVariables.union(with.freeVariables))
+			let newName = name.fresh(freeVariables.union(with.freeVariables).union([ variable ]))
 			return .Abstraction(newName, scope.rename(name, newName).substitute(variable, with: with))
 		case let .Identity(syntax):
 			return Term(syntax.map { $0.substitute(variable, with: with) })
