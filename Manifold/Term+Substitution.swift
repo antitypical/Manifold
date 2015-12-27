@@ -56,4 +56,9 @@ extension Term {
 			return Term(syntax.map { $0.substitute(variable, with: with) })
 		}
 	}
+
+	public func applySubstitution(value: Term) -> Term {
+		guard let (name, scope) = scope else { return self }
+		return scope.substitute(name, with: value)
+	}
 }
