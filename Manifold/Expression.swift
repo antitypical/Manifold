@@ -1,11 +1,29 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Expression<Recur> {
+public enum Expression<Recur>: CustomDebugStringConvertible {
 	case Type(Int)
 	case Application(Recur, Recur)
 	case Lambda(Recur, Recur)
 	case Embedded(Any, (Any, Any) -> Bool, Recur)
 	case Implicit
+
+
+	// MARK: CustomDebugStringConvertible
+
+	public var debugDescription: String {
+		switch self {
+		case let .Type(n):
+			return ".Type(\(n))"
+		case let .Application(a, b):
+			return ".Application(\(String(reflecting: a)), \(String(reflecting: b)))"
+		case let .Lambda(type, body):
+			return ".Lambda(\(String(reflecting: type)), \(String(reflecting: body)))"
+		case let .Embedded(a, eq, type):
+			return ".Embedded(\(String(reflecting: a)), \(String(reflecting: eq)), \(String(reflecting: type)))"
+		case .Implicit:
+			return ".Implicit"
+		}
+	}
 
 
 	// MARK: Functor
