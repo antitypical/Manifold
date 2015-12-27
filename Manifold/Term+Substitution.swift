@@ -3,8 +3,8 @@
 extension Term {
 	public var freeVariables: Set<Name> {
 		switch self {
-		case let .In(f):
-			return f().0
+		case let .In(freeVariables, _):
+			return freeVariables
 		}
 	}
 
