@@ -25,7 +25,7 @@ public enum Datatype: DictionaryLiteralConvertible {
 			return continuation(-1).definitions(recur, abstract: { f in
 				{ recur in
 					type => {
-						return f(.Application(recur, $0))
+						f(.Application(recur, $0))
 					}
 				}
 			} >>> abstract)
