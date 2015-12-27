@@ -46,17 +46,18 @@ public enum Datatype: DictionaryLiteralConvertible {
 		}
 	}
 
-	public func value(symbol: String, telescope: Telescope, constructors: [(String, Telescope)], parameters: [Term] = [])(_ recur: Term) -> Term {
+	public func value(symbol: String, telescope: Telescope, constructors: [(String, Telescope)], index: Int = 0, parameters: [Term] = [])(_ recur: Term) -> Term {
 		switch telescope {
 		case let .Recursive(rest):
-			return recur => { self.value(symbol, telescope: rest, constructors: constructors, parameters: parameters + [ $0 ])(recur) }
+			let name = Name.Local(index)
+			return (name, recur) => self.value(symbol, telescope: rest, constructors: constructors, index: index + 1, parameters: parameters + [ .Variable(name) ])(recur)
 		case let .Argument(type, rest):
-			let name = Name.Local(parameters.count)
-			return (name, type) => self.value(symbol, telescope: rest, constructors: constructors, parameters: parameters + [ .Variable(name) ])(recur)
+			let name = Name.Local(index)
+			return (name, type) => self.value(symbol, telescope: rest, constructors: constructors, index: index + 1, parameters: parameters + [ .Variable(name) ])(recur)
 		case .End:
 			return .Type => { motive in
 				constructors.map {
-					($0, $1.fold(recur, terminal: motive, index: parameters.count, combine: -->))
+					($0, $1.fold(recur, terminal: motive, index: index, combine: -->))
 				}.reverse().reduce(id, combine: { into, each in
 					each.0 == symbol
 						? { _ in each.1 => { into(parameters.reduce($0, combine: { $0[$1] })) } }
