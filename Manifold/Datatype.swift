@@ -57,7 +57,7 @@ public enum Datatype: DictionaryLiteralConvertible {
 		case .End:
 			return .Type => { motive in
 				constructors.map {
-					($0, $1.fold(recur, terminal: motive, combine: -->))
+					($0, $1.fold(recur, terminal: motive, index: parameters.count, combine: -->))
 				}.reverse().reduce(id, combine: { into, each in
 					each.0 == symbol
 						? { _ in each.1 => { into(parameters.reduce($0, combine: { $0[$1] })) } }
