@@ -3,7 +3,7 @@
 final class ElaborationTests: XCTestCase {
 	func testInfersTheTypeOfType() {
 		let term: Term = .Type
-		assert(try? term.elaborateType(nil, [:], [:]), ==, AnnotatedTerm<Term>.Unroll(.Type(1), .Identity(.Type(0))))
+		assert(try? term.elaborateType(nil, [:], [:]), ==, .Unroll(.Type(1), .Identity(.Type(0))))
 	}
 }
 
