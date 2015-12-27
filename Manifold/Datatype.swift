@@ -46,7 +46,7 @@ public enum Datatype: DictionaryLiteralConvertible {
 		}
 	}
 
-	public func value(symbol: String, telescope: Telescope, constructors: [(String, Telescope)], index: Int = 0, parameters: [Term] = [])(_ recur: Term) -> Term {
+	public func value(symbol: String, telescope: Telescope, constructors: [(String, Telescope)], index: Int, parameters: [Term] = [])(_ recur: Term) -> Term {
 		let name = Name.Local(index)
 		switch telescope {
 		case let .Recursive(rest):
