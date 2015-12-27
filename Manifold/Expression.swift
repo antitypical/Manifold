@@ -15,11 +15,11 @@ public enum Expression<Recur>: CustomDebugStringConvertible {
 		case let .Type(n):
 			return ".Type(\(n))"
 		case let .Application(a, b):
-			return ".Application(\(String(reflecting: a)), \(String(reflecting: b)))"
+			return ".Application(\(a), \(b))"
 		case let .Lambda(type, body):
-			return ".Lambda(\(String(reflecting: type)), \(String(reflecting: body)))"
+			return ".Lambda(\(type), \(body))"
 		case let .Embedded(a, eq, type):
-			return ".Embedded(\(String(reflecting: a)), \(String(reflecting: eq)), \(String(reflecting: type)))"
+			return ".Embedded(\(String(reflecting: a)), \(String(reflecting: eq)), \(type))"
 		case .Implicit:
 			return ".Implicit"
 		}
