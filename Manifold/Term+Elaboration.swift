@@ -36,20 +36,15 @@ extension Term {
 				return try elaborateType(nil, environment, context)
 
 			case let (.Identity(.Lambda(type, body)), .Identity(.Lambda(type2, bodyType))) where Term.equate(type, type2, environment) != nil:
-				let t = try type2.elaborateType(.Type, environment, context)
-				if let (name, _) = body.scope, (tName, _) = bodyType.scope {
-					let b = try body.elaborateType(bodyType.substitute(tName, with: Term.Variable(name)), environment, context + [ name : type2 ])
-					return .Unroll(.Lambda(type2, bodyType), .Identity(.Lambda(t, b)))
-				} else if let (name, _) = body.scope {
-					let b = try body.elaborateType(bodyType, environment, context + [ name : type2 ])
-					return .Unroll(.Lambda(type2, bodyType), .Identity(.Lambda(t, b)))
-				} else if let (tName, _) = bodyType.scope {
-					let b = try body.elaborateType(bodyType, environment, context + [ tName: type2 ])
-					return .Unroll(.Lambda(type2, bodyType), .Identity(.Lambda(t, b)))
-				} else {
-					let b = try body.elaborateType(bodyType, environment, context)
-					return .Unroll(.Lambda(type2, bodyType), .Identity(.Lambda(t, b)))
+				let type2ʹ = try type2.elaborateType(.Type, environment, context)
+				let _ = try bodyType.elaborateTypeInScope(type2, .Type, environment, context)
+
+				if let (termName, _) = body.scope {
+					let bodyʹ = try body.elaborateTypeInScope(type2, bodyType.applySubstitution(.Variable(termName)), environment, body.extendContext(context, with: type2))
+					return .Unroll(against, .Identity(.Lambda(type2ʹ, bodyʹ)))
 				}
+				let bodyʹ = try body.elaborateTypeInScope(type2, bodyType, environment, context)
+				return .Unroll(against, .Identity(.Lambda(type2ʹ, bodyʹ)))
 
 			case let (.Identity(.Lambda(type, body)), .Identity(.Type)):
 				let typeʹ = try type.elaborateType(.Type, environment, context)
