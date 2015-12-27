@@ -4,7 +4,7 @@ extension Module {
 	public static var maybe: Module {
 		let Maybe = Declaration.Datatype("Maybe", .Argument(.Type, {
 			[
-				"just": .Argument(nil, $0, .End),
+				"just": .Argument($0, .End),
 				"nothing": .End
 			]
 		}))
