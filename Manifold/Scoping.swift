@@ -26,6 +26,15 @@ public enum Scoping<Term>: CustomDebugStringConvertible {
 		}
 	}
 
+	public var expression: Expression<Term>? {
+		switch self {
+		case let .Identity(expression):
+			return expression
+		default:
+			return nil
+		}
+	}
+
 
 	// MARK: CustomDebugStringConvertible
 
