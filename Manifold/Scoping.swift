@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Scoping<Term>: CustomDebugStringConvertible {
+public enum Scoping<Term>: CustomDebugStringConvertible, CustomStringConvertible {
 	case Variable(Name)
 	case Abstraction(Name, Term)
 	case Identity(Expression<Term>)
@@ -46,6 +46,20 @@ public enum Scoping<Term>: CustomDebugStringConvertible {
 			return ".Abstraction(\(String(reflecting: name)), \(scope))"
 		case let .Identity(term):
 			return ".Identity(\(term))"
+		}
+	}
+
+
+	// MARK: CustomStringConvertible
+
+	public var description: String {
+		switch self {
+		case let .Variable(name):
+			return String(name)
+		case let .Abstraction(_, scope):
+			return String(scope)
+		case let .Identity(expression):
+			return String(expression)
 		}
 	}
 
