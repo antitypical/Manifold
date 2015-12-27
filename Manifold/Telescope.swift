@@ -2,7 +2,7 @@
 
 public enum Telescope {
 	indirect case Recursive(Telescope)
-	indirect case Argument(Term, Term -> Telescope)
+	indirect case Argument(Name?, Term, Telescope)
 	case End
 
 
@@ -12,8 +12,10 @@ public enum Telescope {
 			return terminal
 		case let .Recursive(rest):
 			return combine(recur, rest.fold(recur, terminal: terminal, combine: combine))
-		case let .Argument(type, continuation):
-			return type => { continuation($0).fold(recur, terminal: terminal, combine: combine) }
+		case let .Argument(.Some(name), type, rest):
+			return (name, type) => rest.fold(recur, terminal: terminal, combine: combine)
+		case let .Argument(.None, type, rest):
+			return type --> rest.fold(recur, terminal: terminal, combine: combine)
 		}
 	}
 }

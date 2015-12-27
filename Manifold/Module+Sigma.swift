@@ -4,7 +4,7 @@ extension Module {
 	public static var sigma: Module {
 		let Sigma = Declaration("Sigma", Datatype(.Type, { A in
 			Datatype.Argument(A --> .Type) { B in
-				[ "sigma": Telescope.Argument(A) { a in .Argument(B[a], const(.End)) } ]
+				[ "sigma": Telescope.Argument("a", A, .Argument(nil, B["a" as Term], .End)) ]
 			}
 		}))
 

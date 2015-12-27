@@ -3,7 +3,7 @@
 extension Module {
 	public static var pair: Module {
 		let Pair = Declaration("Pair", Datatype(.Type, .Type) {
-			[ "pair": .Argument($0, const(.Argument($1, const(.End)))) ]
+			[ "pair": .Argument(nil, $0, .Argument(nil, $1, .End)) ]
 		})
 
 		let first = Declaration("first",
@@ -17,6 +17,3 @@ extension Module {
 		return Module("Pair", [ Pair, first, second ])
 	}
 }
-
-
-import Prelude

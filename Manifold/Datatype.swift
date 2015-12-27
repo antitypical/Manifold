@@ -42,8 +42,10 @@ public enum Datatype: DictionaryLiteralConvertible {
 		switch telescope {
 		case let .Recursive(rest):
 			return recur --> type(rest)(recur)
-		case let .Argument(type, continuation):
-			return type => { self.type(continuation($0))(recur) }
+		case let .Argument(.Some(name), type, rest):
+			return (name, type) => self.type(rest)(recur)
+		case let .Argument(.None, type, rest):
+			return type --> self.type(rest)(recur)
 		case .End:
 			return recur
 		}
@@ -53,8 +55,10 @@ public enum Datatype: DictionaryLiteralConvertible {
 		switch telescope {
 		case let .Recursive(rest):
 			return recur => { self.value(symbol, telescope: rest, constructors: constructors, parameters: parameters + [ $0 ])(recur) }
-		case let .Argument(type, continuation):
-			return type => { self.value(symbol, telescope: continuation($0), constructors: constructors, parameters: parameters + [ $0 ])(recur) }
+		case let .Argument(.Some(name), type, rest):
+			return (name, type) => self.value(symbol, telescope: rest, constructors: constructors, parameters: parameters + [ .Variable(name) ])(recur)
+		case let .Argument(.None, type, rest):
+			return type --> self.value(symbol, telescope: rest, constructors: constructors, parameters: parameters)(recur)
 		case .End:
 			return .Type => { motive in
 				constructors.map {

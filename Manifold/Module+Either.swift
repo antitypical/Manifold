@@ -5,13 +5,10 @@ extension Module {
 		return Module("Either", [
 			Declaration("Either", Datatype(.Type, .Type) {
 				[
-					"left": .Argument($0, const(.End)),
-					"right": .Argument($1, const(.End))
+					"left": .Argument(nil, $0, .End),
+					"right": .Argument(nil, $1, .End)
 				]
 			})
 		])
 	}
 }
-
-
-import Prelude
