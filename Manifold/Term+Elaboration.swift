@@ -52,8 +52,8 @@ extension Term {
 					return .Unroll(.Lambda(type2, bodyType), .Identity(.Lambda(t, b)))
 				}
 
-			case let (.Identity(.Lambda(type, body)), .Identity(.Type(n))):
-				let typeʹ = try type.elaborateType(.Type, environment, context) ?? .Unroll(.Type(n + 1), .Identity(.Type(n)))
+			case let (.Identity(.Lambda(type, body)), .Identity(.Type)):
+				let typeʹ = try type.elaborateType(.Type, environment, context)
 				return .Unroll(.Lambda(.Type, .Type), .Identity(.Lambda(typeʹ, try body.elaborateTypeInScope(type, .Type, environment, context))))
 
 			case let (.Abstraction(name, scope), _):
