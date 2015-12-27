@@ -35,7 +35,7 @@ public enum Datatype: DictionaryLiteralConvertible {
 		}
 	}
 
-	public func type(telescope: Telescope, index: Int = 0)(_ recur: Term) -> Term {
+	public func type(telescope: Telescope, index: Int)(_ recur: Term) -> Term {
 		switch telescope {
 		case let .Recursive(rest):
 			return recur --> type(rest, index: index + 1)(recur)
