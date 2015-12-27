@@ -9,22 +9,19 @@ final class ElaborationTests: XCTestCase {
 	func testChecksLambdasAgainstFunctionTypes() {
 		let type = .Type --> .Type
 		let term = .Type => { $0 }
-		let elaborated = assertNoThrow(try term.elaborateType(type, [:], [:]))
-		assert(elaborated?.annotation, ==, type)
+		assert(try term.elaborateType(type, [:], [:]).annotation, ==, type)
 	}
 
 	func testChecksLambdasAgainstDependentFunctionTypes() {
 		let type = .Type => { A in A --> A }
 		let term = .Type => { A in A => { a in a } }
-		let elaborated = assertNoThrow(try term.elaborateType(type, [:], [:]))
-		assert(elaborated?.annotation, ==, type)
+		assert(try term.elaborateType(type, [:], [:]).annotation, ==, type)
 	}
 
 	func testChecksApplicationsOfLambdas() {
 		let type = .Type --> (.Type --> .Type) --> .Type
 		let term = Term.Lambda(.Local(0), .Type, .Lambda(.Local(1), .Type --> .Type, (1 as Term)[0 as Term]))
-		let elaborated = assertNoThrow(try term.elaborateType(type, [:], [:]))
-		assert(elaborated?.annotation, ==, type)
+		assert(try term.elaborateType(type, [:], [:]).annotation, ==, type)
 	}
 }
 
