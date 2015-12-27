@@ -17,6 +17,15 @@ public enum Expression<Recur>: CustomDebugStringConvertible {
 		}
 	}
 
+	public var body: Recur? {
+		switch self {
+		case let .Lambda(_, body):
+			return body
+		default:
+			return nil
+		}
+	}
+
 
 	// MARK: CustomDebugStringConvertible
 
