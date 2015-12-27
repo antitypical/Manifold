@@ -6,7 +6,7 @@ public enum Telescope {
 	case End
 
 
-	public func fold(recur: Term, terminal: Term, index: Int = 0, combine: (Term, Term) -> Term) -> Term {
+	public func fold(recur: Term, terminal: Term, index: Int, combine: (Term, Term) -> Term) -> Term {
 		switch self {
 		case .End:
 			return terminal
