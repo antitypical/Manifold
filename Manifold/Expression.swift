@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public enum Expression<Recur>: CustomDebugStringConvertible {
+public enum Expression<Recur>: CustomDebugStringConvertible, CustomStringConvertible {
 	case Type(Int)
 	case Application(Recur, Recur)
 	case Lambda(Recur, Recur)
@@ -41,6 +41,30 @@ public enum Expression<Recur>: CustomDebugStringConvertible {
 			return ".Embedded(\(String(reflecting: a)), \(String(reflecting: eq)), \(type))"
 		case .Implicit:
 			return ".Implicit"
+		}
+	}
+
+
+	// MARK: CustomStringConvertible
+
+	public var description: String {
+		switch self {
+		case let .Type(n):
+			return n == 0
+				? "Type"
+				: "Type" + renderNumerals(n, "₀₁₂₃₄₅₆₇₈₉")
+
+		case let .Application(a, b):
+			return "\(a) \(b)"
+
+		case let .Lambda(type, body):
+			return "λ : \(type) . \(body)"
+
+		case let .Embedded(value, _, type):
+			return "'\(value)' : \(type)"
+
+		case .Implicit:
+			return "_"
 		}
 	}
 
