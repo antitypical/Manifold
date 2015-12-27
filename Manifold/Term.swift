@@ -1,7 +1,7 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public indirect enum Term: Equatable, Hashable, IntegerLiteralConvertible, NilLiteralConvertible, StringLiteralConvertible, TermContainerType {
-	case In(Set<Name>, Scoping<Term>)
+public enum Term: Equatable, Hashable, IntegerLiteralConvertible, NilLiteralConvertible, StringLiteralConvertible, TermContainerType {
+	case In(() -> (Set<Name>, Scoping<Term>))
 
 
 	public init(_ scoping: Scoping<Term>) {
@@ -11,12 +11,19 @@ public indirect enum Term: Equatable, Hashable, IntegerLiteralConvertible, NilLi
 		case let .Abstraction(name, scope):
 			self = .Abstraction(name, scope)
 		case let .Identity(body):
-			self = Term(body)
+			self = Term.In { (body.foldMap { $0.freeVariables }, .Identity(body)) }
 		}
 	}
 
 	public init(_ expression: Expression<Term>) {
-		self = .In(expression.foldMap { $0.freeVariables }, .Identity(expression))
+		self = Term.In { (expression.foldMap { $0.freeVariables }, .Identity(expression)) }
+	}
+
+	public init(_ scoping: () -> Scoping<Term>) {
+		self = Term.In {
+			let s = scoping()
+			return (s.foldMap { $0.freeVariables }, s)
+		}
 	}
 
 
@@ -69,8 +76,8 @@ public indirect enum Term: Equatable, Hashable, IntegerLiteralConvertible, NilLi
 
 	public var out: Scoping<Term> {
 		switch self {
-		case let .In(_, f):
-			return f
+		case let .In(f):
+			return f().1
 		}
 	}
 }

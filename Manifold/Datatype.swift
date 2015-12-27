@@ -22,16 +22,18 @@ public enum Datatype: DictionaryLiteralConvertible {
 	public func definitions(recur: Term, abstract: (Term -> Term) -> Term -> Term = id) -> [(Name, Term, Term)] {
 		switch self {
 		case let .Argument(type, continuation):
-			return continuation(-1).definitions(recur, abstract: { f in
+			var parameter = Term.Variable(.Local(-1))
+			return continuation(Term { parameter.out }).definitions(recur, abstract: { f in
 				{ recur in
 					type => {
-						f(.Application(recur, $0))
+						parameter = $0
+						return f(.Application(recur, $0))
 					}
 				}
 			} >>> abstract)
 		case let .End(constructors):
 			return constructors.map {
-				(.Global($0), abstract(self.type($1))(recur), abstract(self.value($0, telescope: $1, constructors: constructors))(recur))
+				(.Global($0), Term(term: abstract(self.type($1))(recur)), Term(term: abstract(self.value($0, telescope: $1, constructors: constructors))(recur)))
 			}
 		}
 	}
