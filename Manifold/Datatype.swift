@@ -1,16 +1,16 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public enum Datatype: DictionaryLiteralConvertible {
-	indirect case Argument(Term, Term -> Datatype)
+	indirect case Argument(Term, Datatype)
 	case End([(String, Telescope)])
 
 
-	public init(_ type: Term, _ constructor: Term -> Datatype) {
-		self = .Argument(type, constructor)
+	public init(_ type: Term, _ rest: Datatype) {
+		self = .Argument(type, rest)
 	}
 
-	public init(_ type1: Term, _ type2: Term, _ constructor: (Term, Term) -> Datatype) {
-		self = .Argument(type1, { a in Datatype.Argument(type2) { b in constructor(a, b) } })
+	public init(_ type1: Term, _ type2: Term, _ rest: Datatype) {
+		self = .Argument(type1, .Argument(type2, rest))
 	}
 
 
@@ -21,8 +21,8 @@ public enum Datatype: DictionaryLiteralConvertible {
 
 	public func definitions(recur: Term, abstract: (Term -> Term) -> Term -> Term = id) -> [(Name, Term, Term)] {
 		switch self {
-		case let .Argument(type, continuation):
-			return continuation(-1).definitions(recur, abstract: { f in
+		case let .Argument(type, rest):
+			return rest.definitions(recur, abstract: { f in
 				{ recur in
 					type => {
 						f(.Application(recur, $0))
@@ -70,7 +70,7 @@ public enum Datatype: DictionaryLiteralConvertible {
 	public func withTypeParameters(recur: Term, continuation: (Term, [(String, Telescope)]) -> Term) -> Term {
 		switch self {
 		case let .Argument(type, rest):
-			return type => { rest($0).withTypeParameters(.Application(recur, $0), continuation: continuation) }
+			return type => { rest.withTypeParameters(.Application(recur, $0), continuation: continuation) }
 		case let .End(constructors):
 			return continuation(recur, constructors)
 		}

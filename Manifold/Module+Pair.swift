@@ -2,9 +2,9 @@
 
 extension Module {
 	public static var pair: Module {
-		let Pair = Declaration("Pair", Datatype(.Type, .Type) {
-			[ "pair": .Argument($0, .Argument($1, .End)) ]
-		})
+		let Pair = Declaration("Pair", Datatype(.Type, .Type,
+			[ "pair": .Argument(0, .Argument(1, .End)) ]
+		))
 
 		let first = Declaration("first",
 			type: (nil, nil) => { A, B in Pair.ref[A, B] --> A },
