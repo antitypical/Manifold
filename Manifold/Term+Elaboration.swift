@@ -35,7 +35,8 @@ extension Term {
 			case let (.Identity(.Type(m)), .Identity(.Type(n))) where n > m:
 				return try elaborateType(nil, environment, context)
 
-			case let (.Identity(.Lambda(type, body)), .Identity(.Lambda(type2, bodyType))) where Term.equate(type, type2, environment) != nil:
+			case let (.Identity(.Lambda(type, body)), .Identity(.Lambda(type2, bodyType))):
+				let typeʹ = try type.elaborateType(.Type, environment, context)
 				let type2ʹ = try type2.elaborateType(.Type, environment, context)
 				let _ = try bodyType.elaborateType(.Type, environment, bodyType.extendContext(context, with: type2))
 
