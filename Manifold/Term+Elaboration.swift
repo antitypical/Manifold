@@ -35,14 +35,14 @@ extension Term {
 			case let (.Identity(.Type(m)), .Identity(.Type(n))) where n > m:
 				return try elaborateType(nil, environment, context)
 
-			case let (.Identity(.Lambda(type, body)), .Identity(.Lambda(type2, bodyType))):
+			case let (.Identity(.Lambda(type1, body)), .Identity(.Lambda(type2, bodyType))):
+				guard let type = Term.equate(type1, type2, environment) else { throw "Unable to equate type '\(type1)' with expected type '\(type2)'" }
 				let typeʹ = try type.elaborateType(.Type, environment, context)
-				let type2ʹ = try type2.elaborateType(.Type, environment, context)
 				let _ = try bodyType.elaborateType(.Type, environment, bodyType.extendContext(context, with: type2))
 
 				let bodyTypeʹ = (body.scope?.0).map { bodyType.applySubstitution(.Variable($0)) } ?? bodyType
 				let bodyʹ = try body.elaborateType(bodyTypeʹ, environment, body.extendContext(context, with: type2))
-				return .Unroll(against, .Identity(.Lambda(type2ʹ, bodyʹ)))
+				return .Unroll(against, .Identity(.Lambda(typeʹ, bodyʹ)))
 
 			case let (.Identity(.Lambda(type, body)), .Identity(.Type)):
 				let typeʹ = try type.elaborateType(.Type, environment, context)
