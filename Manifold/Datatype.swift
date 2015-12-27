@@ -19,7 +19,7 @@ public enum Datatype: DictionaryLiteralConvertible {
 	}
 
 
-	public func definitions(recur: Term, abstract: (Term -> Term) -> Term -> Term = { f in { f($0) } }) -> [(Name, Term, Term)] {
+	public func definitions(recur: Term, abstract: (Term -> Term) -> Term -> Term = id) -> [(Name, Term, Term)] {
 		switch self {
 		case let .Argument(type, continuation):
 			return continuation(-1).definitions(recur, abstract: { f in
