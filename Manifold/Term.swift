@@ -77,8 +77,5 @@ public indirect enum Term: Equatable, Hashable, IntegerLiteralConvertible, NilLi
 
 
 public func == (left: Term, right: Term) -> Bool {
-	switch (left, right) {
-	case let (.In(v1, f), .In(v2, g)):
-		return v1 == v2 && Scoping.equal(==)(f, g)
-	}
+	return left.freeVariables == right.freeVariables && Scoping.equal(==)(left.out, right.out)
 }
