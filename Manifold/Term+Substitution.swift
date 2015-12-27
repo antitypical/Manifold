@@ -42,6 +42,7 @@ extension Term {
 	}
 
 	public func substitute(variable: Name, with: Term) -> Term {
+		if case let .Variable(name) = with.out where name == variable { return self }
 		switch out {
 		case let .Variable(name) where name == variable:
 			return with
