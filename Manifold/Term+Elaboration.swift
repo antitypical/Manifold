@@ -26,13 +26,8 @@ extension Term {
 
 			case let (.Identity(.Lambda(a, b)), .Identity(.Implicit)) where a != nil:
 				let aʹ = try a.elaborateType(.Type, environment, context)
-				if let (name, _) = b.scope {
-					let bʹ = try b.elaborateType(nil, environment, context + [ name: a ])
-					return .Unroll(a => { bʹ.annotation.substitute(name, with: $0) }, .Identity(.Lambda(aʹ, bʹ)))
-				} else {
-					let bʹ = try b.elaborateType(nil, environment, context)
-					return .Unroll(bʹ.annotation, .Identity(.Lambda(aʹ, bʹ)))
-				}
+				let bʹ = try b.elaborateTypeInScope(a, nil, environment, context)
+				return .Unroll(.Lambda(a, bʹ.annotation), .Identity(.Lambda(aʹ, bʹ)))
 
 			case let (.Identity(.Embedded(value, eq, type)), .Identity(.Implicit)):
 				let typeʹ = try type.elaborateType(.Type, environment, context)
