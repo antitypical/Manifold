@@ -30,7 +30,7 @@ public enum Datatype: DictionaryLiteralConvertible {
 			} >>> abstract)
 		case let .End(constructors):
 			return constructors.map {
-				(.Global($0), abstract(self.type($1, index: index))(recur), abstract(self.value($0, telescope: $1, constructors: constructors))(recur))
+				(.Global($0), abstract(self.type($1, index: index))(recur), abstract(self.value($0, telescope: $1, constructors: constructors, index: index))(recur))
 			}
 		}
 	}
