@@ -25,7 +25,7 @@ extension Term {
 
 			case let (.Identity(.Lambda(a, b)), .Identity(.Implicit)) where a != nil:
 				let aʹ = try a.elaborateType(.Type, environment, context)
-				let bʹ = try b.elaborateTypeInScope(a, nil, environment, context)
+				let bʹ = try b.elaborateType(nil, environment, b.extendContext(context, with: a))
 				return .Unroll(a => { bʹ.annotation.applySubstitution($0) }, .Identity(.Lambda(aʹ, bʹ)))
 
 			case let (.Identity(.Embedded(value, eq, type)), .Identity(.Implicit)):
@@ -37,7 +37,7 @@ extension Term {
 
 			case let (.Identity(.Lambda(type, body)), .Identity(.Lambda(type2, bodyType))) where Term.equate(type, type2, environment) != nil:
 				let type2ʹ = try type2.elaborateType(.Type, environment, context)
-				let _ = try bodyType.elaborateTypeInScope(type2, .Type, environment, context)
+				let _ = try bodyType.elaborateType(.Type, environment, bodyType.extendContext(context, with: type2))
 
 				let bodyTypeʹ = (body.scope?.0).map { bodyType.applySubstitution(.Variable($0)) } ?? bodyType
 				let bodyʹ = try body.elaborateType(bodyTypeʹ, environment, body.extendContext(bodyTypeʹ.extendContext(context, with: type2), with: type2))
@@ -45,7 +45,7 @@ extension Term {
 
 			case let (.Identity(.Lambda(type, body)), .Identity(.Type)):
 				let typeʹ = try type.elaborateType(.Type, environment, context)
-				return try .Unroll(.Lambda(.Type, .Type), .Identity(.Lambda(typeʹ, body.elaborateTypeInScope(type, .Type, environment, context))))
+				return try .Unroll(.Lambda(.Type, .Type), .Identity(.Lambda(typeʹ, body.elaborateType(.Type, environment, body.extendContext(context, with: type)))))
 
 			case let (.Abstraction(name, scope), _):
 				return try .Unroll(against, .Abstraction(name, scope.elaborateType(against, environment, context)))
