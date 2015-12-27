@@ -59,7 +59,7 @@ public enum Datatype: DictionaryLiteralConvertible {
 			}
 			return (name, .Type) => constructors.reverse().reduce((id, index), combine: { into, each in
 				(each.0 == symbol
-					? { _ in each.1 => { into.0(parameters.reduce($0, combine: { $0[$1] })) } }
+					? { _ in (Name.Local(into.1), each.1) => into.0(parameters.reduce(.Variable(Name.Local(into.1)), combine: { $0[$1] })) }
 					: into.0 >>> { each.1 --> $0 }, into.1 + 1)
 			}).0(.Variable(name))
 		}
