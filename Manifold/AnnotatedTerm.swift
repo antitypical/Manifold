@@ -27,7 +27,14 @@ public enum AnnotatedTerm<Annotation>: TermContainerType {
 	}
 
 	public var freeVariables: Set<Name> {
-		return []
+		switch out {
+		case let .Identity(expression):
+			return expression.foldMap { $0.freeVariables }
+		case let .Variable(name):
+			return [ name ]
+		case let .Abstraction(name, scope):
+			return scope.freeVariables.subtract([ name ])
+		}
 	}
 }
 
