@@ -7,9 +7,10 @@ final class ElaborationTests: XCTestCase {
 	}
 
 	func testChecksLambdasAgainstFunctionTypes() {
-		let actual = try? Term.Lambda(.Local(0), .Type, 0).elaborateType(.Type --> .Type, [:], [:])
-		let expected: AnnotatedTerm<Term> = .Unroll(.Type --> .Type, .Identity(.Lambda(.Unroll(.Type(1), .Identity(.Type(0))), .Unroll(.Type, .Abstraction(.Local(0), .Unroll(.Type, .Variable(.Local(0))))))))
-		assert(actual, ==, expected)
+		let type = .Type --> .Type
+		let term = .Type => { $0 }
+		let elaborated = try? term.elaborateType(type, [:], [:])
+		assert(elaborated?.annotation, ==, type)
 	}
 
 	func testChecksLambdasAgainstDependentFunctionTypes() {
