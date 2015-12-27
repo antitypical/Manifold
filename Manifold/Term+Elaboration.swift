@@ -40,7 +40,7 @@ extension Term {
 				let _ = try bodyType.elaborateType(.Type, environment, bodyType.extendContext(context, with: type2))
 
 				let bodyTypeʹ = (body.scope?.0).map { bodyType.applySubstitution(.Variable($0)) } ?? bodyType
-				let bodyʹ = try body.elaborateType(bodyTypeʹ, environment, body.extendContext(bodyTypeʹ.extendContext(context, with: type2), with: type2))
+				let bodyʹ = try body.elaborateType(bodyTypeʹ, environment, body.extendContext(context, with: type2))
 				return .Unroll(against, .Identity(.Lambda(type2ʹ, bodyʹ)))
 
 			case let (.Identity(.Lambda(type, body)), .Identity(.Type)):
