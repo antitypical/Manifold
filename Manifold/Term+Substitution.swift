@@ -27,6 +27,7 @@ extension Term {
 
 
 	public func rename(old: Name, _ new: Name) -> Term {
+		guard old != new else { return self }
 		switch out {
 		case let .Variable(name):
 			return name == old
