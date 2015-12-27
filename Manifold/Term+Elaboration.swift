@@ -64,7 +64,7 @@ extension Term {
 				return a
 			}
 		} catch let e {
-			throw "\(e)\nin: '\(self)'" + (against == nil ? " ⇒ ?" : " ⇐ '\(against)'")
+			throw "\(e)\nin: '\(self)'" + (against == nil ? " ⇒ ?" : " ⇐ '\(against)' ('\(against.weakHeadNormalForm(environment) as Term)')")
 		}
 	}
 
