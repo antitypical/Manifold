@@ -4,7 +4,7 @@ extension Term {
 	public func evaluate(environment: [Name:Term] = [:]) throws -> Term {
 		switch out {
 		case let .Variable(i):
-			guard let found = environment[i] else { throw "Illegal free variable \(i)" }
+			guard let found = environment[i] else { throw "Illegal free variable \(i) in environment \(Term.toString(environment, separator: "="))" }
 			return found
 
 		case let .Identity(.Application(a, b)):
