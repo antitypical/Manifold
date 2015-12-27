@@ -19,6 +19,13 @@ final class ElaborationTests: XCTestCase {
 		let elaborated = assertNoThrow(try term.elaborateType(type, [:], [:]))
 		assert(elaborated?.annotation, ==, type)
 	}
+
+	func testChecksApplicationsOfLambdas() {
+		let type = .Type --> (.Type --> .Type) --> .Type
+		let term = Term.Lambda(.Local(0), .Type, .Lambda(.Local(1), .Type --> .Type, (1 as Term)[0 as Term]))
+		let elaborated = assertNoThrow(try term.elaborateType(type, [:], [:]))
+		assert(elaborated?.annotation, ==, type)
+	}
 }
 
 func assertNoThrow<A>(@autoclosure test: () throws -> A, file: String = __FILE__, line: UInt = __LINE__) -> A? {
