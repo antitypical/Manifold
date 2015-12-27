@@ -8,6 +8,16 @@ public enum Expression<Recur>: CustomDebugStringConvertible {
 	case Implicit
 
 
+	public var parameterType: Recur? {
+		switch self {
+		case let .Lambda(type, _):
+			return type
+		default:
+			return nil
+		}
+	}
+
+
 	// MARK: CustomDebugStringConvertible
 
 	public var debugDescription: String {
