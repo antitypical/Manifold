@@ -1,6 +1,6 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
-public protocol TermContainerType: CustomStringConvertible {
+public protocol TermContainerType: CustomDebugStringConvertible, CustomStringConvertible {
 	var out: Scoping<Self> { get }
 
 	var freeVariables: Set<Name> { get }
