@@ -2,6 +2,6 @@
 
 extension TermContainerType {
 	public var debugDescription: String {
-		return description
+		return cata { $0.debugDescription }
 	}
 }
