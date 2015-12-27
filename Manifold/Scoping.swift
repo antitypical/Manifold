@@ -13,7 +13,7 @@ public enum Scoping<Term>: CustomDebugStringConvertible {
 		case let .Variable(name):
 			return ".Variable(\(String(reflecting: name)))"
 		case let .Abstraction(name, scope):
-			return ".Abstraction(\(String(reflecting: name))), \(scope))"
+			return ".Abstraction(\(String(reflecting: name)), \(scope))"
 		case let .Identity(term):
 			return ".Identity(\(term))"
 		}
