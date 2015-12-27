@@ -67,13 +67,13 @@ public enum Datatype: DictionaryLiteralConvertible {
 		}
 	}
 
-	public func withTypeParameters(recur: Term, index: Int = 0, continuation: (Term, [(String, Telescope)]) -> Term) -> Term {
+	public func withTypeParameters(recur: Term, index: Int = 0, continuation: (Term, Int, [(String, Telescope)]) -> Term) -> Term {
 		switch self {
 		case let .Argument(type, rest):
 			let name = Name.Local(index)
 			return (name, type) => rest.withTypeParameters(.Application(recur, .Variable(name)), index: index + 1, continuation: continuation)
 		case let .End(constructors):
-			return continuation(recur, constructors)
+			return continuation(recur, index, constructors)
 		}
 	}
 
@@ -83,10 +83,10 @@ public enum Datatype: DictionaryLiteralConvertible {
 	}
 
 	public func value(recur: Term) -> Term {
-		return withTypeParameters(recur) { recur, constructors in
+		return withTypeParameters(recur) { recur, index, constructors in
 			.Type => { motive in
 				constructors.map {
-					$1.fold(recur, terminal: motive, combine: -->)
+					$1.fold(recur, terminal: motive, index: index, combine: -->)
 				}.reverse().reduce(motive, combine: flip(-->))
 			}
 		}
