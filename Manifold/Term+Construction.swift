@@ -99,7 +99,7 @@ public func => (type: Term, body: Term -> Term) -> Term {
 	let body1 = body(.Variable(proposed1))
 	let v1 = body1.freeVariables.union(body1.boundVariables)
 	let proposed2 = proposed1.fresh(v1)
-	if proposed1 == proposed2 { return .Lambda(proposed1, type, body1) }
+	if proposed1 == proposed2 { return .Lambda(type, body1) }
 
 	let body2 = body(.Variable(proposed2))
 	let v2 = body2.freeVariables.union(body2.boundVariables)
