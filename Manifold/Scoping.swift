@@ -6,6 +6,18 @@ public enum Scoping<Term>: CustomDebugStringConvertible {
 	case Identity(Expression<Term>)
 
 
+	public var name: Name? {
+		switch self {
+		case let .Variable(name):
+			return name
+		case let .Abstraction(name, _):
+			return name
+		default:
+			return nil
+		}
+	}
+
+
 	// MARK: CustomDebugStringConvertible
 
 	public var debugDescription: String {
