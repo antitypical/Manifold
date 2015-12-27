@@ -38,7 +38,7 @@ extension Term {
 			return .Embedded(a2, eq, t)
 
 		case let (.Abstraction(name1, scope1), .Abstraction(name2, scope2)):
-			let fresh = Name.fresh(scope1.freeVariables.union(scope2.freeVariables))
+			let fresh = Name.fresh(scope1.freeVariables.union(scope1.boundVariables).union(scope2.freeVariables).union(scope2.boundVariables))
 			guard let scope = equate(scope1.rename(name1, fresh), scope2.rename(name2, fresh), environment, visited: visited) else { return nil }
 			return .Abstraction(name2, scope.rename(fresh, name2))
 
