@@ -11,6 +11,13 @@ final class ElaborationTests: XCTestCase {
 		let expected: AnnotatedTerm<Term> = .Unroll(.Type --> .Type, .Identity(.Lambda(.Unroll(.Type(1), .Identity(.Type(0))), .Unroll(.Type, .Abstraction(.Local(0), .Unroll(.Type, .Variable(.Local(0))))))))
 		assert(actual, ==, expected)
 	}
+
+	func testChecksLambdasAgainstDependentFunctionTypes() {
+		let type = .Type => { A in A --> A }
+		let term = .Type => { A in A => { a in a } }
+		let elaborated = assertNoThrow(try term.elaborateType(type, [:], [:]))
+		assert(elaborated?.annotation, ==, type)
+	}
 }
 
 func assertNoThrow<A>(@autoclosure test: () throws -> A, file: String = __FILE__, line: UInt = __LINE__) -> A? {
