@@ -21,8 +21,7 @@ extension Term {
 					throw "Illegal application of \(a) : \(aʹ.annotation) in context: \(Term.toString(context, separator: ":")), environment: \(Term.toString(environment, separator: "="))"
 				}
 				let bʹ = try b.elaborateType(type, environment, context)
-				guard let (name, _) = body.scope else { return .Unroll(body, .Identity(.Application(aʹ, bʹ))) }
-				return .Unroll(body.substitute(name, with: b), .Identity(.Application(aʹ, bʹ)))
+				return .Unroll(body.applySubstitution(b), .Identity(.Application(aʹ, bʹ)))
 
 			case let (.Identity(.Lambda(a, b)), .Identity(.Implicit)) where a != nil:
 				let aʹ = try a.elaborateType(.Type, environment, context)
