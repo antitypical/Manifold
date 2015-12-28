@@ -31,10 +31,12 @@ public enum Datatype: DictionaryLiteralConvertible {
 		case let .End(constructors):
 			let recur = Term.Variable(symbol)
 			let name = Name.Local(index)
-			let value = (name, .Type) => constructors.map {
-				$1.fold(recur, terminal: .Variable(.Local(index)), index: index + 1, combine: -->)
-			}.reverse().reduce(.Variable(name), combine: flip(-->))
-			return [ (symbol, abstract(.Type), abstract(value)) ] + constructors.map {
+			func value(recur: Term) -> Term {
+				return (name, .Type) => constructors.map {
+					$1.fold(recur, terminal: .Variable(.Local(index)), index: index + 1, combine: -->)
+				}.reverse().reduce(.Variable(name), combine: flip(-->))
+			}
+			return [ (symbol, abstract(.Type), abstractAndApply(value)(recur)) ] + constructors.map {
 				(.Global($0), abstractAndApply(self.type($1))(recur), abstractAndApply(self.value($0, telescope: $1, constructors: constructors, index: index))(recur))
 			}
 		}
