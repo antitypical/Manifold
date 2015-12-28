@@ -24,9 +24,7 @@ public enum Datatype: DictionaryLiteralConvertible {
 		case let .Argument(type, rest):
 			let name = Name.Local(index)
 			return rest.definitions(symbol, index: index + 1, abstract: { (name, type) => $0 } >>> abstract, abstractAndApply: { f in
-				{ recur in
-					(name, type) => f(.Application(recur, .Variable(name)))
-				}
+				{ (name, type) => f(.Application($0, .Variable(name))) }
 			} >>> abstractAndApply)
 		case let .End(constructors):
 			let recur = Term.Variable(symbol)
