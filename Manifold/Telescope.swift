@@ -13,7 +13,7 @@ public enum Telescope {
 		case let .Recursive(rest):
 			return combine(recur, rest.fold(recur, terminal: terminal, index: index + 1, combine: combine))
 		case let .Argument(type, rest):
-			return (Name.Local(index), type) => rest.fold(recur, terminal: terminal, index: index + 1, combine: combine)
+			return combine(type, rest.fold(recur, terminal: terminal, index: index + 1, combine: combine))
 		}
 	}
 }
