@@ -65,16 +65,6 @@ public enum Datatype: DictionaryLiteralConvertible {
 		}
 	}
 
-	public func withTypeParameters(recur: Term, index: Int = 0, continuation: (Term, Int, [(String, Telescope)]) -> Term) -> Term {
-		switch self {
-		case let .Argument(type, rest):
-			let name = Name.Local(index)
-			return (name, type) => rest.withTypeParameters(.Application(recur, .Variable(name)), index: index + 1, continuation: continuation)
-		case let .End(constructors):
-			return continuation(recur, index, constructors)
-		}
-	}
-
 
 	public func type() -> Term {
 		switch self {
