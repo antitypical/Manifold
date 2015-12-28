@@ -77,7 +77,12 @@ public enum Datatype: DictionaryLiteralConvertible {
 
 
 	public func type() -> Term {
-		return withTypeParameters(.Type, continuation: const(.Type))
+		switch self {
+		case let .Argument(type, rest):
+			return type --> rest.type()
+		case .End:
+			return .Type
+		}
 	}
 
 	public func value(recur: Term, index: Int = 0) -> Term {
