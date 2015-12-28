@@ -40,7 +40,7 @@ public enum Datatype: DictionaryLiteralConvertible {
 		case let .Recursive(rest):
 			return recur --> type(rest, index: index + 1)(recur)
 		case let .Argument(type, rest):
-			return (Name.Local(index), type) => self.type(rest, index: index + 1)(recur)
+			return type --> self.type(rest, index: index + 1)(recur)
 		case .End:
 			return recur
 		}
