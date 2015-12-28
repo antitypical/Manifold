@@ -37,7 +37,7 @@ public enum Datatype: DictionaryLiteralConvertible {
 				}.reverse().reduce(.Variable(name), combine: flip(-->))
 			}
 			return [ (symbol, abstract(.Type), abstractAndApply(value)(recur)) ] + constructors.map {
-				(.Global($0), abstractAndApply(self.type($1, index: index))(recur), abstractAndApply(self.value($0, telescope: $1, constructors: constructors, index: index))(recur))
+				(.Global($0), abstractAndApply(type($1, index: index))(recur), abstractAndApply(self.value($0, telescope: $1, constructors: constructors, index: index))(recur))
 			}
 		}
 	}
@@ -58,9 +58,9 @@ public enum Datatype: DictionaryLiteralConvertible {
 		let name = Name.Local(index)
 		switch telescope {
 		case let .Recursive(rest):
-			return (name, recur) => self.value(symbol, telescope: rest, constructors: constructors, index: index + 1, parameters: parameters + [ .Variable(name) ])(recur)
+			return (name, recur) => value(symbol, telescope: rest, constructors: constructors, index: index + 1, parameters: parameters + [ .Variable(name) ])(recur)
 		case let .Argument(type, rest):
-			return (name, type) => self.value(symbol, telescope: rest, constructors: constructors, index: index + 1, parameters: parameters + [ .Variable(name) ])(recur)
+			return (name, type) => value(symbol, telescope: rest, constructors: constructors, index: index + 1, parameters: parameters + [ .Variable(name) ])(recur)
 		case .End:
 			let constructors = constructors.map {
 				($0, $1.fold(recur, terminal: .Variable(name), index: index + 1, combine: -->))
