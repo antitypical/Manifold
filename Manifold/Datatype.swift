@@ -57,7 +57,7 @@ public enum Datatype: DictionaryLiteralConvertible {
 			let constructors = constructors.map {
 				($0, $1.fold(recur, terminal: .Variable(name), index: index + 1, combine: -->))
 			}
-			return (name, .Type) => constructors.reverse().reduce((id, index), combine: { into, each in
+			return (name, .Type) => constructors.reverse().reduce((id, index + 1), combine: { into, each in
 				(each.0 == symbol
 					? { _ in (Name.Local(into.1), each.1) => into.0(parameters.reduce(.Variable(Name.Local(into.1)), combine: { $0[$1] })) }
 					: into.0 >>> { each.1 --> $0 }, into.1 + 1)
