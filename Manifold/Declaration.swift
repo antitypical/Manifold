@@ -1,5 +1,7 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
+public typealias DefinitionType = (symbol: Name, type: Term, value: Term)
+
 public enum Declaration: CustomStringConvertible {
 	public init(_ symbol: Name, type: Term, value: Term) {
 		self = .Definition(symbol, type, value)
@@ -9,8 +11,6 @@ public enum Declaration: CustomStringConvertible {
 		self = .Datatype(symbol, datatype)
 	}
 
-
-	public typealias DefinitionType = (symbol: Name, type: Term, value: Term)
 
 	public var definitions: [DefinitionType] {
 		switch self {
