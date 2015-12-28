@@ -30,7 +30,7 @@ public enum Datatype: DictionaryLiteralConvertible {
 			} >>> abstract)
 		case let .End(constructors):
 			let recur = Term.Variable(symbol)
-			return [ (symbol, type(), value(symbol, index: index)) ] + constructors.map {
+			return [ (symbol, type(), value(symbol)) ] + constructors.map {
 				(.Global($0), abstract(self.type($1))(recur), abstract(self.value($0, telescope: $1, constructors: constructors, index: index))(recur))
 			}
 		}
@@ -76,7 +76,7 @@ public enum Datatype: DictionaryLiteralConvertible {
 		}
 	}
 
-	public func value(symbol: Name, index: Int = 0) -> Term {
+	public func value(symbol: Name) -> Term {
 		func value(datatype: Datatype, recur: Term, index: Int) -> Term {
 			let name = Name.Local(index)
 			switch datatype {
@@ -88,7 +88,7 @@ public enum Datatype: DictionaryLiteralConvertible {
 				}.reverse().reduce(.Variable(name), combine: flip(-->))
 			}
 		}
-		return value(self, recur: .Variable(symbol), index: index)
+		return value(self, recur: .Variable(symbol), index: 0)
 	}
 }
 
