@@ -66,16 +66,6 @@ public enum Datatype: DictionaryLiteralConvertible {
 		}
 	}
 
-
-	public func type() -> Term {
-		switch self {
-		case let .Argument(type, rest):
-			return type --> rest.type()
-		case .End:
-			return .Type
-		}
-	}
-
 	public func value(symbol: Name) -> Term {
 		func value(datatype: Datatype, recur: Term, index: Int) -> Term {
 			let name = Name.Local(index)
