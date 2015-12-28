@@ -28,7 +28,8 @@ public enum Declaration: CustomStringConvertible {
 			return "\(symbol) : \(type)\n"
 				+ "\(symbol) = \(value)"
 		case let .Datatype(symbol, datatype):
-			return "data \(symbol) : \(datatype.type()) = \(datatype.value(symbol))"
+			let definition = datatype.definitions(symbol)[0]
+			return "data \(symbol) : \(definition.type) = \(definition.value)"
 		}
 	}
 
