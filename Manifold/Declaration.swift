@@ -17,8 +17,7 @@ public enum Declaration: CustomStringConvertible {
 		case let .Definition(symbol, type, value):
 			return [ (symbol, type, value) ]
 		case let .Datatype(symbol, datatype):
-			let recur = Term.Variable(symbol)
-			return datatype.definitions(symbol, recur)
+			return datatype.definitions(symbol)
 		}
 	}
 
@@ -29,7 +28,7 @@ public enum Declaration: CustomStringConvertible {
 			return "\(symbol) : \(type)\n"
 				+ "\(symbol) = \(value)"
 		case let .Datatype(symbol, datatype):
-			return "data \(symbol) : \(datatype.type()) = \(datatype.value(.Variable(symbol)))"
+			return "data \(symbol) : \(datatype.type()) = \(datatype.value(symbol))"
 		}
 	}
 

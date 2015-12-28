@@ -19,17 +19,18 @@ public enum Datatype: DictionaryLiteralConvertible {
 	}
 
 
-	public func definitions(symbol: Name, _ recur: Term, index: Int = 0, abstract: (Term -> Term) -> Term -> Term = id) -> [DefinitionType] {
+	public func definitions(symbol: Name, index: Int = 0, abstract: (Term -> Term) -> Term -> Term = id) -> [DefinitionType] {
 		switch self {
 		case let .Argument(type, rest):
 			let name = Name.Local(index)
-			return rest.definitions(symbol, recur, index: index + 1, abstract: { f in
+			return rest.definitions(symbol, index: index + 1, abstract: { f in
 				{ recur in
 					(name, type) => f(.Application(recur, .Variable(name)))
 				}
 			} >>> abstract)
 		case let .End(constructors):
-			return [ (symbol, type(), value(recur)) ] + constructors.map {
+			let recur = Term.Variable(symbol)
+			return [ (symbol, type(), value(symbol)) ] + constructors.map {
 				(.Global($0), abstract(self.type($1))(recur), abstract(self.value($0, telescope: $1, constructors: constructors, index: index))(recur))
 			}
 		}
@@ -75,16 +76,19 @@ public enum Datatype: DictionaryLiteralConvertible {
 		}
 	}
 
-	public func value(recur: Term, index: Int = 0) -> Term {
-		let name = Name.Local(index)
-		switch self {
-		case let .Argument(type, rest):
-			return (name, type) => rest.value(.Application(recur, .Variable(name)), index: index + 1)
-		case let .End(constructors):
-			return (name, .Type) => constructors.map {
-				$1.fold(recur, terminal: .Variable(.Local(index)), index: index + 1, combine: -->)
-			}.reverse().reduce(.Variable(name), combine: flip(-->))
+	public func value(symbol: Name) -> Term {
+		func value(datatype: Datatype, recur: Term, index: Int) -> Term {
+			let name = Name.Local(index)
+			switch datatype {
+			case let .Argument(type, rest):
+				return (name, type) => value(rest, recur: .Application(recur, .Variable(name)), index: index + 1)
+			case let .End(constructors):
+				return (name, .Type) => constructors.map {
+					$1.fold(recur, terminal: .Variable(.Local(index)), index: index + 1, combine: -->)
+				}.reverse().reduce(.Variable(name), combine: flip(-->))
+			}
 		}
+		return value(self, recur: .Variable(symbol), index: 0)
 	}
 }
 
