@@ -80,11 +80,15 @@ public enum Datatype: DictionaryLiteralConvertible {
 		return withTypeParameters(.Type, continuation: const(.Type))
 	}
 
-	public func value(recur: Term) -> Term {
-		return withTypeParameters(recur) { recur, index, constructors in
-			(Name.Local(index), .Type) => constructors.map {
+	public func value(recur: Term, index: Int = 0) -> Term {
+		let name = Name.Local(index)
+		switch self {
+		case let .Argument(type, rest):
+			return (name, type) => rest.value(.Application(recur, .Variable(name)), index: index + 1)
+		case let .End(constructors):
+			return (name, .Type) => constructors.map {
 				$1.fold(recur, terminal: .Variable(.Local(index)), index: index + 1, combine: -->)
-			}.reverse().reduce(.Variable(Name.Local(index)), combine: flip(-->))
+			}.reverse().reduce(.Variable(name), combine: flip(-->))
 		}
 	}
 }
