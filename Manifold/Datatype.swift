@@ -30,7 +30,7 @@ public enum Datatype: DictionaryLiteralConvertible {
 			} >>> abstractAndApply)
 		case let .End(constructors):
 			let recur = Term.Variable(symbol)
-			return [ (symbol, abstract(.Type), value(symbol)) ] + constructors.map {
+			return [ (symbol, abstract(.Type), abstractAndApply(id)(recur)) ] + constructors.map {
 				(.Global($0), abstractAndApply(self.type($1))(recur), abstractAndApply(self.value($0, telescope: $1, constructors: constructors, index: index))(recur))
 			}
 		}
