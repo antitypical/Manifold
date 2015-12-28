@@ -23,7 +23,7 @@ public enum Datatype: DictionaryLiteralConvertible {
 		switch self {
 		case let .Argument(type, rest):
 			let name = Name.Local(index)
-			return rest.definitions(symbol, index: index + 1, abstract: { type --> $0 } >>> abstract, abstractAndApply: { f in
+			return rest.definitions(symbol, index: index + 1, abstract: { (name, type) => $0 } >>> abstract, abstractAndApply: { f in
 				{ recur in
 					(name, type) => f(.Application(recur, .Variable(name)))
 				}
