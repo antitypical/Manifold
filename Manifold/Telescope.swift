@@ -6,14 +6,14 @@ public enum Telescope {
 	case End
 
 
-	public func fold(recur: Term, terminal: Term, index: Int, combine: (Term, Term) -> Term) -> Term {
+	public func fold(recur: Term, terminal: Term, index: Int, combine: (Name, Term, Term) -> Term) -> Term {
 		switch self {
 		case .End:
 			return terminal
 		case let .Recursive(rest):
-			return combine(recur, rest.fold(recur, terminal: terminal, index: index + 1, combine: combine))
+			return combine(Name.Local(index), recur, rest.fold(recur, terminal: terminal, index: index + 1, combine: combine))
 		case let .Argument(type, rest):
-			return combine(type, rest.fold(recur, terminal: terminal, index: index + 1, combine: combine))
+			return combine(Name.Local(index), type, rest.fold(recur, terminal: terminal, index: index + 1, combine: combine))
 		}
 	}
 }
