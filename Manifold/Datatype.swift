@@ -65,21 +65,6 @@ public enum Datatype: DictionaryLiteralConvertible {
 			}).0(.Variable(name))
 		}
 	}
-
-	public func value(symbol: Name) -> Term {
-		func value(datatype: Datatype, recur: Term, index: Int) -> Term {
-			let name = Name.Local(index)
-			switch datatype {
-			case let .Argument(type, rest):
-				return (name, type) => value(rest, recur: .Application(recur, .Variable(name)), index: index + 1)
-			case let .End(constructors):
-				return (name, .Type) => constructors.map {
-					$1.fold(recur, terminal: .Variable(.Local(index)), index: index + 1, combine: -->)
-				}.reverse().reduce(.Variable(name), combine: flip(-->))
-			}
-		}
-		return value(self, recur: .Variable(symbol), index: 0)
-	}
 }
 
 
