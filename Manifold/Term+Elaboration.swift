@@ -55,7 +55,7 @@ extension Term {
 			case (_, .Identity(.Implicit)):
 				throw "No rule to infer type of '\(self)'"
 
-			case let (.Identity(.Implicit), .Identity(type)):
+			case let (.Identity(.Implicit), type):
 				return .Unroll(Term(type), .Identity(.Implicit))
 
 			case let (_, b):
