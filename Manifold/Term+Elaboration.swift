@@ -16,7 +16,7 @@ extension Term {
 				return .Unroll(type, .Variable(name))
 
 			case let (.Identity(.Application(a, b)), .Identity(.Implicit)):
-				let aʹ = try a.elaborateType(nil, environment, context)
+				let aʹ = try a.elaborateType(nil --> nil, environment, context)
 				guard case let .Identity(.Lambda(type, body)) = aʹ.annotation.weakHeadNormalForm(environment).out else {
 					throw "Illegal application of \(a) : \(aʹ.annotation) in context: \(Term.toString(context, separator: ":")), environment: \(Term.toString(environment, separator: "="))"
 				}
@@ -60,7 +60,7 @@ extension Term {
 
 			case let (_, b):
 				let a = try elaborateType(nil, environment, context)
-				guard Term.equate(a.annotation, Term(b), environment) != nil else {
+				guard Term.equate(a.annotation.weakHeadNormalForm(environment), Term(b), environment) != nil else {
 					throw "Type mismatch: expected '\(self)' to be of type '\(Term(b))', but it was actually of type '\(a.annotation)' in context: \(Term.toString(context, separator: ":")), environment: \(Term.toString(environment, separator: "="))"
 				}
 				return a
