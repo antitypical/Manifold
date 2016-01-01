@@ -19,18 +19,18 @@ public enum Datatype: DictionaryLiteralConvertible {
 	}
 
 
-	public func definitions(symbol: Name, index: Int = 0, abstract: Term -> Term = id, abstractAndApply: (Term -> Term) -> Term -> Term = id) -> [DefinitionType] {
+	public func definitions(symbol: Name, abstract: Term -> Term = id, abstractAndApply: (Term -> Term) -> Term -> Term = id) -> [DefinitionType] {
 		switch self {
 		case let .Argument(name, type, rest):
-			return rest.definitions(symbol, index: index + 1, abstract: { (name, type) => $0 } >>> abstract, abstractAndApply: { f in
+			return rest.definitions(symbol, abstract: { (name, type) => $0 } >>> abstract, abstractAndApply: { f in
 				{ (name, type) => f(.Application($0, .Variable(name))) }
 			} >>> abstractAndApply)
 		case let .End(constructors):
 			let recur = Term.Variable(symbol)
-			let name = Name.Local(index)
+			let name = Name.Global("Motive")
 			func value(recur: Term) -> Term {
 				return (name, .Type) => constructors.map {
-					$1.fold(recur, terminal: .Variable(.Local(index))) { ($0, $1) => $2 }
+					$1.fold(recur, terminal: .Variable(name)) { ($0, $1) => $2 }
 				}.reverse().reduce(.Variable(name), combine: flip(-->))
 			}
 			return [ (symbol, abstract(.Type), abstractAndApply(value)(recur)) ] + constructors.map {
