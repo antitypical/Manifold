@@ -21,44 +21,34 @@ final class TermTests: XCTestCase {
 
 
 	func testHigherOrderConstruction() {
-		assert(.Type => id, ==, .Lambda(0, .Type, 0))
-		assert(identity.value, ==, .Lambda(1, .Type, .Lambda(0, 1, 0)))
-		assert(constant, ==, .Lambda(2, .Type, .Lambda(1, .Type, .Lambda(0, 2, .Lambda(-1, 1, 0)))))
+		assert(.Type => id, Term.equate, .Lambda(.Local(0), .Type, 0))
+		assert(identity.value, Term.equate, .Lambda(.Local(1), .Type, .Lambda(.Local(0), 1, 0)))
+		assert(constant, Term.equate, .Lambda(.Local(3), .Type, .Lambda(.Local(2), .Type, .Lambda(.Local(1), 3, .Lambda(.Local(0), 2, 1)))))
 	}
 
 	func testChurchEncodedBooleanConstruction() {
-		assert(.Type => { A in (A, A) => { a, _ in a } }, ==, .Lambda(1, .Type, .Lambda(0, 1, .Lambda(-1, 1, 0))))
-		assert(.Type => { A in (A, A) => { _, b in b } }, ==, .Lambda(1, .Type, .Lambda(-1, 1, .Lambda(0, 1, 0))))
+		assert(.Type => { A in (A, A) => { b, _ in b } }, Term.equate, .Lambda(.Local(2), .Type, .Lambda(.Local(1), 2, .Lambda(.Local(0), 2, 1))))
+		assert(.Type => { A in (A, A) => { _, a in a } }, Term.equate, .Lambda(.Local(2), .Type, .Lambda(.Local(1), 2, .Lambda(.Local(0), 2, 0))))
 	}
 
 	func testFunctionTypeConstruction() {
-		assert(.Type => { A in (A --> A, A) => const(A) }, ==, .Lambda(0, .Type, .Lambda(-1, .Lambda(-1, 0, 0), .Lambda(-1, 0, 0))))
+		assert(.Type => { A in (A --> A) --> A --> A }, Term.equate, .Lambda(.Local(0), .Type, .Lambda(.Lambda(0, 0), .Lambda(0, 0))))
 	}
 
 	func testSubstitution() {
-		assert(Term.Lambda(0, 1, 0).substitute(1, identity.value), ==, .Lambda(0, identity.value, 0))
+		assert(Term.Lambda(1, 0).substitute(.Local(1), with: identity.value), Term.equate, .Lambda(identity.value, 0))
 	}
 
 	func testFreeVariablesDoNotIncludeThoseBoundByLambdas() {
-		assert(Term.Lambda(1, .Type, 1).freeVariables, ==, [])
+		assert(Term.Lambda(.Local(1), .Type, 1).freeVariables, ==, [])
 	}
 
 	func testLambdasDoNotShadowFreeVariablesInTheirTypes() {
-		assert(Term.Lambda(1, 1, 1).freeVariables, ==, [ 1 ])
+		assert(Term.Lambda(.Local(1), 1, 1).freeVariables, ==, [ .Local(1) ])
 	}
 
 	func testLambdasBindVariablesDeeply() {
-		assert(Term.Lambda(2, .Type, .Lambda(1, 2, .Lambda(0, .Type, .Application(2, .Application(1, 0))))).freeVariables, ==, [])
-	}
-
-
-	func testFreeVariablesAreOrderedByOccurence() {
-		assert(Array(Term.Application(.Application(.Application(1, 2), .Application(3, 4)), .Application(.Application(5, 6), .Application(7, 8))).freeVariables), ==, (1...8).map(id))
-	}
-
-
-	func testGeneralizationMaintainsLeftToRightOrdering() {
-		assert(Term.Lambda(0, 2, .Lambda(-1, 1, 0)).generalize(), ==, .Lambda(2, nil, .Lambda(1, nil, .Lambda(0, 2, .Lambda(-1, 1, 0)))))
+		assert(Term.Lambda(.Local(2), .Type, .Lambda(.Local(1), 2, .Lambda(.Local(0), .Type, .Application(2, .Application(1, 0))))).freeVariables, ==, [])
 	}
 }
 

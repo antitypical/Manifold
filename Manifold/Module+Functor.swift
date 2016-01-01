@@ -2,9 +2,9 @@
 
 extension Module {
 	public static var functor: Module {
-		let Functor = Declaration("Functor", Datatype(.Type --> .Type, { f in
-			[ "functor": Telescope.Argument((.Type, .Type) => { A, B in (A --> B) --> f[A] --> f[B] }, const(.End)) ]
-		}))
+		let Functor = Declaration("Functor", Datatype("fmap", .Type --> .Type,
+			[ "functor": Telescope.Argument("a", (.Type, .Type) => { A, B in (A --> B) --> (0 as Term)[A] --> (0 as Term)[B] }, .End) ]
+		))
 
 		let map = Declaration("map",
 			type: .Type --> nil => { f in (Functor.ref[f], .Type, .Type) => { F, A, B in (A --> B) --> f[A] --> f[B] } },
@@ -13,6 +13,3 @@ extension Module {
 		return Module("Functor", [ Functor, map ])
 	}
 }
-
-
-import Prelude

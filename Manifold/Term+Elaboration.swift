@@ -6,49 +6,57 @@ extension Term {
 	public func elaborateType(against: Term, _ environment: [Name:Term], _ context: [Name:Term]) throws -> AnnotatedTerm<Term> {
 		do {
 			switch (out, against.weakHeadNormalForm(environment).out) {
-			case let (.Type(n), .Implicit):
-				return .Unroll(.Type(n + 1), .Type(n))
+			case let (.Identity(.Type(n)), .Identity(.Implicit)):
+				return .Unroll(.Type(n + 1), .Identity(.Type(n)))
 
-			case let (.Variable(name), .Implicit):
+			case let (.Variable(name), .Identity(.Implicit)):
 				guard let type = context[name] else {
 					throw "Unexpectedly free variable \(name) in context: \(Term.toString(context, separator: ":")), environment: \(Term.toString(environment, separator: "="))"
 				}
 				return .Unroll(type, .Variable(name))
 
-			case let (.Application(a, b), .Implicit):
+			case let (.Identity(.Application(a, b)), .Identity(.Implicit)):
 				let aʹ = try a.elaborateType(nil --> nil, environment, context)
-				guard case let .Lambda(i, type, body) = aʹ.annotation.weakHeadNormalForm(environment).out else {
+				guard case let .Identity(.Lambda(type, body)) = aʹ.annotation.weakHeadNormalForm(environment).out else {
 					throw "Illegal application of \(a) : \(aʹ.annotation) in context: \(Term.toString(context, separator: ":")), environment: \(Term.toString(environment, separator: "="))"
 				}
 				let bʹ = try b.elaborateType(type, environment, context)
-				return .Unroll(body.substitute(i, b), .Application(aʹ, bʹ))
+				return .Unroll(body.applySubstitution(b), .Identity(.Application(aʹ, bʹ)))
 
-			case let (.Lambda(i, a, b), .Implicit) where a != nil:
+			case let (.Identity(.Lambda(a, b)), .Identity(.Implicit)) where a != nil:
 				let aʹ = try a.elaborateType(.Type, environment, context)
-				let bʹ = try b.elaborateType(nil, environment, context + [ .Local(i): a ])
-				return .Unroll(a => { bʹ.annotation.substitute(i, $0) }, .Lambda(i, aʹ, bʹ))
+				let bʹ = try b.elaborateType(nil, environment, b.extendContext(context, with: a))
+				return .Unroll(a => { bʹ.annotation.applySubstitution($0) }, .Identity(.Lambda(aʹ, bʹ)))
 
-			case let (.Embedded(value, eq, type), .Implicit):
+			case let (.Identity(.Embedded(value, eq, type)), .Identity(.Implicit)):
 				let typeʹ = try type.elaborateType(.Type, environment, context)
-				return .Unroll(type, .Embedded(value, eq, typeʹ))
+				return .Unroll(type, .Identity(.Embedded(value, eq, typeʹ)))
 
-			case let (.Type(m), .Type(n)) where n > m:
+			case let (.Identity(.Type(m)), .Identity(.Type(n))) where n > m:
 				return try elaborateType(nil, environment, context)
 
-			case let (.Lambda(i, type, body), .Lambda(j, type2, bodyType)) where Term.equate(type, type2, environment) != nil:
-				let t = try type2.elaborateType(.Type, environment, context)
-				let b = try body.elaborateType(bodyType.substitute(j, Term.Variable(Name.Local(i))), environment, context + [ Name.Local(i) : type2 ])
-				return .Unroll(.Lambda(j, type2, bodyType), .Lambda(i, t, b))
+			case let (.Identity(.Lambda(type1, body)), .Identity(.Lambda(type2, bodyType))):
+				guard let _ = Term.equate(type1, type2, environment) else { throw "Unable to equate type '\(type1)' with expected type '\(type2)'" }
+				let typeʹ = try type2.elaborateType(.Type, environment, context)
 
-			case let (.Lambda(i, type, body), .Type(n)):
-				let typeʹ = try type.elaborateType(.Type, environment, context) ?? .Unroll(.Type(n + 1), .Type(n))
-				return .Unroll(.Lambda(i, .Type, .Type), .Lambda(i, typeʹ, try body.elaborateType(.Type, environment, context + [ Name.Local(i) : type ?? .Type(n) ])))
+				let bodyTypeʹ = (body.scope?.0).map { bodyType.applySubstitution(.Variable($0)) } ?? bodyType
+				let _ = try bodyTypeʹ.elaborateType(.Type, environment, body.extendContext(context, with: type2))
 
-			case (.Implicit, .Implicit):
+				let bodyʹ = try body.elaborateType(bodyTypeʹ, environment, body.extendContext(context, with: type2))
+				return .Unroll(against, .Identity(.Lambda(typeʹ, bodyʹ)))
+
+			case let (.Identity(.Lambda(type, body)), .Identity(.Type)):
+				let typeʹ = try type.elaborateType(.Type, environment, context)
+				return try .Unroll(.Type --> .Type, .Identity(.Lambda(typeʹ, body.elaborateType(.Type, environment, body.extendContext(context, with: type)))))
+
+			case let (.Abstraction(name, scope), _):
+				return try .Unroll(against, .Abstraction(name, scope.elaborateType(against, environment, context)))
+
+			case (_, .Identity(.Implicit)):
 				throw "No rule to infer type of '\(self)'"
 
-			case let (.Implicit, type):
-				return .Unroll(Term(type), .Implicit)
+			case let (.Identity(.Implicit), type):
+				return .Unroll(Term(type), .Identity(.Implicit))
 
 			case let (_, b):
 				let a = try elaborateType(nil, environment, context)
@@ -58,8 +66,15 @@ extension Term {
 				return a
 			}
 		} catch let e {
-			throw "\(e)\nin: '\(self)'" + (against == nil ? " ⇒ ?" : " ⇐ '\(against)'")
+			throw "\(e)\nin: '\(self)'" + (against == nil ? " ⇒ ?" : " ⇐ '\(against)' ('\(against.weakHeadNormalForm(environment) as Term)')")
 		}
+	}
+
+	func extendContext(context: [Name:Term], with: Term) -> [Name:Term] {
+		if let (name, _) = scope {
+			return context + [ name: with ]
+		}
+		return context
 	}
 
 	static func toString(table: [Name:Term], separator: String) -> String {

@@ -22,7 +22,7 @@ final class ModuleTests: XCTestCase {
 	}
 
 	func testSuccessorOfZeroTypechecksAsNatural() {
-		assert(try? successor[zero].elaborateType(nil, Module.natural.environment, Module.natural.context), ==, .Unroll(Natural, .Application(.Unroll(Natural --> Natural, .Variable(.Global("successor"))), .Unroll(Natural, .Variable(.Global("zero"))))))
+		assert(try? successor[zero].elaborateType(nil, Module.natural.environment, Module.natural.context).annotation, ==, Natural)
 	}
 
 
@@ -93,9 +93,12 @@ final class ModuleTests: XCTestCase {
 		let nilTerm: Term = fromList[`nil`[Term.Implicit]]
 		let consTerm: Term = fromList[cons[nil, embedCharacter("a"), `nil`[Term.Implicit]]]
 		let term = fromList[cons[nil, embedCharacter("h"), cons[nil, embedCharacter("i"), `nil`[Term.Implicit]]]]
-		assert(try? nilTerm.evaluate(environment), ==, Term.Embedded("", "String"))
-		assert(try? consTerm.evaluate(environment), ==, Term.Embedded("a", "String"))
-		assert(try? term.evaluate(environment), ==, Term.Embedded("hi", "String"))
+		assert(try nilTerm.elaborateType("String", environment, Module.string.context).annotation, Term.equate, "String")
+		assert(try nilTerm.evaluate(environment), Term.equate, Term.Embedded("", "String"))
+		assert(try consTerm.elaborateType("String", environment, Module.string.context).annotation, Term.equate, "String")
+		assert(try consTerm.evaluate(environment), Term.equate, Term.Embedded("a", "String"))
+		assert(try term.elaborateType("String", environment, Module.string.context).annotation, Term.equate, "String")
+		assert(try term.evaluate(environment), Term.equate, Term.Embedded("hi", "String"))
 	}
 
 

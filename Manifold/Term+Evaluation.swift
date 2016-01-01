@@ -4,16 +4,17 @@ extension Term {
 	public func evaluate(environment: [Name:Term] = [:]) throws -> Term {
 		switch out {
 		case let .Variable(i):
-			guard let found = environment[i] else { throw "Illegal free variable \(i)" }
+			guard let found = environment[i] else { throw "Illegal free variable \(i) in environment \(Term.toString(environment, separator: "="))" }
 			return found
 
-		case let .Application(a, b):
+		case let .Identity(.Application(a, b)):
 			let aʹ = try a.evaluate(environment)
 			switch aʹ.out {
-			case let .Lambda(i, _, body):
-				return try body.substitute(i, b.evaluate(environment)).evaluate(environment)
+			case let .Identity(.Lambda(_, body)):
+				guard let (name, scope) = body.scope else { return try body.evaluate(environment) }
+				return try scope.substitute(name, with: b.evaluate(environment)).evaluate(environment)
 
-			case let .Embedded((_, evaluator) as (String, Term throws -> Term), _, _):
+			case let .Identity(.Embedded((_, evaluator) as (String, Term throws -> Term), _, _)):
 				return try evaluator(b.evaluate(environment)).evaluate(environment)
 
 			default:

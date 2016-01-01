@@ -3,15 +3,12 @@
 extension Module {
 	public static var either: Module {
 		return Module("Either", [
-			Declaration("Either", Datatype(.Type, .Type) {
+			Declaration("Either", Datatype("L", .Type, "R", .Type,
 				[
-					"left": .Argument($0, const(.End)),
-					"right": .Argument($1, const(.End))
+					"left": .Argument("l", "L", .End),
+					"right": .Argument("r", "R", .End)
 				]
-			})
+			))
 		])
 	}
 }
-
-
-import Prelude

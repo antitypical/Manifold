@@ -10,15 +10,23 @@ extension Term {
 	}
 
 	public static func Variable(name: Name) -> Term {
-		return Term(.Variable(name))
+		return .In([ name ], .Variable(name))
+	}
+
+	public static func Abstraction(name: Name, _ scope: Term) -> Term {
+		return .In(scope.freeVariables.subtract([ name ]), .Abstraction(name, scope))
 	}
 
 	public static func Application(a: Term, _ b: Term) -> Term {
 		return Term(.Application(a, b))
 	}
 
-	public static func Lambda(i: Int, _ type: Term, _ body: Term) -> Term {
-		return Term(.Lambda(i, type, body))
+	public static func Lambda(name: Name, _ type: Term, _ body: Term) -> Term {
+		return Term(.Lambda(type, .Abstraction(name, body)))
+	}
+
+	public static func Lambda(type: Term, _ body: Term) -> Term {
+		return Term(.Lambda(type, body))
 	}
 
 	public static func Embedded(name: String, _ type: Term, _ evaluator: Term throws -> Term) -> Term {
@@ -31,7 +39,7 @@ extension Term {
 
 	public static func Embedded<A>(name: String, _ type: Term, _ evaluator: A throws -> Term) -> Term {
 		return Embedded(name, type) { term in
-			guard case let .Embedded(value as A, _, _) = term.out else { throw "Illegal application of '\(name)' to '\(term)'" }
+			guard case let .Identity(.Embedded(value as A, _, _)) = term.out else { throw "Illegal application of '\(name)' : '\(type)' to '\(term)' (expected term of embedded type '\(A.self)')" }
 			return try evaluator(value)
 		}
 	}
@@ -83,15 +91,22 @@ infix operator => {
 }
 
 public func --> (left: Term, right: Term) -> Term {
-	return left => const(right)
+	return .Lambda(left, right)
 }
 
 public func => (type: Term, body: Term -> Term) -> Term {
-	var n = -1
-	let body = body(Term { .Variable(.Local(n)) })
-	n = body.maxBoundVariable + 1
-	if !body.freeVariables.contains(n) { n = -1 }
-	return .Lambda(n, type, body)
+	let proposed1 = Name.Local(0)
+	let body1 = body(.Variable(proposed1))
+	let v1 = body1.freeVariables.union(body1.boundVariables)
+	let proposed2 = proposed1.fresh(v1)
+	if proposed1 == proposed2 { return .Lambda(type, body1) }
+
+	let body2 = body(.Variable(proposed2))
+	let v2 = body2.freeVariables.union(body2.boundVariables)
+	
+	return v1.subtract([ proposed1 ]) == v2.subtract([ proposed2 ])
+		? .Lambda(proposed1, type, body1)
+		: .Lambda(proposed2, type, body2)
 }
 
 public func => (left: (Term, Term), right: (Term, Term) -> Term) -> Term {
@@ -104,6 +119,16 @@ public func => (left: (Term, Term, Term), right: (Term, Term, Term) -> Term) -> 
 
 public func => (left: (Term, Term, Term, Term), right: (Term, Term, Term, Term) -> Term) -> Term {
 	return left.0 => { a in left.1 => { b in left.2 => { c in left.3 => { d in right(a, b, c, d) } } } }
+}
+
+public func => (left: (Name, Term), right: Term) -> Term {
+	return .Lambda(left.0, left.1, right)
+}
+
+public func => (left: DictionaryLiteral<Name, Term>, right: Term) -> Term {
+	return left.reverse().reduce(right) { into, each in
+		each => into
+	}
 }
 
 

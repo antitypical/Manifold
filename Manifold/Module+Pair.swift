@@ -2,9 +2,9 @@
 
 extension Module {
 	public static var pair: Module {
-		let Pair = Declaration("Pair", Datatype(.Type, .Type) {
-			[ "pair": .Argument($0, const(.Argument($1, const(.End)))) ]
-		})
+		let Pair = Declaration("Pair", Datatype("A", .Type, "B", .Type,
+			[ "pair": .Argument("a", "A", .Argument("b", "B", .End)) ]
+		))
 
 		let first = Declaration("first",
 			type: (.Type, .Type) => { A, B in Pair.ref[A, B] --> A },
@@ -17,6 +17,3 @@ extension Module {
 		return Module("Pair", [ Pair, first, second ])
 	}
 }
-
-
-import Prelude

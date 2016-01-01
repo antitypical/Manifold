@@ -5,7 +5,7 @@ extension Module {
 		return Module("Natural", [
 			.Datatype("Natural", [
 				"zero": .End,
-				"successor": .Recursive(.End)
+				"successor": .Recursive("n", .End)
 			])
 		])
 	}

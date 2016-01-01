@@ -3,13 +3,13 @@
 extension Module {
 	public static var datatype: Module {
 		let _Datatype: Term = "Datatype"
-		let datatype = Declaration("Datatype", Datatype(.Type) { I in
+		let datatype = Declaration("Datatype", Datatype("I", .Type,
 			[
-				"end": .Argument(I, const(.End)),
-				"recursive": .Argument(I, const(.Recursive(.End))),
-				"argument": Telescope.Argument(.Type) { A in .Argument(A --> _Datatype[I], const(.End)) },
+				"end": .Argument("index", "I", .End),
+				"recursive": .Argument("index", "I", .Recursive("recur", .End)),
+				"argument": Telescope.Argument("A", .Type, .Argument("telescope", "A" --> _Datatype["I" as Term], .End)),
 			]
-		})
+		))
 
 		let μ = Declaration("μ",
 			type: nil => { I in _Datatype[I] --> I --> .Type },
