@@ -128,8 +128,8 @@ final class ModuleTests: XCTestCase {
 		if let actual = module.environment[symbol] {
 			assert(actual, equate, value, message:
 				"Term mismatch in '\(module.name).\(symbol)'\n"
-					+ "expected : \(value)\n"
-					+ "  actual : \(actual)\n", file: file, line: line)
+					+ "expected = \(value)\n"
+					+ "  actual = \(actual)\n", file: file, line: line)
 		}
 	}
 }
