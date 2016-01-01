@@ -11,18 +11,18 @@ final class DeclarationTests: XCTestCase {
 	}
 
 	func testDatatypeDeclarationsAddDataConstructorsToEnvironment() {
-		assert(Module.boolean.environment["true"], ==, .Type => { A in A => { a in A --> a } })
-		assert(Module.boolean.environment["false"], ==, .Type => { A in A --> A => id })
+		assert(Module.boolean.environment["true"], Term.equate, .Type => { A in A => { a in A --> a } })
+		assert(Module.boolean.environment["false"], Term.equate, .Type => { A in A --> A => id })
 	}
 
 	func testDatatypeConstructorsWithRecursiveReferencesProduceValuesEmbeddingReferencesToTheirType() {
 		let Natural: Term = "Natural"
-		assert(Module.natural.environment["successor"], ==, (Natural, .Type) => { n, A in A --> (Natural --> A) => { $0[n] } })
+		assert(Module.natural.environment["successor"], Term.equate, (Natural, .Type) => { n, A in A --> (Natural --> A) => { $0[n] } })
 	}
 
 	func testDatatypeConstructorsWithArgumentsHaveFunctionTypes() {
-		assert(datatype.context["a"], ==, (.Type, .Type) => const("A"))
-		assert(datatype.context["b"], ==, (.Type, .Type) => const("A"))
+		assert(datatype.context["a"], Term.equate, (.Type, .Type) => const("A"))
+		assert(datatype.context["b"], Term.equate, (.Type, .Type) => const("A"))
 	}
 
 	func testDatatypeConstructorsWithArgumentsAreEncodedFunctions() {
