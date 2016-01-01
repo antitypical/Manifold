@@ -34,7 +34,7 @@ public enum Datatype: DictionaryLiteralConvertible {
 				}.reverse().reduce(.Variable(name), combine: flip(-->))
 			}
 			return [ (symbol, abstract(.Type), abstractAndApply(value)(recur)) ] + constructors.map {
-				(.Global($0), abstractAndApply(type($1))(recur), abstractAndApply(self.value($0, telescope: $1, constructors: constructors, index: index))(recur))
+				(.Global($0), abstractAndApply(type($1))(recur), abstractAndApply(self.value($0, telescope: $1, constructors: constructors))(recur))
 			}
 		}
 	}
@@ -50,22 +50,22 @@ public enum Datatype: DictionaryLiteralConvertible {
 		}
 	}
 
-	public func value(symbol: String, telescope: Telescope, constructors: [(String, Telescope)], index: Int, parameters: [Term] = [])(_ recur: Term) -> Term {
+	public func value(symbol: String, telescope: Telescope, constructors: [(String, Telescope)], parameters: [Term] = [])(_ recur: Term) -> Term {
 		switch telescope {
 		case let .Recursive(name, rest):
-			return (name, recur) => value(symbol, telescope: rest, constructors: constructors, index: index + 1, parameters: parameters + [ .Variable(name) ])(recur)
+			return (name, recur) => value(symbol, telescope: rest, constructors: constructors, parameters: parameters + [ .Variable(name) ])(recur)
 		case let .Argument(name, type, rest):
-			return (name, type) => value(symbol, telescope: rest, constructors: constructors, index: index + 1, parameters: parameters + [ .Variable(name) ])(recur)
+			return (name, type) => value(symbol, telescope: rest, constructors: constructors, parameters: parameters + [ .Variable(name) ])(recur)
 		case .End:
-			let name = Name.Local(index)
+			let name = Name.Global("Motive")
 			let constructors = constructors.map {
 				($0, $1.fold(recur, terminal: .Variable(name)) { ($0, $1) => $2 })
 			}
-			return (name, .Type) => constructors.reverse().reduce((id, index + 1), combine: { into, each in
-				(each.0 == symbol
-					? { _ in (Name.Local(into.1), each.1) => into.0(parameters.reduce(.Variable(Name.Local(into.1)), combine: { $0[$1] })) }
-					: into.0 >>> { each.1 --> $0 }, into.1 + 1)
-			}).0(.Variable(name))
+			return (name, .Type) => constructors.reverse().reduce(id, combine: { into, each in
+				each.0 == symbol
+					? { _ in (Name.Global("if" + symbol), each.1) => into(parameters.reduce(.Variable(Name.Global("if" + symbol)), combine: { $0[$1] })) }
+					: into >>> { each.1 --> $0 }
+			})(.Variable(name))
 		}
 	}
 }
