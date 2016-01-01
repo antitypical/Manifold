@@ -34,8 +34,8 @@ final class DeclarationTests: XCTestCase {
 
 private let datatype = Module("A", [], [
 	Declaration.Datatype("A", [
-		"a": Telescope.Argument(.Type, .Argument(.Type, .End)),
-		"b": Telescope.Argument(.Type, .Argument(.Type, .End)),
+		"a": Telescope.Argument("x", .Type, .Argument("y", .Type, .End)),
+		"b": Telescope.Argument("x", .Type, .Argument("y", .Type, .End)),
 	])
 ])
 

@@ -40,11 +40,10 @@ public enum Datatype: DictionaryLiteralConvertible {
 	}
 
 	public func type(telescope: Telescope, index: Int)(_ recur: Term) -> Term {
-		let name = Name.Local(index)
 		switch telescope {
-		case let .Recursive(rest):
+		case let .Recursive(name, rest):
 			return (name, recur) => type(rest, index: index + 1)(recur)
-		case let .Argument(type, rest):
+		case let .Argument(name, type, rest):
 			return (name, type) => self.type(rest, index: index + 1)(recur)
 		case .End:
 			return recur
@@ -52,13 +51,13 @@ public enum Datatype: DictionaryLiteralConvertible {
 	}
 
 	public func value(symbol: String, telescope: Telescope, constructors: [(String, Telescope)], index: Int, parameters: [Term] = [])(_ recur: Term) -> Term {
-		let name = Name.Local(index)
 		switch telescope {
-		case let .Recursive(rest):
+		case let .Recursive(name, rest):
 			return (name, recur) => value(symbol, telescope: rest, constructors: constructors, index: index + 1, parameters: parameters + [ .Variable(name) ])(recur)
-		case let .Argument(type, rest):
+		case let .Argument(name, type, rest):
 			return (name, type) => value(symbol, telescope: rest, constructors: constructors, index: index + 1, parameters: parameters + [ .Variable(name) ])(recur)
 		case .End:
+			let name = Name.Local(index)
 			let constructors = constructors.map {
 				($0, $1.fold(recur, terminal: .Variable(name), index: index + 1) { ($0, $1) => $2 })
 			}

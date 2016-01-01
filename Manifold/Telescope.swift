@@ -1,8 +1,8 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public enum Telescope {
-	indirect case Recursive(Telescope)
-	indirect case Argument(Term, Telescope)
+	indirect case Recursive(Name, Telescope)
+	indirect case Argument(Name, Term, Telescope)
 	case End
 
 
@@ -10,10 +10,10 @@ public enum Telescope {
 		switch self {
 		case .End:
 			return terminal
-		case let .Recursive(rest):
-			return combine(Name.Local(index), recur, rest.fold(recur, terminal: terminal, index: index + 1, combine: combine))
-		case let .Argument(type, rest):
-			return combine(Name.Local(index), type, rest.fold(recur, terminal: terminal, index: index + 1, combine: combine))
+		case let .Recursive(name, rest):
+			return combine(name, recur, rest.fold(recur, terminal: terminal, index: index + 1, combine: combine))
+		case let .Argument(name, type, rest):
+			return combine(name, type, rest.fold(recur, terminal: terminal, index: index + 1, combine: combine))
 		}
 	}
 }

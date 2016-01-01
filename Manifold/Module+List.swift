@@ -4,7 +4,7 @@ extension Module {
 	public static var list: Module {
 		let List = Declaration("List", Datatype("A", .Type,
 			[
-				"cons": .Argument("A", .Recursive(.End)),
+				"cons": .Argument("head", "A", .Recursive("tail", .End)),
 				"nil": .End
 			]
 		))
