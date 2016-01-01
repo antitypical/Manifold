@@ -1,5 +1,7 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
+public typealias DefinitionType = (symbol: Name, type: Term, value: Term)
+
 public enum Declaration: CustomStringConvertible {
 	public init(_ symbol: Name, type: Term, value: Term) {
 		self = .Definition(symbol, type, value)
@@ -10,15 +12,12 @@ public enum Declaration: CustomStringConvertible {
 	}
 
 
-	public typealias DefinitionType = (symbol: Name, type: Term, value: Term)
-
 	public var definitions: [DefinitionType] {
 		switch self {
 		case let .Definition(symbol, type, value):
 			return [ (symbol, type, value) ]
 		case let .Datatype(symbol, datatype):
-			let recur = Term.Variable(symbol)
-			return [ (symbol, datatype.type(), datatype.value(recur)) ] + datatype.definitions(recur)
+			return datatype.definitions(symbol)
 		}
 	}
 
@@ -29,7 +28,8 @@ public enum Declaration: CustomStringConvertible {
 			return "\(symbol) : \(type)\n"
 				+ "\(symbol) = \(value)"
 		case let .Datatype(symbol, datatype):
-			return "data \(symbol) : \(datatype.type()) = \(datatype.value(.Variable(symbol)))"
+			let definition = datatype.definitions(symbol)[0]
+			return "data \(symbol) : \(definition.type) = \(definition.value)"
 		}
 	}
 

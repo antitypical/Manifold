@@ -1,6 +1,29 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public enum Name: Comparable, CustomStringConvertible, Hashable, StringLiteralConvertible {
+	static func fresh(set: Set<Name>) -> Name {
+		let proposed = set.lazy.filter {
+			guard case .Local = $0 else { return false }
+			return true
+		}.maxElement() ?? Name.Local(0)
+		return proposed.fresh(set)
+	}
+
+	func fresh(isUsed: Name -> Bool) -> Name {
+		guard isUsed(self) else { return self }
+		switch self {
+		case let .Local(i):
+			return Name.Local(i + 1).fresh(isUsed)
+		case let .Global(string):
+			return Name.Global(string + "ʹ").fresh(isUsed)
+		}
+	}
+
+	func fresh(set: Set<Name>) -> Name {
+		return fresh(set.contains)
+	}
+
+
 	// MARK: CustomStringConvertible
 
 	public var description: String {
@@ -63,6 +86,3 @@ public func < (left: Name, right: Name) -> Bool {
 		return false
 	}
 }
-
-
-import Prelude

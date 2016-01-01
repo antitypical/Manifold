@@ -9,31 +9,33 @@ extension TermContainerType {
 		}
 		let (out, _): (String, Bool) = para {
 			switch $0 {
-			case let .Type(n) where n == 0:
+			case let .Identity(.Type(n)) where n == 0:
 				return ("Type", false)
-			case let .Type(n):
+			case let .Identity(.Type(n)):
 				return ("Type" + renderNumerals(n, "₀₁₂₃₄₅₆₇₈₉"), false)
 
 			case let .Variable(name):
 				return (String(name), false)
 
-			case let .Application((_, (a, _)), (_, b)):
+			case let .Identity(.Application((_, (a, _)), (_, b))):
 				return ("\(a) \(wrap(b))", true)
 
-			case let .Lambda(variable, (t, (type, _)), (b, (body, _))) where b.freeVariables.contains(variable):
-				if case .Implicit = t.out {
-					return ("λ \(Name.Local(variable)) . \(body)", true)
+			case let .Identity(.Lambda((t, type), (b, (body, _)))):
+				guard let (name, _) = b.scope else { return ("\(wrap(type)) → \(body)", true) }
+
+				if case .Identity(.Implicit) = t.out {
+					return ("λ \(name) . \(body)", true)
 				}
-				return ("λ \(Name.Local(variable)) : \(type) . \(body)", true)
+				return ("λ \(name) : \(type.0) . \(body)", true)
 
-			case let .Lambda(_, (_, type), (_, (body, _))):
-				return ("\(wrap(type)) → \(body)", true)
-
-			case let .Embedded(value, _, (_, (type, _))):
+			case let .Identity(.Embedded(value, _, (_, (type, _)))):
 				return ("'\(value)' : \(type)", true)
 
-			case .Implicit:
+			case .Identity(.Implicit):
 				return ("_", false)
+
+			case let .Abstraction(_, (_, scope)):
+				return scope
 			}
 		}
 		return out
@@ -47,6 +49,3 @@ func renderNumerals(n: Int, _ alphabet: String) -> String {
 	}
 	return n.digits(alphabet.characters.count).lazy.map { String(atModular(alphabet.characters, offset: $0)) }.joinWithSeparator("")
 }
-
-
-import Prelude

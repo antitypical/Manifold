@@ -24,7 +24,7 @@ extension Term: Arbitrary {
 					arbitrary(n + 1).bind { a in arbitrary(n + 1).fmap { b in Term.Application(a, b) } }
 				},
 				Gen.pure(()).bind {
-					arbitrary(n + 1).bind { type in arbitrary(n + 1).fmap { body in Term.Lambda(n + 1, type, body) } }
+					arbitrary(n + 1).bind { type in arbitrary(n + 1).fmap { body in Term.Lambda(type, body) } }
 				},
 			]
 			let variable = [

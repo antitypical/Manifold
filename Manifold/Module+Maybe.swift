@@ -2,12 +2,12 @@
 
 extension Module {
 	public static var maybe: Module {
-		let Maybe = Declaration.Datatype("Maybe", .Argument(.Type, {
+		let Maybe = Declaration.Datatype("Maybe", .Argument("A", .Type,
 			[
-				"just": .Argument($0, const(.End)),
+				"just": .Argument("a", "A", .End),
 				"nothing": .End
 			]
-		}))
+		))
 
 		let just: Term = "just"
 		let nothing: Term = "nothing"
@@ -18,6 +18,3 @@ extension Module {
 		return Module("Maybe", [ Maybe, map ])
 	}
 }
-
-
-import Prelude

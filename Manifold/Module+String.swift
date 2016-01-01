@@ -30,8 +30,8 @@ extension Module {
 		let combine = Declaration("combine",
 			type: Character.ref --> String.ref --> String.ref,
 			value: Term.Embedded("combine1", Character.ref --> String.ref --> String.ref) { (c: Swift.Character) in
-				Term.Embedded("combine2", String.ref --> String.ref) { (s: Swift.String) in
-					Term.Embedded(Swift.String(c) + s, String.ref)
+				Term.Embedded("combine2", String.ref --> String.ref) {
+					Term.Embedded(Swift.String(c) + $0, String.ref)
 				}
 			})
 

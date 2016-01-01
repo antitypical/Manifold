@@ -2,12 +2,12 @@
 
 extension Module {
 	public static var list: Module {
-		let List = Declaration("List", Datatype(.Type) {
+		let List = Declaration("List", Datatype("A", .Type,
 			[
-				"cons": .Argument($0, const(.Recursive(.End))),
+				"cons": .Argument("head", "A", .Recursive("tail", .End)),
 				"nil": .End
 			]
-		})
+		))
 
 		let cons: Term = "cons"
 		let `nil`: Term = "nil"
@@ -18,7 +18,7 @@ extension Module {
 
 		let pure = Declaration("List.pure",
 			type: nil => { A in A --> List.ref[A] },
-			value: (nil, nil) => { A, a in cons[nil, a, `nil`[Term.Implicit]] })
+			value: (nil, nil) => { A, a in cons[A, a, `nil`[Term.Implicit]] })
 
 		let _cat: Term = "cat"
 		let cat = Declaration("cat",
