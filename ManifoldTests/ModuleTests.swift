@@ -25,7 +25,7 @@ final class ModuleTests: XCTestCase {
 	}
 
 	func testSuccessorOfZeroTypechecksAsNatural() {
-		assert(try? successor[zero].elaborateType(nil, Module.natural.environment, Module.natural.context), ==, .Unroll(Natural, .Identity(.Application(.Unroll(Natural --> Natural, .Variable(.Global("successor"))), .Unroll(Natural, .Variable(.Global("zero")))))))
+		assert(try? successor[zero].elaborateType(nil, Module.natural.environment, Module.natural.context).annotation, ==, Natural)
 	}
 
 
