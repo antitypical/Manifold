@@ -2,7 +2,7 @@
 
 extension Module {
 	public static var functor: Module {
-		let Functor = Declaration("Functor", Datatype(.Type --> .Type,
+		let Functor = Declaration("Functor", Datatype("fmap", .Type --> .Type,
 			[ "functor": Telescope.Argument((.Type, .Type) => { A, B in (A --> B) --> (0 as Term)[A] --> (0 as Term)[B] }, .End) ]
 		))
 

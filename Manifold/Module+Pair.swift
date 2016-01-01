@@ -2,8 +2,8 @@
 
 extension Module {
 	public static var pair: Module {
-		let Pair = Declaration("Pair", Datatype(.Type, .Type,
-			[ "pair": .Argument(0, .Argument(1, .End)) ]
+		let Pair = Declaration("Pair", Datatype("A", .Type, "B", .Type,
+			[ "pair": .Argument("A", .Argument("B", .End)) ]
 		))
 
 		let first = Declaration("first",

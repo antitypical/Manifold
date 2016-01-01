@@ -2,9 +2,9 @@
 
 extension Module {
 	public static var sigma: Module {
-		let Sigma = Declaration("Sigma", Datatype(.Type,
-			Datatype.Argument(0 --> .Type,
-				[ "sigma": Telescope.Argument(0, .Argument((1 as Term)[2 as Term], .End)) ]
+		let Sigma = Declaration("Sigma", Datatype("A", .Type,
+			Datatype.Argument("B", "A" --> .Type,
+				[ "sigma": Telescope.Argument("A", .Argument(("B" as Term)[2 as Term], .End)) ]
 			)
 		))
 

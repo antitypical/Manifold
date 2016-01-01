@@ -2,9 +2,9 @@
 
 extension Module {
 	public static var list: Module {
-		let List = Declaration("List", Datatype(.Type,
+		let List = Declaration("List", Datatype("A", .Type,
 			[
-				"cons": .Argument(0, .Recursive(.End)),
+				"cons": .Argument("A", .Recursive(.End)),
 				"nil": .End
 			]
 		))

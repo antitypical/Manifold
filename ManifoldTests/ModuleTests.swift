@@ -44,7 +44,7 @@ final class ModuleTests: XCTestCase {
 	func testEquivalenceOfEncodedAndDatatypeSigmas() {
 		encodedSigma.definitions.forEach { symbol, type, value in
 			assert(Module.sigma.context[symbol], Term.equate, type, message: "'\(symbol)' expected '\(type)', actual '\(Module.sigma.context[symbol])'")
-			assert(Module.sigma.environment[symbol], Term.equate, value, message: "'\(symbol)' expected '\(value)', actual '\(Module.sigma.environment[symbol] ?? "nil")'")
+			assert(Module.sigma.environment[symbol], Term.equate, value, message: "'\(symbol)'\nexpected '\(value)'\nactual '\(Module.sigma.environment[symbol] ?? "nil")'")
 		}
 	}
 

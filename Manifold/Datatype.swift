@@ -1,16 +1,16 @@
 //  Copyright © 2015 Rob Rix. All rights reserved.
 
 public enum Datatype: DictionaryLiteralConvertible {
-	indirect case Argument(Term, Datatype)
+	indirect case Argument(Name, Term, Datatype)
 	case End([(String, Telescope)])
 
 
-	public init(_ type: Term, _ rest: Datatype) {
-		self = .Argument(type, rest)
+	public init(_ name: Name, _ type: Term, _ rest: Datatype) {
+		self = .Argument(name, type, rest)
 	}
 
-	public init(_ type1: Term, _ type2: Term, _ rest: Datatype) {
-		self = .Argument(type1, .Argument(type2, rest))
+	public init(_ name1: Name, _ type1: Term, _ name2: Name, _ type2: Term, _ rest: Datatype) {
+		self = .Argument(name1, type1, .Argument(name2, type2, rest))
 	}
 
 
@@ -21,8 +21,7 @@ public enum Datatype: DictionaryLiteralConvertible {
 
 	public func definitions(symbol: Name, index: Int = 0, abstract: Term -> Term = id, abstractAndApply: (Term -> Term) -> Term -> Term = id) -> [DefinitionType] {
 		switch self {
-		case let .Argument(type, rest):
-			let name = Name.Local(index)
+		case let .Argument(name, type, rest):
 			return rest.definitions(symbol, index: index + 1, abstract: { (name, type) => $0 } >>> abstract, abstractAndApply: { f in
 				{ (name, type) => f(.Application($0, .Variable(name))) }
 			} >>> abstractAndApply)
