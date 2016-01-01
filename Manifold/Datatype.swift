@@ -34,17 +34,17 @@ public enum Datatype: DictionaryLiteralConvertible {
 				}.reverse().reduce(.Variable(name), combine: flip(-->))
 			}
 			return [ (symbol, abstract(.Type), abstractAndApply(value)(recur)) ] + constructors.map {
-				(.Global($0), abstractAndApply(type($1, index: index))(recur), abstractAndApply(self.value($0, telescope: $1, constructors: constructors, index: index))(recur))
+				(.Global($0), abstractAndApply(type($1))(recur), abstractAndApply(self.value($0, telescope: $1, constructors: constructors, index: index))(recur))
 			}
 		}
 	}
 
-	public func type(telescope: Telescope, index: Int)(_ recur: Term) -> Term {
+	public func type(telescope: Telescope)(_ recur: Term) -> Term {
 		switch telescope {
 		case let .Recursive(name, rest):
-			return (name, recur) => type(rest, index: index + 1)(recur)
+			return (name, recur) => type(rest)(recur)
 		case let .Argument(name, type, rest):
-			return (name, type) => self.type(rest, index: index + 1)(recur)
+			return (name, type) => self.type(rest)(recur)
 		case .End:
 			return recur
 		}
