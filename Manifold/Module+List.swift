@@ -18,7 +18,7 @@ extension Module {
 
 		let pure = Declaration("List.pure",
 			type: nil => { A in A --> List.ref[A] },
-			value: (nil, nil) => { A, a in cons[nil, a, `nil`[Term.Implicit]] })
+			value: (nil, nil) => { A, a in cons[A, a, `nil`[Term.Implicit]] })
 
 		let _cat: Term = "cat"
 		let cat = Declaration("cat",
