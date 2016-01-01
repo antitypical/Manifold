@@ -49,6 +49,8 @@ extension Term {
 			return with
 		case .Variable:
 			return self
+		case let .Abstraction(name, _) where name == variable:
+			return self
 		case let .Abstraction(name, scope):
 			let newName = name.fresh(freeVariables.union(with.freeVariables).union([ variable ]))
 			return .Abstraction(newName, scope.rename(name, newName).substitute(variable, with: with))
