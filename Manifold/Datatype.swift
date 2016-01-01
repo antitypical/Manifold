@@ -30,7 +30,7 @@ public enum Datatype: DictionaryLiteralConvertible {
 			let name = Name.Local(index)
 			func value(recur: Term) -> Term {
 				return (name, .Type) => constructors.map {
-					$1.fold(recur, terminal: .Variable(.Local(index)), index: index + 1) { ($0, $1) => $2 }
+					$1.fold(recur, terminal: .Variable(.Local(index))) { ($0, $1) => $2 }
 				}.reverse().reduce(.Variable(name), combine: flip(-->))
 			}
 			return [ (symbol, abstract(.Type), abstractAndApply(value)(recur)) ] + constructors.map {
@@ -59,7 +59,7 @@ public enum Datatype: DictionaryLiteralConvertible {
 		case .End:
 			let name = Name.Local(index)
 			let constructors = constructors.map {
-				($0, $1.fold(recur, terminal: .Variable(name), index: index + 1) { ($0, $1) => $2 })
+				($0, $1.fold(recur, terminal: .Variable(name)) { ($0, $1) => $2 })
 			}
 			return (name, .Type) => constructors.reverse().reduce((id, index + 1), combine: { into, each in
 				(each.0 == symbol
